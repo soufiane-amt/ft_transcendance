@@ -70,5 +70,5 @@ Note: The above entities may have additional attributes based on specific requir
 
 
 
-
+https://www.codecademy.com/article/mongo-db-data-modeling-basics
 
