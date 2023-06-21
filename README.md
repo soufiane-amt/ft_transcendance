@@ -1,5 +1,7 @@
 # ft_transcendance
 
+->DataBase :
+
 To start building a chat application with the mentioned features, here is a suggested approach:
 
 Design the Data Model:
@@ -40,6 +42,32 @@ Deploy and Scale:
 Deploy your application to a hosting provider or cloud platform, such as Heroku, AWS, or Azure.
 Set up appropriate scaling mechanisms to handle increased user traffic, such as load balancing and horizontal scaling.
 Throughout the development process, it is essential to follow best practices for security, data validation, error handling, and performance optimization. Regularly communicate with your team or stakeholders to ensure the application aligns with the desired specifications and meets their expectations.
+
+
+User:
+
+Attributes: username, email, password, profile picture, etc.
+Channel:
+
+Attributes: name, description, visibility (public, private), password (optional), owner information.
+Message:
+
+Attributes: content, timestamp, sender, channel reference.
+BlockedUser:
+
+Attributes: blocking user, blocked user.
+Administrator:
+
+Attributes: user, channel.
+GameInvitation:
+
+Attributes: sender, recipient, game details.
+Profile:
+
+Attributes: user, profile information (e.g., bio, profile picture, etc.).
+Note: The above entities may have additional attributes based on specific requirements. The provided list outlines the core entities necessary to support the mentioned features in the chat application.
+
+
 
 
 
