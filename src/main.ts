@@ -6,3 +6,9 @@ async function bootstrap() {
   await app.listen(3000);
 }
 bootstrap();
+
+
+//private messaging 
+//if the message is firstly intialized 
+///you create a new Dm
+//if not look for the Dm id 
