@@ -1,105 +1,73 @@
-Learn the basics of web development: HTML, CSS, and JavaScript.
+<p align="center">
+  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="200" alt="Nest Logo" /></a>
+</p>
 
-Choose a backend framework that suits your preferences and has good WebSocket support, such as Node.js with Express.js or Django with Channels.
+[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
+[circleci-url]: https://circleci.com/gh/nestjs/nest
 
-Set up a basic backend server using your chosen framework.
+  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
+    <p align="center">
+<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
+<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
+<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
+<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
+<a href="https://coveralls.io/github/nestjs/nest?branch=master" target="_blank"><img src="https://coveralls.io/repos/github/nestjs/nest/badge.svg?branch=master#9" alt="Coverage" /></a>
+<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
+<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
+<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
+  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg"/></a>
+    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
+  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow"></a>
+</p>
+  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
+  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
 
-Learn about WebSockets and their implementation in your selected backend framework.
+## Description
 
-Implement a WebSocket server in your backend to handle client connections, messages, and room/channel management.
+[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
 
-Set up a PostgreSQL database to store chat messages and user data.
+## Installation
 
-Integrate the backend WebSocket server with the PostgreSQL database for data storage.
+```bash
+$ npm install
+```
 
-Choose a frontend framework or library that suits your preferences and has good WebSocket support, such as React with libraries like Socket.IO or SockJS.
+## Running the app
 
-Set up a basic frontend application using your chosen framework.
+```bash
+# development
+$ npm run start
 
-Implement a WebSocket client in your frontend to establish a connection with the backend WebSocket server.
+# watch mode
+$ npm run start:dev
 
-Design and implement UI components for displaying chat messages, user lists, input fields, etc.
+# production mode
+$ npm run start:prod
+```
 
-Implement sending and receiving chat messages in real-time using the WebSocket connection.
+## Test
 
-Enhance the chat experience by implementing features like channel/room creation, joining, and leaving.
+```bash
+# unit tests
+$ npm run test
 
-Implement user-to-user direct messaging functionality.
+# e2e tests
+$ npm run test:e2e
 
-Add basic security measures, such as server-side validation of input and protection against cross-site scripting (XSS) attacks.
+# test coverage
+$ npm run test:cov
+```
 
-Test the chat functionality thoroughly, including real-time updates, messaging between multiple users, and handling edge cases.
+## Support
 
-Deploy the chat application to a suitable environment, considering the project requirements for Docker and Linux compatibility.
+Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
 
-Working on the chat part of the project can provide you with valuable learning opportunities in several areas. Here are some key aspects you can learn from working on the chat functionality:
+## Stay in touch
 
-Real-time Communication: Implementing a chat system involves working with real-time communication protocols like websockets. You'll learn how to establish bidirectional communication channels between the server and clients, allowing for instant messaging and updates.
+- Author - [Kamil Myśliwiec](https://kamilmysliwiec.com)
+- Website - [https://nestjs.com](https://nestjs.com/)
+- Twitter - [@nestframework](https://twitter.com/nestframework)
 
-Event-Driven Architecture: Chat systems often follow an event-driven architecture, where events (such as new messages or user actions) trigger specific actions or updates. You'll gain experience in designing and implementing event-driven systems, handling events, and broadcasting messages to relevant users or chat channels.
+## License
 
-User Interactions and Privacy: Chat systems involve various user interactions, such as creating channels, sending direct messages, and managing user blocks. You'll learn how to handle these interactions, enforce privacy rules, and ensure that messages are delivered securely and accurately to the intended recipients.
-
-Channel Management: Building a chat system typically includes features like creating public or private channels, setting passwords for protected channels, and assigning channel ownership. You'll learn how to handle channel management functionalities, such as creating, updating, and deleting channels, as well as assigning permissions and managing channel administrators.
-
-User Profiles and Interaction: Chat systems often provide features for users to view and interact with each other's profiles. You'll learn how to implement profile views, handle friend requests, display user statuses (online, offline, in a game, etc.), and enable interactions like inviting users to play games or initiating direct messages.
-
-Security and Moderation: Chat systems require considerations for security and moderation. You'll learn how to handle user blocking, implement spam detection, and enforce content moderation policies to maintain a safe and respectful chat environment.
-
-Throughout the chat implementation, you'll also gain experience in backend development, database integration (such as storing chat messages and user information), and frontend development for displaying chat interfaces and handling user interactions.
-
-Overall, working on the chat part will provide you with insights into real-time communication, event-driven architecture, user interactions, privacy considerations, and security aspects of building interactive chat systems.
-
-
-
-
-
-------------
-To build the chat part of your project using NestJS, there are several key concepts and components you need to master. Here are the key concepts of NestJS that are relevant for building a chat feature:
-
-    Modules: Modules in NestJS provide a way to organize your application into cohesive blocks of functionality. You can create a dedicated module for the chat feature to encapsulate its related components, controllers, services, and providers.
-
-    Controllers: Controllers handle incoming HTTP requests and define the routes for your API endpoints. In the context of the chat feature, you'll have controllers responsible for handling chat-related operations, such as sending messages, creating channels, and managing user interactions.
-
-    Services: Services encapsulate the business logic of your application. They are responsible for handling complex operations and interact with data sources such as databases. In the chat feature, you'll have services for managing chat messages, channels, user interactions, and handling real-time communication.
-
-    Providers: Providers in NestJS are responsible for injecting dependencies into your application. You can have providers for services, repositories, and external libraries that you'll use for implementing chat functionalities, such as database access, real-time communication, and authentication.
-
-    WebSocket Gateway: NestJS provides a built-in WebSocket Gateway for handling real-time communication using WebSockets. You'll use this feature to establish bidirectional communication between the server and clients in real-time for the chat functionality.
-
-    Authentication and Authorization: You'll need to implement authentication and authorization mechanisms to secure the chat feature. NestJS provides various strategies for authentication, such as JWT (JSON Web Tokens), OAuth, and session-based authentication. You'll need to ensure that users are authenticated before sending or receiving chat messages and that they have the necessary permissions to perform certain actions.
-
-    Database Integration: NestJS supports various database integrations, including PostgreSQL, which you're required to use in your project. You'll need to set up a PostgreSQL database connection and define the necessary models and repositories to store and retrieve chat-related data, such as messages, channels, and user information.
-
-    Validation and Error Handling: NestJS provides mechanisms for validating incoming requests and handling errors. You'll need to implement server-side validation for forms and user input in the chat feature to ensure data integrity and prevent security vulnerabilities.
-
-By mastering these key concepts and components of NestJS, you'll be well-equipped to build the chat functionality for your project. Remember to refer to the NestJS documentation and explore relevant examples and tutorials to deepen your understanding and make the most of the framework.
-
-
-----------------------
-Set up the NestJS WebSocket Gateway: Create a WebSocket gateway using the @WebSocketGateway decorator provided by NestJS. This will allow you to handle WebSocket connections and events.
-
-Implement the Chat Data Model: Design the database schema for storing chat-related data, such as channels, messages, and user relationships. Create the necessary entities and database migrations to represent the chat data model.
-
-Create Chat Controllers and Services: Implement controllers and services for handling chat-related functionality, such as creating channels, sending messages, managing channel settings, blocking users, and retrieving chat history.
-
-Implement WebSocket Events: Define and handle WebSocket events for chat functionality. For example:
-
-User authentication and connection handling when a user connects/disconnects.
-Channel creation and deletion events.
-Sending and receiving messages within channels.
-User presence updates (online, offline) and status notifications.
-User blocking/unblocking events.
-Implement Authorization and Security: Add authorization checks to WebSocket events and APIs to ensure that users have the necessary permissions to perform actions within chat channels. Implement server-side validation for chat-related forms and user input to prevent security vulnerabilities.
-
-Implement Chat UI/UX: Integrate a frontend framework (e.g., React, Angular, or Vue.js) to build the chat interface. Implement the necessary components and UI elements for creating channels, sending messages, displaying user profiles, and managing chat settings.
-
-Test and Debug: Write unit tests and integration tests to ensure the chat functionality works as expected. Perform thorough testing and debugging to identify and fix any issues or bugs.
-
-Document and Refactor: Document the chat implementation, including WebSocket events, API endpoints, and any additional notes or instructions. Refactor the code as needed to improve readability, maintainability, and performance.
-
-Remember to consult the official NestJS documentation and any relevant libraries or frameworks' documentation for more detailed guidance on each step.
-
-
-
-
+Nest is [MIT licensed](LICENSE).
