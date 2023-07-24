@@ -19,11 +19,12 @@ export class dmGateway {
   }
   
   @SubscribeMessage('join')
-  handleJoinRoom(client: any, room: string): void {
+  handleJoinRoom(client: any, room: string): void { 
     client.join(room);
     this.server.to(room).emit('message', `User joined room: ${room}`);
   }
-  
+
+
   @SubscribeMessage('sendChannel')
   handleMessageRoom(client: any, playload: {room:string, message:string} ): void {
     this.server.to(playload.room).emit('message', playload.message);
