@@ -7,14 +7,14 @@ import { catchError } from '../decorators.prisma';
 @Injectable()
 export class UserCrudService 
 {
-    constructor (@Inject (PrismaService) private readonly prisma:PrismaClient ){}
+    constructor (@Inject (PrismaService) private readonly prisma:PrismaService ){}
 
-      // Create:
+// Create:
 // Create a new user account upon registration.
-@catchError()
+// @catchError()
 async createUserAccount(data: userDto)
 {
-    return this.prisma.user.create ({data})
+    return this.prisma.prismaClient.user.create ({data})
 }
 
 
@@ -23,7 +23,7 @@ async createUserAccount(data: userDto)
 //ifindUser method finds user by id 
 async findUserByID(userId: string)
 {
-  return this.prisma.user.findUnique (
+  return this.prisma.prismaClient.user.findUnique (
     {
       where : {
         id : userId
@@ -35,7 +35,7 @@ async findUserByID(userId: string)
 //ifindUser method finds user by username 
 async findUserByUsername(username: string)
 {
-  return this.prisma.user.findUnique (
+  return this.prisma.prismaClient.user.findUnique (
     {
       where : {
         username : username
@@ -48,7 +48,7 @@ async findUserByUsername(username: string)
 @catchError()
 async findFriendsList(id: string)
 {
-  return this.prisma.friendships.findMany (
+  return this.prisma.prismaClient.friendships.findMany (
     {
       where : {
         OR : [
@@ -63,7 +63,7 @@ async findFriendsList(id: string)
 // Retrieve user stats (wins, losses, ladder level, achievements, etc.).
 async getUserStats (user_id:string)
 {
-    return this.prisma.stats.findUnique(
+    return this.prisma.prismaClient.stats.findUnique(
     {
       where:{
         user_id: user_id,
@@ -76,7 +76,7 @@ async getUserStats (user_id:string)
 @catchError()
 async userMatchsRecord(user_id : string)
 {
-    return this.prisma.match.findMany(
+    return this.prisma.prismaClient.match.findMany(
     {
       where: {
         OR : [
@@ -92,7 +92,7 @@ async userMatchsRecord(user_id : string)
 // Update user information (avatar, two-factor authentication settings, etc.).
 async changeUserAvatar (user_id: string, newAvatarURI :string)
 {
-    return this.prisma.user.update(
+    return this.prisma.prismaClient.user.update(
     {
       where: { id : user_id}, 
       data : {
@@ -106,7 +106,7 @@ async changeUserAvatar (user_id: string, newAvatarURI :string)
 async addWin (id : string)
 {
     // Use the 'increment' method to increment the numeric field
-     return this.prisma.stats.update({
+     return this.prisma.prismaClient.stats.update({
       where: { id },
       data: {
         wins: {
@@ -120,7 +120,7 @@ async addWin (id : string)
 async addLoss (id : string)
 {
     // Use the 'increment' method to increment the numeric field
-    return this.prisma.stats.update({
+    return this.prisma.prismaClient.stats.update({
       where: { id },
       data: {
         losses: {
@@ -134,7 +134,7 @@ async addLoss (id : string)
 @catchError()
 async createFriendShip (user1_id :string, user2_id :string)
 {
-  return this.prisma.friendships.create (
+  return this.prisma.prismaClient.friendships.create (
     {
       data:
       {
@@ -148,7 +148,7 @@ async createFriendShip (user1_id :string, user2_id :string)
 //in case the user 
 async deleteFriendship (friendship_id :string)
 {
-  return this.prisma.friendships.delete({
+  return this.prisma.prismaClient.friendships.delete({
     where:
     {
       id :friendship_id
@@ -158,7 +158,7 @@ async deleteFriendship (friendship_id :string)
 @catchError()
 async deleteUserAccount (user_id:string)
 {
-  return  this.prisma.user.delete({
+  return  this.prisma.prismaClient.user.delete({
     where: {
       id: user_id,
     },
@@ -168,7 +168,7 @@ async deleteUserAccount (user_id:string)
 @catchError()
 async changeVisibily (user_id : string,  status:  'IN_GAME' | 'ONLINE' | 'OFFLINE')
 {
-  this.prisma.user.update ({
+  this.prisma.prismaClient.user.update ({
     where:
     {
       id : user_id,

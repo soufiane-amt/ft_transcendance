@@ -9,11 +9,11 @@ export class dmGateway {
   @WebSocketServer()
   server :Server
 
-  constructor(private readonly DmService: DmService) {}
+  constructor() {}
 
   @SubscribeMessage('createMessage')
   create(@MessageBody() createMessageDto: CreateMessageDto) {
-    this.DmService.create(createMessageDto);
+    this.create(createMessageDto);
     console.log ("status:"+ createMessageDto.is_read)
     return (createMessageDto)
   }
@@ -33,7 +33,6 @@ export class dmGateway {
   @SubscribeMessage('dmMessage')
   send_message (client: any, message: CreateMessageDto)
   {
-
     client.emit('message', message)
   }
 //   @SubscribeMessage('findAllChat')

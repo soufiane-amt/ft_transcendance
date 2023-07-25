@@ -7,19 +7,19 @@ import { catchError } from '../decorators.prisma';
 @Injectable()
 export class GameCrudService 
 {
-    constructor (@Inject (PrismaService) private readonly prisma:PrismaClient ){}
+    constructor (@Inject (PrismaService) private readonly prisma:PrismaService ){}
 
     @catchError()
     async createGame (data: matchDto)
     {
-        return this.prisma.match.create ({data})
+        return this.prisma.prismaClient.match.create ({data})
     }
 
 
     @catchError()
     async retieveAllGamerecords (user_id : string)
     {
-        return this.prisma.match.findMany ({
+        return this.prisma.prismaClient.match.findMany ({
             where:
             {
                 OR :[

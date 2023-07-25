@@ -1,21 +1,21 @@
 import { Inject, Injectable } from '@nestjs/common';
 import {  PrismaClient } from '@prisma/client';
 import { PrismaService } from './prisma.service';
-import { channelDto, channelMembershipDto, CreateMessageDto} from '../../chat/dto/create-chat.dto'
+import { channelDto, channelMembershipDto, CreateMessageDto, dmDto} from '../../chat/dto/create-chat.dto'
 import { catchError } from '../decorators.prisma';
 
 
 @Injectable()
 export class ChatCrudService 
 {
-    constructor (@Inject (PrismaService) private readonly prisma:PrismaClient ){}
+  constructor (@Inject (PrismaService) private readonly prisma:PrismaService ){}
 
     // Create a new chat channel (public, or password-protected).
 
     @catchError()
     async   createChannel (user_id:string , data : channelDto)
     {
-      const channel_id :string =   (await this.prisma.channel.create ({data})).id
+      const channel_id :string =   (await this.prisma.prismaClient.channel.create ({data})).id
       const memberShipData : channelMembershipDto = {
         channel_id : channel_id,
         user_id : user_id, 
@@ -30,13 +30,13 @@ export class ChatCrudService
     @catchError()
     async   joinChannel (data : channelMembershipDto)
     {
-        return this.prisma.channelMembership.create ({data})
+        return this.prisma.prismaClient.channelMembership.create ({data})
     }
 
     @catchError()
     async findChannelById (channel_id :string)
     {
-      return this.prisma.channel.findUnique (
+      return this.prisma.prismaClient.channel.findUnique (
         {
           where :{
             id : channel_id
@@ -47,7 +47,7 @@ export class ChatCrudService
 
     async findChannelsByType (channel_type :'PUBLIC' | 'PRIVATE' | 'PROTECTED')
     {
-      return this.prisma.channel.findMany (
+      return this.prisma.prismaClient.channel.findMany (
         {
           where :{
             type : channel_type
@@ -55,11 +55,30 @@ export class ChatCrudService
         }
       )
     }
+    // @catchError()
+    async createDm ( data : dmDto)
+    {
+      // console.log ("user_id" + user_id)
+      // console.log ("data" + data)
+      if (this.prisma.prismaClient === undefined)
+        console.log('Prisma is undefined.');
+      else
+        console.log('Prisma is defined.');
+
+      return await this.prisma.prismaClient.directMessaging.create ({
+        data: {
+          user1_id: 'dlskfl343kds',
+          user2_id : "dfls45jj",
+          status: 'ALLOWED',
+
+        }
+    })
+    }
 
     @catchError()
     async retrieveUserDmChannels (user_id: string)
     {
-      return this.prisma.directMessaging.findMany(
+      return this.prisma.prismaClient.directMessaging.findMany(
         {
           where :{
             OR :[
@@ -79,7 +98,7 @@ export class ChatCrudService
     @catchError()
     async findAllChannelsAvailbleToJoin(user_id :string)
     {
-      const notJoinedChannels = await this.prisma.channelMembership.findMany(
+      const notJoinedChannels = await this.prisma.prismaClient.channelMembership.findMany(
         {
           where :
           {
@@ -95,7 +114,7 @@ export class ChatCrudService
       //the type of the retrieved id's look like this { id: string }[], the nest function tries to add them to an array of string
       const channelIds: string[] = notJoinedChannels.map(item => item.id);
 
-      return  this.prisma.channel.findMany (
+      return  this.prisma.prismaClient.channel.findMany (
         {
           where :{
             id:
@@ -115,7 +134,7 @@ export class ChatCrudService
     @catchError()
     async findAllJoinedChannels (user_id :string )
     {
-      return this.prisma.channelMembership.findMany(
+      return this.prisma.prismaClient.channelMembership.findMany(
         {
           where :
           {
@@ -129,7 +148,7 @@ export class ChatCrudService
     @catchError()
     async retrieveChannelMessages (channel_id : string)//This method is used both for dm and groups
     {
-      return this.prisma.message.findMany(
+      return this.prisma.prismaClient.message.findMany(
         {
           where :
           {
@@ -146,7 +165,7 @@ export class ChatCrudService
     @catchError()
     async retieveBlockedUsersList (user_id :string)
     {
-      return this.prisma.friendships.findMany (
+      return this.prisma.prismaClient.friendships.findMany (
         {
           where:
           {
@@ -163,7 +182,7 @@ export class ChatCrudService
     @catchError()
     async retieveBlockedChannelUsers (channel_id :string)//for groups only
     {
-      return this.prisma.channelMembership.findMany (
+      return this.prisma.prismaClient.channelMembership.findMany (
         {
           where:
           {
@@ -181,7 +200,7 @@ export class ChatCrudService
     @catchError()
   async changeChannelPhoto (channel_id: string, newAvatarURI :string)
   {
-      return this.prisma.channel.update(
+      return this.prisma.prismaClient.channel.update(
       {
         where: { id : channel_id}, 
         data : {
@@ -194,7 +213,7 @@ export class ChatCrudService
     @catchError()
     async blockAUserWithinGroup(user_id :string, channel_id: string)
     {
-      return this.prisma.channelMembership.update(
+      return this.prisma.prismaClient.channelMembership.update(
         {
           where :{
             user_id :user_id,
@@ -212,7 +231,7 @@ export class ChatCrudService
     @catchError()
     async unblockAUserWithinGroup(user_id :string, channel_id: string)
     {
-      return this.prisma.channelMembership.update(
+      return this.prisma.prismaClient.channelMembership.update(
         {
           where :{
             user_id :user_id,
@@ -229,7 +248,7 @@ export class ChatCrudService
     @catchError()
     async blockAUserWithDm(channel_id: string)
     {
-      return this.prisma.directMessaging.update(
+      return this.prisma.prismaClient.directMessaging.update(
         {
           where :{
             id : channel_id
@@ -245,7 +264,7 @@ export class ChatCrudService
     @catchError()
     async unblockAUserWithDm(channel_id: string)
     {
-      return this.prisma.directMessaging.update(
+      return this.prisma.prismaClient.directMessaging.update(
         {
           where :{
             id : channel_id
@@ -262,7 +281,7 @@ export class ChatCrudService
     @catchError()
     async leaveChannel (user_id: string, channel_id :string)
     {
-      return this.prisma.channelMembership.delete (
+      return this.prisma.prismaClient.channelMembership.delete (
         {
           where :
           {
@@ -280,7 +299,7 @@ export class ChatCrudService
     {
       try
       {
-        this.prisma.directMessaging.delete (
+        this.prisma.prismaClient.directMessaging.delete (
           {
             where :
             {
@@ -292,7 +311,7 @@ export class ChatCrudService
       }
       catch (error)
       {
-        this.prisma.channel.delete (
+        this.prisma.prismaClient.channel.delete (
           {
             where :
             {
@@ -307,13 +326,13 @@ export class ChatCrudService
     @catchError()
     async createMessage (data : CreateMessageDto)
     {
-      this.prisma.message.create ({data})
+      this.prisma.prismaClient.message.create ({data})
     }
   
     @catchError()
     async deleteMessage (message_id: string)
     {
-      this.prisma.message.delete (
+      this.prisma.prismaClient.message.delete (
         {
           where:
           {
@@ -326,7 +345,7 @@ export class ChatCrudService
     @catchError()
     async editMessage (message_id: string, content :string)
     {
-      this.prisma.message.update ({
+      this.prisma.prismaClient.message.update ({
         where :
         {
           id : message_id
@@ -342,7 +361,7 @@ export class ChatCrudService
     @catchError()
     async upgradeToAdmin (user_id :string, channel_id: string)
     {
-      this.prisma.channelMembership.update ({
+      this.prisma.prismaClient.channelMembership.update ({
         where :
         {
           channel_id : channel_id,
@@ -357,7 +376,7 @@ export class ChatCrudService
     @catchError()
     async setGradeToUser (user_id :string, channel_id: string)
     {
-      this.prisma.channelMembership.update ({
+      this.prisma.prismaClient.channelMembership.update ({
         where :
         {
           channel_id : channel_id,
@@ -372,7 +391,7 @@ export class ChatCrudService
     @catchError()
     async makeOwner (user_id :string, channel_id: string)
     {
-      this.prisma.channelMembership.update ({
+      this.prisma.prismaClient.channelMembership.update ({
         where :
         {
           channel_id : channel_id,

@@ -9,8 +9,14 @@ export class PrismaService
 
     constructor ()
     {
-        this.prisma = new PrismaClient
+        this.prisma = new PrismaClient()
+        console.log('Prisma client initialized.');
+
     }
+    get prismaClient(): PrismaClient {
+        return this.prisma;
+      }
+    
 }
 /*By using DI, you don't need to create separate instances of the Prisma client in each service class.
  NestJS will handle the creation and sharing of the PrismaService instance across all services that inject it. 

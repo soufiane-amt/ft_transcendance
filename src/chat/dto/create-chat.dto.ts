@@ -15,6 +15,15 @@ export interface channelDto
     password? :string;
 }
 
+
+export interface dmDto
+{
+    user1_id :string;
+    user2_id :string;
+    status : 'ALLOWED' | 'BANNED';
+}
+
+
 export interface channelMembershipDto
 {
     channel_id :string;

@@ -5,6 +5,7 @@ import { UserCrudService } from './user-crud.service';
 import { GameCrudService } from './game-crud.service';
 
 @Module({
-  providers: [PrismaService, ChatCrudService, UserCrudService, GameCrudService]
+  providers: [PrismaService, ChatCrudService, UserCrudService, GameCrudService],
+  exports : [PrismaService, ChatCrudService, UserCrudService, GameCrudService]
 })
 export class PrismaModule {}
