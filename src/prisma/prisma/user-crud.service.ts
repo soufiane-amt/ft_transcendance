@@ -1,7 +1,8 @@
 import { Inject, Injectable } from '@nestjs/common';
 import {  PrismaClient } from '@prisma/client';
 import { PrismaService } from './prisma.service';
-import {userDto } from '../../chat/dto/user.dto'
+import { userDto } from '../../chat/dto/user.dto'
+import { catchError } from '../decorators.prisma';
 
 @Injectable()
 export class UserCrudService 
@@ -10,7 +11,7 @@ export class UserCrudService
 
       // Create:
 // Create a new user account upon registration.
-// @catchError
+@catchError()
 async createUserAccount(data: userDto)
 {
     return this.prisma.user.create ({data})
@@ -18,7 +19,7 @@ async createUserAccount(data: userDto)
 
 
 //   Read:
-// @catchError
+@catchError()
 //ifindUser method finds user by id 
 async findUserByID(userId: string)
 {
@@ -30,7 +31,7 @@ async findUserByID(userId: string)
     }
   )
 }
-// @catchError
+@catchError()
 //ifindUser method finds user by username 
 async findUserByUsername(username: string)
 {
@@ -44,7 +45,7 @@ async findUserByUsername(username: string)
 }
 
 // Retrieve user's friends list and their statuses.
-// @catchError
+@catchError()
 async findFriendsList(id: string)
 {
   return this.prisma.friendships.findMany (
@@ -58,7 +59,7 @@ async findFriendsList(id: string)
     }
   )
 }
-// @catchError
+@catchError()
 // Retrieve user stats (wins, losses, ladder level, achievements, etc.).
 async getUserStats (user_id:string)
 {
@@ -72,7 +73,7 @@ async getUserStats (user_id:string)
 }
 
 // Retrieve user's match history.
-// @catchError
+@catchError()
 async userMatchsRecord(user_id : string)
 {
     return this.prisma.match.findMany(
@@ -86,7 +87,7 @@ async userMatchsRecord(user_id : string)
     }
   )
 }
-// @catchError
+@catchError()
 // Update:
 // Update user information (avatar, two-factor authentication settings, etc.).
 async changeUserAvatar (user_id: string, newAvatarURI :string)
@@ -101,7 +102,7 @@ async changeUserAvatar (user_id: string, newAvatarURI :string)
     )
   } 
 //other setting may be added later ... //***// */
-// @catchError
+@catchError()
 async addWin (id : string)
 {
     // Use the 'increment' method to increment the numeric field
@@ -130,7 +131,7 @@ async addLoss (id : string)
 }
 
   //friendShips
-// @catchError
+@catchError()
 async createFriendShip (user1_id :string, user2_id :string)
 {
   return this.prisma.friendships.create (
@@ -154,7 +155,7 @@ async deleteFriendship (friendship_id :string)
     }
   })
 }
-// @catchError
+@catchError()
 async deleteUserAccount (user_id:string)
 {
   return  this.prisma.user.delete({
@@ -164,7 +165,7 @@ async deleteUserAccount (user_id:string)
   });
 }
 
-// @catchError
+@catchError()
 async changeVisibily (user_id : string,  status:  'IN_GAME' | 'ONLINE' | 'OFFLINE')
 {
   this.prisma.user.update ({

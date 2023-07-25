@@ -2,6 +2,7 @@ import { Inject, Injectable } from '@nestjs/common';
 import {  PrismaClient } from '@prisma/client';
 import { PrismaService } from './prisma.service';
 import { channelDto, channelMembershipDto, CreateMessageDto} from '../../chat/dto/create-chat.dto'
+import { catchError } from '../decorators.prisma';
 
 
 @Injectable()
@@ -11,7 +12,7 @@ export class ChatCrudService
 
     // Create a new chat channel (public, or password-protected).
 
-    // @catchError
+    @catchError()
     async   createChannel (user_id:string , data : channelDto)
     {
       const channel_id :string =   (await this.prisma.channel.create ({data})).id
@@ -26,13 +27,13 @@ export class ChatCrudService
     
   //user joins channel
 
-    // @catchError
+    @catchError()
     async   joinChannel (data : channelMembershipDto)
     {
         return this.prisma.channelMembership.create ({data})
     }
 
-    // @catchError
+    @catchError()
     async findChannelById (channel_id :string)
     {
       return this.prisma.channel.findUnique (
@@ -55,7 +56,7 @@ export class ChatCrudService
       )
     }
 
-    // @catchError
+    @catchError()
     async retrieveUserDmChannels (user_id: string)
     {
       return this.prisma.directMessaging.findMany(
@@ -75,7 +76,7 @@ export class ChatCrudService
     //this method finds all the channels that exist in the server
     
     
-    // @catchError
+    @catchError()
     async findAllChannelsAvailbleToJoin(user_id :string)
     {
       const notJoinedChannels = await this.prisma.channelMembership.findMany(
@@ -111,7 +112,7 @@ export class ChatCrudService
     }
 
 
-    // @catchError
+    @catchError()
     async findAllJoinedChannels (user_id :string )
     {
       return this.prisma.channelMembership.findMany(
@@ -125,7 +126,7 @@ export class ChatCrudService
     }
 
 
-    // @catchError
+    @catchError()
     async retrieveChannelMessages (channel_id : string)//This method is used both for dm and groups
     {
       return this.prisma.message.findMany(
@@ -142,7 +143,7 @@ export class ChatCrudService
     }
 
     // Retrieve direct messages between users.
-    // @catchError
+    @catchError()
     async retieveBlockedUsersList (user_id :string)
     {
       return this.prisma.friendships.findMany (
@@ -159,7 +160,7 @@ export class ChatCrudService
         }
       )
     }
-    // @catchError
+    @catchError()
     async retieveBlockedChannelUsers (channel_id :string)//for groups only
     {
       return this.prisma.channelMembership.findMany (
@@ -177,7 +178,7 @@ export class ChatCrudService
 
     //update
 
-    // @catchError
+    @catchError()
   async changeChannelPhoto (channel_id: string, newAvatarURI :string)
   {
       return this.prisma.channel.update(
@@ -190,7 +191,7 @@ export class ChatCrudService
       )
     } 
 
-    // @catchError
+    @catchError()
     async blockAUserWithinGroup(user_id :string, channel_id: string)
     {
       return this.prisma.channelMembership.update(
@@ -208,7 +209,7 @@ export class ChatCrudService
       )
     }
 
-    // @catchError
+    @catchError()
     async unblockAUserWithinGroup(user_id :string, channel_id: string)
     {
       return this.prisma.channelMembership.update(
@@ -225,7 +226,7 @@ export class ChatCrudService
       )
     }
 
-    // @catchError
+    @catchError()
     async blockAUserWithDm(channel_id: string)
     {
       return this.prisma.directMessaging.update(
@@ -241,7 +242,7 @@ export class ChatCrudService
       )
     }
 
-    // @catchError
+    @catchError()
     async unblockAUserWithDm(channel_id: string)
     {
       return this.prisma.directMessaging.update(
@@ -258,7 +259,7 @@ export class ChatCrudService
     }
 
 
-    // @catchError
+    @catchError()
     async leaveChannel (user_id: string, channel_id :string)
     {
       return this.prisma.channelMembership.delete (
@@ -274,7 +275,7 @@ export class ChatCrudService
     }
 
     //this method espacially was created in case all the members of a channel left
-    // @catchError
+    @catchError()
     async deleteChannel ( channel_id :string)
     {
       try
@@ -303,13 +304,13 @@ export class ChatCrudService
       }
     }
 
-    // @catchError
+    @catchError()
     async createMessage (data : CreateMessageDto)
     {
       this.prisma.message.create ({data})
     }
   
-    // @catchError
+    @catchError()
     async deleteMessage (message_id: string)
     {
       this.prisma.message.delete (
@@ -322,7 +323,7 @@ export class ChatCrudService
       )
     }
 
-    // @catchError
+    @catchError()
     async editMessage (message_id: string, content :string)
     {
       this.prisma.message.update ({
@@ -338,7 +339,7 @@ export class ChatCrudService
     }
 
 
-    // @catchError
+    @catchError()
     async upgradeToAdmin (user_id :string, channel_id: string)
     {
       this.prisma.channelMembership.update ({
@@ -353,7 +354,7 @@ export class ChatCrudService
       })
     }
 
-    // @catchError
+    @catchError()
     async setGradeToUser (user_id :string, channel_id: string)
     {
       this.prisma.channelMembership.update ({
@@ -368,7 +369,7 @@ export class ChatCrudService
       })
     }
 
-    // @catchError
+    @catchError()
     async makeOwner (user_id :string, channel_id: string)
     {
       this.prisma.channelMembership.update ({
