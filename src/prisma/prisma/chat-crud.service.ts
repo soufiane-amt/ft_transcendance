@@ -55,24 +55,10 @@ export class ChatCrudService
         }
       )
     }
-    // @catchError()
+    @catchError()
     async createDm ( data : dmDto)
     {
-      // console.log ("user_id" + user_id)
-      // console.log ("data" + data)
-      if (this.prisma.prismaClient === undefined)
-        console.log('Prisma is undefined.');
-      else
-        console.log('Prisma is defined.');
-
-      return await this.prisma.prismaClient.directMessaging.create ({
-        data: {
-          user1_id: 'dlskfl343kds',
-          user2_id : "dfls45jj",
-          status: 'ALLOWED',
-
-        }
-    })
+      return this.prisma.prismaClient.directMessaging.create ({data})
     }
 
     @catchError()

@@ -11,7 +11,7 @@ export class UserCrudService
 
 // Create:
 // Create a new user account upon registration.
-// @catchError()
+@catchError()
 async createUserAccount(data: userDto)
 {
     return this.prisma.prismaClient.user.create ({data})
