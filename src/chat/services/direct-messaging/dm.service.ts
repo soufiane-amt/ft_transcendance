@@ -44,5 +44,21 @@ export class DmService
    {
       return await this.chatCrudService.createDm ({user1_id,user2_id, status :'ALLOWED'})
    }
+
+   // async getAllUserDms (user_id :string)
+   // {
+   //    return this.chatCrudService.retrieveUserDmChannels (user_id)
+   // }
+
+   async getAllDmMessages (dm_id :string)
+   {
+      try{
+         return await this.chatCrudService.retrieveChannelMessages(dm_id)
+      }
+      catch {
+         return {};
+      }
+   }
+
 }
 

@@ -78,7 +78,7 @@ export class ChatCrudService
       return Dm ? (await Dm).id : null
     }
 
-    @catchError()
+
     async retrieveUserDmChannels (user_id: string)
     {
       return this.prisma.prismaClient.directMessaging.findMany(
@@ -163,6 +163,7 @@ export class ChatCrudService
         }
       )
     }
+
 
     // Retrieve direct messages between users.
     @catchError()
