@@ -10,43 +10,17 @@ export class dmGateway {
   server :Server
 
   constructor() {}
-
-  @SubscribeMessage('createMessage')
-  create(@MessageBody() createMessageDto: CreateMessageDto) {
-    this.create(createMessageDto);
-    console.log ("status:"+ createMessageDto.is_read)
-    return (createMessageDto)
-  }
   
   @SubscribeMessage('join')
-  handleJoinRoom(client: any, room: string): void { 
+  handleJoinDm(client: any, room: string): void { 
     client.join(room);
     this.server.to(room).emit('message', `User joined room: ${room}`);
   }
 
 
   @SubscribeMessage('sendChannel')
-  handleMessageRoom(client: any, playload: {room:string, message:string} ): void {
+  handleMessageDm(client: any, playload: {room:string, message:string} ): void {
     this.server.to(playload.room).emit('message', playload.message);
   }
 
-  @SubscribeMessage('dmMessage')
-  send_message (client: any, message: CreateMessageDto)
-  {
-    client.emit('message', message)
-  }
-//   @SubscribeMessage('findAllChat')
-//   findAll() {
-//     return this.DmService.findAll();
-//   }
-
-//   @SubscribeMessage('updateChat')
-//   update(@MessageBody() updateChatDto: UpdateChatDto) {
-//     return this.DmService.update(updateChatDto.id, updateChatDto);
-//   }
-
-//   @SubscribeMessage('removeChat')
-//   remove(@MessageBody() id: number) {
-//     return this.DmService.remove(id);
-//   }
 }

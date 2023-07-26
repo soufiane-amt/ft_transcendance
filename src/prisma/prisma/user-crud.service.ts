@@ -31,17 +31,22 @@ async findUserByID(userId: string)
     }
   )
 }
-@catchError()
+
 //ifindUser method finds user by username 
-async findUserByUsername(username: string)
+async findUserByUsername(username: string) 
 {
-  return this.prisma.prismaClient.user.findUnique (
+    const user =  await this.prisma.prismaClient.user.findUnique (
     {
       where : {
         username : username
+      },
+      select :
+      {
+        id : true
       }
     }
   )
+  return user ? user.id : null
 }
 
 // Retrieve user's friends list and their statuses.
@@ -59,6 +64,25 @@ async findFriendsList(id: string)
     }
   )
 }
+
+async findFriendship(user1_id: string, user2_id: string)
+{
+  const friendship = await this.prisma.prismaClient.friendships.findUnique (
+    {
+      where : {
+          user1_id: user1_id,
+          user2_id : user2_id
+      },
+      select :
+      {
+        id :true
+      }
+    }
+  )
+  return friendship ? friendship.id : null 
+}
+
+
 @catchError()
 // Retrieve user stats (wins, losses, ladder level, achievements, etc.).
 async getUserStats (user_id:string)

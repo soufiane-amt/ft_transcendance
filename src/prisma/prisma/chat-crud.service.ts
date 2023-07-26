@@ -61,6 +61,18 @@ export class ChatCrudService
       return this.prisma.prismaClient.directMessaging.create ({data})
     }
 
+
+    @catchError()
+    async getDmTable ( user1_id: string, user2_id: string)
+    {
+      return this.prisma.prismaClient.directMessaging.findUnique (
+        {
+          
+        }
+      )
+      )
+    }
+
     @catchError()
     async retrieveUserDmChannels (user_id: string)
     {

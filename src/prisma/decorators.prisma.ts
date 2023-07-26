@@ -7,7 +7,7 @@ export function catchError(): MethodDecorator {
       try {
         return await method.apply(this, args);
       } catch (error) {
-        console.error(`Error in ${key.toString()}:`, error);
+        // console.error(`Error in ${key.toString()}:`, error);
         throw new Error(`Error in ${key.toString()}: ${error.name}`);
       }
     };
