@@ -9,25 +9,25 @@ export class ChatController
     constructor (private readonly dmService :DmService){}
     
   @Get ()
-  async getUserToDm (@Query('u1') user: string, @Query('u2') userToDm: string, @Res() response )
+  async getUserToDm (@Query('uid') userToDm: string,@Req() request : Request, @Res() response )
   {
-    const users_id = await this.dmService.checkFriendshipExistence (user, userToDm)
+    const user_id  = request.cookies["user.id"]
+
+    const users_id = await this.dmService.checkFriendshipExistence (user_id, userToDm)
     if (!users_id)
       throw new HttpException('Forbidden', HttpStatus.FORBIDDEN);
-    var dmRoom_id :string  = await this.dmService.checkDmTableExistence (users_id.user1_id, users_id.user2_id)
+    var dmRoom_id :string  = await this.dmService.checkDmTableExistence (user_id, userToDm)
     if (!dmRoom_id)
-      dmRoom_id = await this.dmService.createDmTable (users_id.user1_id, users_id.user2_id)
+      dmRoom_id = await this.dmService.createDmTable (user_id, userToDm)
     response.redirect ('/chat/direct_messaging/' + dmRoom_id)
   }
 
   @Get (':id')
   async findAllDm (@Req() request : Request,  @Param() param : any)
   {
-    // const allMessages = await this.dmService.getAllDmMessages(param)
-    // const   
-    // request
-    console.log (request)
+    const allRoomMessages = await this.dmService.getAllDmMessages(param)
 
-    console.log(request.headers['cookie']);
+    const dmUsers = await this.dmService.getAllDmRooms (request.cookies["user.id"])
+    return [allRoomMessages, dmUsers]
   }
 }
