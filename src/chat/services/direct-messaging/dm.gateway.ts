@@ -9,7 +9,7 @@ export class dmGateway {
   @WebSocketServer()
   server :Server
 
-  constructor() {}
+  constructor(private readonly dmService:DmService) {}
   
   @SubscribeMessage('join')
   handleJoinDm(client: any, room: string): void { 
@@ -18,9 +18,11 @@ export class dmGateway {
   }
 
 
-  @SubscribeMessage('sendChannel')
-  handleMessageDm(client: any, playload: {room:string, message:string} ): void {
-    this.server.to(playload.room).emit('message', playload.message);
+  @SubscribeMessage('sendMessage')
+  async handleMessageDm(client: any, playload: {room:string, message:CreateMessageDto} ) {
+    this.server.to(playload.room).emit('message', playload.message.content)
+    
+    console.log ( await this.dmService.storeMessageInDb ( playload.message))
   }
 
 }

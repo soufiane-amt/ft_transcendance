@@ -63,5 +63,9 @@ export class DmService
       }
    }
 
+   async storeMessageInDb (message : CreateMessageDto)
+   {
+      return await this.chatCrudService.createMessage (message);
+   }
 }
 

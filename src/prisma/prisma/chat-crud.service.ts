@@ -327,10 +327,11 @@ export class ChatCrudService
       }
     }
 
-    @catchError()
+    // @catchError()
     async createMessage (data : CreateMessageDto)
     {
-      this.prisma.prismaClient.message.create ({data})
+      console.log (data)
+      return ( await this.prisma.prismaClient.message.create ({data}))
     }
   
     @catchError()

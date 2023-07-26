@@ -1,10 +1,10 @@
 export interface CreateMessageDto 
 {
     user_id :string    
-    created_at : Date
     channel_id : string
     content : string
-    is_read : boolean
+    created_at? : Date
+    is_read? : boolean
 }
 
 export interface channelDto

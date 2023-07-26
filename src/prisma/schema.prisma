@@ -114,9 +114,11 @@ model Message {
 
   channel    Channel  @relation(fields: [channel_id], references: [id])
   channel_id String   @unique
-  created_at DateTime @default(now())
+  Dm    Channel  @relation(fields: [channel_id], references: [id])
+  channel_id String   @unique
   content    String
-  is_read    Boolean  @default(false)
+  created_at DateTime? @default(now())
+  is_read    Boolean ? @default(false)
 }
 
 enum Channel_type {
