@@ -1,5 +1,5 @@
 import { Injectable } from "@nestjs/common";
-import { CreateMessageDto } from '../../dto/create-chat.dto';
+import { CreateMessageDto, dmDto } from '../../dto/create-chat.dto';
 import { ChatCrudService } from 'src/prisma/prisma/chat-crud.service';
 import { UserCrudService } from 'src/prisma/prisma/user-crud.service';
 
@@ -32,20 +32,17 @@ export class DmService
 
    async checkDmTableExistence (user1_id:string, user2_id:string)
    {
-      try
-      {
-
-         await this.userCrudService.findFriendship (user1_id, user2_id)
-
-         return { user1_id : user1_id, user2_id : user2_id}
-
+      try{
+         return await this.chatCrudService.getDmTable (user1_id, user2_id)
       }
-      catch (error)
-      {
-         return (null)
+      catch {
+         return null;
       }
-      return (null)
    }
 
+   async createDmTable (user1_id:string, user2_id:string) 
+   {
+      return await this.chatCrudService.createDm ({user1_id,user2_id, status :'ALLOWED'})
+   }
 }
 

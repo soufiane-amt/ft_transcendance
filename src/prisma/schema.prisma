@@ -152,7 +152,7 @@ model DirectMessaging {
 
   user2     User   @relation("receiver", fields: [user2_id], references: [id])
   user2_id  String @unique
-  status    DmStatus
+  status    DmStatus @default(ALLOWED)
   created_at DateTime @default(now())
   updated_at DateTime @default(now())
 }

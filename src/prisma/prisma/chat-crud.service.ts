@@ -58,19 +58,24 @@ export class ChatCrudService
     @catchError()
     async createDm ( data : dmDto)
     {
-      return this.prisma.prismaClient.directMessaging.create ({data})
+      return (await this.prisma.prismaClient.directMessaging.create ({data})).id
     }
 
 
-    @catchError()
     async getDmTable ( user1_id: string, user2_id: string)
     {
-      return this.prisma.prismaClient.directMessaging.findUnique (
+        const Dm = await this.prisma.prismaClient.directMessaging.findUnique({
+        where :
         {
-          
+          user1_id :user1_id,
+          user2_id : user2_id
+        },
+        select : {
+          id : true
         }
-      )
-      )
+
+      })
+      return Dm ? (await Dm).id : null
     }
 
     @catchError()
