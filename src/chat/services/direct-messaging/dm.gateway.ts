@@ -14,9 +14,13 @@ export class dmGateway implements OnGatewayConnection, OnGatewayDisconnect {
   
   constructor(private readonly dmService:DmService) {}
 
+  //When the user connects to websocket it will be passed the id of the user 
+  //to use it to create an inbox of notifications and new dm's to be initiated
   handleConnection(client: any, ...args: any[]) {
     console.log ('user connected\n')
-    
+    const user_id = client.handshake.query.id
+    const inbox_id = "inbox-".concat(user_id)
+    client.join (inbox_id)
   }
 
   handleDisconnect(client: any) {
@@ -32,9 +36,6 @@ export class dmGateway implements OnGatewayConnection, OnGatewayDisconnect {
     client.join(inbox_id);
   }
 
-  private handleJoinDm(client: Socket, Dm_id: string): void { 
-    client.join(Dm_id);
-  }
 
   @SubscribeMessage('sendMessage')
   async getMsgDm (client: any,  message:CreateMessageDto)

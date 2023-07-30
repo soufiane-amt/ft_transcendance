@@ -15,7 +15,6 @@ export class ChatController
   @Get (":uid")
   async getUserToDm (@Param("uid") userToDm: string ,@Req() request : Request, @Res() response )
   {
-    await this.chatCrud.deleteChannel ("241e8958-7ab5-4bf7-85e0-d6dd0a6e2bff")
     const user_id  = request.cookies["user.id"]
     const users_id = await this.dmService.checkFriendshipExistence (user_id, userToDm)
     if (!users_id)
@@ -45,7 +44,8 @@ export class ChatController
     const allRoomMessages = await this.chatCrud.retrieveRoomMessages(room)
     const dmUsers = await this.dmService.getAllDmRooms (request.cookies["user.id"])
   
-    return [allRoomMessages, dmUsers]
+    // return [allRoomMessages, dmUsers]
+    return { dmUser : dmUsers, roomsMesg : allRoomMessages, new_init : init}
   }
 
 }
