@@ -37,8 +37,8 @@ export class dmGateway implements OnGatewayConnection, OnGatewayDisconnect {
   }
 
 
-
-  private async handleSendMesDm(client: any,  message:CreateMessageDto ) {
+  @SubscribeMessage ("sendMsgDm")
+  handleSendMesDm(client: any,  message:CreateMessageDto ) {
     this.server.to("dm-"+message.dm_id).emit('message', message.content)
   }
 
@@ -54,8 +54,9 @@ export class dmGateway implements OnGatewayConnection, OnGatewayDisconnect {
   deliver_to_inbox (client: Socket, packet: inboxPacketDto)
   {
     //here I will send you the room  you must join
-      this.server.to(packet.inbox_id).emit('inboxMsg', "hello")
-      //when the inboxMsg is triggered it will fire an event to client side
+    this.server.to(packet.inbox_id).emit('inboxMsg', "hello")
+    this.server.to("inbox-" + packet.sender_id).emit('inboxMsg', "hello")
+    //when the inboxMsg is triggered it will fire an event to client side
       // the right client will receive that event and will trigger the joinDm 
       //function wich will make him join the common room , the Dm room where 
       //the real messaging will happen
