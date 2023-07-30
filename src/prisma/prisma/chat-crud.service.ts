@@ -45,6 +45,24 @@ export class ChatCrudService
       )
     }
 
+    async findDmById (dm_id :string)
+    {
+      try
+      {
+        return await this.prisma.prismaClient.directMessaging.findUnique (
+          {
+            where :{
+              id : dm_id
+            }
+          }
+        )
+      }
+      catch
+      {
+        return null
+      }
+    }
+
     async findChannelsByType (channel_type :'PUBLIC' | 'PRIVATE' | 'PROTECTED')
     {
       return this.prisma.prismaClient.channel.findMany (
@@ -90,7 +108,7 @@ export class ChatCrudService
             ]
           },
           orderBy :{
-            updated_at : 'asc'
+            updatedAt : 'asc'
           }
         },
       );
@@ -148,20 +166,27 @@ export class ChatCrudService
     }
 
 
-    @catchError()
-    async retrieveChannelMessages (channel_id : string)//This method is used both for dm and groups
+    async retrieveRoomMessages (room_id : string)//This method is used both for dm and groups
     {
-      return this.prisma.prismaClient.message.findMany(
+      try{
+        return await this.prisma.prismaClient.message.findMany(
         {
           where :
           {
-            channel_id : channel_id
+            OR:[
+              {channel_id : room_id},
+              {dm_id : room_id}
+            ]
           },
           orderBy :{
-            created_at : 'asc'
+            createdAt : 'asc'
           }
         }
       )
+      }
+      catch{
+        return {}
+      }
     }
 
 
@@ -298,12 +323,11 @@ export class ChatCrudService
     }
 
     //this method espacially was created in case all the members of a channel left
-    @catchError()
     async deleteChannel ( channel_id :string)
     {
       try
       {
-        this.prisma.prismaClient.directMessaging.delete (
+        await this.prisma.prismaClient.directMessaging.delete (
           {
             where :
             {
@@ -315,7 +339,7 @@ export class ChatCrudService
       }
       catch (error)
       {
-        this.prisma.prismaClient.channel.delete (
+        await this.prisma.prismaClient.channel.delete (
           {
             where :
             {

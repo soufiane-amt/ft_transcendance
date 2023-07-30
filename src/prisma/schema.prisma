@@ -79,7 +79,7 @@ model Friendships {
     user2    User   @relation("invitor", fields: [user2_id], references: [id])
     user2_id String @unique
 
-    created_at  DateTime @default(now())
+    createdAt  DateTime @default(now())
     relationStatus RelationStatus  @default(PENDING)
 }
 
@@ -110,14 +110,16 @@ model Message {
   id String @id @default(uuid())
 
   user    User   @relation(fields: [user_id], references: [id])
-  user_id String @unique
+  user_id String 
 
-  channel    Channel  @relation(fields: [channel_id], references: [id])
-  channel_id String   @unique
-  Dm    Channel  @relation(fields: [channel_id], references: [id])
-  channel_id String   @unique
+  channel    Channel?  @relation(fields: [channel_id], references: [id])
+  channel_id String?   
+
+  dm         DirectMessaging?  @relation(fields: [dm_id], references: [id])
+  dm_id      String?   
+
   content    String
-  created_at DateTime? @default(now())
+  createdAt DateTime? @default(now())
   is_read    Boolean ? @default(false)
 }
 
@@ -136,8 +138,8 @@ model Channel {
   memeberShips ChannelMembership[]
   messages     Message[]
   password     String?
-  created_at DateTime @default(now())
-  updated_at   DateTime @default(now())
+  createdAt DateTime @default(now())
+  updatedAt     DateTime @updatedAt
 }
 
 enum DmStatus {
@@ -154,9 +156,12 @@ model DirectMessaging {
 
   user2     User   @relation("receiver", fields: [user2_id], references: [id])
   user2_id  String @unique
+
+  messages  Message[]
+
   status    DmStatus @default(ALLOWED)
-  created_at DateTime @default(now())
-  updated_at DateTime @default(now())
+  createdAt DateTime @default(now())
+  updatedAt  DateTime @updatedAt
 }
 
 
@@ -173,7 +178,7 @@ model Notification {
 
   //I still don't know how the source notification will be like
   type       NotificationType
-  created_at DateTime         @default(now())
+  createdAt DateTime         @default(now())
 }
 
 //here are the CRUD (Create, Read, Update, Delete) operations for the different entities based on the provided project overview:

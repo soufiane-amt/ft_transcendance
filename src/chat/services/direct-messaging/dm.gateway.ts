@@ -1,28 +1,49 @@
-import { WebSocketGateway, SubscribeMessage, MessageBody, WebSocketServer } from '@nestjs/websockets';
+import { WebSocketGateway, SubscribeMessage, WebSocketServer, 
+  OnGatewayConnection, OnGatewayDisconnect } from '@nestjs/websockets';
+
 import { DmService } from './dm.service';
 import { CreateMessageDto } from '../../dto/create-chat.dto';
-import { UpdateChatDto } from '../../dto/update-chat.dto';
+import { inboxPacketDto } from '../../dto/userInbox.dto';
 import { Server } from 'socket.io';
+import { Socket } from 'socket.io';
 
 @WebSocketGateway()
-export class dmGateway {
+export class dmGateway implements OnGatewayConnection, OnGatewayDisconnect {
   @WebSocketServer()
-  server :Server
-
-  constructor(private readonly dmService:DmService) {}
+  server: Server;
   
-  @SubscribeMessage('join')
-  handleJoinDm(client: any, room: string): void { 
-    client.join(room);
-    this.server.to(room).emit('message', `User joined room: ${room}`);
+  constructor(private readonly dmService:DmService) {}
+
+  handleConnection(client: any, ...args: any[]) {
+    console.log ('user connected\n')
+    
+  }
+
+  handleDisconnect(client: any) {
+    // This method is triggered when a user disconnects from the WebSocket server
+    console.log(`User disconnected: ID=${client.id}`);
   }
 
 
+
+  @SubscribeMessage('joinInbox')
+  handleJoinInbox(client: Socket, inbox_id: string): void { 
+    console.log (`${client.id} is connected to ${inbox_id}`)
+    client.join(inbox_id);
+  }
+
+  private handleJoinDm(client: Socket, Dm_id: string): void { 
+    client.join(Dm_id);
+  }
+
   @SubscribeMessage('sendMessage')
-  async handleMessageDm(client: any, playload: {room:string, message:CreateMessageDto} ) {
-    this.server.to(playload.room).emit('message', playload.message.content)
-    
-    console.log ( await this.dmService.storeMessageInDb ( playload.message))
+  async getMsgDm (client: any,  message:CreateMessageDto)
+  {
+
+  }
+
+  private async handleSendMesDm(client: any,  message:CreateMessageDto ) {
+    this.server.to("dm-"+message.dm_id).emit('message', message.content)
   }
 
 }
