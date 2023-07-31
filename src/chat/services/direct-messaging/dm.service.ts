@@ -53,5 +53,13 @@ export class DmService
    {
       return await this.chatCrudService.createMessage (message);
    }
+
+
+   async userJoinedChannel (user_id : string, room_id :string)
+   {
+      return await this.chatCrudService.checkUserInDm (user_id, room_id)
+   }
+
+
 }
 

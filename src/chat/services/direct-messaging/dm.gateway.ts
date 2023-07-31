@@ -1,11 +1,14 @@
 import { WebSocketGateway, SubscribeMessage, WebSocketServer, 
-  OnGatewayConnection, OnGatewayDisconnect } from '@nestjs/websockets';
+  OnGatewayConnection, OnGatewayDisconnect, WsException } from '@nestjs/websockets';
 
 import { DmService } from './dm.service';
 import { CreateMessageDto } from '../../dto/create-chat.dto';
 import { inboxPacketDto } from '../../dto/userInbox.dto';
 import { Server } from 'socket.io';
 import { Socket } from 'socket.io';
+import { UserExistenceGuard, userRoomSubscriptionGuard } from 'src/chat/guards/dm.guard';
+import { UseGuards } from '@nestjs/common';
+import { UserCrudService } from 'src/prisma/prisma/user-crud.service';
 
 
 @WebSocketGateway()
@@ -13,19 +16,23 @@ export class dmGateway implements OnGatewayConnection, OnGatewayDisconnect {
   @WebSocketServer()
   server: Server;
   
-  constructor(private readonly dmService:DmService) {}
+  constructor(private readonly dmService:DmService, private readonly userCrud :UserCrudService) {}
 
   //When the user connects to websocket it will be passed the id of the user 
   //to use it to create an inbox of notifications and new dm's to be initiated
-
+  
   async handleConnection(client: any, ...args: any[]) {
     const user_id = client.handshake.query.id
+    // console.log ("user_id" + user_id)
+    if (await this.userCrud.findUserByID(user_id) == null)
+      throw new WsException ("User not existing")
     console.log (`user ${user_id} connected\n`)
     const inbox_id = "inbox-".concat(user_id)
     client.join (inbox_id);
     (await this.dmService.getAllDmRooms(user_id)).forEach(room => {
       client.join("dm-"+room.id)
     });
+    
   }
 
   handleDisconnect(client: any) {
@@ -63,6 +70,7 @@ export class dmGateway implements OnGatewayConnection, OnGatewayDisconnect {
 
 
   //In case 
+  @UseGuards(userRoomSubscriptionGuard)
   @SubscribeMessage ("sendMsgDm")
   handleSendMesDm(client: any,  message:CreateMessageDto ) {
     this.server.to(message.dm_id).emit('message', message.content)

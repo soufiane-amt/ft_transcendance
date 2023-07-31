@@ -433,5 +433,19 @@ export class ChatCrudService
     }
       ///
 
-
+    async checkUserInDm (user_id : string, room_id :string)
+    {
+      return await this.prisma.prismaClient.directMessaging.findUnique(
+        {
+          where : 
+          {
+            OR:[
+              {user1_id : user_id},
+              {user2_id : user_id},
+            ],
+            id : room_id
+          }
+        }
+      )
+    }
 }

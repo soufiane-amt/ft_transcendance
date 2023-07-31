@@ -19,11 +19,10 @@ async createUserAccount(data: userDto)
 
 
 //   Read:
-@catchError()
 //ifindUser method finds user by id 
 async findUserByID(userId: string)
 {
-  return this.prisma.prismaClient.user.findUnique (
+  return await this.prisma.prismaClient.user.findUnique (
     {
       where : {
         id : userId
