@@ -2,13 +2,14 @@ import { WebSocketGateway, SubscribeMessage, WebSocketServer,
   OnGatewayConnection, OnGatewayDisconnect, WsException } from '@nestjs/websockets';
 
 import { DmService } from './dm.service';
-import { CreateMessageDto } from '../../dto/create-chat.dto';
+import { MessageDto, banManageSignalDto } from '../../dto/chat.dto';
 import { inboxPacketDto } from '../../dto/userInbox.dto';
 import { Server } from 'socket.io';
 import { Socket } from 'socket.io';
-import { UserExistenceGuard, userRoomSubscriptionGuard } from 'src/chat/guards/dm.guard';
+import {  bannedConversationGuard, userRoomSubscriptionGuard } from 'src/chat/guards/dm.guard';
 import { UseGuards } from '@nestjs/common';
 import { UserCrudService } from 'src/prisma/prisma/user-crud.service';
+import { ChatCrudService } from 'src/prisma/prisma/chat-crud.service';
 
 
 @WebSocketGateway()
@@ -16,7 +17,8 @@ export class dmGateway implements OnGatewayConnection, OnGatewayDisconnect {
   @WebSocketServer()
   server: Server;
   
-  constructor(private readonly dmService:DmService, private readonly userCrud :UserCrudService) {}
+  constructor(private readonly dmService:DmService, 
+    private readonly userCrud :UserCrudService, private readonly chatCrud :ChatCrudService) {}
 
   //When the user connects to websocket it will be passed the id of the user 
   //to use it to create an inbox of notifications and new dm's to be initiated
@@ -71,10 +73,24 @@ export class dmGateway implements OnGatewayConnection, OnGatewayDisconnect {
 
   //In case 
   @UseGuards(userRoomSubscriptionGuard)
+  @UseGuards (bannedConversationGuard)
   @SubscribeMessage ("sendMsgDm")
-  handleSendMesDm(client: any,  message:CreateMessageDto ) {
+  handleSendMesDm(client: any,  message:MessageDto ) 
+  {
+    console.log ("----messge sent----")
     this.server.to(message.dm_id).emit('message', message.content)
   }  
+
+  @UseGuards(userRoomSubscriptionGuard)
+  @SubscribeMessage ("banDm")
+  handleDmBan(client: any,  banSignal:banManageSignalDto ) 
+  {
+    if (banSignal.type == "BAN")
+      this.chatCrud.blockAUserWithDm(banSignal.dm_id)
+    else
+      this.chatCrud.unblockAUserWithDm (banSignal.dm_id)
+  }  
+
 
 
 

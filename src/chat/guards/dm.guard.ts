@@ -53,28 +53,23 @@ export class userRoomSubscriptionGuard implements CanActivate
         else if (context.getType() == "ws")
         {
             const user_id  = context.switchToHttp().getRequest().handshake.query.id
-            const msg = context.switchToWs().getData()
+            const packet_data = context.switchToWs().getData()
             if (context.getClass() == dmGateway)
-                return await this.dmService.userJoinedChannel(msg.user_id, msg.dm_id) != null            
-            }
+                return await this.dmService.userJoinedChannel(packet_data.user_id, packet_data.dm_id) != null            
+        }
         return true
     }
 }
 
 
 @Injectable()
-export class UserExistenceGuard implements CanActivate {
-  constructor(private readonly chatCrudService: ChatCrudService, private readonly dmService: DmService) {}
+export class bannedConversationGuard implements CanActivate {
+  constructor(private readonly chatCrud: ChatCrudService) {}
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
-    const client = context.switchToWs().getClient();
-    const user_id = client.handshake.query.id; // Assuming you are passing 'id' as a query parameter during WebSocket handshake
-    // Perform your guard logic here based on user_id
-    // const userExists = await this.dmService.checkUserExists(user_id);
-    // if (!userExists) {
-    //   throw new WsException('User does not exist.');
-    // }
-    return true;
+    const packet_data = context.switchToWs().getData()
+    const dm_data = await this.chatCrud.findDmById (packet_data.dm_id)
+    return dm_data.status == 'ALLOWED'
   }
 }
 

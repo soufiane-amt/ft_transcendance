@@ -1,13 +1,15 @@
 import { Injectable } from "@nestjs/common";
-import { CreateMessageDto, dmDto } from '../../dto/create-chat.dto';
+import { MessageDto, dmDto } from '../../dto/chat.dto';
 import { ChatCrudService } from 'src/prisma/prisma/chat-crud.service';
 import { UserCrudService } from 'src/prisma/prisma/user-crud.service';
 
 
 @Injectable()
-export class DmService
-{
-   constructor (private readonly chatCrudService:ChatCrudService, private readonly userCrudService:UserCrudService){}
+export class DmService 
+{  
+   constructor (private readonly chatCrudService:ChatCrudService, private readonly userCrudService:UserCrudService)
+   {
+   }
 
 
    async checkFriendshipExistence (user1_id :string, user2_id :string)
@@ -49,7 +51,7 @@ export class DmService
       }
    }
 
-   async storeMessageInDb (message : CreateMessageDto)
+   async storeMessageInDb (message : MessageDto)
    {
       return await this.chatCrudService.createMessage (message);
    }

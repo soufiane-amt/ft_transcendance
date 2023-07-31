@@ -1,7 +1,7 @@
 import { Inject, Injectable } from '@nestjs/common';
 import {  PrismaClient } from '@prisma/client';
 import { PrismaService } from './prisma.service';
-import { channelDto, channelMembershipDto, CreateMessageDto, dmDto} from '../../chat/dto/create-chat.dto'
+import { channelDto, channelMembershipDto, MessageDto, dmDto} from '../../chat/dto/chat.dto'
 import { catchError } from '../decorators.prisma';
 
 
@@ -275,12 +275,12 @@ export class ChatCrudService
     }
 
     @catchError()
-    async blockAUserWithDm(channel_id: string)
+    async blockAUserWithDm(dm_id: string)
     {
       return this.prisma.prismaClient.directMessaging.update(
         {
           where :{
-            id : channel_id
+            id : dm_id
           },
           data:
           {
@@ -352,7 +352,7 @@ export class ChatCrudService
     }
 
     // @catchError()
-    async createMessage (data : CreateMessageDto)
+    async createMessage (data : MessageDto)
     {
       console.log (data)
       return ( await this.prisma.prismaClient.message.create ({data}))

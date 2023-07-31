@@ -1,4 +1,4 @@
-export interface CreateMessageDto 
+export interface MessageDto 
 {
     user_id :string    
     dm_id? : string
@@ -31,4 +31,13 @@ export interface channelMembershipDto
     user_id :string;
     role :   'OWNER' | 'ADMIN' | 'USER';
     banned_at? :string;
+}
+
+export interface banManageSignalDto
+{
+    user_id :string
+    type : 'BAN' | "UNBAN"
+    dm_id? : string
+    channel_id? : string
+    created_at? : Date
 }
