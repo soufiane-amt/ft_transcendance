@@ -45,7 +45,7 @@ export class DmService
          return await this.chatCrudService.retrieveUserDmChannels(user_id)
       }
       catch {
-         return {};
+         return null;
       }
    }
 

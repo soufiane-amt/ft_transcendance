@@ -7,6 +7,7 @@ import { inboxPacketDto } from '../../dto/userInbox.dto';
 import { Server } from 'socket.io';
 import { Socket } from 'socket.io';
 
+
 @WebSocketGateway()
 export class dmGateway implements OnGatewayConnection, OnGatewayDisconnect {
   @WebSocketServer()
@@ -16,11 +17,15 @@ export class dmGateway implements OnGatewayConnection, OnGatewayDisconnect {
 
   //When the user connects to websocket it will be passed the id of the user 
   //to use it to create an inbox of notifications and new dm's to be initiated
-  handleConnection(client: any, ...args: any[]) {
-    console.log ('user connected\n')
+
+  async handleConnection(client: any, ...args: any[]) {
     const user_id = client.handshake.query.id
+    console.log (`user ${user_id} connected\n`)
     const inbox_id = "inbox-".concat(user_id)
-    client.join (inbox_id)
+    client.join (inbox_id);
+    (await this.dmService.getAllDmRooms(user_id)).forEach(room => {
+      client.join("dm-"+room.id)
+    });
   }
 
   handleDisconnect(client: any) {
@@ -37,18 +42,6 @@ export class dmGateway implements OnGatewayConnection, OnGatewayDisconnect {
   }
 
 
-  @SubscribeMessage ("sendMsgDm")
-  handleSendMesDm(client: any,  message:CreateMessageDto ) {
-    this.server.to("dm-"+message.dm_id).emit('message', message.content)
-  }
-
-  //this method will be triggered right after dekiver_to_inbox right after the client get the dm room id
-  @SubscribeMessage ("joinDm")
-  handleJoinDm(client: any,  dm_id:string ) {
-    client.join(`dm-${dm_id}`)
-  }
-
-
   //this method serves as a postman to inbox destination
   @SubscribeMessage('toInbox')
   deliver_to_inbox (client: Socket, packet: inboxPacketDto)
@@ -61,6 +54,21 @@ export class dmGateway implements OnGatewayConnection, OnGatewayDisconnect {
       //function wich will make him join the common room , the Dm room where 
       //the real messaging will happen
   }
+
+  //this method will be triggered right after deliver_to_inbox right after the client get the dm room id
+  @SubscribeMessage ("joinDm")
+  handleJoinDm(client: any,  dm_id:string ) {
+    client.join(dm_id)
+  }  
+
+
+  //In case 
+  @SubscribeMessage ("sendMsgDm")
+  handleSendMesDm(client: any,  message:CreateMessageDto ) {
+    this.server.to(message.dm_id).emit('message', message.content)
+  }  
+
+
 
 
 }
