@@ -49,3 +49,10 @@ export interface banManageSignalDto
     channel_id? : string
     created_at? : Date
 }
+
+export interface kickSignalDto
+{
+    kicker_id :string
+    user_id :string
+    channel_id :string
+}

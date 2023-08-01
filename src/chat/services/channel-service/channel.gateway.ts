@@ -1,7 +1,7 @@
 import { SubscribeMessage, WebSocketGateway, WebSocketServer } from "@nestjs/websockets";
 import { Socket } from "dgram";
 import { Server } from "socket.io";
-import { banManageSignalDto, channelMembershipDto } from "src/chat/dto/chat.dto";
+import { banManageSignalDto, channelMembershipDto, kickSignalDto } from "src/chat/dto/chat.dto";
 import { UpdateChannelDto, UpdateUserMemberShip } from "src/chat/dto/update-chat.dto";
 import { ChatCrudService } from "src/prisma/prisma/chat-crud.service";
 
@@ -57,13 +57,26 @@ import { ChatCrudService } from "src/prisma/prisma/chat-crud.service";
         await this.chatCrud.joinChannel (membReq)
     }
 
-    @SubscribeMessage ("channelUserModerate")
-    handleChannelBan(client: any,  banSignal:banManageSignalDto ) 
+
+    //User Moderation :
+    //Kicking or banning a user can only be done by the owner or moderator 
+    //the admin cannot ban/kick the owner or an other admin 
+    //the user cannot ban or kick other memebers
+    
+    @SubscribeMessage ("channelUserBanModerate")
+    async handleChannelBan(client: any,  banSignal:banManageSignalDto ) 
     {
       if (banSignal.type == "BAN")
-        this.chatCrud.blockAUserWithinGroup(banSignal.user_id, banSignal.channel_id)
+        await this.chatCrud.blockAUserWithinGroup(banSignal.user_id, banSignal.channel_id)
       else
-        this.chatCrud.unblockAUserWithinGroup (banSignal.user_id, banSignal.channel_id)
+        await this.chatCrud.unblockAUserWithinGroup (banSignal.user_id, banSignal.channel_id)
+    }  
+
+
+    @SubscribeMessage ("kickOutUser")
+    async handleChannelKicks(client: any,  kickSignal:kickSignalDto ) 
+    {
+        await this.chatCrud.leaveChannel (kickSignal.user_id, kickSignal.channel_id)
     }  
   
 
