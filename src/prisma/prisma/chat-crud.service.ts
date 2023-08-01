@@ -231,19 +231,42 @@ export class ChatCrudService
 
     //update
 
-    @catchError()
-  async changeChannelPhoto (channel_id: string, newAvatarURI :string)
-  {
-      return this.prisma.prismaClient.channel.update(
-      {
-        where: { id : channel_id}, 
-        data : {
-          image: newAvatarURI,
+    async changeChannelPhoto (channel_id: string, newAvatarURI :string)
+    {
+        return await  this.prisma.prismaClient.channel.update(
+        {
+          where: { id : channel_id}, 
+          data : {
+            image: newAvatarURI,
+          }
         }
-      }
-      )
-    } 
+        )
+      } 
 
+      async changeChannelType (channel_id: string, new_type : 'PUBLIC' | 'PROTECTED' | 'PRIVATE', new_pass :string)
+      {
+          return await  this.prisma.prismaClient.channel.update(
+          {
+            where: { id : channel_id}, 
+            data : {
+              type : new_type,
+              password: new_pass,
+            }
+          }
+          )
+        } 
+        async changeChannelName (channel_id: string, new_name :string)
+        {
+            return await  this.prisma.prismaClient.channel.update(
+            {
+              where: { id : channel_id}, 
+              data : {
+                name : new_name,
+              }
+            }
+            )
+          } 
+        
     @catchError()
     async blockAUserWithinGroup(user_id :string, channel_id: string)
     {
