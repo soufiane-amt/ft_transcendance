@@ -68,6 +68,8 @@ export class ChatController
   
   }
 
+  //when the user creates a channel we should make him join the ws channel too
+  //so we gonna need a way to tell if it is routed from create channel
   @Get ('channels/@me/:id')
   async findAllChannels (@Req() request : Request,  @Param("id") room : string)
   {

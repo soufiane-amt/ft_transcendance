@@ -1,7 +1,6 @@
 import { OnGatewayConnection, SubscribeMessage, WebSocketGateway, WebSocketServer, WsException } from "@nestjs/websockets";
-import { Socket } from "dgram";
-import { Server } from "socket.io";
-import { banManageSignalDto, channelMembershipDto, kickSignalDto } from "src/chat/dto/chat.dto";
+import { Server, Socket } from "socket.io";
+import { MessageDto, banManageSignalDto, channelMembershipDto, kickSignalDto } from "src/chat/dto/chat.dto";
 import { UpdateChannelDto, UpdateUserMemberShip } from "src/chat/dto/update-chat.dto";
 import { ChatCrudService } from "src/prisma/prisma/chat-crud.service";
 import { UserCrudService } from "src/prisma/prisma/user-crud.service";
@@ -65,9 +64,10 @@ import { UserCrudService } from "src/prisma/prisma/user-crud.service";
     //check if the user exists
     //Check if the data sent to the channel is actually 
     //comptible with the requirement of the channel .e.g (protected has to have password ... )
-    async joinChannel (client :Socket, membReq : channelMembershipDto)
+    async handlejoinChannel (client :Socket, membReq : channelMembershipDto)
     {
         await this.chatCrud.joinChannel (membReq)
+        client.join(membReq.channel_id)
     }
 
 
@@ -91,6 +91,13 @@ import { UserCrudService } from "src/prisma/prisma/user-crud.service";
     {
         await this.chatCrud.leaveChannel (kickSignal.user_id, kickSignal.channel_id)
     }  
-  
+
+    @SubscribeMessage ("sendMsgCh")
+    handleSendMesDm(client: any,  message:MessageDto ) 
+    {
+      console.log ("----messge sent----")
+      this.server.to(message.channel_id).emit('message', message.content)
+    }  
+
 
 }
