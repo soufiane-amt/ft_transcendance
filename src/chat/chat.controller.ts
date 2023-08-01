@@ -72,9 +72,9 @@ export class ChatController
   async findAllChannels (@Req() request : Request,  @Param("id") room : string)
   {
     const allRoomMessages = await this.chatCrud.retrieveRoomMessages(room)
-    const dmUsers = await this.chatCrud.findAllJoinedChannels (request.cookies["user.id"])
+    const channels = await this.chatCrud.findAllJoinedChannels (request.cookies["user.id"])
   
-    return { dmUser : dmUsers, roomsMesg : allRoomMessages}
+    return { dmUser : channels, roomsMesg : allRoomMessages}
   }
 
 }
