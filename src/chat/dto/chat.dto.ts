@@ -33,6 +33,14 @@ export interface channelMembershipDto
     banned_at? :string;
 }
 
+export interface channelReqDto
+{
+    channel_id :string;
+    user_id :string;
+    role :    'ADMIN' | 'USER';
+    password? :string;
+}
+
 export interface banManageSignalDto
 {
     user_id :string

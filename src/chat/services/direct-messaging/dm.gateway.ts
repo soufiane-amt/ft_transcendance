@@ -81,7 +81,7 @@ export class dmGateway implements OnGatewayConnection, OnGatewayDisconnect {
   }  
 
   @UseGuards(userRoomSubscriptionGuard)
-  @SubscribeMessage ("banDm")
+  @SubscribeMessage ("dmModeration")
   handleDmBan(client: any,  banSignal:banManageSignalDto ) 
   {
     if (banSignal.type == "BAN")
