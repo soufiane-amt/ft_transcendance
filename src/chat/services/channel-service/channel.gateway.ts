@@ -1,20 +1,33 @@
-import { SubscribeMessage, WebSocketGateway, WebSocketServer } from "@nestjs/websockets";
+import { OnGatewayConnection, SubscribeMessage, WebSocketGateway, WebSocketServer, WsException } from "@nestjs/websockets";
 import { Socket } from "dgram";
 import { Server } from "socket.io";
 import { banManageSignalDto, channelMembershipDto, kickSignalDto } from "src/chat/dto/chat.dto";
 import { UpdateChannelDto, UpdateUserMemberShip } from "src/chat/dto/update-chat.dto";
 import { ChatCrudService } from "src/prisma/prisma/chat-crud.service";
+import { UserCrudService } from "src/prisma/prisma/user-crud.service";
 
  
 
  @WebSocketGateway()
 
- export class channelGateway
+ export class channelGateway implements OnGatewayConnection
  {
     @WebSocketServer ()
     server:Server
 
-    constructor (private readonly chatCrud :ChatCrudService){}
+    constructor (private readonly chatCrud :ChatCrudService,
+         private readonly userCrud :UserCrudService){}
+
+    async handleConnection(client: any, ...args: any[]) {
+        const user_id = client.handshake.query.id
+
+        if (await this.userCrud.findUserByID(user_id) == null)
+          throw new WsException ("User not existing")
+        console.log (`user ${user_id} connected\n`);
+        (await this.chatCrud.findAllJoinedChannels(user_id)).forEach(room => {
+          client.join(room.id)
+        });
+        }
 
     @SubscribeMessage ('updateChannelPic')
     //check if the user exists
@@ -62,7 +75,7 @@ import { ChatCrudService } from "src/prisma/prisma/chat-crud.service";
     //Kicking or banning a user can only be done by the owner or moderator 
     //the admin cannot ban/kick the owner or an other admin 
     //the user cannot ban or kick other memebers
-    
+
     @SubscribeMessage ("channelUserBanModerate")
     async handleChannelBan(client: any,  banSignal:banManageSignalDto ) 
     {
