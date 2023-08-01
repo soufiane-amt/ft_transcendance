@@ -1,12 +1,13 @@
-import { Controller, Get, Query, HttpException, HttpStatus, Res,Req,  Param, ParseBoolPipe, Inject, UseGuards } from '@nestjs/common';
+import { Controller, Get, Query,Post , Res,Req,  Param, Inject, UseGuards, Body, BadRequestException } from '@nestjs/common';
 import { DmService } from './services/direct-messaging/dm.service';
 import { Request } from "express"
 import { ChatCrudService } from 'src/prisma/prisma/chat-crud.service';
 import { dmGateway } from './services/direct-messaging/dm.gateway';
 import { FriendShipExistenceGuard, cookieGuard, userRoomSubscriptionGuard } from './guards/dm.guard';
+import { channelDto } from './dto/chat.dto';
 
 
-@Controller('chat/direct_messaging')
+@Controller('chat')
 @UseGuards(cookieGuard)
 export class ChatController
 {
@@ -14,8 +15,13 @@ export class ChatController
   constructor (private readonly dmService :DmService, 
                     private readonly chatCrud : ChatCrudService,
                     @Inject(dmGateway) private readonly dmGate : dmGateway){}
-    
-  @Get (":uid")
+
+
+  ///////////////////////////////////////////////////////////
+  //-                 Direct Messaging controllers        -//
+  ///////////////////////////////////////////////////////////
+
+  @Get ("/direct_messaging/:uid")
   @UseGuards(FriendShipExistenceGuard)
   async getUserToDm (@Param("uid") userToDm: string ,@Req() request : Request, @Res() response )
   {
@@ -32,12 +38,13 @@ export class ChatController
     response.redirect (`/chat/direct_messaging/@me/${dmRoom_id}/${init_stat}`)
   }
 
+
   //When the front-end part receives  this response 
   //it will have two data element in an array of json format 
   //the array will also contain the user_id to which the message will be sent
   //that will be used later 
 
-  @Get('/@me/:id')
+  @Get('/direct_messaging/@me/:id')
   @UseGuards(userRoomSubscriptionGuard)
   async findAllDm (@Req() request : Request,  @Param("id") room : string, @Query("init") init : string)
   {
@@ -46,8 +53,20 @@ export class ChatController
     const allRoomMessages = await this.chatCrud.retrieveRoomMessages(room)
     const dmUsers = await this.dmService.getAllDmRooms (request.cookies["user.id"])
   
-    // return [allRoomMessages, dmUsers]
     return { dmUser : dmUsers, roomsMesg : allRoomMessages, new_init : init}
   }
+
+
+
+  ///////////////////////////////////////////////////////////
+  //-                 Channel controllers                 -//
+  ///////////////////////////////////////////////////////////
+
+  @Post ("channels/createChannel")
+  async createChannel (@Req() req :any,  @Body() channelData : channelDto)
+  {
+    await this.chatCrud.createChannel(req.cookies["user.id"], channelData)
+    return ("The Channel was successfully created.")
+  }  
 
 }

@@ -7,9 +7,7 @@ import { UserCrudService } from 'src/prisma/prisma/user-crud.service';
 @Injectable()
 export class DmService 
 {  
-   constructor (private readonly chatCrudService:ChatCrudService, private readonly userCrudService:UserCrudService)
-   {
-   }
+   constructor (private readonly chatCrudService:ChatCrudService, private readonly userCrudService:UserCrudService){}
 
 
    async checkFriendshipExistence (user1_id :string, user2_id :string)

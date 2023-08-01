@@ -12,7 +12,8 @@ export class ChatCrudService
 
     // Create a new chat channel (public, or password-protected).
 
-    @catchError()
+
+    // @catchError()
     async   createChannel (user_id:string , data : channelDto)
     {
       const channel_id :string =   (await this.prisma.prismaClient.channel.create ({data})).id
@@ -21,16 +22,20 @@ export class ChatCrudService
         user_id : user_id, 
         role : 'OWNER'
       }
-      this.joinChannel (memberShipData)
+      try{
+
+        await this.joinChannel (memberShipData)
+      }
+      catch (error){
+      }
       return channel_id
     }
     
   //user joins channel
 
-    @catchError()
     async   joinChannel (data : channelMembershipDto)
     {
-        return this.prisma.prismaClient.channelMembership.create ({data})
+        return await this.prisma.prismaClient.channelMembership.create ({data})
     }
 
     @catchError()
@@ -244,9 +249,12 @@ export class ChatCrudService
     {
       return this.prisma.prismaClient.channelMembership.update(
         {
-          where :{
-            user_id :user_id,
-            channel_id : channel_id
+          where :
+          {
+            channel_id_user_id : {
+            channel_id : channel_id,
+            user_id : user_id
+            },
           },
           data:
           {
@@ -262,9 +270,12 @@ export class ChatCrudService
     {
       return this.prisma.prismaClient.channelMembership.update(
         {
-          where :{
-            user_id :user_id,
-            channel_id : channel_id
+          where :
+          {
+            channel_id_user_id : {
+            channel_id : channel_id,
+            user_id : user_id
+            },
           },
           data:
           {
@@ -314,10 +325,11 @@ export class ChatCrudService
         {
           where :
           {
-            user_id : user_id, 
-            channel_id: channel_id
+            channel_id_user_id : {
+            channel_id : channel_id,
+            user_id : user_id
+            },
           }
-
         }
       )
     }
@@ -390,11 +402,13 @@ export class ChatCrudService
     @catchError()
     async upgradeToAdmin (user_id :string, channel_id: string)
     {
-      this.prisma.prismaClient.channelMembership.update ({
-        where :
-        {
-          channel_id : channel_id,
-          user_id : user_id
+        this.prisma.prismaClient.channelMembership.update ({
+          where :
+          {
+            channel_id_user_id : {
+            channel_id : channel_id,
+            user_id : user_id
+            },
         },
         data: {
           role : 'ADMIN'
@@ -408,8 +422,10 @@ export class ChatCrudService
       this.prisma.prismaClient.channelMembership.update ({
         where :
         {
+          channel_id_user_id : {
           channel_id : channel_id,
           user_id : user_id
+          },
         },
         data: {
           role : 'USER'
@@ -423,8 +439,10 @@ export class ChatCrudService
       this.prisma.prismaClient.channelMembership.update ({
         where :
         {
+          channel_id_user_id : {
           channel_id : channel_id,
           user_id : user_id
+          },
         },
         data: {
           role : 'OWNER'

@@ -94,16 +94,18 @@ model ChannelMembership {
   id String @id @default(uuid())
 
   channel    Channel @relation(fields: [channel_id], references: [id])
-  channel_id String  @unique
+  channel_id String  
 
   user    User   @relation(fields: [user_id], references: [id])
-  user_id String @unique
+  user_id String 
 
   role      Role
   joined_at DateTime @default(now())
 
   is_banned Boolean @default(false)
   banned_at DateTime?
+
+  @@unique([channel_id, user_id])
 }
 
 model Message {

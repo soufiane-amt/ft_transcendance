@@ -4,8 +4,7 @@ import { WebSocketGateway, SubscribeMessage, WebSocketServer,
 import { DmService } from './dm.service';
 import { MessageDto, banManageSignalDto } from '../../dto/chat.dto';
 import { inboxPacketDto } from '../../dto/userInbox.dto';
-import { Server } from 'socket.io';
-import { Socket } from 'socket.io';
+import { Server, Socket } from 'socket.io';
 import {  bannedConversationGuard, userRoomSubscriptionGuard } from 'src/chat/guards/dm.guard';
 import { UseGuards } from '@nestjs/common';
 import { UserCrudService } from 'src/prisma/prisma/user-crud.service';
