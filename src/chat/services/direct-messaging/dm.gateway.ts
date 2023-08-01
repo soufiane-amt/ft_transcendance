@@ -30,7 +30,7 @@ export class dmGateway implements OnGatewayConnection, OnGatewayDisconnect {
     console.log (`user ${user_id} connected\n`)
     const inbox_id = "inbox-".concat(user_id)
     client.join (inbox_id);
-    (await this.dmService.getAllDmRooms(user_id)).forEach(room => {
+    (await this.dmService.retrieveAllDmRooms(user_id)).forEach(room => {
       client.join("dm-"+room.id)
     });
     

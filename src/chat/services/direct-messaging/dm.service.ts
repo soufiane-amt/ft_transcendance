@@ -39,7 +39,7 @@ export class DmService
    }
 
 
-   async getAllDmRooms (user_id :string)
+   async retrieveAllDmRooms (user_id :string)
    {
       try{
          return await this.chatCrudService.retrieveUserDmChannels(user_id)

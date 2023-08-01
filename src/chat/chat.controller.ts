@@ -48,10 +48,8 @@ export class ChatController
   @UseGuards(userRoomSubscriptionGuard)
   async findAllDm (@Req() request : Request,  @Param("id") room : string, @Query("init") init : string)
   {
-
-    console.log (init)
     const allRoomMessages = await this.chatCrud.retrieveRoomMessages(room)
-    const dmUsers = await this.dmService.getAllDmRooms (request.cookies["user.id"])
+    const dmUsers = await this.dmService.retrieveAllDmRooms (request.cookies["user.id"])
   
     return { dmUser : dmUsers, roomsMesg : allRoomMessages, new_init : init}
   }
@@ -63,10 +61,20 @@ export class ChatController
   ///////////////////////////////////////////////////////////
 
   @Post ("channels/createChannel")
-  async createChannel (@Req() req :any,  @Body() channelData : channelDto)
+  async createChannel (@Req() req :any,  @Body() channelData : channelDto, @Res() response)
   {
-    await this.chatCrud.createChannel(req.cookies["user.id"], channelData)
-    return ("The Channel was successfully created.")
-  }  
+    const channel_id = await this.chatCrud.createChannel(req.cookies["user.id"], channelData)//check if channel succesfully created 
+    response.redirect (`/chat/direct_messaging/@me/${channel_id}`)
+  
+  }
+
+  @Get ('channels/@me/:id')
+  async findAllChannels (@Req() request : Request,  @Param("id") room : string)
+  {
+    const allRoomMessages = await this.chatCrud.retrieveRoomMessages(room)
+    const dmUsers = await this.chatCrud.findAllJoinedChannels (request.cookies["user.id"])
+  
+    return { dmUser : dmUsers, roomsMesg : allRoomMessages}
+  }
 
 }
