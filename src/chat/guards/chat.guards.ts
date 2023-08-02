@@ -8,6 +8,7 @@ import { Role } from "../enum/role.enum";
 import { Observable } from "rxjs";
 import { banManageSignalDto, channelReqDto, kickSignalDto } from "../dto/chat.dto";
 import { UpdateChannelDto } from "../dto/update-chat.dto";
+import { channelGateway } from "../services/channel-service/channel.gateway";
 
 
 //Setting metadata aliases
@@ -150,7 +151,7 @@ export class FriendShipExistenceGuard implements CanActivate
 export class userRoomSubscriptionGuard implements CanActivate
 {
     constructor (
-        private readonly dmService :DmService){}
+        private readonly dmService :DmService, private readonly chatCrud : ChatCrudService){}
 
     async canActivate(context: ExecutionContext): Promise <boolean>{
         if (context.getType() == "http")
@@ -159,14 +160,15 @@ export class userRoomSubscriptionGuard implements CanActivate
             const user_id = request.cookies["user.id"]
             if (context.getHandler().name == 'findAllDm')
                 var room_id = request.params.id;
-            return (await this.dmService.userJoinedChannel(user_id,room_id) != null)
+            return (await this.chatCrud.checkUserInDm(user_id,room_id) != null)
         }
         else if (context.getType() == "ws")
         {
-            const user_id  = context.switchToHttp().getRequest().handshake.query.id
             const packet_data = context.switchToWs().getData()
             if (context.getClass() == dmGateway)
-                return await this.dmService.userJoinedChannel(packet_data.user_id, packet_data.dm_id) != null            
+                return (await this.chatCrud.checkUserInDm(packet_data.user_id, packet_data.dm_id) != null)
+            if (context.getClass() == channelGateway)
+                return (await this.chatCrud.getMemeberShip(packet_data.user_id, packet_data.channel_id) != null)
         }
         return true
     }
@@ -179,7 +181,15 @@ export class bannedConversationGuard implements CanActivate {
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const packet_data = context.switchToWs().getData()
-    const dm_data = await this.chatCrud.findDmById (packet_data.dm_id)
-    return dm_data.status == 'ALLOWED'
+    if (context.getClass() == dmGateway)
+    {
+        const dm_data = await this.chatCrud.findDmById (packet_data.dm_id)
+        return dm_data.status == 'ALLOWED'
+    }
+    else
+    {
+        const memeberShip = await this.chatCrud.getMemeberShip (packet_data.channel_id, packet_data.user_id)
+        return (memeberShip.is_banned != false)
+    }
   }
 }

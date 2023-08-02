@@ -4,7 +4,7 @@ import { Server, Socket } from "socket.io";
 import { MessageDto, banManageSignalDto, channelMembershipDto, channelReqDto, kickSignalDto } from "src/chat/dto/chat.dto";
 import { UpdateChannelDto, UpdateUserMemberShip } from "src/chat/dto/update-chat.dto";
 import { Role } from "src/chat/enum/role.enum";
-import { Roles, allowJoinGuard, channelPermission } from "src/chat/guards/chat.guards";
+import { Roles, allowJoinGuard, bannedConversationGuard, channelPermission, userRoomSubscriptionGuard } from "src/chat/guards/chat.guards";
 import { ChatCrudService } from "src/prisma/prisma/chat-crud.service";
 import { UserCrudService } from "src/prisma/prisma/user-crud.service";
 
@@ -31,18 +31,11 @@ import { UserCrudService } from "src/prisma/prisma/user-crud.service";
         });
         }
 
-    
-    @SubscribeMessage ('test')
-    test (str :string)
-    {
-      
-    }
-    
     //check if the user exists
     //check if the user has permissions 
-    @SubscribeMessage ('updateChannelPic')
-    @Roles (Role.OWNER, Role.ADMIN)
+    @Roles(Role.OWNER, Role.ADMIN)
     @UseGuards(channelPermission)
+    @SubscribeMessage ('updateChannelPic')
     async changeChannelPhoto (client :Socket, updatePic : UpdateChannelDto)
     {
         await this.chatCrud.changeChannelPhoto (updatePic.channel_id, updatePic.image)
@@ -115,6 +108,9 @@ import { UserCrudService } from "src/prisma/prisma/user-crud.service";
 
 
     //check if the user is not banned 
+    //user must have membership
+    @UseGuards (userRoomSubscriptionGuard)
+    @UseGuards(bannedConversationGuard)
     @SubscribeMessage ("sendMsgCh")
     handleSendMesDm(client: any,  message:MessageDto ) 
     {
