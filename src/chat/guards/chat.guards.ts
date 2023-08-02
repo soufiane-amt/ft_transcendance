@@ -6,7 +6,8 @@ import { DmService } from "../services/direct-messaging/dm.service";
 import { dmGateway } from "../services/direct-messaging/dm.gateway";
 import { Role } from "../enum/role.enum";
 import { Observable } from "rxjs";
-import { channelReqDto } from "../dto/chat.dto";
+import { banManageSignalDto, channelReqDto, kickSignalDto } from "../dto/chat.dto";
+import { UpdateChannelDto } from "../dto/update-chat.dto";
 
 
 //Setting metadata aliases
@@ -26,14 +27,45 @@ export  class channelPermission implements CanActivate
         if (context.getType() == 'ws')
         {
             const data = context.switchToWs ().getData()
-            return this.verifyData (data.user_id, data.channel_id, subscribedRoles)
+            if (context.getHandler().name == ("changeChannelPhoto" || 
+                "changeChannelType" || "changeChannelName" || "upgradeUserToAdmin"))
+                return this.verifyModificatData (data, subscribedRoles)
+            
+            if (context.getHandler().name == "handleChannelBan")
+                return this.verifyBanData (data, subscribedRoles)
+            if (context.getHandler().name == "handleChannelKicks")
+                return this.verifyKickData (data, subscribedRoles)
         }
         return false
     }
 
-    async verifyData (user_id : string, channel_id : string, subscribedRoles :Role[]) : Promise<boolean>
+    async verifyKickData (update : kickSignalDto, subscribedRoles :Role[]) : Promise<boolean>
     {
-        const membership = await this.chatCrud.getMemeberShip(user_id, channel_id)
+        const targetedMember = await this.chatCrud.getMemeberShip(update.user_id, update.channel_id)
+        const memberToAct = await this.chatCrud.getMemeberShip(update.kicker_id, update.channel_id)
+        if (!targetedMember || !memberToAct)
+            return false
+        if (subscribedRoles.some((role) => memberToAct.role.includes(role)) &&
+                !subscribedRoles.some((role) => targetedMember.role.includes(role)))
+            return true
+        return false
+    }
+
+    async verifyBanData (update : banManageSignalDto, subscribedRoles :Role[]) : Promise<boolean>
+    {
+        const targetedMember = await this.chatCrud.getMemeberShip(update.user_id, update.channel_id)
+        const memberToAct = await this.chatCrud.getMemeberShip(update.banner_id, update.channel_id)
+        if (!targetedMember || !memberToAct)
+            return false
+        if (subscribedRoles.some((role) => memberToAct.role.includes(role)) &&
+                !subscribedRoles.some((role) => targetedMember.role.includes(role)))
+            return true
+        return false
+    }
+
+    async verifyModificatData (updateChannel : UpdateChannelDto, subscribedRoles :Role[]) : Promise<boolean>
+    {
+        const membership = await this.chatCrud.getMemeberShip(updateChannel.user_id, updateChannel.channel_id)
         if (!membership)
             return false
         if (subscribedRoles.some((role) => membership.role.includes(role)))
@@ -56,17 +88,21 @@ export class allowJoinGuard implements CanActivate
     async allowJoining (joinRequest : channelReqDto) : Promise<boolean>
     {
         const targetedChannel = await this.chatCrud.findChannelById(joinRequest.channel_id)
+        console.log ("1")
         if (!targetedChannel)
             return false
-        
+        console.log ("2")
             //check if the user wanting to join is already there in  join 
         if (await this.chatCrud.getMemeberShip (joinRequest.user_id, joinRequest.channel_id) == null)
         {
-            if (!joinRequest.password || (targetedChannel.type == 'PROTECTED' && 
+        console.log ("3")
+
+            if ((targetedChannel.type == 'PROTECTED') && (!joinRequest.password || 
                             joinRequest.password != targetedChannel.password))
                 return false
             return true 
         }
+        console.log ("4")
         return false
     }
 

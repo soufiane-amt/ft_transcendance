@@ -65,7 +65,7 @@ export class ChatController
   async createChannel (@Req() req :any,  @Body() channelData : channelDto, @Res() response)
   {
     const channel_id = await this.chatCrud.createChannel(req.cookies["user.id"], channelData)//check if channel succesfully created 
-    response.redirect (`/chat/direct_messaging/@me/${channel_id}`)
+    response.redirect (`/chat/channels/@me/${channel_id}`)
   
   }
 

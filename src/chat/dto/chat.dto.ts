@@ -43,6 +43,7 @@ export interface channelReqDto
 export interface banManageSignalDto
 {
     user_id :string
+    banner_id :string
     type : 'BAN' | "UNBAN"
     dm_id? : string
     channel_id? : string
