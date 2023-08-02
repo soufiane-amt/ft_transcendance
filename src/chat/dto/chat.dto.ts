@@ -37,7 +37,6 @@ export interface channelReqDto
 {
     channel_id :string;
     user_id :string;
-    role :    'ADMIN' | 'USER';
     password? :string;
 }
 

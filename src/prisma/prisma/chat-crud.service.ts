@@ -38,10 +38,9 @@ export class ChatCrudService
         return await this.prisma.prismaClient.channelMembership.create ({data})
     }
 
-    @catchError()
     async findChannelById (channel_id :string)
     {
-      return this.prisma.prismaClient.channel.findUnique (
+      return await this.prisma.prismaClient.channel.findUnique (
         {
           where :{
             id : channel_id
@@ -453,6 +452,19 @@ export class ChatCrudService
         data: {
           role : 'USER'
         }
+      })
+    }
+
+    async getMemeberShip (user_id :string, channel_id :string)
+    {
+      return await this.prisma.prismaClient.channelMembership.findUnique ({
+        where :
+        {
+          channel_id_user_id : {
+          channel_id : channel_id,
+          user_id : user_id
+          },
+        },
       })
     }
 

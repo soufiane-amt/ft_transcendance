@@ -1,11 +1,12 @@
-import { Controller, Get, Query,Post , Res,Req,  Param, Inject, UseGuards, Body, BadRequestException } from '@nestjs/common';
+import { Controller, Get, Query,Post , Res,Req,  Param, Inject, UseGuards, Body, BadRequestException, ExecutionContext, CallHandler, SetMetadata } from '@nestjs/common';
 import { DmService } from './services/direct-messaging/dm.service';
 import { Request } from "express"
 import { ChatCrudService } from 'src/prisma/prisma/chat-crud.service';
 import { dmGateway } from './services/direct-messaging/dm.gateway';
-import { FriendShipExistenceGuard, cookieGuard, userRoomSubscriptionGuard } from './guards/dm.guard';
+import { FriendShipExistenceGuard, cookieGuard, userRoomSubscriptionGuard } from './guards/chat.guards';
 import { channelDto } from './dto/chat.dto';
-
+import { Reflector } from '@nestjs/core';
+0
 
 @Controller('chat')
 @UseGuards(cookieGuard)
@@ -14,10 +15,10 @@ export class ChatController
 
   constructor (private readonly dmService :DmService, 
                     private readonly chatCrud : ChatCrudService,
-                    @Inject(dmGateway) private readonly dmGate : dmGateway){}
+                    @Inject(dmGateway) private readonly dmGate : dmGateway, 
+                    private readonly reflector: Reflector){}
 
-
-  ///////////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////
   //-                 Direct Messaging controllers        -//
   ///////////////////////////////////////////////////////////
 

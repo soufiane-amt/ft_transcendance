@@ -5,7 +5,7 @@ import { DmService } from './dm.service';
 import { MessageDto, banManageSignalDto } from '../../dto/chat.dto';
 import { inboxPacketDto } from '../../dto/userInbox.dto';
 import { Server, Socket } from 'socket.io';
-import {  bannedConversationGuard, userRoomSubscriptionGuard } from 'src/chat/guards/dm.guard';
+import {  bannedConversationGuard, userRoomSubscriptionGuard } from 'src/chat/guards/chat.guards';
 import { UseGuards } from '@nestjs/common';
 import { UserCrudService } from 'src/prisma/prisma/user-crud.service';
 import { ChatCrudService } from 'src/prisma/prisma/chat-crud.service';
@@ -71,7 +71,7 @@ export class dmGateway implements OnGatewayConnection, OnGatewayDisconnect {
 
 
   //In case 
-  @UseGuards(userRoomSubscriptionGuard)
+  @UseGuards (userRoomSubscriptionGuard)
   @UseGuards (bannedConversationGuard)
   @SubscribeMessage ("sendMsgDm")
   handleSendMesDm(client: any,  message:MessageDto ) 
