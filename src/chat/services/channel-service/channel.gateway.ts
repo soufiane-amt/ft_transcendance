@@ -1,10 +1,11 @@
 import { UseGuards } from "@nestjs/common";
 import { OnGatewayConnection, SubscribeMessage, WebSocketGateway, WebSocketServer, WsException } from "@nestjs/websockets";
 import { Server, Socket } from "socket.io";
+import { Roles } from "src/chat/decorators/chat.decorator";
 import { MessageDto, banManageSignalDto, channelMembershipDto, channelReqDto, kickSignalDto } from "src/chat/dto/chat.dto";
 import { UpdateChannelDto, UpdateUserMemberShip } from "src/chat/dto/update-chat.dto";
 import { Role } from "src/chat/enum/role.enum";
-import { Roles, allowJoinGuard, bannedConversationGuard, channelPermission, userRoomSubscriptionGuard } from "src/chat/guards/chat.guards";
+import {  allowJoinGuard, bannedConversationGuard, channelPermission, userRoomSubscriptionGuard } from "src/chat/guards/chat.guards";
 import { ChatCrudService } from "src/prisma/prisma/chat-crud.service";
 import { UserCrudService } from "src/prisma/prisma/user-crud.service";
 
@@ -29,7 +30,7 @@ import { UserCrudService } from "src/prisma/prisma/user-crud.service";
         (await this.chatCrud.findAllJoinedChannels(user_id)).forEach(room => {
           client.join(room.id)
         });
-        }
+      }
 
     //check if the user exists
     //check if the user has permissions 

@@ -5,15 +5,8 @@ import { UserCrudService } from "src/prisma/prisma/user-crud.service";
 import { DmService } from "../services/direct-messaging/dm.service";
 import { dmGateway } from "../services/direct-messaging/dm.gateway";
 import { Role } from "../enum/role.enum";
-import { Observable } from "rxjs";
 import { banManageSignalDto, channelReqDto, kickSignalDto } from "../dto/chat.dto";
 import { UpdateChannelDto } from "../dto/update-chat.dto";
-import { channelGateway } from "../services/channel-service/channel.gateway";
-
-
-//Setting metadata aliases
-export const KEY_ROLE = 'roles'
-export const Roles = (...roles: Role[]) => SetMetadata('roles', roles);
 
 
 @Injectable()
@@ -193,3 +186,4 @@ export class bannedConversationGuard implements CanActivate {
     }
   }
 }
+import { channelGateway } from "../services/channel-service/channel.gateway";
