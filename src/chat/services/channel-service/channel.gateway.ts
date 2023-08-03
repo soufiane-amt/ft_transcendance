@@ -28,7 +28,8 @@ import { UserCrudService } from "src/prisma/prisma/user-crud.service";
           throw new WsException ("User not existing")
         console.log (`user ${user_id} connected\n`);
         (await this.chatCrud.findAllJoinedChannels(user_id)).forEach(room => {
-          client.join(room.id)
+          console.log ("user : " + user_id + " joined " + room.channel_id)
+          client.join(room.channel_id)
         });
       }
 
@@ -115,7 +116,8 @@ import { UserCrudService } from "src/prisma/prisma/user-crud.service";
     @SubscribeMessage ("sendMsgCh")
     handleSendMesDm(client: any,  message:MessageDto ) 
     {
-      this.server.to(message.channel_id).emit('message', message.content)
+      console.log ("---Dkhl---: ", message)
+      this.server.to(message.channel_id).emit('message', message)
     }
 
 

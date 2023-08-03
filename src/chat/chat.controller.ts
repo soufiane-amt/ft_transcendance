@@ -22,6 +22,11 @@ export class ChatController
   //-                 Direct Messaging controllers        -//
   ///////////////////////////////////////////////////////////
 
+  // @Get ()
+  // async getWelcomingData () //for later
+  // {
+
+  // }
   @Get ("/direct_messaging/:uid")
   @UseGuards(FriendShipExistenceGuard)
   async getUserToDm (@Param("uid") userToDm: string ,@Req() request : Request, @Res() response )

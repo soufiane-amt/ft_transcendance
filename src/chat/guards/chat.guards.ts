@@ -87,15 +87,18 @@ export class allowJoinGuard implements CanActivate
             return false
         console.log ("2")
             //check if the user wanting to join is already there in  join 
-        if (await this.chatCrud.getMemeberShip (joinRequest.user_id, joinRequest.channel_id) == null)
+        const user_membership = await this.chatCrud.getMemeberShip (joinRequest.user_id, joinRequest.channel_id)
+        if (user_membership == null)
         {
-        console.log ("3")
-
+            console.log ("3")
+            
             if ((targetedChannel.type == 'PROTECTED') && (!joinRequest.password || 
-                            joinRequest.password != targetedChannel.password))
+                joinRequest.password != targetedChannel.password))
                 return false
             return true 
         }
+        if (user_membership.role == 'OWNER') //this condition checks wether the channel is just created, and the owner is requesting to join its own channel
+            return true
         console.log ("4")
         return false
     }
@@ -182,7 +185,7 @@ export class bannedConversationGuard implements CanActivate {
     else
     {
         const memeberShip = await this.chatCrud.getMemeberShip (packet_data.channel_id, packet_data.user_id)
-        return (memeberShip.is_banned != false)
+        return (memeberShip?.is_banned != false)
     }
   }
 }
