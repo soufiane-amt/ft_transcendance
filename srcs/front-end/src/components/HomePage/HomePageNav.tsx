@@ -1,21 +1,31 @@
+'use client'
 import Image from "next/image";
 import Link from "next/link";
+import { useState } from "react";
 
 export default function HomePageNav() {
+  const [toggle, setToggle] = useState<boolean>(false);
+  const close = "/close.png";
+  const open = "/align.png"
+
+
+
   return (
-    <div className="bg-[#0D0149]  h-[100px] flex justify-between items-center">
-      <div className="m-[25px] w-[20%]">
-        <Image src="/myWhiteLogo.png" width={119.5} height={95.7} alt="Logo" priority={true}/>
-      </div>
-      <div className="flex items-center justify-around w-[40%] text-white">
+    <nav className="bg-[#0D0149]  w-full h-[100px] flex justify-between items-center">
+        <Image src="/myWhiteLogo.png" width={109.5} height={85.7} alt="Logo" priority={true} className="px-[15px] lg:[50px]"/>
+      <div className="lg:flex hidden items-center space-x-20 text-white ml-[50px] mr-[50px] font-bold ">
         <Link href="/" className="bg-[#333989] px-[60px] py-[10px] rounded-lg hover:bg-white hover:text-black">Home</Link>
         <Link href="/history" className="bg-[#333989] px-[60px] py-[10px] rounded-lg hover:bg-white hover:text-black">History</Link>
         <Link href="/about" className="bg-[#DA343E] px-[60px] py-[10px] rounded-lg hover:bg-white hover:text-black">About</Link>
       </div>
-    </div>
+      <div className="lg:hidden flex flex-1 justify-end items-center">
+          <Image src={toggle ? close : open} width={toggle ? 32 : 45} height={toggle ? 32 : 45} alt="Menu" className="mr-[20px] object-contain" onClick={() => setToggle((prev) => !prev)} />
+          <div className={`${toggle ? 'flex' : 'hidden'} p-6 bg-[#000000] bg-opacity-50 backdrop-blur-md absolute top-20 right-0 mx-4 my-2 min-w-[200px] min-h-[100px] rounded-xl flex-col space-y-5 text-white font-bold`}>
+            <Link href="/" className="bg-[#333989] px-[20px] py-[5px] rounded-lg hover:bg-white hover:text-black text-center">Home</Link>
+            <Link href="/history" className="bg-[#333989] px-[20px] py-[5px] rounded-lg hover:bg-white hover:text-black text-center">History</Link>
+            <Link href="/about" className="bg-[#DA343E] px-[20px] py-[5px] rounded-lg hover:bg-white hover:text-black text-center">About</Link>
+          </div>
+      </div>
+    </nav>
   );
 }
-
-
-// TODO: SEARCH FOR RESPONSIVE IN TALIWIND CSS WITH NAV BAR
-// READ MORE ABOUT NEXT AND FETCHING DATA

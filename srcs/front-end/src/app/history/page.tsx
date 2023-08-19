@@ -2,9 +2,10 @@ import HomePageNav from "../../components/HomePage/HomePageNav";
 
 export default function Home() {
   return (
-    <div>
+    <div className="bg-black overflow-hidden w-full h-full">
       <HomePageNav />
-      <h1>History</h1>
+      <main className="bg-[#EFECFF] w-full h-full">
+      </main>
     </div>
   );
 }
