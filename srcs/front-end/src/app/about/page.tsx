@@ -1,5 +1,10 @@
+import HomePageNav from "../../components/HomePage/HomePageNav";
+
 export default function Home() {
   return (
-    <h1>About</h1>
-  )
+    <div>
+      <HomePageNav />
+      <h1>About</h1>
+    </div>
+  );
 }
