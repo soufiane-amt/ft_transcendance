@@ -2,6 +2,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
+import { text } from "stream/consumers";
 
 export default function HomePageNav() {
   const [toggle, setToggle] = useState<boolean>(false);
@@ -19,7 +20,11 @@ export default function HomePageNav() {
         <Link href="/about" className="bg-[#DA343E] px-[60px] py-[10px] rounded-lg duration-[0.4s] ease-in hover:bg-[#e36870] hover:scale-110 hover:shadow-[2px_1px_15px_1px_#DA343E]">About</Link>
       </div>
       <div className="lg:hidden flex flex-1 justify-end items-center">
-          <Image src={toggle ? close : open} width={toggle ? 32 : 45} height={toggle ? 32 : 45} alt="Menu" className="mr-[20px] object-contain" onClick={() => setToggle((prev) => !prev)} />
+        {/* TODO: I will update this button to make me log in with intra */}
+          <button className="text-white font-bold hover:text-[#cccccc]">Let's Go</button>
+          <div className="mr-[30px] ml-[50px] w-[50px]">
+            <Image src={toggle ? close : open} width={toggle ? 32 : 45} height={toggle ? 32 : 45} alt="Menu" className="object-contain" onClick={() => setToggle((prev) => !prev)} />
+          </div>
           <div className={`${toggle ? 'flex' : 'hidden'} p-6 bg-[#000000] bg-opacity-50 backdrop-blur-md absolute top-20 right-0 mx-4 my-2 min-w-[200px] min-h-[100px] rounded-xl flex-col space-y-5 text-white font-bold popup`}>
             <Link href="/" className="bg-[#333989] px-[20px] py-[5px] rounded-lg hover:bg-[#6a70c8]  text-center">Home</Link>
             <Link href="/history" className="bg-[#333989] px-[20px] py-[5px] rounded-lg hover:bg-[#6a70c8]  text-center">History</Link>
