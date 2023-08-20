@@ -21,14 +21,14 @@ export default function HomePageNav() {
       </div>
       <div className="lg:hidden flex flex-1 justify-end items-center">
         {/* TODO: I will update this button to make me log in with intra */}
-          <button className="text-white font-bold hover:text-[#cccccc]">Let's Go!</button>
+          <button className="text-white font-extrabold text-lg hover:text-[#cccccc]">Let's Go!</button>
           <div className="mr-[15px] ml-[50px] w-[50px]">
             <Image src={toggle ? close : open} width={toggle ? 32 : 45} height={toggle ? 32 : 45} alt="Menu" className="object-contain" onClick={() => setToggle((prev) => !prev)} />
           </div>
-          <div className={`${toggle ? 'flex' : 'hidden'} p-6 bg-[#000000] bg-opacity-50 backdrop-blur-md absolute top-20 right-0 mx-4 my-2 min-w-[200px] min-h-[100px] rounded-xl flex-col space-y-5 text-white font-bold popup`}>
+          <div className={`${toggle ? 'flex  popup' : ' flex hide-popup'} p-6 bg-[#000000] bg-opacity-50 backdrop-blur-md absolute top-20 right-0 mx-4 my-2 min-w-[200px] min-h-[100px] rounded-xl flex-col space-y-5 text-white font-bold`}>
             <Link href="/" className="bg-[#333989] px-[20px] py-[5px] rounded-lg hover:bg-[#6a70c8]  text-center">Home</Link>
             <Link href="/history" className="bg-[#333989] px-[20px] py-[5px] rounded-lg hover:bg-[#6a70c8]  text-center">History</Link>
-            <Link href="/about" className="bg-[#DA343E] px-[20px] py-[5px] rounded-lg hover:bg-[#6a70c8]  text-center">About</Link>
+            <Link href="/about" className="bg-[#DA343E] px-[20px] py-[5px] rounded-lg hover:bg-[#e36870]  text-center">About</Link>
           </div>
       </div>
     </nav>
