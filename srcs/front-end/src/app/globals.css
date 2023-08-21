@@ -20,7 +20,7 @@ body {
 
 /*  this code is made by abdellah in homepage part */
 .popup {
-  animation: showPopup 0.8s ease-in-out forwards;
+  animation: showPopup 0.5s ease-in-out forwards;
 }
 
 @keyframes showPopup {
@@ -33,15 +33,10 @@ body {
 }
 
 
-.hide-popup {
-  animation: hidePopup 0.5s ease-in-out forwards;
+.card-shadow {
+  box-shadow: 1px 1px 15px #000000;
 }
 
-@keyframes hidePopup {
-  0% {
-    opacity: 1;
-}
-  100% {
-    opacity: 0;
-  }
+.custom {
+  height: 75%;
 }
