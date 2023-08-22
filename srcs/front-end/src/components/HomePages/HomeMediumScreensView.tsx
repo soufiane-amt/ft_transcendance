@@ -25,5 +25,3 @@ export default function HomeMediumScreensView() {
     </div>
     );
 }
-
-// items-center h-full justify-around
