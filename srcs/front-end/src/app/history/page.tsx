@@ -6,7 +6,7 @@ export default function Home() {
   return (
     <div className="bg-black w-full h-full">
       <HomePageNav />
-      <main className="bg-[#EFECFF] w-full h-[88%]">
+      <main className="bg-[#EFECFF] h-[88%] w-full overflow-scroll">
         <HistorySmallScreenView />
         <HistoryLargeScreenView />
       </main>
