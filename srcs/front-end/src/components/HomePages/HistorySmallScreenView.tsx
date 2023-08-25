@@ -18,7 +18,7 @@ const mono = Space_Mono({
 export default function HistorySmallScreenView() {
     return (
         <div className={`sm:lg:hidden flex justify-around items-center flex-col p-[5%] w-full h-full overflow-auto`}>
-            <h1 className={`font-black text-[35px] text-[#343CFF] ${pixelfont.className}`}>History</h1>
+            <h1 className={`font-black text-[45px] text-[#343CFF] ${pixelfont.className}`}>History</h1>
             <div className="w-[70%] h-[45%] relative">
                 <Image src="/PongCodeTheClassics.png" alt="ping game" layout="fill" objectFit="contain"/>
             </div>
