@@ -1,6 +1,6 @@
 import { Press_Start_2P } from "next/font/google";
-import { Kanit } from "next/font/google";
 import Image from "next/image";
+import HomePageIntraLoginButton from "./HomePageIntraLoginButton";
 
 
 const pixelfont = Press_Start_2P({
@@ -8,11 +8,6 @@ const pixelfont = Press_Start_2P({
   weight: ['400'],
 });
 
-
-const quotefont = Kanit({
-  subsets: ['latin'],
-  weight: ['400'],
-});
 
 export default function HomeSmallScreensView() {
     return (
@@ -25,7 +20,7 @@ export default function HomeSmallScreensView() {
         <div className="w-[80%] h-[30%] relative">
             <Image src="/PongGameAnimation.png" alt="ping game" layout="fill" objectFit="contain"/>
         </div>
-        <div className={`${quotefont.className} p-[15px] w-[195px] max-w-[226px] text-center mx-[20px]  rounded-md text-white bg-[#DA343E] font-extrabold card-shadow hover:border-white hover:bg-white hover:text-[#0D0149] hover:cursor-pointer`}>Login with intra 42</div>
+        <HomePageIntraLoginButton />
     </div>
     );
 }
