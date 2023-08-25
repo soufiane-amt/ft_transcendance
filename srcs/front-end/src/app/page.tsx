@@ -18,5 +18,4 @@ export default function Home() {
 
 // TODO:
 // split repeated components 
-// change the animation of buttons in large screen navbar
 // start working on about and history pages
