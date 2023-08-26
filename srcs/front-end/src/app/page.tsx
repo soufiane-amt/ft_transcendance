@@ -15,3 +15,8 @@ export default function Home() {
     </div>
   );
 }
+
+// TODO:: code home/history/about page with three difffent responsive sizes minimum , handle small height problem it should be scroll , sync one padding - header size etc between all pages, use grid in about contributers , use one component in about contibuters
+// TODO: start learning : node, express, nest , postgreSQL and orm (prisma)
+// TODO: start working in ATH
+// TODO: start working in 2fa
