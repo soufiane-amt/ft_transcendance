@@ -22,7 +22,7 @@ export default function AboutSmallScreensView() {
     return (
         <div className="sm:lg:hidden flex justify-evenly items-center flex-col gap-8 p-[8%] text-white overflow-scroll">
             <h2 className={`text-[30px] ${pixelfont.className}`}>About</h2>
-            <p className={`${mono.className} text-center text-[13px] `}>
+            <p className={`${mono.className} text-center text-[13px]`}>
                 The project "ft_transcendence" is a website creation project focused on implementing a multiplayer online game of Pong.
                 The website provides a user-friendly interface, a chat feature, and real-time gameplay.
                 The project has specific requirements, such as using NestJS for the backend, a TypeScript framework for the frontend, and a PostgreSQL database.

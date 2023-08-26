@@ -18,7 +18,7 @@ const mono = Space_Mono({
 export default function HistorySmallScreenView() {
     return (
         <div className={`sm:lg:hidden flex justify-evenly items-center flex-col p-[8%] gap-8`}>
-            <h1 className={`text-[30px] text-[#343CFF] ${pixelfont.className}`}>History</h1>
+            <h2 className={`text-[30px] text-[#343CFF] ${pixelfont.className}`}>History</h2>
             <Image src="/PongCodeTheClassics.png" alt="ping game" height={300} width={300}/>
             <p className={`${mono.className} text-[#0D0149] text-center text-[13px]`}>
                 Pong, groundbreaking electronic game released in 1972 by the American game manufacturer Atari, Inc.

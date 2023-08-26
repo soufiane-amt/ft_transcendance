@@ -1,5 +1,6 @@
 import AboutSmallScreensView from "@/components/HomePages/AboutSmallScreensView";
 import HomePageNav from "../../components/HomePages/HomePageNav";
+import AboutLargeScreensView from "@/components/HomePages/AboutLargeScreensView";
 
 export default function Home() {
   return (
@@ -7,6 +8,7 @@ export default function Home() {
       <HomePageNav />
       <main className="bg-[#0D0149] w-full h-[88%] overflow-auto">
         <AboutSmallScreensView />
+        <AboutLargeScreensView />
       </main>
     </div>
   );
