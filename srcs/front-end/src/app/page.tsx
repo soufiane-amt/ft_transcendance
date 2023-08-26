@@ -15,7 +15,3 @@ export default function Home() {
     </div>
   );
 }
-
-// TODO:
-// split repeated components 
-// start working on about and history pages
