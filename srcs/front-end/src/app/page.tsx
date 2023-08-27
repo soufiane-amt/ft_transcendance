@@ -20,4 +20,3 @@ export default function Home() {
 // TODO: start working in ATH
 // TODO: start working in 2fa
 // TODO: focus on animations and user experience 
-// headers size hisory about
