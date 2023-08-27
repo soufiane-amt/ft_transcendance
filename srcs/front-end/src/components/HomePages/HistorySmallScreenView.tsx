@@ -18,7 +18,7 @@ const mono = Space_Mono({
 export default function HistorySmallScreenView() {
     return (
         <div className={`sm:md:hidden flex flex-col items-center justify-between h-full overflow-auto p-[5%]`}>
-            <h2 className={`text-[45px] text-[#343CFF] ${pixelfont.className}`}>History</h2>
+            <h2 className={`text-[30px] text-[#343CFF] ${pixelfont.className} mt-[30px]`}>History</h2>
             <Image src="/PongCodeTheClassics.png" alt="ping game" height={300} width={300} className="my-[30px]"/>
             <div className="flex gap-8 flex-col">
                 <p  className={`${mono.className} text-[#0D0149] text-center text-[13px]`}>

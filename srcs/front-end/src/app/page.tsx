@@ -19,4 +19,5 @@ export default function Home() {
 // TODO: start learning : node, express, nest , postgreSQL and orm (prisma)
 // TODO: start working in ATH
 // TODO: start working in 2fa
-// TODO: focus on animations and user experience
+// TODO: focus on animations and user experience 
+// headers size hisory about
