@@ -11,12 +11,12 @@ const pixelfont = Press_Start_2P({
 
 export default function HomeMediumScreensView() {
     return (
-    <div className="sm:max-2xl:flex hidden  items-center flex-col w-full h-full justify-around  p-[5%] gap-16">
-        <div className="flex items-center justify-center flex-col">
-            <h2 className={`text-white ${pixelfont.className} text-[45px]`}>Retro</h2>
-            <h2 className={`text-white ${pixelfont.className} text-[45px]`}>Ping Pong</h2>
+    <div className="sm:max-2xl:flex hidden items-center justify-between flex-col h-full p-[5%] overflow-auto">
+        <div className="flex items-center justify-center flex-col mt-[30px]">
+            <h2 className={`text-white ${pixelfont.className} text-[60px]`}>Retro</h2>
+            <h2 className={`text-white ${pixelfont.className} text-[50px]`}>Ping Pong</h2>
         </div>
-        <Image src="/PingPongTable.png" alt="ping game" width={520} height={350}/>
+        <Image src="/pingpong.png" alt="ping game" width={500} height={500} className="my-[40px]"/>
         <HomePageIntraLoginButton />
     </div>
     );

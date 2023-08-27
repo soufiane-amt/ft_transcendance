@@ -17,7 +17,7 @@ export default function HomePageNav() {
 
 
   return (
-    <nav className="bg-[#0D0149]  w-full h-[12%] flex justify-between items-center">
+    <nav className="bg-[#0D0149] flex justify-between items-center min-h-[105px] w-full">
       <Image src="/myWhiteLogo.png" width={129.5} height={105.7} alt="Logo" priority={true} className="px-[15px] lg:[50px]"/>
       <div className="lg:flex hidden items-center space-x-20 text-white ml-[50px] mr-[20px] font-bold  p-[2%]">
         <Link href="/" className={`${quotefont.className} p-[10px] w-[195px] max-w-[226px] text-center mx-[20px]  rounded-md text-white bg-[#333989] font-black card-shadow hover:border-white hover:bg-white hover:text-[#0D0149] hover:cursor-pointer`}>Home</Link>
