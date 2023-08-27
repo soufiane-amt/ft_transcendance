@@ -1,3 +1,4 @@
+
 import { Press_Start_2P } from "next/font/google";
 import { Space_Mono } from "next/font/google";
 import Image from "next/image";
@@ -14,13 +15,12 @@ const mono = Space_Mono({
     style: ['normal'],
     weight: ['400', '700'],
 })
-
-export default function HistoryLargeScreenView() {
+export default function HistoryMediumScreenView() {
     return (
-        <div className="2xl:flex hidden items-center justify-between flex-col h-full p-[5%] overflow-auto">
-            <h2 className={`text-[80px] text-[#343CFF] ${pixelfont.className}`}>History</h2>
-            <div className="flex items-center justify-evenly gap-x-14">
+        <div className="md:max-2xl:flex hidden items-center justify-between flex-col h-full p-[5%] overflow-auto">
+            <div className="flex items-center justify-evenly gap-x-14 mt-[15%]">
                 <div className="flex justify-normal items-start flex-col gap-y-8 w-[40%]">
+                    <h2 className={`text-[50px] text-[#343CFF] ${pixelfont.className}`}>History</h2>
                     <p   className={`${mono.className} text-[#0D0149] text-[13px]`}>
                         Pong, a simple yet groundbreaking game, was released in 1972 by the American game manufacturer Atari, Inc.
                         It was one of the earliest video games and its popularity helped to launch the video game industry.
@@ -43,9 +43,9 @@ export default function HistoryLargeScreenView() {
                         Today, Pong is part of the permanent collection of the Smithsonian Institution in Washington, D.C., due to its cultural impact.
                     </p>
                 </div>
-                <Image src="/PongCodeTheClassics.png" alt="ping game" width={450} height={400}/>
+                <Image src="/PongCodeTheClassics.png" alt="ping game" width={350} height={500}/>
             </div>
-            <h6 className={`${mono.className} text-[#0D0149] text-center text-[10px] mt-[3%]`}>© 2023 retro ping pong. All rights reserved.</h6>
+            <h6 className={`${mono.className} text-[#0D0149] text-center text-[10px] mt-[15px]`}>© 2023 retro ping pong. All rights reserved.</h6>
         </div>
     );
 }
