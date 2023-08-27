@@ -20,7 +20,7 @@ export default function HistorySmallScreenView() {
         <div className={`sm:md:hidden flex flex-col items-center justify-between h-full overflow-auto p-[5%]`}>
             <h2 className={`text-[45px] text-[#343CFF] ${pixelfont.className}`}>History</h2>
             <Image src="/PongCodeTheClassics.png" alt="ping game" height={300} width={300} className="my-[30px]"/>
-            <div>
+            <div className="flex gap-8 flex-col">
                 <p  className={`${mono.className} text-[#0D0149] text-center text-[13px]`}>
                     Pong, a simple yet groundbreaking game, was released in 1972 by the American game manufacturer Atari, Inc.
                     It was one of the earliest video games and its popularity helped to launch the video game industry.

@@ -18,7 +18,7 @@ const mono = Space_Mono({
 export default function HistoryLargeScreenView() {
     return (
         <div className="2xl:flex hidden items-center justify-between flex-col h-full p-[5%] overflow-auto">
-            <h2 className={`text-[80px] text-[#343CFF] ${pixelfont.className}`}>History</h2>
+            <h2 className={`text-[80px] text-[#343CFF] ${pixelfont.className} mb-[30px]`}>History</h2>
             <div className="flex items-center justify-evenly gap-x-14">
                 <div className="flex justify-normal items-start flex-col gap-y-8 w-[40%]">
                     <p   className={`${mono.className} text-[#0D0149] text-[13px]`}>

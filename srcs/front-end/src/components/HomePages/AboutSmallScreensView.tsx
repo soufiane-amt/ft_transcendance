@@ -1,7 +1,6 @@
 import { Press_Start_2P } from "next/font/google";
 import { Space_Mono } from "next/font/google";
-import Image from "next/image";
-import Link from 'next/link'
+import AboutPersonInfo from "./AboutPersonInfo";
 
 
 
@@ -20,7 +19,7 @@ const mono = Space_Mono({
 
 export default function AboutSmallScreensView() {
     return (
-        <div className="sm:lg:hidden flex justify-evenly items-center flex-col gap-8 p-[8%] text-white overflow-scroll">
+        <div className="sm:hidden flex justify-evenly items-center flex-col gap-8 p-[5%] text-white overflow-auto">
             <h2 className={`text-[30px] ${pixelfont.className}`}>About</h2>
             <p className={`${mono.className} text-center text-[13px]`}>
                 The project "ft_transcendence" is a website creation project focused on implementing a multiplayer online game of Pong.
@@ -34,66 +33,10 @@ export default function AboutSmallScreensView() {
             </p>
             <h2 className={`text-[30px] ${pixelfont.className}`}>Team</h2>
             <div className="flex items-center gap-8 flex-col">
-                <div className="flex items-center justify-center gap-4 flex-col">
-                    <h3 className={`${mono.className} text-center text-[16px] `}>Full Stack</h3>
-                    <Image src="/Abdellah.jpg" alt="profile picture" height={150} width={150} className="rounded-full"/>
-                    <div className="flex items-center justify-center gap-6">
-                        <Link href="https://twitter.com/withabdellah" target="_blank">
-                            <Image src="/IconTwitter.png" alt="githubicon" height={40} width={40}/>
-                        </Link>
-                        <Link href="https://www.linkedin.com/in/abdellah-bellakrim-0027b6233" target="_blank">
-                            <Image src="/IconLinkedin.png" alt="githubicon" height={40} width={40}/>
-                        </Link>
-                        <Link href="https://www.github.com/AbdellahBellakrim" target="_blank">
-                            <Image src="/IconGithub.png" alt="githubicon" height={40} width={40}/>
-                        </Link>
-                    </div>
-                </div>
-                <div className="flex items-center justify-center gap-4 flex-col">
-                    <h3 className={`${mono.className} text-center text-[16px] `}>Full Stack</h3>
-                    <Image src="/Abdellah.jpg" alt="profile picture" height={150} width={150} className="rounded-full"/>
-                    <div className="flex items-center justify-center gap-6">
-                        <Link href="https://twitter.com/withabdellah" target="_blank">
-                            <Image src="/IconTwitter.png" alt="githubicon" height={40} width={40}/>
-                        </Link>
-                        <Link href="https://www.linkedin.com/in/abdellah-bellakrim-0027b6233" target="_blank">
-                            <Image src="/IconLinkedin.png" alt="githubicon" height={40} width={40}/>
-                        </Link>
-                        <Link href="https://www.github.com/AbdellahBellakrim" target="_blank">
-                            <Image src="/IconGithub.png" alt="githubicon" height={40} width={40}/>
-                        </Link>
-                    </div>
-                </div>
-                <div className="flex items-center justify-center gap-4 flex-col">
-                    <h3 className={`${mono.className} text-center text-[16px] `}>Full Stack</h3>
-                    <Image src="/Abdellah.jpg" alt="profile picture" height={150} width={150} className="rounded-full"/>
-                    <div className="flex items-center justify-center gap-6">
-                        <Link href="https://twitter.com/withabdellah" target="_blank">
-                            <Image src="/IconTwitter.png" alt="githubicon" height={40} width={40}/>
-                        </Link>
-                        <Link href="https://www.linkedin.com/in/abdellah-bellakrim-0027b6233" target="_blank">
-                            <Image src="/IconLinkedin.png" alt="githubicon" height={40} width={40}/>
-                        </Link>
-                        <Link href="https://www.github.com/AbdellahBellakrim" target="_blank">
-                            <Image src="/IconGithub.png" alt="githubicon" height={40} width={40}/>
-                        </Link>
-                    </div>
-                </div>
-                <div className="flex items-center justify-center gap-4 flex-col">
-                    <h3 className={`${mono.className} text-center text-[16px] `}>Full Stack</h3>
-                    <Image src="/Abdellah.jpg" alt="profile picture" height={150} width={150} className="rounded-full"/>
-                    <div className="flex items-center justify-center gap-6">
-                        <Link href="https://twitter.com/withabdellah" target="_blank">
-                            <Image src="/IconTwitter.png" alt="githubicon" height={40} width={40}/>
-                        </Link>
-                        <Link href="https://www.linkedin.com/in/abdellah-bellakrim-0027b6233" target="_blank">
-                            <Image src="/IconLinkedin.png" alt="githubicon" height={40} width={40}/>
-                        </Link>
-                        <Link href="https://www.github.com/AbdellahBellakrim" target="_blank">
-                            <Image src="/IconGithub.png" alt="githubicon" height={40} width={40}/>
-                        </Link>
-                    </div>
-                </div>
+                <AboutPersonInfo Picture="/Abdellah.jpg" TwitterLink="https://twitter.com/withabdellah" LinkedinLink="https://www.linkedin.com/in/abdellah-bellakrim-0027b6233" GithubLink="https://www.github.com/AbdellahBellakrim"/>
+                <AboutPersonInfo Picture="/Abdellah.jpg" TwitterLink="https://twitter.com/withabdellah" LinkedinLink="https://www.linkedin.com/in/abdellah-bellakrim-0027b6233" GithubLink="https://www.github.com/AbdellahBellakrim"/>
+                <AboutPersonInfo Picture="/Abdellah.jpg" TwitterLink="https://twitter.com/withabdellah" LinkedinLink="https://www.linkedin.com/in/abdellah-bellakrim-0027b6233" GithubLink="https://www.github.com/AbdellahBellakrim"/>
+                <AboutPersonInfo Picture="/Abdellah.jpg" TwitterLink="https://twitter.com/withabdellah" LinkedinLink="https://www.linkedin.com/in/abdellah-bellakrim-0027b6233" GithubLink="https://www.github.com/AbdellahBellakrim"/>
             </div>
         </div>
     );

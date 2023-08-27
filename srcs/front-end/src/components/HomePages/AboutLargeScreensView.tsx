@@ -1,7 +1,6 @@
 import { Press_Start_2P } from "next/font/google";
 import { Space_Mono } from "next/font/google";
-import Image from "next/image";
-import Link from 'next/link'
+import AboutPersonInfo from "./AboutPersonInfo";
 
 
 
@@ -20,10 +19,9 @@ const mono = Space_Mono({
 
 export default function AboutLargeScreensView() {
     return (
-        <div className="max-lg:hidden flex items-center justify-around flex-col  text-white p-[5%] w-full h-full gap-16">
-
-            <div className="flex items-center justify-between gap-16">
-                <p className={`${mono.className} text-[13px] font-bold`}>
+        <div className="2xl:flex hidden items-center justify-normal flex-col  text-white p-[5%] w-full h-full overflow-auto">
+            <div className="flex items-center justify-between gap-16 w-full my-[50px] h-1/2">
+                <p className={`${mono.className} text-[13px]  w-8/12`}>
                     The project "ft_transcendence" is a website creation project focused on implementing a multiplayer online game of Pong.
                     The website provides a user-friendly interface, a chat feature, and real-time gameplay.
                     The project has specific requirements, such as using NestJS for the backend, a TypeScript framework for the frontend, and a PostgreSQL database.
@@ -33,77 +31,16 @@ export default function AboutLargeScreensView() {
                     The game itself should be a faithful representation of the original Pong, with customization options and responsiveness to network issues.
                     The project submission and evaluation process follow the standard Git repository workflow.
                 </p>
-                <h2 className={`text-[45px] ${pixelfont.className}`}>About</h2>
+                <h2 className={`text-[80px] ${pixelfont.className}`}>About</h2>
             </div>
-
-
-
-            
-            <div className="flex items-center justify-between  gap-8 w-full">
-                <h2 className={`text-[45px] ${pixelfont.className}`}>Team</h2>
-                <div className="flex items-center justify-between gap-24">
-                    <div className="flex items-center justify-center gap-4 flex-col">
-                        <h3 className={`${mono.className} text-center text-[16px] `}>Full Stack</h3>
-                        <Image src="/Abdellah.jpg" alt="profile picture" height={150} width={150} className="rounded-full"/>
-                        <div className="flex items-center justify-center gap-6">
-                            <Link href="https://twitter.com/withabdellah" target="_blank">
-                                <Image src="/IconTwitter.png" alt="githubicon" height={40} width={40}/>
-                            </Link>
-                            <Link href="https://www.linkedin.com/in/abdellah-bellakrim-0027b6233" target="_blank">
-                                <Image src="/IconLinkedin.png" alt="githubicon" height={40} width={40}/>
-                            </Link>
-                            <Link href="https://www.github.com/AbdellahBellakrim" target="_blank">
-                                <Image src="/IconGithub.png" alt="githubicon" height={40} width={40}/>
-                            </Link>
-                        </div>
-                    </div>    
-                    <div className="flex items-center justify-center gap-4 flex-col">
-                        <h3 className={`${mono.className} text-center text-[16px] `}>Full Stack</h3>
-                        <Image src="/Abdellah.jpg" alt="profile picture" height={150} width={150} className="rounded-full"/>
-                        <div className="flex items-center justify-center gap-6">
-                            <Link href="https://twitter.com/withabdellah" target="_blank">
-                                <Image src="/IconTwitter.png" alt="githubicon" height={40} width={40}/>
-                            </Link>
-                            <Link href="https://www.linkedin.com/in/abdellah-bellakrim-0027b6233" target="_blank">
-                                <Image src="/IconLinkedin.png" alt="githubicon" height={40} width={40}/>
-                            </Link>
-                            <Link href="https://www.github.com/AbdellahBellakrim" target="_blank">
-                                <Image src="/IconGithub.png" alt="githubicon" height={40} width={40}/>
-                            </Link>
-                        </div>
-                    </div>
-                    <div className="flex items-center justify-center gap-4 flex-col">
-                        <h3 className={`${mono.className} text-center text-[16px] `}>Full Stack</h3>
-                        <Image src="/Abdellah.jpg" alt="profile picture" height={150} width={150} className="rounded-full"/>
-                        <div className="flex items-center justify-center gap-6">
-                            <Link href="https://twitter.com/withabdellah" target="_blank">
-                                <Image src="/IconTwitter.png" alt="githubicon" height={40} width={40}/>
-                            </Link>
-                            <Link href="https://www.linkedin.com/in/abdellah-bellakrim-0027b6233" target="_blank">
-                                <Image src="/IconLinkedin.png" alt="githubicon" height={40} width={40}/>
-                            </Link>
-                            <Link href="https://www.github.com/AbdellahBellakrim" target="_blank">
-                                <Image src="/IconGithub.png" alt="githubicon" height={40} width={40}/>
-                            </Link>
-                        </div>
-                    </div>      
-                    <div className="flex items-center justify-center gap-4 flex-col">
-                        <h3 className={`${mono.className} text-center text-[16px] `}>Full Stack</h3>
-                        <Image src="/Abdellah.jpg" alt="profile picture" height={150} width={150} className="rounded-full"/>
-                        <div className="flex items-center justify-center gap-6">
-                            <Link href="https://twitter.com/withabdellah" target="_blank">
-                                <Image src="/IconTwitter.png" alt="githubicon" height={40} width={40}/>
-                            </Link>
-                            <Link href="https://www.linkedin.com/in/abdellah-bellakrim-0027b6233" target="_blank">
-                                <Image src="/IconLinkedin.png" alt="githubicon" height={40} width={40}/>
-                            </Link>
-                            <Link href="https://www.github.com/AbdellahBellakrim" target="_blank">
-                                <Image src="/IconGithub.png" alt="githubicon" height={40} width={40}/>
-                            </Link>
-                        </div>
-                    </div>      
+            <div className="flex items-center justify-between  gap-8 w-full my-[50px] min-h-[250px]">
+                <h2 className={`text-[80px] ${pixelfont.className}`}>Team</h2>
+                <div className="flex items-center justify-between gap-24 w-8/12">
+                    <AboutPersonInfo Picture="/Abdellah.jpg" TwitterLink="https://twitter.com/withabdellah" LinkedinLink="https://www.linkedin.com/in/abdellah-bellakrim-0027b6233" GithubLink="https://www.github.com/AbdellahBellakrim"/>
+                    <AboutPersonInfo Picture="/Abdellah.jpg" TwitterLink="https://twitter.com/withabdellah" LinkedinLink="https://www.linkedin.com/in/abdellah-bellakrim-0027b6233" GithubLink="https://www.github.com/AbdellahBellakrim"/>
+                    <AboutPersonInfo Picture="/Abdellah.jpg" TwitterLink="https://twitter.com/withabdellah" LinkedinLink="https://www.linkedin.com/in/abdellah-bellakrim-0027b6233" GithubLink="https://www.github.com/AbdellahBellakrim"/>
+                    <AboutPersonInfo Picture="/Abdellah.jpg" TwitterLink="https://twitter.com/withabdellah" LinkedinLink="https://www.linkedin.com/in/abdellah-bellakrim-0027b6233" GithubLink="https://www.github.com/AbdellahBellakrim"/>
                 </div>
-
             </div>
         </div>
     );
