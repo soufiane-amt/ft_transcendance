@@ -1,0 +1,15 @@
+version: '3.8'
+services:
+  db:
+    image: postgres:13
+    ports:
+      - 5434:5432
+    networks:
+      - pingpong
+    env_file:
+      - .env
+    restart: on-failure
+  
+networks:
+  pingpong:
+    driver: bridge
