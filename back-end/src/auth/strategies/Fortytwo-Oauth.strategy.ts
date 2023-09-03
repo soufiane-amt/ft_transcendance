@@ -22,8 +22,8 @@ export class Fortytwostrategy extends PassportStrategy(Strategy) {
     const user = {
       login: data._json.login,
       firstname: data._json.first_name,
-      last_name: data._json.last_name,
-      full_name: data._json.displayname,
+      lastname: data._json.last_name,
+      fullname: data._json.displayname,
       email: data._json.email,
       avatar: data._json.image.link,
     };
