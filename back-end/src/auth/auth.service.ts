@@ -3,11 +3,15 @@ import {
   Injectable,
   InternalServerErrorException,
 } from '@nestjs/common';
+import { JwtService } from '@nestjs/jwt';
 import { PrismaService } from 'src/prisma/prisma.service';
 
 @Injectable()
 export class AuthService {
-  constructor(private readonly service: PrismaService) {}
+  constructor(
+    private readonly service: PrismaService,
+    private readonly jwtservice: JwtService,
+  ) {}
 
   // signin function
   async signIn(user) {
@@ -16,17 +20,23 @@ export class AuthService {
     const userExists = await this.findUserByEmail(user.email);
 
     if (!userExists) return this.registerUser(user);
-    return 'user connected successfully';
+    return this.jwtservice.sign({
+      sub: userExists.id,
+      email: userExists.email,
+    });
   }
 
   // function to register user
   async registerUser(user) {
     try {
-      const createUser = await this.service.user.create({
+      const newUser = await this.service.user.create({
         data: user,
       });
 
-      return 'user registred successfully';
+      return this.jwtservice.sign({
+        sub: newUser.id,
+        email: newUser.email,
+      });
     } catch {
       throw new InternalServerErrorException();
     }
