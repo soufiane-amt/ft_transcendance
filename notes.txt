@@ -44,3 +44,4 @@ Examples
 
   Format your Prisma schema
   $ prisma format
+

@@ -34,5 +34,5 @@ lerna-debug.log*
 !.vscode/launch.json
 !.vscode/extensions.json
 
-nest-cli-data
 prisma/migrations
+nest-cli/
