@@ -9,6 +9,7 @@ import {
 import FortytwoOauthGuard from './guards/Fortytwo-Oauth.guard';
 import { AuthService } from './auth.service';
 import { Response } from 'express';
+import { JwtAuthGuard } from './guards/jwt-aut.guard';
 
 @Controller()
 export class AuthController {
@@ -16,9 +17,7 @@ export class AuthController {
 
   @Get('login')
   @UseGuards(FortytwoOauthGuard)
-  async HandleLogin() {
-    return 'this is login page';
-  }
+  async HandleLogin() {}
 
   @Get('redirect')
   @UseGuards(FortytwoOauthGuard)
@@ -26,11 +25,17 @@ export class AuthController {
     const token = await this.authservice.signIn(request.user);
 
     response.cookie('access_token', token, {
-      maxAge: 2592000000,
-      sameSite: true,
+      maxAge: 60 * 60 * 24 * 7,
       secure: false,
     });
 
-    return response.status(HttpStatus.OK);
+    return response.redirect('http://localhost:3001/profile');
+    // return response.status(200).send('done');
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Get('/profile')
+  async HandleProfile() {
+    return 'profile';
   }
 }

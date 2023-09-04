@@ -13,12 +13,7 @@ export class Fortytwostrategy extends PassportStrategy(Strategy) {
     });
   }
 
-  async validate(
-    accessToken: string,
-    refreshToken: string,
-    data: any,
-    done: VerifyCallback,
-  ) {
+  async validate(accessToken: string, refreshToken: string, data: any) {
     const user = {
       login: data._json.login,
       firstname: data._json.first_name,

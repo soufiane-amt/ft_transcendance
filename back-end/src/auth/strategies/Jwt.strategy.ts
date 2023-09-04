@@ -20,16 +20,16 @@ export class JwtStrategy extends PassportStrategy(Strategy, 'jwt') {
     };
 
     super({
+      jwtFromRequest: extractJwtFromCookie,
       ignoreExpiration: false,
       secretOrKey: process.env.JWT_SECRET,
-      jwtFromRequest: extractJwtFromCookie,
     });
   }
-
   async validate(payload: JwtPayload) {
     const user = await this.service.user.findFirst({
       where: {
         id: payload.sub,
+        email: payload.email,
       },
     });
 

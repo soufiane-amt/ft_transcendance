@@ -2,6 +2,7 @@ import {
   BadRequestException,
   Injectable,
   InternalServerErrorException,
+  Res,
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { PrismaService } from 'src/prisma/prisma.service';
@@ -20,10 +21,7 @@ export class AuthService {
     const userExists = await this.findUserByEmail(user.email);
 
     if (!userExists) return this.registerUser(user);
-    return this.jwtservice.sign({
-      sub: userExists.id,
-      email: userExists.email,
-    });
+    return this.signToken(userExists.id, userExists.email);
   }
 
   // function to register user
@@ -33,17 +31,14 @@ export class AuthService {
         data: user,
       });
 
-      return this.jwtservice.sign({
-        sub: newUser.id,
-        email: newUser.email,
-      });
+      return this.signToken(newUser.id, newUser.email);
     } catch {
       throw new InternalServerErrorException();
     }
   }
 
   // function to find user by email on database
-  async findUserByEmail(_email) {
+  async findUserByEmail(_email: string) {
     const user = await this.service.user.findUnique({
       where: {
         email: _email,
@@ -51,5 +46,14 @@ export class AuthService {
     });
     if (!user) return null;
     return user;
+  }
+
+  async signToken(userId: string, email: string) {
+    const payload = {
+      userId: userId,
+      email: email,
+    };
+    const token = await this.jwtservice.signAsync(payload);
+    return token;
   }
 }
