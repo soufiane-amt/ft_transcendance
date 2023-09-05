@@ -1,33 +1,53 @@
-
 /*This class styles the main element of message container*/
-.msgBubble__match_width_to_text {
-    display: inline-block; /*Making the parent container resizes based on the size of its content*/
-    
-    padding: 10px 30px;
-    max-width: 50%;
-    
-    background-color: rgb(128, 128, 202);
-    border-radius: 20px;
 
-    color: white;
-    position: relative;
+.message_bubble {
+  display: inline-block; /*Making the parent container resizes based on the size of its content*/
+
+  padding: 10px 30px;
+  max-width: 50%;
+
+  border-radius: 20px;
+
+  position: relative;
 }
-
 
 /*This class serves a styling for the bubble tail triangle*/
-.msgBubble__triangle {
-    border: 10px solid transparent;
-    border-top: 0px;
-    border-bottom: 20px solid rgb(79, 79, 183);
-    transform: rotate(228deg);
-    position: absolute;
-  }
-
-
-
-.middlePosition {
-    position: relative;
-    top: 50%;
-    left: 50%;
+.left.message_bubble::after {
+  content: "";
+  position: absolute;
+  bottom: 3px; /* Adjust this value to position the tail */
+  left: -15px;
+  border-width: 20px; /* Size of the triangle */
+  border-style: solid;
+  border-color: transparent transparent rgb(128, 128, 202);
+  transform: rotate(352deg);
 }
 
+.right.message_bubble::after {
+    content: "";
+    position: absolute;
+    bottom: 0px; /* Adjust this value to position the tail */
+    right: -15px;
+    border-width: 20px; /* Size of the triangle */
+    border-style: solid;
+    border-color: transparent transparent rgb(212, 212, 235);
+    transform: rotate(8deg);
+
+  }
+
+  .message_bubble___sender_theme {
+    background-color: rgb(128, 128, 202);
+    color: white;
+  
+  }
+
+  .message_bubble___receiver_theme  {
+    background-color: rgb(212, 212, 235);
+    color: rgb(0, 0, 0);
+
+  }
+      
+.middlePosition {
+  position: relative;
+  left: 30px;
+}

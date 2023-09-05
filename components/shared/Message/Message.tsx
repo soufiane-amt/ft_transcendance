@@ -1,27 +1,20 @@
-import style from "./Message.module.css"
-
-function BubbleTail ()
-{
-    return (
-    <div className={style.msgBubble__triangle} ></div>
-    )
-}
-
+import style from "./Message.module.css";
 
 function MessageBubble() {
-    return (
-    <div className={`${style.msgBubble__match_width_to_text} ${style.middlePosition}`}>Hello world!</div>
-    ); // Use the class name directly
-  }
-  
+  return (
+    <div className={`${style.left} ${style.message_bubble} ${style.message_bubble___sender_theme}`}>
+    {/* <div className={`${style.right} ${style.message_bubble} ${style.message_bubble___receiver_theme}`}> */}
+      Hello world!
+      {/* Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world! */}
+      {/* Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world! */}
+    </div>
+  );
+}
 
-export default function Message ()
-{
-    return (
-        <div >
-            <MessageBubble/>
-            <BubbleTail/>
-                
-        </div>
-    );
+export default function Message() {
+  return (
+    <div className={style.middlePosition}>
+      <MessageBubble />
+    </div>
+  );
 }
