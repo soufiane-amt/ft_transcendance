@@ -1,0 +1,33 @@
+
+/*This class styles the main element of message container*/
+.msgBubble__match_width_to_text {
+    display: inline-block; /*Making the parent container resizes based on the size of its content*/
+    
+    padding: 10px 30px;
+    max-width: 50%;
+    
+    background-color: rgb(128, 128, 202);
+    border-radius: 20px;
+
+    color: white;
+    position: relative;
+}
+
+
+/*This class serves a styling for the bubble tail triangle*/
+.msgBubble__triangle {
+    border: 10px solid transparent;
+    border-top: 0px;
+    border-bottom: 20px solid rgb(79, 79, 183);
+    transform: rotate(228deg);
+    position: absolute;
+  }
+
+
+
+.middlePosition {
+    position: relative;
+    top: 50%;
+    left: 50%;
+}
+
