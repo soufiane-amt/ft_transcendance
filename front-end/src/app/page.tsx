@@ -1,4 +1,4 @@
-import MobileView from "@/components/HomePage/MobileView/MobileView";
+import HomePage from "@/components/HomePage/HomePage";
 import HomePageNav from "../components/HomePage/HomePageNav";
 
 export default function Home() {
@@ -6,7 +6,7 @@ export default function Home() {
     <div className="w-full h-full overflow-y-auto">
       <HomePageNav />
       <main className="w-full z-0">
-        <MobileView />
+        <HomePage />
       </main>
     </div>
   );

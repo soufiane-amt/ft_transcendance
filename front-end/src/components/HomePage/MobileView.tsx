@@ -1,9 +1,9 @@
 import { Press_Start_2P } from "next/font/google";
 import Image from "next/image";
-import HomePageIntraLoginButton from "../HomePageIntraLoginButton";
+import HomePageIntraLoginButton from "./HomePageIntraLoginButton";
 import { Space_Mono } from "next/font/google";
 import Link from "next/link";
-import AboutPersonInfo from "../AboutPersonInfo";
+import AboutPersonInfo from "./AboutPersonInfo";
 
 const pixelfont = Press_Start_2P({
   subsets: ["latin"],
@@ -18,7 +18,7 @@ const mono = Space_Mono({
 
 export default function MobileView() {
   return (
-    <div className="sm:hidden">
+    <div>
       <section
         id="home"
         className="bg-[#0D0149] flex flex-col items-center justify-around min-h-[100vh] p-[5%] pt-[90px]"
@@ -50,7 +50,7 @@ export default function MobileView() {
       </section>
       <section
         id="history"
-        className="bg-[#dfdafd] min-h-[100vh] p-[5%] flex flex-col items-center justify-evenly py-[90px]"
+        className="bg-[#EFECFF] min-h-[100vh] p-[5%] flex flex-col items-center justify-evenly py-[90px]"
       >
         <h2 className={`text-[30px] text-[#343CFF] ${pixelfont.className}`}>
           History
