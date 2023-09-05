@@ -45,9 +45,8 @@ Examples
   Format your Prisma schema
   $ prisma format
 
-TODO: recode front, backend local : yes or no , backend to check if the is login or not
-
-TODO: start learning : node, express, nest , postgreSQL and orm (prisma)
-TODO: start working in ATH
+TODO: ----------------- fix errors, review code , start animations
+TODO: backend to check if the is login or not
 TODO: start working in 2fa
-TODO: focus on animations and user experience
+
+
