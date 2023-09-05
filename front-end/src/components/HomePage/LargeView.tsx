@@ -108,9 +108,9 @@ export default function LargeView() {
       </section>
       <section
         id="about"
-        className="bg-[#0D0149] min-h-[100vh] p-[5%] pt-[90px] flex items-center justify-around flex-col text-white"
+        className="bg-[#0D0149] p-[5%] pt-[90px] flex items-center justify-around flex-col text-white min-h-[100vh]"
       >
-        <div className="flex items-center justify-between gap-16 w-full h-1/2">
+        <div className="flex items-center justify-between gap-16 w-full min-h-1/2 my-[30px]">
           <p className={`${mono.className} text-[16px]  w-8/12`}>
             The project "ft_transcendence" is a website creation project focused
             on implementing a multiplayer online game of Pong. The website
@@ -131,8 +131,8 @@ export default function LargeView() {
           <h2 className={`text-[80px] ${pixelfont.className}`}>About</h2>
         </div>
 
-        <div className="w-full flex flex-col">
-          <div className="flex items-center justify-between  gap-8 w-full h-1/2">
+        <div className="w-full flex flex-col min-h-1/2 my-[30px]">
+          <div className="flex items-center justify-between gap-8">
             <h2 className={`text-[80px] ${pixelfont.className}`}>Team</h2>
             <div className="flex items-center justify-between gap-24 w-8/12">
               <AboutPersonInfo
@@ -162,7 +162,7 @@ export default function LargeView() {
             </div>
           </div>
         </div>
-        <h6 className={`${mono.className} text-center text-[13px]`}>
+        <h6 className={`${mono.className} text-center text-[13px] my-[30px]`}>
           © 2023 retro ping pong. All rights reserved.
         </h6>
       </section>
