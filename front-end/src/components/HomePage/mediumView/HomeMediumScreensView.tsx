@@ -1,6 +1,6 @@
 import { Press_Start_2P } from "next/font/google";
 import Image from "next/image";
-import HomePageIntraLoginButton from "./HomePageIntraLoginButton";
+import HomePageIntraLoginButton from "../HomePageIntraLoginButton";
 import Link from "next/link";
 
 const pixelfont = Press_Start_2P({

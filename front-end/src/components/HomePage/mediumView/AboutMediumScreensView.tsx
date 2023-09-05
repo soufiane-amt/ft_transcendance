@@ -1,6 +1,6 @@
 import { Press_Start_2P } from "next/font/google";
 import { Space_Mono } from "next/font/google";
-import AboutPersonInfo from "./AboutPersonInfo";
+import AboutPersonInfo from "../AboutPersonInfo";
 
 const pixelfont = Press_Start_2P({
   subsets: ["latin"],

@@ -1,6 +1,6 @@
 import { Press_Start_2P } from "next/font/google";
 import Image from "next/image";
-import HomePageIntraLoginButton from "./HomePageIntraLoginButton";
+import HomePageIntraLoginButton from "../HomePageIntraLoginButton";
 import Link from "next/link";
 
 const pixelfont = Press_Start_2P({
@@ -10,7 +10,7 @@ const pixelfont = Press_Start_2P({
 
 export default function HomeLargeScreensView() {
   return (
-    <div className="2xl:flex hidden items-center justify-between w-full h-full p-[5%] overflow-auto">
+    <div className="2xl:flex hidden items-center justify-between w-full h-full p-[5%] overflow-visible">
       <div className="w-[50%] h-[100%] relative">
         <Image
           src="/PingPongTable.png"
