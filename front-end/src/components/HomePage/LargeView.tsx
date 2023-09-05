@@ -108,9 +108,9 @@ export default function LargeView() {
       </section>
       <section
         id="about"
-        className="bg-[#0D0149] min-h-[100vh] p-[5%] pt-[90px] flex items-center justify-between flex-col text-white"
+        className="bg-[#0D0149] min-h-[100vh] p-[5%] pt-[90px] flex items-center justify-evenly flex-col text-white"
       >
-        <div className="flex items-center justify-between gap-16 w-full my-[220px] h-1/2">
+        <div className="flex items-center justify-between gap-16 w-full h-1/2">
           <p className={`${mono.className} text-[16px]  w-8/12`}>
             The project "ft_transcendence" is a website creation project focused
             on implementing a multiplayer online game of Pong. The website
@@ -132,7 +132,7 @@ export default function LargeView() {
         </div>
 
         <div className="w-full flex flex-col">
-          <div className="flex items-center justify-between  gap-8 w-full mt-[50px] mb-[80px] h-1/2">
+          <div className="flex items-center justify-between  gap-8 w-full h-1/2">
             <h2 className={`text-[80px] ${pixelfont.className}`}>Team</h2>
             <div className="flex items-center justify-between gap-24 w-8/12">
               <AboutPersonInfo
