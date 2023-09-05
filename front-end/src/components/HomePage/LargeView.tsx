@@ -108,7 +108,7 @@ export default function LargeView() {
       </section>
       <section
         id="about"
-        className="bg-[#0D0149] min-h-[100vh] p-[5%] pt-[90px] flex items-center justify-evenly flex-col text-white"
+        className="bg-[#0D0149] min-h-[100vh] p-[5%] pt-[90px] flex items-center justify-around flex-col text-white"
       >
         <div className="flex items-center justify-between gap-16 w-full h-1/2">
           <p className={`${mono.className} text-[16px]  w-8/12`}>
@@ -161,10 +161,10 @@ export default function LargeView() {
               />
             </div>
           </div>
-          <h6 className={`${mono.className} text-center text-[13px] mt-[3%]`}>
-            © 2023 retro ping pong. All rights reserved.
-          </h6>
         </div>
+        <h6 className={`${mono.className} text-center text-[13px]`}>
+          © 2023 retro ping pong. All rights reserved.
+        </h6>
       </section>
     </div>
   );
