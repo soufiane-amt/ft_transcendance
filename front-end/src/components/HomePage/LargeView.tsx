@@ -23,7 +23,7 @@ export default function LargeView() {
         id="home"
         className="bg-[#0D0149] min-h-[100vh] pb-[5%] pt-[90px] max-w-[1920px] flex flex-row justify-around"
       >
-        <div className="flex justify-center items-center flex-col mt-[30px] min-w-[800px]">
+        <div className="flex justify-center items-center flex-col mt-[50px] min-w-[800px]">
           <h2
             className={`text-white text-center font-bold text-[50px]  ${pixelfont.className}`}
           >
@@ -32,7 +32,7 @@ export default function LargeView() {
           <Image src="/test4.png" alt="ping game" width={600} height={600} />
         </div>
 
-        <div className="flex items-center justify-around flex-col mt-[30px] min-w-[800px]">
+        <div className="flex items-center justify-around flex-col mt-[50px] min-w-[800px]">
           <div className="bg-[#DA343E] p-[15px] -rotate-12 rounded-md card-shadow w-fit h-fit my-[30px]">
             <h2
               className={`text-white text-center font-bold text-[70px]  ${pixelfont.className}`}
