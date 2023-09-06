@@ -18,12 +18,12 @@ const mono = Space_Mono({
 
 export default function LargeView() {
   return (
-    <div>
+    <div className="flex flex-col items-center">
       <section
         id="home"
-        className="bg-[#0D0149] min-h-[100vh] p-[5%] pt-[90px] flex flex-row justify-evenly"
+        className="bg-[#0D0149] min-h-[100vh] p-[5%] pt-[90px] max-w-[1880px] flex flex-row justify-around"
       >
-        <div className="flex justify-center items-center w-[50%] flex-col mt-[30px]">
+        <div className="flex justify-center items-center flex-col mt-[30px] min-w-[800px]">
           <h2
             className={`text-white text-center font-bold text-[50px]  ${pixelfont.className}`}
           >
@@ -32,7 +32,7 @@ export default function LargeView() {
           <Image src="/test4.png" alt="ping game" width={600} height={600} />
         </div>
 
-        <div className="flex items-center justify-around flex-col w-[50%] mt-[30px]">
+        <div className="flex items-center justify-around flex-col mt-[30px] min-w-[800px]">
           <div className="bg-[#DA343E] p-[15px] -rotate-12 rounded-md card-shadow w-fit h-fit my-[30px]">
             <h2
               className={`text-white text-center font-bold text-[70px]  ${pixelfont.className}`}
@@ -60,60 +60,63 @@ export default function LargeView() {
       </section>
       <section
         id="history"
-        className="bg-[#EFECFF] min-h-[100vh] p-[5%] pt-[90px] flex justify-evenly items-center flex-col"
+        className="bg-[#EFECFF] w-full flex items-center justify-center"
       >
-        <h2
-          className={`text-[50px] text-[#343CFF] ${pixelfont.className} mb-[30px]`}
-        >
-          History
-        </h2>
-        <div className="flex items-center justify-evenly gap-x-14">
-          <div className="flex justify-normal items-start flex-col gap-y-8 w-[40%]">
-            <p className={`${mono.className} text-[#0D0149] text-[16px]`}>
-              Pong, a simple yet groundbreaking game, was released in 1972 by
-              the American game manufacturer Atari, Inc. It was one of the
-              earliest video games and its popularity helped to launch the video
-              game industry. The original Pong consisted of two paddles that
-              players used to volley a small ball back and forth across a
-              screen.
-            </p>
-            <p className={`${mono.className} text-[#0D0149] text-[16px]`}>
-              The game was created by Allan Alcorn as a training exercise
-              assigned to him by Atari co-founder Nolan Bushnell. Bushnell and
-              Atari co-founder Ted Dabney were surprised by the quality of
-              Alcorn’s work and decided to manufacture the game. The concept of
-              the game was based on an electronic ping-pong game included in the
-              Magnavox Odyssey, which was the first home video game console.
-            </p>
-            <p className={`${mono.className} text-[#0D0149] text-[16px]`}>
-              In response to Pong’s success, Magnavox later sued Atari for
-              patent infringement. Despite this, Pong was the first commercially
-              successful video game, and it helped establish the video game
-              industry along with the Magnavox Odyssey. After its release,
-              several companies began producing games that closely mimicked its
-              gameplay.
-            </p>
-            <p className={`${mono.className} text-[#0D0149] text-[16px]`}>
-              During the 1975 Christmas season, Atari released a home version of
-              Pong exclusively through Sears retail stores. The home version was
-              also a commercial success and led to numerous clones. The game has
-              been remade on numerous home and portable platforms following its
-              release. Today, Pong is part of the permanent collection of the
-              Smithsonian Institution in Washington, D.C., due to its cultural
-              impact.
-            </p>
+        <div className="min-h-[100vh] p-[5%] pt-[90px] flex justify-evenly items-center flex-col max-w-[1880px]">
+          <h2
+            className={`text-[50px] text-[#343CFF] ${pixelfont.className} mb-[30px]`}
+          >
+            History
+          </h2>
+          <div className="flex items-center justify-evenly gap-x-14">
+            <div className="flex justify-normal items-start flex-col gap-y-8 w-[40%]">
+              <p className={`${mono.className} text-[#0D0149] text-[16px]`}>
+                Pong, a simple yet groundbreaking game, was released in 1972 by
+                the American game manufacturer Atari, Inc. It was one of the
+                earliest video games and its popularity helped to launch the video
+                game industry. The original Pong consisted of two paddles that
+                players used to volley a small ball back and forth across a
+                screen.
+              </p>
+              <p className={`${mono.className} text-[#0D0149] text-[16px]`}>
+                The game was created by Allan Alcorn as a training exercise
+                assigned to him by Atari co-founder Nolan Bushnell. Bushnell and
+                Atari co-founder Ted Dabney were surprised by the quality of
+                Alcorn’s work and decided to manufacture the game. The concept of
+                the game was based on an electronic ping-pong game included in the
+                Magnavox Odyssey, which was the first home video game console.
+              </p>
+              <p className={`${mono.className} text-[#0D0149] text-[16px]`}>
+                In response to Pong’s success, Magnavox later sued Atari for
+                patent infringement. Despite this, Pong was the first commercially
+                successful video game, and it helped establish the video game
+                industry along with the Magnavox Odyssey. After its release,
+                several companies began producing games that closely mimicked its
+                gameplay.
+              </p>
+              <p className={`${mono.className} text-[#0D0149] text-[16px]`}>
+                During the 1975 Christmas season, Atari released a home version of
+                Pong exclusively through Sears retail stores. The home version was
+                also a commercial success and led to numerous clones. The game has
+                been remade on numerous home and portable platforms following its
+                release. Today, Pong is part of the permanent collection of the
+                Smithsonian Institution in Washington, D.C., due to its cultural
+                impact.
+              </p>
+            </div>
+            <Image
+              src="/PongCodeTheClassics.png"
+              alt="ping game"
+              width={450}
+              height={400}
+            />
           </div>
-          <Image
-            src="/PongCodeTheClassics.png"
-            alt="ping game"
-            width={450}
-            height={400}
-          />
+
         </div>
       </section>
       <section
         id="about"
-        className="bg-[#0D0149] flex items-center flex-col text-white min-h-[100vh] justify-around gap-36 px-[5%] pt-[90px] pb-[2%]"
+        className="bg-[#0D0149]  text-white min-h-[100vh] max-w-[1880px] flex items-center flex-col justify-around gap-36 px-[5%] pt-[90px] pb-[2%]"
       >
         <div className="flex items-center justify-between gap-16 w-full mt-[20px]">
           <p className={`${mono.className} text-[16px]  w-8/12`}>
