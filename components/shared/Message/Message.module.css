@@ -1,5 +1,31 @@
-/*This class styles the main element of message container*/
 
+.image__full_circle {
+  border-radius: 50%;
+}
+
+.message_header {
+  display: inline-block;
+  position: relative;
+}
+
+.message_header__avatar {
+  height: var(--message_avatar_size);
+  width: var(--message_avatar_size);
+}
+
+.message_header__visibility_icon {
+  /* height: 10px; */
+  /* width: 10px; */
+  height: calc(var(--message_avatar_size)/5);
+  width: calc(var(--message_avatar_size)/5);
+  position: absolute;
+  left: 80%;
+  bottom:5%;
+
+  background-color: #1AE304;
+}
+
+/*This class styles the main element of message container*/
 .message_bubble {
   display: inline-block; /*Making the parent container resizes based on the size of its content*/
 
@@ -10,6 +36,11 @@
 
   position: relative;
 }
+
+
+
+
+
 
 /*This class serves a styling for the bubble tail triangle*/
 
@@ -30,7 +61,10 @@
   color: white;
 }
 
+
+
 /* |received message styling| */
+
 .right.message_bubble::after {
   content: "";
   position: absolute;
@@ -46,6 +80,10 @@
   background-color: rgb(212, 212, 235);
   color: rgb(0, 0, 0);
 }
+
+
+
+
 
 .middlePosition {
   position: relative;

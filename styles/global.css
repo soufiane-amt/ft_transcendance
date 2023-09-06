@@ -1,3 +1,9 @@
+:root{
+  --message_avatar_size:60px;
+
+}
+
+
 html,
 body {
   padding: 0;
