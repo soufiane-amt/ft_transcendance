@@ -5,14 +5,15 @@ import Image from 'next/image'
 // const messageContent = "Hello world! Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!"
 const messageContent = "Hello world!"
 const avatar = "/images/avatar.png"
-const sentMessage = true;
+const sentMessage = false;
 
 
 
-function    AvatarUser ({messageOwnerAvatar})
+function    AvatarUser ({messageOwnerAvatar, isMessageSent})
 {
+    const avatarStylingClasses:string = `${style.message_header} ${isMessageSent ? style.message__switch_order : ''} `
     return (
-        <div className={style.message_header}>
+        <div className={avatarStylingClasses}>
             <Image className={`${style.message_header__avatar} ${style.image__full_circle}`} src={messageOwnerAvatar} alt="user avatar" width={100} height={1000}/>
         </div>
     )
@@ -50,11 +51,12 @@ function MessageBubble({messageContent :string, isMessageSent}) {
   );
 }
 export default function Message() {
-  const messageBodyClasses = `style.message_body style.message__switch_order`;
+
+  const messagePositionStyle = sentMessage ? `${style.middlePosition}` : '';
   return (
-    <div className={`${style.message}  `}>
-        <AvatarUser messageOwnerAvatar={avatar} />
-        <div className={messageBodyClasses}>
+    <div className={`${style.message} ${messagePositionStyle} `}>
+        <AvatarUser messageOwnerAvatar={avatar} isMessageSent={sentMessage}/>
+        <div className={style.message_body}>
             <MessageBubble messageContent={messageContent} isMessageSent={sentMessage} />
             <TimeStamp/>
         </div>

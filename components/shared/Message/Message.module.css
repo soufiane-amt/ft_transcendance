@@ -6,6 +6,7 @@
 .message {
   display: flex;
   flex-direction: row;
+  max-width: 50%;
   gap: var(--message_header_body_spacing);
 }
 
@@ -22,8 +23,6 @@
   position: absolute;
   left: 80%;
   top : calc(var(--message_avatar_size)/1.4);
-  /* bottom:9%; */
-
 
 }
 
@@ -46,7 +45,7 @@
   display: inline-block; /*Making the parent container resizes based on the size of its content*/
 
   padding: 10px 50px;
-  max-width: 50%;
+  /* max-width: 50%; */
 
   border-radius: 20px;
 
@@ -112,10 +111,11 @@
 
 /***- utils -**/
 .message__switch_order {
+  /* display: none; */
   order: 2;
 }
 
 .middlePosition {
-  position: relative;
-  left: 30px;
+  position: absolute;
+  right: 0;
 }
