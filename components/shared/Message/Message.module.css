@@ -8,14 +8,23 @@
   position: relative;
 }
 
+.message_header::before {
+  content: var(--black_circle_char); /* Unicode character for a solid circle or any icon you prefer */
+  color: var(--online_user_icon); /* Color for the online indicator */
+  font-size: calc(var(--message_avatar_size)/5);; /* Adjust the size as needed */
+  position: absolute;
+  left: 80%;
+  bottom:5%;
+
+
+}
+
 .message_header__avatar {
   height: var(--message_avatar_size);
   width: var(--message_avatar_size);
 }
 
 .message_header__visibility_icon {
-  /* height: 10px; */
-  /* width: 10px; */
   height: calc(var(--message_avatar_size)/5);
   width: calc(var(--message_avatar_size)/5);
   position: absolute;

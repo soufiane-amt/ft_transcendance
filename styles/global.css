@@ -1,6 +1,7 @@
 :root{
   --message_avatar_size:60px;
-
+  --online_user_icon:#1AE304;
+  --black_circle_char:"\25CF";
 }
 
 

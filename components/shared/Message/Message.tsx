@@ -21,7 +21,7 @@ function    AvatarUser ({messageOwnerAvatar, userVisibiliy})
     return (
         <div className={style.message_header}>
             <Image className={`${style.message_header__avatar} ${style.image__full_circle}`} src={messageOwnerAvatar} alt="user avatar" width={100} height={1000}/>
-            <div className={`${style.message_header__visibility_icon} ${style.image__full_circle}`}/>
+            {/* <div className={`${style.message_header__visibility_icon} ${style.image__full_circle}`}/> */}
         </div>
     )
 }
