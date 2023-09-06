@@ -5,8 +5,8 @@ import Image from 'next/image'
 // const messageContent = "Hello world! Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!"
 const messageContent = "Hello world!"
 const avatar = "/images/avatar.png"
-const sentMessage = false;
-
+const sentMessage = true;
+const timeStamp="16:35"
 
 
 function    AvatarUser ({messageOwnerAvatar, isMessageSent})
@@ -18,23 +18,15 @@ function    AvatarUser ({messageOwnerAvatar, isMessageSent})
         </div>
     )
 }
-function TimeStamp ()
+function TimeStamp ({time})
 {
   return (
     <div className={`${style.time_stamp} ${style.time_stamp__font_size} ${style.time_stamp__gray}`}>
-      16:35
+      {time}
     </div>
   )
 }
 
-// function MessageBubble({messageContent :string, isMessageSent:boolean}) {
-//   return (
-//     <div className={`${style.left} ${style.message_bubble} ${style.message_bubble___sent_style}`}>
-//       {/* <div className={`${style.right} ${style.message_bubble} ${style.message_bubble___received_style}`}> */}
-//       {messageContent}
-//     </div>
-//   );
-// }
 function MessageBubble({messageContent :string, isMessageSent}) {
   const bubbleStylingClass = clsx ( {
     [style.message_bubble]: true,
@@ -52,13 +44,13 @@ function MessageBubble({messageContent :string, isMessageSent}) {
 }
 export default function Message() {
 
-  const messagePositionStyle = sentMessage ? `${style.middlePosition}` : '';
+  const messagePositionStyle = sentMessage ? `${style.message__to_right}` : '';
   return (
     <div className={`${style.message} ${messagePositionStyle} `}>
         <AvatarUser messageOwnerAvatar={avatar} isMessageSent={sentMessage}/>
         <div className={style.message_body}>
             <MessageBubble messageContent={messageContent} isMessageSent={sentMessage} />
-            <TimeStamp/>
+            <TimeStamp time={timeStamp}/>
         </div>
     </div>
   );

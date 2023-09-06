@@ -109,13 +109,14 @@
   color: rgb(125, 139, 158);
 }
 
+/*/***********************/*
+
 /***- utils -**/
 .message__switch_order {
-  /* display: none; */
   order: 2;
 }
 
-.middlePosition {
+.message__to_right {
   position: absolute;
   right: 0;
 }
