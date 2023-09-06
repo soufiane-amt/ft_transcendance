@@ -21,7 +21,7 @@ export default function LargeView() {
     <div className="flex flex-col items-center">
       <section
         id="home"
-        className="bg-[#0D0149] min-h-[100vh] p-[5%] pt-[90px] max-w-[1880px] flex flex-row justify-around"
+        className="bg-[#0D0149] min-h-[100vh] pb-[5%] pt-[90px] max-w-[1880px] flex flex-row justify-around"
       >
         <div className="flex justify-center items-center flex-col mt-[30px] min-w-[800px]">
           <h2
@@ -62,7 +62,7 @@ export default function LargeView() {
         id="history"
         className="bg-[#EFECFF] w-full flex items-center justify-center"
       >
-        <div className="min-h-[100vh] p-[5%] pt-[90px] flex justify-evenly items-center flex-col max-w-[1880px]">
+        <div className="min-h-[100vh] pb-[5%] pt-[90px] flex justify-evenly items-center flex-col max-w-[1880px]">
           <h2
             className={`text-[50px] text-[#343CFF] ${pixelfont.className} mb-[30px]`}
           >
