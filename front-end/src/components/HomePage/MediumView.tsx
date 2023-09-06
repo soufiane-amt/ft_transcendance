@@ -64,7 +64,7 @@ export default function MediumView() {
         />
         <div className="flex gap-8 flex-col">
           <p
-            className={`${mono.className} text-[#0D0149] text-center text-[12px]`}
+            className={`${mono.className} text-[#0D0149] text-center text-[16px]`}
           >
             Pong, a simple yet groundbreaking game, was released in 1972 by the
             American game manufacturer Atari, Inc. It was one of the earliest
@@ -73,7 +73,7 @@ export default function MediumView() {
             used to volley a small ball back and forth across a screen.
           </p>
           <p
-            className={`${mono.className} text-[#0D0149] text-center text-[12px]`}
+            className={`${mono.className} text-[#0D0149] text-center text-[16px]`}
           >
             The game was created by Allan Alcorn as a training exercise assigned
             to him by Atari co-founder Nolan Bushnell. Bushnell and Atari
@@ -83,7 +83,7 @@ export default function MediumView() {
             Odyssey, which was the first home video game console.
           </p>
           <p
-            className={`${mono.className} text-[#0D0149] text-center text-[12px]`}
+            className={`${mono.className} text-[#0D0149] text-center text-[16px]`}
           >
             In response to Pong’s success, Magnavox later sued Atari for patent
             infringement. Despite this, Pong was the first commercially
@@ -92,7 +92,7 @@ export default function MediumView() {
             companies began producing games that closely mimicked its gameplay.
           </p>
           <p
-            className={`${mono.className} text-[#0D0149] text-center text-[12px]`}
+            className={`${mono.className} text-[#0D0149] text-center text-[16px]`}
           >
             During the 1975 Christmas season, Atari released a home version of
             Pong exclusively through Sears retail stores. The home version was
@@ -109,7 +109,7 @@ export default function MediumView() {
         className="bg-[#0D0149] min-h-[100vh] flex justify-evenly items-center flex-col gap-8 p-[5%] text-white pt-[90px]"
       >
         <h2 className={`text-[40px] ${pixelfont.className}`}>About</h2>
-        <p className={`${mono.className} text-center text-[12px]`}>
+        <p className={`${mono.className} text-center text-[16px]`}>
           The project ft_transcendence is a website creation project focused on
           implementing a multiplayer online game of Pong. The website provides a
           user-friendly interface, a chat feature, and real-time gameplay. The
@@ -156,7 +156,7 @@ export default function MediumView() {
             />
           </div>
         </div>
-        <h6 className={`${mono.className} text-center text-[9px] my-[30px]`}>
+        <h6 className={`${mono.className} text-center text-[13px] my-[30px]`}>
           © 2023 retro ping pong. All rights reserved.
         </h6>
       </section>
