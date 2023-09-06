@@ -23,16 +23,16 @@ export default function LargeView() {
         id="home"
         className="bg-[#0D0149] min-h-[100vh] p-[5%] pt-[90px] flex flex-row justify-evenly"
       >
-        <div className="flex justify-center items-center w-[50%] flex-col">
-          <h3
+        <div className="flex justify-center items-center w-[50%] flex-col mt-[30px]">
+          <h2
             className={`text-white text-center font-bold text-[50px]  ${pixelfont.className}`}
           >
             Let&apos;s Play!
-          </h3>
-          <Image src="/test4.png" alt="ping game" width={880} height={880} />
+          </h2>
+          <Image src="/test4.png" alt="ping game" width={600} height={600} />
         </div>
 
-        <div className="flex items-center justify-around flex-col w-[50%]">
+        <div className="flex items-center justify-around flex-col w-[50%] mt-[30px]">
           <div className="bg-[#DA343E] p-[15px] -rotate-12 rounded-md card-shadow w-fit h-fit my-[30px]">
             <h2
               className={`text-white text-center font-bold text-[70px]  ${pixelfont.className}`}
@@ -63,7 +63,7 @@ export default function LargeView() {
         className="bg-[#EFECFF] min-h-[100vh] p-[5%] pt-[90px] flex justify-evenly items-center flex-col"
       >
         <h2
-          className={`text-[80px] text-[#343CFF] ${pixelfont.className} mb-[30px]`}
+          className={`text-[50px] text-[#343CFF] ${pixelfont.className} mb-[30px]`}
         >
           History
         </h2>
@@ -113,9 +113,9 @@ export default function LargeView() {
       </section>
       <section
         id="about"
-        className="bg-[#0D0149] p-[5%] pt-[90px] flex items-center justify-around flex-col text-white min-h-[100vh]"
+        className="bg-[#0D0149] flex items-center flex-col text-white min-h-[100vh] justify-around gap-36 px-[5%] pt-[90px] pb-[2%]"
       >
-        <div className="flex items-center justify-between gap-16 w-full min-h-1/2 my-[30px]">
+        <div className="flex items-center justify-between gap-16 w-full mt-[20px]">
           <p className={`${mono.className} text-[16px]  w-8/12`}>
             The project ft_transcendence is a website creation project focused
             on implementing a multiplayer online game of Pong. The website
@@ -133,41 +133,39 @@ export default function LargeView() {
             issues. The project submission and evaluation process follow the
             standard Git repository workflow.
           </p>
-          <h2 className={`text-[80px] ${pixelfont.className}`}>About</h2>
+          <h2 className={`text-[50px] ${pixelfont.className}`}>About</h2>
         </div>
 
-        <div className="w-full flex flex-col min-h-1/2 my-[30px]">
-          <div className="flex items-center justify-between gap-8">
-            <h2 className={`text-[80px] ${pixelfont.className}`}>Team</h2>
-            <div className="flex items-center justify-between gap-24 w-8/12">
-              <AboutPersonInfo
-                Picture="/Abdellah.jpg"
-                TwitterLink="https://twitter.com/withabdellah"
-                LinkedinLink="https://www.linkedin.com/in/abdellah-bellakrim-0027b6233"
-                GithubLink="https://www.github.com/AbdellahBellakrim"
-              />
-              <AboutPersonInfo
-                Picture="/Abdellah.jpg"
-                TwitterLink="https://twitter.com/withabdellah"
-                LinkedinLink="https://www.linkedin.com/in/abdellah-bellakrim-0027b6233"
-                GithubLink="https://www.github.com/AbdellahBellakrim"
-              />
-              <AboutPersonInfo
-                Picture="/Abdellah.jpg"
-                TwitterLink="https://twitter.com/withabdellah"
-                LinkedinLink="https://www.linkedin.com/in/abdellah-bellakrim-0027b6233"
-                GithubLink="https://www.github.com/AbdellahBellakrim"
-              />
-              <AboutPersonInfo
-                Picture="/Abdellah.jpg"
-                TwitterLink="https://twitter.com/withabdellah"
-                LinkedinLink="https://www.linkedin.com/in/abdellah-bellakrim-0027b6233"
-                GithubLink="https://www.github.com/AbdellahBellakrim"
-              />
-            </div>
+        <div className="flex items-center justify-between gap-8 w-full">
+          <h2 className={`text-[50px] ${pixelfont.className}`}>Team</h2>
+          <div className="flex items-center justify-between gap-24 w-8/12">
+            <AboutPersonInfo
+              Picture="/Abdellah.jpg"
+              TwitterLink="https://twitter.com/withabdellah"
+              LinkedinLink="https://www.linkedin.com/in/abdellah-bellakrim-0027b6233"
+              GithubLink="https://www.github.com/AbdellahBellakrim"
+            />
+            <AboutPersonInfo
+              Picture="/Abdellah.jpg"
+              TwitterLink="https://twitter.com/withabdellah"
+              LinkedinLink="https://www.linkedin.com/in/abdellah-bellakrim-0027b6233"
+              GithubLink="https://www.github.com/AbdellahBellakrim"
+            />
+            <AboutPersonInfo
+              Picture="/Abdellah.jpg"
+              TwitterLink="https://twitter.com/withabdellah"
+              LinkedinLink="https://www.linkedin.com/in/abdellah-bellakrim-0027b6233"
+              GithubLink="https://www.github.com/AbdellahBellakrim"
+            />
+            <AboutPersonInfo
+              Picture="/Abdellah.jpg"
+              TwitterLink="https://twitter.com/withabdellah"
+              LinkedinLink="https://www.linkedin.com/in/abdellah-bellakrim-0027b6233"
+              GithubLink="https://www.github.com/AbdellahBellakrim"
+            />
           </div>
         </div>
-        <h6 className={`${mono.className} text-center text-[13px] my-[30px]`}>
+        <h6 className={`${mono.className} text-center text-[13px]`}>
           © 2023 retro ping pong. All rights reserved.
         </h6>
       </section>
