@@ -5,9 +5,10 @@ import MediumView from "./MediumView";
 import LargeView from "./LargeView";
 
 export default function HomePage() {
-  const [WindowWidth, setWindowWidth] = useState(window.innerWidth);
+  const [WindowWidth, setWindowWidth] = useState(-1);
 
   useEffect(() => {
+    setWindowWidth(window.innerWidth);
     const handleResize = () => setWindowWidth(window.innerWidth);
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);

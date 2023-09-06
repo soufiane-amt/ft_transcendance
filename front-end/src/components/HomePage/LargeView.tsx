@@ -23,8 +23,13 @@ export default function LargeView() {
         id="home"
         className="bg-[#0D0149] min-h-[100vh] p-[5%] pt-[90px] flex flex-row justify-evenly"
       >
-        <div className="flex justify-center items-center w-[50%]">
-          <Image src="/pingpong.png" alt="ping game" width={680} height={680} />
+        <div className="flex justify-center items-center w-[50%] flex-col">
+          <h3
+            className={`text-white text-center font-bold text-[50px]  ${pixelfont.className}`}
+          >
+            Let&apos;s Play!
+          </h3>
+          <Image src="/test4.png" alt="ping game" width={880} height={880} />
         </div>
 
         <div className="flex items-center justify-around flex-col w-[50%]">
@@ -112,7 +117,7 @@ export default function LargeView() {
       >
         <div className="flex items-center justify-between gap-16 w-full min-h-1/2 my-[30px]">
           <p className={`${mono.className} text-[16px]  w-8/12`}>
-            The project "ft_transcendence" is a website creation project focused
+            The project ft_transcendence is a website creation project focused
             on implementing a multiplayer online game of Pong. The website
             provides a user-friendly interface, a chat feature, and real-time
             gameplay. The project has specific requirements, such as using
