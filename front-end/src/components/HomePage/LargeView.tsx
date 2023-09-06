@@ -4,6 +4,9 @@ import HomePageIntraLoginButton from "./HomePageIntraLoginButton";
 import { Space_Mono } from "next/font/google";
 import Link from "next/link";
 import AboutPersonInfo from "./AboutPersonInfo";
+import Lottie from "react-lottie-player";
+import PaddleAnimation from "../../../public/AnimationPong.json";
+import GameAnimation from "../../../public/GameAnimation.json";
 
 const pixelfont = Press_Start_2P({
   subsets: ["latin"],
@@ -29,7 +32,13 @@ export default function LargeView() {
           >
             Let&apos;s Play!
           </h2>
-          <Image src="/test4.png" alt="ping game" width={600} height={600} />
+          {/* <Image src="/test4.png" alt="ping game" width={600} height={600} /> */}
+          <Lottie
+            loop
+            animationData={PaddleAnimation}
+            play
+            style={{ width: 600, height: 600 }}
+          />
         </div>
 
         <div className="flex items-center justify-around flex-col mt-[50px] min-w-[800px]">
@@ -46,12 +55,18 @@ export default function LargeView() {
             </h2>
           </div>
           <div className="min-h-[280px] flex justify-center items-center">
-            <Image
+            {/* <Image
               src="/PongGameAnimation.png"
               alt="ping game"
               width={200}
               height={175}
-            />
+            /> */}
+          <Lottie
+            loop
+            animationData={GameAnimation}
+            play
+            style={{ width: 400, height: 275 }}
+          />
           </div>
           <Link href={"http://localhost:3001/login"}>
             <HomePageIntraLoginButton />

@@ -4,6 +4,8 @@ import HomePageIntraLoginButton from "./HomePageIntraLoginButton";
 import { Space_Mono } from "next/font/google";
 import Link from "next/link";
 import AboutPersonInfo from "./AboutPersonInfo";
+import Lottie from "react-lottie-player";
+import GameAnimation from "../../../public/GameAnimation.json";
 
 const pixelfont = Press_Start_2P({
   subsets: ["latin"],
@@ -37,11 +39,17 @@ export default function MobileView() {
         </div>
         {/* here I will have the pong aniimation */}
         <div className="min-h-[280px] flex justify-center items-center">
-          <Image
+          {/* <Image
             src="/PongGameAnimation.png"
             alt="ping game"
             width={200}
             height={175}
+          /> */}
+          <Lottie
+            loop
+            animationData={GameAnimation}
+            play
+            style={{ width: 400, height: 275 }}
           />
         </div>
         <Link href={"http://localhost:3001/login"}>
