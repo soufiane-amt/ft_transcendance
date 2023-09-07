@@ -25,7 +25,7 @@ export default function MobileView() {
         id="home"
         className="bg-[#0D0149] flex flex-col items-center justify-around min-h-[100vh] p-[5%] pt-[90px]"
       >
-        <div className="bg-[#DA343E] p-[15px] -rotate-12 rounded-md card-shadow w-fit h-fit my-[30px]">
+        <div className="bg-[#DA343E] p-[15px] -rotate-12 rounded-md card-shadow w-fit h-fit my-[40px]">
           <h2
             className={`text-white text-center font-bold text-[50px]  ${pixelfont.className}`}
           >

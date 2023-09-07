@@ -6,6 +6,9 @@ import Link from "next/link";
 import AboutPersonInfo from "./AboutPersonInfo";
 import Lottie from "react-lottie-player";
 import PaddleAnimation from "../../../public/AnimationPong.json";
+import { Cursor, useTypewriter } from "react-simple-typewriter";
+import BackgroundCircle from "../BackgroundCircle";
+import { motion } from "framer-motion";
 
 const pixelfont = Press_Start_2P({
   subsets: ["latin"],
@@ -19,46 +22,85 @@ const mono = Space_Mono({
 });
 
 export default function LargeView() {
+  const [text, count] = useTypewriter({
+    words: ["Are you up for the challenge?"],
+    loop: true,
+    delaySpeed: 2000,
+  });
   return (
     <div className="flex flex-col items-center">
       <section
         id="home"
-        className="bg-[#0D0149] min-h-[100vh] pb-[5%] pt-[90px] max-w-[1920px] flex flex-row gap-[250px]"
+        className="overflow-hidden w-full flex justify-center items-center"
       >
-        <div className="flex justify-evenly items-center flex-col mt-[50px]">
-          <Lottie
-            loop
-            animationData={PaddleAnimation}
-            play
-            style={{ width: 600, height: 600 }}
-          />
-        </div>
+        <div className="bg-[#0D0149] min-h-[100vh] pb-[5%] pt-[90px] max-w-[1920px] flex flex-row gap-[250px] relative">
+          <BackgroundCircle />
+          <motion.div className="flex justify-evenly items-center flex-col mt-[50px]"
+            initial={{
+              x: -500,
+              opacity: 0,
+              scale: 0.5,
+            }}
+            animate={{
+              x: 0,
+              opacity: 1,
+              scale: 1,
+            }}
+            transition={{
+              duration: 1.5,
+            }}
+          >
+            <Lottie
+              loop
+              animationData={PaddleAnimation}
+              play
+              style={{ width: 600, height: 600 }}
+            />
+          </motion.div>
 
-        <div className="flex items-center justify-around flex-col mt-[50px] gap-[100px]">
-          <h2
-            className={`text-white text-center font-bold text-[50px]  ${pixelfont.className}`}
+          <motion.div className="flex items-center justify-around flex-col mt-[50px] gap-[100px]" 
+            initial={{
+              x: 500,
+              opacity: 0,
+              scale: 0.5,
+            }}
+            animate={{
+              x: 0,
+              opacity: 1,
+              scale: 1,
+            }}
+            transition={{
+              duration: 1.5,
+            }}
           >
-            Let&apos;s Play!
-          </h2>
-          <p
-            className={`${pixelfont.className} text-white text-[16px] w-[600px] leading-10 text-center`}
-          >
-            Get ready to unleash your paddle prowess in the ultimate game of
-            precision and reflexes! Welcome to Pong Paradise, where the classic
-            game of ping pong comes to life in a pixel-perfect showdown. Bounce,
-            smash, and rally your way to victory in this timeless arcade
-            sensation. Are you up for the challenge?
-          </p>
-          <Link href={"http://localhost:3001/login"}>
-            <HomePageIntraLoginButton />
-          </Link>
+            <h2
+              className={`text-white text-center font-bold text-[50px]  ${pixelfont.className}`}
+            >
+              Let&apos;s Play!
+            </h2>
+            <p
+              className={`${pixelfont.className} text-white text-[16px] w-[600px] leading-10 text-center`}
+            >
+              Get ready to unleash your paddle prowess in the ultimate game of
+              precision and reflexes! Welcome to Pong Paradise, where the
+              classic game of ping pong comes to life in a pixel-perfect
+              showdown. Bounce, smash, and rally your way to victory in this
+              timeless arcade sensation.
+              <br />
+              {text}
+              <Cursor cursorColor="#DA343E" cursorStyle="_" />
+            </p>
+            <Link href={"http://localhost:3001/login"}>
+              <HomePageIntraLoginButton />
+            </Link>
+          </motion.div>
         </div>
       </section>
       <section
         id="history"
         className="bg-[#EFECFF] w-full flex items-center justify-center"
       >
-        <div className="min-h-[100vh] pb-[5%] pt-[90px] flex justify-evenly items-center flex-col max-w-[1920px]">
+        <div className="min-h-[100vh] pb-[5%] pt-[90px] flex justify-evenly items-center flex-col max-w-[1920px]   ">
           <h2
             className={`text-[50px] text-[#343CFF] ${pixelfont.className} mb-[30px]`}
           >
@@ -112,7 +154,7 @@ export default function LargeView() {
       </section>
       <section
         id="about"
-        className="bg-[#0D0149]  text-white min-h-[100vh] max-w-[1920px] flex items-center flex-col justify-around gap-36 px-[5%] pt-[90px] pb-[2%]"
+        className="bg-[#0D0149]  text-white min-h-[100vh] max-w-[1920px] flex items-center flex-col justify-around gap-36 px-[5%] pt-[90px] pb-[2%]  "
       >
         <div className="flex items-center justify-between gap-16 w-full mt-[20px]">
           <p className={`${mono.className} text-[16px]  w-8/12`}>
