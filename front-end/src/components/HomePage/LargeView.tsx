@@ -26,7 +26,7 @@ export default function LargeView() {
         id="home"
         className="bg-[#0D0149] min-h-[100vh] pb-[5%] pt-[90px] max-w-[1920px] flex flex-row justify-around"
       >
-        <div className="flex justify-center items-center flex-col mt-[50px] min-w-[800px]">
+        <div className="flex justify-evenly items-center flex-col mt-[50px] min-w-[800px]">
           <h2
             className={`text-white text-center font-bold text-[50px]  ${pixelfont.className}`}
           >
