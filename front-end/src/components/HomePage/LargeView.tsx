@@ -43,11 +43,11 @@ export default function LargeView() {
           <p
             className={`${pixelfont.className} text-white text-[16px] w-[600px] leading-loose`}
           >
-            Step into the timeless world of Pong, where nostalgia meets
-            innovation. Our sleek landing page invites you to experience the
-            classic game of Pong like never before. Get ready to paddle your way
-            through pixels and challenge your reflexes in this modern twist on a
-            retro favorite. Dive into the excitement now!
+            Get ready to unleash your paddle prowess in the ultimate game of
+            precision and reflexes! Welcome to Pong Paradise, where the classic
+            game of ping pong comes to life in a pixel-perfect showdown. Bounce,
+            smash, and rally your way to victory in this timeless arcade
+            sensation. Are you up for the challenge?
           </p>
           <Link href={"http://localhost:3001/login"}>
             <HomePageIntraLoginButton />
