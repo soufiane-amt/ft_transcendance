@@ -6,7 +6,6 @@ import Link from "next/link";
 import AboutPersonInfo from "./AboutPersonInfo";
 import Lottie from "react-lottie-player";
 import PaddleAnimation from "../../../public/AnimationPong.json";
-import GameAnimation from "../../../public/GameAnimation.json";
 
 const pixelfont = Press_Start_2P({
   subsets: ["latin"],
@@ -24,15 +23,14 @@ export default function LargeView() {
     <div className="flex flex-col items-center">
       <section
         id="home"
-        className="bg-[#0D0149] min-h-[100vh] pb-[5%] pt-[90px] max-w-[1920px] flex flex-row justify-around"
+        className="bg-[#0D0149] min-h-[100vh] pb-[5%] pt-[90px] max-w-[1920px] flex flex-row gap-72"
       >
-        <div className="flex justify-evenly items-center flex-col mt-[50px] min-w-[800px]">
+        <div className="flex justify-evenly items-center flex-col mt-[50px]">
           <h2
             className={`text-white text-center font-bold text-[50px]  ${pixelfont.className}`}
           >
             Let&apos;s Play!
           </h2>
-          {/* <Image src="/test4.png" alt="ping game" width={600} height={600} /> */}
           <Lottie
             loop
             animationData={PaddleAnimation}
@@ -41,7 +39,7 @@ export default function LargeView() {
           />
         </div>
 
-        <div className="flex items-center justify-around flex-col mt-[50px] min-w-[800px]">
+        <div className="flex items-center justify-around flex-col mt-[50px]">
           <p
             className={`${pixelfont.className} text-white text-[16px] w-[600px] leading-loose`}
           >
