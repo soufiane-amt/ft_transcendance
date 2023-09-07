@@ -34,7 +34,7 @@ export default function LargeView() {
           />
         </div>
 
-        <div className="flex items-center justify-around flex-col mt-[50px] gap-[150px]">
+        <div className="flex items-center justify-around flex-col mt-[50px] gap-[100px]">
           <h2
             className={`text-white text-center font-bold text-[50px]  ${pixelfont.className}`}
           >
