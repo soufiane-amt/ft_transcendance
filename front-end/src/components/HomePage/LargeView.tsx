@@ -23,14 +23,9 @@ export default function LargeView() {
     <div className="flex flex-col items-center">
       <section
         id="home"
-        className="bg-[#0D0149] min-h-[100vh] pb-[5%] pt-[90px] max-w-[1920px] flex flex-row gap-72"
+        className="bg-[#0D0149] min-h-[100vh] pb-[5%] pt-[90px] max-w-[1920px] flex flex-row gap-[250px]"
       >
         <div className="flex justify-evenly items-center flex-col mt-[50px]">
-          <h2
-            className={`text-white text-center font-bold text-[50px]  ${pixelfont.className}`}
-          >
-            Let&apos;s Play!
-          </h2>
           <Lottie
             loop
             animationData={PaddleAnimation}
@@ -39,9 +34,14 @@ export default function LargeView() {
           />
         </div>
 
-        <div className="flex items-center justify-around flex-col mt-[50px]">
+        <div className="flex items-center justify-around flex-col mt-[50px] gap-[150px]">
+          <h2
+            className={`text-white text-center font-bold text-[50px]  ${pixelfont.className}`}
+          >
+            Let&apos;s Play!
+          </h2>
           <p
-            className={`${pixelfont.className} text-white text-[16px] w-[600px] leading-loose`}
+            className={`${pixelfont.className} text-white text-[16px] w-[600px] leading-10 text-center`}
           >
             Get ready to unleash your paddle prowess in the ultimate game of
             precision and reflexes! Welcome to Pong Paradise, where the classic
