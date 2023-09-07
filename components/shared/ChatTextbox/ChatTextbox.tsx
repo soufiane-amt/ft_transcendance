@@ -21,8 +21,7 @@ function ChatTextBox ()
     return (
         <div className={`${style.message_bar} ${style.middlePos}`}>
             <textarea className={`${style.message_input_bar} `} 
-            placeholder='message...'
-            rows={1} 
+            placeholder='Type a message...'
             />
             {sendMsgIcon}
         </div>

@@ -1,34 +1,33 @@
-.button {
-    position: relative;
-}
-
 
 .message_bar {
     
-    position: relative;
     display: flex;
-    justify-content: end;
+    position: fixed;
+    bottom: 10px;
+    width: 100%;
 }
 
 .message_input_bar{
+    /*Removing default style*/
     border: none;
     outline: none;
     resize: none;
+    overflow: hidden;
+
     background-color: var(--chat_text_box_back_color); 
     font-size: 25px;
     border-radius: 8px;
-    padding: 10px 50px ;
+    
     width: 100%;
     height: 60px;
+
+    padding: 20px 50px 5px;
+    margin-inline: 20px;
 } 
 
 .message_send_icon {
-    width:  82px;
-    height: 67px;
-    position: absolute;
-    /* top: 0;
-    right: 0; */
-
+    width:  90px;
+    height: 90px;
 }
 
 .message_send_icon__init_fill{
@@ -37,12 +36,4 @@
 
 .message_send_icon__init_fill:hover{
     fill: rgb(213, 159, 32);
-}
-
-
-.middlePos {
-    /* position: absolute;
-    top: 50%;
-    left: 10%; */
-
 }
