@@ -42,32 +42,15 @@ export default function LargeView() {
         </div>
 
         <div className="flex items-center justify-around flex-col mt-[50px] min-w-[800px]">
-          <div className="bg-[#DA343E] p-[15px] -rotate-12 rounded-md card-shadow w-fit h-fit my-[30px]">
-            <h2
-              className={`text-white text-center font-bold text-[70px]  ${pixelfont.className}`}
-            >
-              Retro
-            </h2>
-            <h2
-              className={`text-white text-center font-bold text-[30px] ${pixelfont.className}`}
-            >
-              Ping Pong
-            </h2>
-          </div>
-          <div className="min-h-[280px] flex justify-center items-center">
-            {/* <Image
-              src="/PongGameAnimation.png"
-              alt="ping game"
-              width={200}
-              height={175}
-            /> */}
-          <Lottie
-            loop
-            animationData={GameAnimation}
-            play
-            style={{ width: 400, height: 275 }}
-          />
-          </div>
+          <p
+            className={`${pixelfont.className} text-white text-[16px] w-[600px] leading-loose`}
+          >
+            Step into the timeless world of Pong, where nostalgia meets
+            innovation. Our sleek landing page invites you to experience the
+            classic game of Pong like never before. Get ready to paddle your way
+            through pixels and challenge your reflexes in this modern twist on a
+            retro favorite. Dive into the excitement now!
+          </p>
           <Link href={"http://localhost:3001/login"}>
             <HomePageIntraLoginButton />
           </Link>
