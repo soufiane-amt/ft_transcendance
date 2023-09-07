@@ -1,8 +1,14 @@
 :root{
-  --message_avatar_size:70px;
+  /*Chat general*/
   --online_user_icon:#1AE304;
   --black_circle_char:"\25CF";
+
+  /*Chat messages*/
+  --message_avatar_size:70px;
   --message_header_body_spacing:30px;
+
+  /*Chat chatting box*/
+  --chat_text_box_back_color:#CBCAE5;
 }
 
 
