@@ -3,8 +3,8 @@
     
     display: flex;
     position: fixed;
-    bottom: 10px;
-    width: 100%;
+    bottom: 1vh;
+    width: 60%;
 }
 
 .message_input_bar{

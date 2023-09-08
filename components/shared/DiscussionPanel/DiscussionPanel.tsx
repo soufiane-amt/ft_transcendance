@@ -5,6 +5,7 @@ import TimeStamp from '../TimeStamp/TimeStamp';
 
 const avatar = "/images/avatar.png";
 const panelLastMsg:string = 'The behavior could be thought of as a minimum gutter, as if the gutter is bigger somehow (because of something like justify-content: space-between;) then the gap will only take effect if that space would end up smaller.'
+// const panelLastMsg:string = 'The behavior could '
 
 
 function PaneLastMessage ( {message})

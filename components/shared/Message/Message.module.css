@@ -3,6 +3,8 @@
   flex-direction: row;
   max-width: 50%;
   gap: var(--message_header_body_spacing);
+
+
 }
 
 /*********-Message header section-****************/
@@ -76,7 +78,6 @@
 /***- utils -**/
 
 .message__to_right {
-  position: absolute;
-  right: 0;
+  margin-left: 60%;
   text-align: right;
 }
