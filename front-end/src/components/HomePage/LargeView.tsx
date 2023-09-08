@@ -9,6 +9,7 @@ import PaddleAnimation from "../../../public/AnimationPong.json";
 import { Cursor, useTypewriter } from "react-simple-typewriter";
 import { motion } from "framer-motion";
 import BackgroundCircle from "./BackgroundCircle";
+import { useInView } from "react-intersection-observer";
 
 const pixelfont = Press_Start_2P({
   subsets: ["latin"],
@@ -27,6 +28,10 @@ export default function LargeView() {
     loop: true,
     delaySpeed: 2000,
   });
+
+  const [ref, inView] = useInView({
+    triggerOnce: false, // Trigger the animation only once
+  });
   return (
     <div className="flex flex-col items-center">
       <section
@@ -34,7 +39,8 @@ export default function LargeView() {
         className="overflow-hidden w-full flex justify-center items-center"
       >
         <div className="bg-[#0D0149] min-h-[100vh] pb-[5%] pt-[90px] max-w-[1920px] flex flex-row gap-[250px] relative">
-          <motion.div className="flex justify-evenly items-center flex-col mt-[50px] relative"
+          <motion.div
+            className="flex justify-evenly items-center flex-col mt-[50px] relative"
             initial={{
               x: -500,
               opacity: 0,
@@ -58,7 +64,8 @@ export default function LargeView() {
             />
           </motion.div>
 
-          <motion.div className="flex items-center justify-around flex-col mt-[50px] gap-[100px]" 
+          <motion.div
+            className="flex items-center justify-around flex-col mt-[50px] gap-[100px]"
             initial={{
               x: 500,
               opacity: 0,
@@ -100,7 +107,7 @@ export default function LargeView() {
         id="history"
         className="bg-[#EFECFF] w-full flex items-center justify-center"
       >
-        <div className="min-h-[100vh] pb-[5%] pt-[90px] flex justify-evenly items-center flex-col max-w-[1920px]   ">
+        <div className="min-h-[100vh] pb-[5%] pt-[90px] flex justify-evenly items-center flex-col max-w-[1920px] overflow-hidden">
           <h2
             className={`text-[50px] text-[#343CFF] ${pixelfont.className} mb-[30px]`}
           >
@@ -143,18 +150,35 @@ export default function LargeView() {
                 Washington, D.C., due to its cultural impact.
               </p>
             </div>
-            <Image
+            {/* <Image
               src="/PongCodeTheClassics.png"
               alt="ping game"
               width={450}
               height={400}
+            /> */}
+            <motion.img
+              initial={{
+                x: 500,
+                opacity: 0,
+              }}
+              whileInView={{
+                x: 0,
+                opacity: 1,
+
+              }}
+              viewport={{once: true}}
+              transition={{
+                duration: 1,
+              }}
+              src="/PongCodeTheClassics.png"
+              className="w-[450px] h-[550px] rounded-xl"
             />
           </div>
         </div>
       </section>
       <section
         id="about"
-        className="bg-[#0D0149]  text-white min-h-[100vh] max-w-[1920px] flex items-center flex-col justify-around gap-36 px-[5%] pt-[90px] pb-[2%]  "
+        className="bg-[#0D0149]  text-white min-h-[100vh] max-w-[1920px] flex items-center flex-col justify-around gap-36 px-[5%] pt-[90px] pb-[2%] overflow-hidden"
       >
         <div className="flex items-center justify-between gap-16 w-full mt-[20px]">
           <p className={`${mono.className} text-[16px]  w-8/12`}>
@@ -174,11 +198,27 @@ export default function LargeView() {
             issues. The project submission and evaluation process follow the
             standard Git repository workflow.
           </p>
-          <h2 className={`text-[50px] ${pixelfont.className}`}>About</h2>
+          <motion.h2
+            ref={ref}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: inView ? 1 : 0, y: inView ? 0 : 20 }}
+            transition={{ duration: 0.5 }}
+            className={`text-[50px] ${pixelfont.className}`}
+          >
+            About
+          </motion.h2>
         </div>
 
         <div className="flex items-center justify-between gap-8 w-full">
-          <h2 className={`text-[50px] ${pixelfont.className}`}>Team</h2>
+        <motion.h2
+            ref={ref}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: inView ? 1 : 0, y: inView ? 0 : 20 }}
+            transition={{ duration: 0.5 }}
+            className={`text-[50px] ${pixelfont.className}`}
+          >
+            Team
+          </motion.h2>
           <div className="flex items-center justify-between gap-24 w-8/12">
             <AboutPersonInfo
               Picture="/Abdellah.jpg"
