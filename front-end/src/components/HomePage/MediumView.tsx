@@ -1,11 +1,13 @@
 import { Press_Start_2P } from "next/font/google";
-import Image from "next/image";
 import HomePageIntraLoginButton from "./HomePageIntraLoginButton";
 import { Space_Mono } from "next/font/google";
 import Link from "next/link";
 import AboutPersonInfo from "./AboutPersonInfo";
 import Lottie from "react-lottie-player";
 import GameAnimation from "../../../public/GameAnimation.json";
+import BackgroundCircleMedium from "./BackroundCirclesMedium";
+import { motion } from "framer-motion";
+import { useInView } from "react-intersection-observer";
 
 const pixelfont = Press_Start_2P({
   subsets: ["latin"],
@@ -19,13 +21,16 @@ const mono = Space_Mono({
 });
 
 export default function MediumView() {
+  const [ref, inView] = useInView({
+    triggerOnce: false, // Trigger the animation only once
+  });
   return (
     <div>
       <section
         id="home"
-        className="bg-[#0D0149] flex flex-col items-center justify-around min-h-[100vh] p-[5%] pt-[90px]"
+        className="bg-[#0D0149] flex flex-col items-center justify-around min-h-[100vh] p-[5%] pt-[90px] relative overflow-hidden"
       >
-        <div className="bg-[#DA343E] p-[15px] -rotate-12 rounded-md card-shadow w-fit h-fit my-[40px]">
+        <div className="bg-[#DA343E] p-[15px] -rotate-12 rounded-md card-shadow w-fit h-fit my-[40px] z-[2]">
           <h2
             className={`text-white text-center font-bold text-[70px]  ${pixelfont.className}`}
           >
@@ -38,20 +43,34 @@ export default function MediumView() {
           </h2>
         </div>
         {/* here I will have the pong aniimation */}
-        <div className="min-h-[280px] flex justify-center items-center">
+        <motion.div
+          className="min-h-[300px] flex justify-center items-center relative"
+          initial={{
+            opacity: 0,
+            scale: 0.5,
+          }}
+          animate={{
+            opacity: 1,
+            scale: 1,
+          }}
+          transition={{
+            duration: 1.5,
+          }}
+        >
           {/* <Image
             src="/PongGameAnimation.png"
             alt="ping game"
             width={200}
             height={175}
           /> */}
+          <BackgroundCircleMedium />
           <Lottie
             loop
             animationData={GameAnimation}
             play
             style={{ width: 400, height: 275 }}
           />
-        </div>
+        </motion.div>
         <Link href={"http://localhost:3001/login"}>
           <HomePageIntraLoginButton />
         </Link>
@@ -60,17 +79,29 @@ export default function MediumView() {
         id="history"
         className="bg-[#EFECFF] min-h-[100vh] p-[5%] flex flex-col items-center justify-evenly py-[90px]"
       >
-        <h2 className={`text-[40px] text-[#343CFF] ${pixelfont.className}`}>
+        <h2 className={`text-[40px] text-[#0D0149] ${pixelfont.className}`}>
           History
         </h2>
-        <Image
+        <motion.img
+          initial={{
+            opacity: 0,
+            scale: 0.5,
+          }}
+          whileInView={{
+            opacity: 1,
+            scale: 1,
+          }}
+          viewport={{ once: true }}
+          transition={{
+            duration: 1,
+          }}
           src="/PongCodeTheClassics.png"
           alt="ping game"
           height={300}
           width={300}
-          className="my-[30px]"
+          className="my-[30px] rounded-xl"
         />
-        <div className="flex gap-8 flex-col">
+        <div className="flex gap-8 flex-col  max-w-[650px]">
           <p
             className={`${mono.className} text-[#0D0149] text-center text-[16px]`}
           >
@@ -116,8 +147,18 @@ export default function MediumView() {
         id="about"
         className="bg-[#0D0149] min-h-[100vh] flex justify-evenly items-center flex-col gap-8 p-[5%] text-white pt-[90px]"
       >
-        <h2 className={`text-[40px] ${pixelfont.className}`}>About</h2>
-        <p className={`${mono.className} text-center text-[16px]`}>
+        <motion.h2
+          ref={ref}
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: inView ? 1 : 0, y: inView ? 0 : -20 }}
+          transition={{ duration: 0.8 }}
+          className={`text-[40px] ${pixelfont.className}`}
+        >
+          About
+        </motion.h2>
+        <p
+          className={`${mono.className} text-center text-[16px]   max-w-[650px]`}
+        >
           The project ft_transcendence is a website creation project focused on
           implementing a multiplayer online game of Pong. The website provides a
           user-friendly interface, a chat feature, and real-time gameplay. The
@@ -133,7 +174,15 @@ export default function MediumView() {
           options and responsiveness to network issues. The project submission
           and evaluation process follow the standard Git repository workflow.
         </p>
-        <h2 className={`text-[40px] ${pixelfont.className}`}>Team</h2>
+        <motion.h2
+          ref={ref}
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: inView ? 1 : 0, y: inView ? 0 : -20 }}
+          transition={{ duration: 0.8 }}
+          className={`text-[40px] ${pixelfont.className}`}
+        >
+          Team
+        </motion.h2>
         <div className="flex items-center flex-col w-full">
           <div className="flex items-center justify-evenly  min-h-1/2 w-full my-[35px]">
             <AboutPersonInfo
@@ -143,24 +192,24 @@ export default function MediumView() {
               GithubLink="https://www.github.com/AbdellahBellakrim"
             />
             <AboutPersonInfo
-              Picture="/Abdellah.jpg"
-              TwitterLink="https://twitter.com/withabdellah"
-              LinkedinLink="https://www.linkedin.com/in/abdellah-bellakrim-0027b6233"
-              GithubLink="https://www.github.com/AbdellahBellakrim"
+              Picture="/Zakaria.jpg"
+              TwitterLink="https://twitter.com/"
+              LinkedinLink="https://www.linkedin.com/in/zakaria-aabou-a13098208/"
+              GithubLink="https://github.com/Ziko909"
             />
           </div>
           <div className="flex items-center justify-evenly min-h-1/2 w-full my-[35px]">
             <AboutPersonInfo
-              Picture="/Abdellah.jpg"
-              TwitterLink="https://twitter.com/withabdellah"
-              LinkedinLink="https://www.linkedin.com/in/abdellah-bellakrim-0027b6233"
-              GithubLink="https://www.github.com/AbdellahBellakrim"
+              Picture="/Oussama.jpg"
+              TwitterLink="https://twitter.com/DakhchO"
+              LinkedinLink="https://www.linkedin.com/in/oussama-dakhch-608964257/"
+              GithubLink="https://www.github.com/DakhchOussama"
             />
             <AboutPersonInfo
-              Picture="/Abdellah.jpg"
-              TwitterLink="https://twitter.com/withabdellah"
-              LinkedinLink="https://www.linkedin.com/in/abdellah-bellakrim-0027b6233"
-              GithubLink="https://www.github.com/AbdellahBellakrim"
+              Picture="/Soufyane.jpg"
+              TwitterLink="https://twitter.com/"
+              LinkedinLink="https://www.linkedin.com/in/soufiane-amajat-6a828b197/"
+              GithubLink="https://www.github.com/soufiane-amt"
             />
           </div>
         </div>

@@ -23,7 +23,7 @@ const mono = Space_Mono({
 });
 
 export default function LargeView() {
-  const [text, count] = useTypewriter({
+  const [text] = useTypewriter({
     words: ["Are you up for the challenge?"],
     loop: true,
     delaySpeed: 2000,
@@ -109,7 +109,7 @@ export default function LargeView() {
       >
         <div className="min-h-[100vh] pb-[5%] pt-[90px] flex justify-evenly items-center flex-col max-w-[1920px] overflow-hidden">
           <h2
-            className={`text-[50px] text-[#343CFF] ${pixelfont.className} mb-[30px]`}
+            className={`text-[50px] text-[#0D0149] ${pixelfont.className} mb-[30px]`}
           >
             History
           </h2>
@@ -202,7 +202,7 @@ export default function LargeView() {
             ref={ref}
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: inView ? 1 : 0, y: inView ? 0 : 20 }}
-            transition={{ duration: 0.5 }}
+            transition={{ duration: 0.8 }}
             className={`text-[50px] ${pixelfont.className}`}
           >
             About
@@ -227,22 +227,22 @@ export default function LargeView() {
               GithubLink="https://www.github.com/AbdellahBellakrim"
             />
             <AboutPersonInfo
-              Picture="/Abdellah.jpg"
-              TwitterLink="https://twitter.com/withabdellah"
-              LinkedinLink="https://www.linkedin.com/in/abdellah-bellakrim-0027b6233"
-              GithubLink="https://www.github.com/AbdellahBellakrim"
+              Picture="/Zakaria.jpg"
+              TwitterLink="https://twitter.com/"
+              LinkedinLink="https://www.linkedin.com/in/zakaria-aabou-a13098208/"
+              GithubLink="https://github.com/Ziko909"
             />
             <AboutPersonInfo
-              Picture="/Abdellah.jpg"
-              TwitterLink="https://twitter.com/withabdellah"
-              LinkedinLink="https://www.linkedin.com/in/abdellah-bellakrim-0027b6233"
-              GithubLink="https://www.github.com/AbdellahBellakrim"
+              Picture="/Oussama.jpg"
+              TwitterLink="https://twitter.com/DakhchO"
+              LinkedinLink="https://www.linkedin.com/in/oussama-dakhch-608964257/"
+              GithubLink="https://www.github.com/DakhchOussama"
             />
             <AboutPersonInfo
-              Picture="/Abdellah.jpg"
-              TwitterLink="https://twitter.com/withabdellah"
-              LinkedinLink="https://www.linkedin.com/in/abdellah-bellakrim-0027b6233"
-              GithubLink="https://www.github.com/AbdellahBellakrim"
+              Picture="/Soufyane.jpg"
+              TwitterLink="https://twitter.com/"
+              LinkedinLink="https://www.linkedin.com/in/soufiane-amajat-6a828b197/"
+              GithubLink="https://www.github.com/soufiane-amt"
             />
           </div>
         </div>
