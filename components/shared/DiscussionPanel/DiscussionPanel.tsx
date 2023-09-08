@@ -9,16 +9,14 @@ const panelLastMsg:string = 'The behavior could be thought of as a minimum gutte
 
 function PaneLastMessage ( {message})
 {
-    const messagePanelMaxSize = 21;
-    var  processedMessage:string = message;
-    // if (message.length > 21)
-    //     processedMessage = message.substr(0, messagePanelMaxSize-1).concat('...');
     return (
-        <p className={style.panel__add_ellipsis}>
-            {processedMessage}
+        <p id="notifier" className={style.panel_last_message}>
+            {message}
         </p>
     )
 }
+
+
 function DiscussionPanel ()
 {
     return (
@@ -29,7 +27,7 @@ function DiscussionPanel ()
             <PaneLastMessage message={panelLastMsg}></PaneLastMessage>
         </div>
         <div className={style.panel_last_part}>
-            <button>***</button>
+            <button>...</button>
             <TimeStamp time={"12:22pm"}/>
             <div className={style.panel_message_notifier}>new</div>
         </div>

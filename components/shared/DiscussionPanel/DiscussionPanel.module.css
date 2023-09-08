@@ -1,3 +1,5 @@
+
+/**The pannel main class*/
 .discussion_panel {
     display:flex;
     flex-direction: row;
@@ -14,42 +16,76 @@
 }
 
 
+/**The button that displays play/bock styling*/
 .discussion_panel button {
+    font-size: 20px;
+    font-weight: bolder;
     border: 0;
     background-color: #5C5B8B;
+    color:#a2a1ac;
 }
 
 
+/*setting the size of central part of the panel*/
 .panel_central_part {
     width: 60%;
+    overflow: hidden;
+
 }
 
-
-.panel_avatar{
-    background-color: aliceblue;
-}
 
 /* selectors to ensure handling the overflow when width changes
 , Also to ensure that the overflowed lastMessage will end in ellipsis */
-.panel_central_part .panel__add_ellipsis {
+.panel_central_part .panel_last_message {
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
 }
 
+
 .panel_last_part{
-    text-align: end;
     position: absolute;
     right: 1%;
+
     overflow: hidden;
+
     display: flex;
     flex-direction: column;
     align-items:flex-end;
 }
+
 .panel_message_notifier{
     background-color: red;
-    display: inline-block;
-    text-align: center;
     border-radius: 5px;
-    
+    /* display: none; */
+}
+
+
+@media (max-width:600px) 
+{
+    .panel_last_message {
+        display: none;
+    }
+    .panel_last_part :not(button):not(.panel_message_notifier) {
+        display: none;
+      }
+      .panel_last_part button{
+        margin-bottom: 20px;
+      }
+}
+
+@media (max-width:478px) 
+{
+    .discussion_panel {
+        min-width: 245px;
+    }
+      .panel_central_part {
+        display: none;
+      }
+
+      .panel_last_part button {
+        display: none;
+
+      }
+
 }
