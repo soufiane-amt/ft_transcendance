@@ -1,8 +1,3 @@
-
-.image__full_circle {
-  border-radius: 50%;
-}
-
 .message {
   display: flex;
   flex-direction: row;
@@ -11,49 +6,25 @@
 }
 
 /*********-Message header section-****************/
-.message_header {
-  display: inline-block;
-  position: relative;
-}
-
-.message_header::before {
-  content: var(--black_circle_char); /* Unicode character for a solid circle or any icon you prefer */
-  color: var(--online_user_icon); /* Color for the online indicator */
-  font-size: calc(var(--message_avatar_size)/5); /* Adjust the size as needed */
-  position: absolute;
-  left: 80%;
-  top : calc(var(--message_avatar_size)/1.4);
-
-}
-
-.message_header__avatar {
-  height: var(--message_avatar_size);
-  width: var(--message_avatar_size);
-}
-
 
 /*********-Message body section-****************/
 
 .message_body {
-  display:flex;
+  display: flex;
   flex-direction: column;
-  gap: 40px;
 }
 
 /*This class styles the main element of message container*/
 .message_bubble {
   display: inline-block; /*Making the parent container resizes based on the size of its content*/
-
   padding: 10px 50px;
   /* max-width: 50%; */
 
   border-radius: 20px;
 
+  margin-top: calc(var(--avatar_size) / 2);
   position: relative;
-  top: calc(var(--message_avatar_size)/2);
 }
-
-
 
 /*This class serves a styling for the bubble tail triangle*/
 
@@ -74,8 +45,6 @@
   color: white;
 }
 
-
-
 /* |received message styling| */
 
 .right_tail.message_bubble::after {
@@ -94,6 +63,13 @@
   color: rgb(0, 0, 0);
 }
 
+/*|UserName|*/
+.message_username__style {
+  font-size: large;
+  color: red;
+  letter-spacing: 1px;
+}
+
 /*|Time Stamp styling|*/
 
 .time_stamp {
@@ -109,14 +85,13 @@
   color: rgb(125, 139, 158);
 }
 
-/*/***********************/*
+/*/***********************/
+*
 
 /***- utils -**/
-.message__switch_order {
-  order: 2;
-}
 
 .message__to_right {
   position: absolute;
   right: 0;
+  text-align: right;
 }

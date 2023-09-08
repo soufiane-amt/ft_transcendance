@@ -1,0 +1,30 @@
+.avatar__style {
+  display: inline-block;
+  position: relative;
+}
+
+.avatar__style::before {
+  content: var(
+    --black_circle_char
+  ); /* Unicode character for a solid circle or any icon you prefer */
+  color: var(--online_user_icon); /* Color for the online indicator */
+  font-size: calc(var(--avatar_size) / 5); /* Adjust the size as needed */
+  position: absolute;
+  left: 80%;
+  top: calc(var(--avatar_size) / 1.4);
+}
+
+.avatar__dimentions {
+  height: var(--avatar_size);
+  width: var(--avatar_size);
+}
+
+.image__full_circle {
+    border-radius: 50%;
+  }
+  
+/*This class is needed only if we need to reverse the row order of the message */
+.image__switch_order {
+    order: 2;
+  }
+  

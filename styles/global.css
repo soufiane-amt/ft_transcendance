@@ -1,16 +1,15 @@
-:root{
+:root {
   /*Chat general*/
-  --online_user_icon:#1AE304;
-  --black_circle_char:"\25CF";
+  --online_user_icon: #1ae304;
+  --black_circle_char: "\25CF";
 
   /*Chat messages*/
-  --message_avatar_size:70px;
-  --message_header_body_spacing:30px;
+  --avatar_size: 70px;
+  --message_header_body_spacing: 30px;
 
   /*Chat chatting box*/
-  --chat_text_box_back_color:#CBCAE5;
+  --chat_text_box_back_color: #cbcae5;
 }
-
 
 html,
 body {
@@ -18,5 +17,11 @@ body {
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
     Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
-  background-color:#EFECFF;
-  }
+  background-color: #efecff;
+  display: flex;
+  flex-direction: column;
+}
+.name {
+  flex: 1;
+  overflow-y: auto;
+}

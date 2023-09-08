@@ -16,10 +16,10 @@
 
     background-color: var(--chat_text_box_back_color); 
     font-size: 25px;
-    border-radius: 8px;
+    border-radius: 15px;
     
     width: 100%;
-    height: 60px;
+    height: 45px;
 
     padding: 20px 50px 5px;
     margin-inline: 20px;
