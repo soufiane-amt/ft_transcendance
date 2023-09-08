@@ -3,7 +3,7 @@ import { motion } from "framer-motion";
 function BackgroundCircle() {
   return (
     <motion.div
-      className="absolute flex justify-center items-center mt-96 ml-80"
+      className="absolute flex justify-center items-center mt-[12rem] ml-[6rem]"
       initial={{
         opacity: 0,
       }}

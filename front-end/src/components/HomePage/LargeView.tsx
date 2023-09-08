@@ -7,8 +7,8 @@ import AboutPersonInfo from "./AboutPersonInfo";
 import Lottie from "react-lottie-player";
 import PaddleAnimation from "../../../public/AnimationPong.json";
 import { Cursor, useTypewriter } from "react-simple-typewriter";
-import BackgroundCircle from "../BackgroundCircle";
 import { motion } from "framer-motion";
+import BackgroundCircle from "./BackgroundCircle";
 
 const pixelfont = Press_Start_2P({
   subsets: ["latin"],
@@ -34,8 +34,7 @@ export default function LargeView() {
         className="overflow-hidden w-full flex justify-center items-center"
       >
         <div className="bg-[#0D0149] min-h-[100vh] pb-[5%] pt-[90px] max-w-[1920px] flex flex-row gap-[250px] relative">
-          <BackgroundCircle />
-          <motion.div className="flex justify-evenly items-center flex-col mt-[50px]"
+          <motion.div className="flex justify-evenly items-center flex-col mt-[50px] relative"
             initial={{
               x: -500,
               opacity: 0,
@@ -50,6 +49,7 @@ export default function LargeView() {
               duration: 1.5,
             }}
           >
+            <BackgroundCircle />
             <Lottie
               loop
               animationData={PaddleAnimation}
