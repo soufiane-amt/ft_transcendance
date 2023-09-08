@@ -21,7 +21,3 @@ body {
   display: flex;
   flex-direction: column;
 }
-.name {
-  flex: 1;
-  overflow-y: auto;
-}

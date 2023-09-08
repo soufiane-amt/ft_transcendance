@@ -70,21 +70,6 @@
   letter-spacing: 1px;
 }
 
-/*|Time Stamp styling|*/
-
-.time_stamp {
-  padding-left: 20px;
-}
-
-.time_stamp__font_size {
-  font-size: small;
-  font-weight: bold;
-}
-
-.time_stamp__gray {
-  color: rgb(125, 139, 158);
-}
-
 /*/***********************/
 *
 

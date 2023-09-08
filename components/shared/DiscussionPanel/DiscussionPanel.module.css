@@ -1,0 +1,55 @@
+.discussion_panel {
+    display:flex;
+    flex-direction: row;
+    align-items: center;
+    background-color: #5C5B8B;
+    color: white;
+    gap:10px;
+    width: 40%;
+    height: 80px;
+    padding-inline: 2%;
+    overflow: hidden;
+
+    position: relative;
+}
+
+
+.discussion_panel button {
+    border: 0;
+    background-color: #5C5B8B;
+}
+
+
+.panel_central_part {
+    width: 60%;
+}
+
+
+.panel_avatar{
+    background-color: aliceblue;
+}
+
+/* selectors to ensure handling the overflow when width changes
+, Also to ensure that the overflowed lastMessage will end in ellipsis */
+.panel_central_part .panel__add_ellipsis {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.panel_last_part{
+    text-align: end;
+    position: absolute;
+    right: 1%;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    align-items:flex-end;
+}
+.panel_message_notifier{
+    background-color: red;
+    display: inline-block;
+    text-align: center;
+    border-radius: 5px;
+    
+}
