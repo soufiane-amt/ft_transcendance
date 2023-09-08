@@ -28,37 +28,38 @@ export default function Home() {
       </div>
 
       <div className="chat_field">
-        <Message sentMessage={true}/>
-        <Message sentMessage={false}/>
-        <Message sentMessage={true}/>
-        <Message sentMessage={false}/>
-        <Message sentMessage={true}/>
-        <Message sentMessage={false}/>
-        <Message sentMessage={true}/>
-        <Message sentMessage={false}/>
-        <Message sentMessage={true}/>
-        <Message sentMessage={false}/>
-        <Message sentMessage={true}/>
-        <Message sentMessage={false}/>
-        <Message sentMessage={true}/>
-        <Message sentMessage={true}/>
-        <Message sentMessage={false}/>
-        <Message sentMessage={true}/>
-        <Message sentMessage={false}/>
-        <Message sentMessage={true}/>
-        <Message sentMessage={false}/>
-        <Message sentMessage={true}/>
-        <Message sentMessage={false}/>
-        <Message sentMessage={true}/>
-        <Message sentMessage={false}/>
-        <Message sentMessage={true}/>
-        <Message sentMessage={false}/>
-        <Message sentMessage={true}/>
-        
-        <Message sentMessage={false}/>
-        <Message sentMessage={true}/>
-        <Message sentMessage={false}/>
-        <Message sentMessage={true}/> 
+        <div className="messages">  
+            <Message sentMessage={true}/>
+            <Message sentMessage={false}/>
+            <Message sentMessage={true}/>
+            <Message sentMessage={false}/>
+            <Message sentMessage={true}/>
+            <Message sentMessage={false}/>
+            <Message sentMessage={true}/>
+            <Message sentMessage={false}/>
+            <Message sentMessage={true}/>
+            <Message sentMessage={false}/>
+            <Message sentMessage={true}/>
+            <Message sentMessage={false}/>
+            <Message sentMessage={true}/>
+            <Message sentMessage={true}/>
+            <Message sentMessage={false}/>
+            <Message sentMessage={true}/>
+            <Message sentMessage={false}/>
+            <Message sentMessage={true}/>
+            <Message sentMessage={false}/>
+            <Message sentMessage={true}/>
+            <Message sentMessage={false}/>
+            <Message sentMessage={true}/>
+            <Message sentMessage={false}/>
+            <Message sentMessage={true}/>
+            <Message sentMessage={false}/>
+            <Message sentMessage={true}/>
+            <Message sentMessage={false}/>
+            <Message sentMessage={true}/>
+            <Message sentMessage={false}/>
+            <Message sentMessage={true}/> 
+        </div>
         <ChatTextBox/>
       </div>
     </div>

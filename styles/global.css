@@ -9,6 +9,9 @@
 
   /*Chat chatting box*/
   --chat_text_box_back_color: #cbcae5;
+
+  /*chat-messaging-field*/
+  --chat_field_back_color: #efecff;
 }
 
 html,
@@ -40,9 +43,12 @@ body {
   width: 60%; 
   height: 100vh;
   overflow: auto;
-  
 }
 
 .chat_field::-webkit-scrollbar {
   width: 0.5em; /* Adjust the width as needed */
+}
+
+.messages {
+  margin-bottom: 50px;
 }

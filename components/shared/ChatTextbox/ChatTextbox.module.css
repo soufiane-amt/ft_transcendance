@@ -3,8 +3,10 @@
     
     display: flex;
     position: fixed;
-    bottom: 1vh;
+    bottom: 0vh;
     width: 60%;
+    background-color: var(--chat_field_back_color);
+    border-top: 0.1px solid rgb(0, 0, 0);
 }
 
 .message_input_bar{
@@ -15,7 +17,7 @@
     overflow: hidden;
 
     background-color: var(--chat_text_box_back_color); 
-    font-size: 25px;
+    font-size: 21px;
     border-radius: 15px;
     
     width: 100%;
@@ -23,6 +25,8 @@
 
     padding: 20px 50px 5px;
     margin-inline: 20px;
+
+
 } 
 
 .message_send_icon {
