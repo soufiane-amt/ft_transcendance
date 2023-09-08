@@ -9,9 +9,11 @@ services:
     env_file:
       - .env
     volumes:
-      - /Users/abellakr/goinfre/ft_transcendance/data-base/pg-data:/var/lib/postgresql/data
+      - /home/abdellah/projects/ft_transcendance/data-base/pg-data:/var/lib/postgresql/data
     restart: on-failure
 
 networks:
   pingpong:
     driver: bridge
+
+# /Users/abellakr/goinfre/ft_transcendance/data-base
