@@ -20,7 +20,7 @@ function MessagesHistory({messages}) {
     <div className={style.messages_history}>
       {
         messages.map ( (messageElement) =>{
-          return <Message messageData= {messageElement} sentMessage={true}/>
+          return <Message messageData= {messageElement} sentMessage={messageElement.name === "samajat"}/>
         })
       }
     </div>
