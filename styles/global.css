@@ -12,6 +12,21 @@
 
   /*chat-messaging-field*/
   --chat_field_back_color: #efecff;
+
+  /*chat end icon*/
+  --send_icon_default_color:rgb(42, 42, 192);
+  --send_icon_on_hover_color:rgb(215, 215, 97);
+
+
+  /*sent message bubble color*/
+  --message_sent_bubble_color:#776DA8;
+  /*received message bubble color*/
+  --message_received_bubble_color:rgb(212, 212, 235);
+
+
+    /*Discussion Panel*/
+    --discussion_panel_back_color: #5C5B8B;
+    
 }
 
 html,
@@ -27,6 +42,7 @@ body {
 .all {
   display: flex;
 }
+
 .bar_part {
   width: 40%; 
   height: 100vh;
@@ -35,7 +51,7 @@ body {
 }
 
 .bar_part::-webkit-scrollbar {
-  width: 0.5em; /* Adjust the width as needed */
+  width: 0; /* Adjust the width as needed */
 }
 
 

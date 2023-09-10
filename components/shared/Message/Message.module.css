@@ -4,10 +4,8 @@
   max-width: 50%;
   gap: var(--message_header_body_spacing);
 
-
 }
 
-/*********-Message header section-****************/
 
 /*********-Message body section-****************/
 
@@ -38,12 +36,13 @@
   left: -15px;
   border-width: 20px; /* Size of the triangle */
   border-style: solid;
-  border-color: transparent transparent rgb(128, 128, 202);
+  border-color: transparent transparent var(--message_sent_bubble_color);
   transform: rotate(352deg);
 }
 
+
 .message_bubble___sent_style {
-  background-color: rgb(128, 128, 202);
+  background-color: var(--message_sent_bubble_color);
   color: white;
 }
 
@@ -56,12 +55,12 @@
   right: -15px;
   border-width: 20px; /* Size of the triangle */
   border-style: solid;
-  border-color: transparent transparent rgb(212, 212, 235);
+  border-color: transparent transparent var(--message_received_bubble_color);
   transform: rotate(8deg);
 }
 
 .message_bubble___received_style {
-  background-color: rgb(212, 212, 235);
+  background-color: var(--message_received_bubble_color);
   color: rgb(0, 0, 0);
 }
 
@@ -73,11 +72,13 @@
 }
 
 /*/***********************/
-*
 
 /***- utils -**/
 
 .message__to_right {
-  margin-left: 60%;
+
+  justify-content: end;
+
+  margin-left: auto;
   text-align: right;
 }

@@ -1,0 +1,30 @@
+.direct_msg_main {
+    display: flex;
+  }
+  
+.discussion_panel_bar {
+    width: 40%; 
+    height: 100vh;
+    overflow-y: auto;
+    background-color: var(--discussion_panel_back_color);
+  }
+  
+  .discussion_panel_bar::-webkit-scrollbar {
+    width: 0; /* Adjust the width as needed */
+  }
+  
+  
+  .chat_field {
+    width: 60%; 
+    height: 100vh;
+    overflow: auto;
+  }
+  
+  .chat_field::-webkit-scrollbar {
+    width: 0.5em; /* Adjust the width as needed */
+  }
+  
+  .messages_history {
+    margin-bottom: 50px;
+  }
+  

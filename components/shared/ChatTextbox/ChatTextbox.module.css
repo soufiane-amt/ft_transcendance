@@ -1,12 +1,10 @@
-
 .message_bar {
-    
     display: flex;
-    position: fixed;
-    bottom: 0vh;
-    width: 60%;
+    position: sticky;
+    top: 100%;
+    width: 100%;
     background-color: var(--chat_field_back_color);
-    border-top: 0.1px solid rgb(0, 0, 0);
+    border-top: 0.1px solid black;
 }
 
 .message_input_bar{
@@ -35,9 +33,9 @@
 }
 
 .message_send_icon__init_fill{
-    fill: rgb(42, 42, 192);
+    fill: var(--send_icon_default_color);
 }
 
 .message_send_icon__init_fill:hover{
-    fill: rgb(213, 159, 32);
+    fill: var(--send_icon_on_hover_color);
 }

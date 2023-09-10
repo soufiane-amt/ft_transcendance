@@ -4,7 +4,7 @@
     display:flex;
     flex-direction: row;
     align-items: center;
-    background-color: #5C5B8B;
+    background-color: var(--discussion_panel_back_color);
     color: white;
     gap:10px;
     width: 96%;
@@ -13,7 +13,7 @@
     overflow: hidden;
 
     position: relative;
-    border-bottom: 1px solid #cdcdd5;
+    border-bottom: 1px solid white;
 }
 
 
@@ -22,7 +22,7 @@
     font-size: 20px;
     font-weight: bolder;
     border: 0;
-    background-color: #5C5B8B;
+    background-color: var(--discussion_panel_back_color);
     color:#a2a1ac;
 }
 
