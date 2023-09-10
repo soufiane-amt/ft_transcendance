@@ -72,7 +72,7 @@ export default function MobileView() {
             style={{ width: 400, height: 275 }}
           />
         </motion.div>
-        <Link href={"http://localhost:3001/login"}>
+        <Link href={`${process.env.NEXT_PUBLIC_BACKEND_SERV}/auth/login`}>
           <HomePageIntraLoginButton />
         </Link>
       </section>

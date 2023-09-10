@@ -16,4 +16,5 @@ model User {
   fullname   String
   email       String @unique
   avatar      String
+  firstauth   Boolean @default(false)
 }

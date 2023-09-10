@@ -97,7 +97,7 @@ export default function LargeView() {
               {text}
               <Cursor cursorColor="#DA343E" cursorStyle="_" />
             </p>
-            <Link href={"http://localhost:3001/login"}>
+            <Link href={`${process.env.NEXT_PUBLIC_BACKEND_SERV}/auth/login`}>
               <HomePageIntraLoginButton />
             </Link>
           </motion.div>

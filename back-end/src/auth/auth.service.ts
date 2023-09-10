@@ -27,7 +27,9 @@ export class AuthService {
   async registerUser(user) {
     try {
       const newUser = await this.service.user.create({
-        data: user,
+        data: { ...user,
+          firstauth: true,
+        },
       });
 
       return this.signToken(newUser.id, newUser.email);
@@ -54,5 +56,10 @@ export class AuthService {
     };
     const token = await this.jwtservice.signAsync(payload);
     return token;
+  }
+
+  extractPayload(token: string) {
+    const payload = this.jwtservice.decode(token);
+    return payload;
   }
 }
