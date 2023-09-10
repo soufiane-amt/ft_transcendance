@@ -14,6 +14,7 @@
 
     position: relative;
     border-bottom: 1px solid white;
+    cursor: pointer;
 }
 
 
@@ -24,6 +25,8 @@
     border: 0;
     background-color: var(--discussion_panel_back_color);
     color:#a2a1ac;
+    cursor: pointer;
+
 }
 
 

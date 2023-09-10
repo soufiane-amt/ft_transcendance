@@ -16,23 +16,28 @@ function PaneLastMessage ( {message})
         </p>
     )
 }
-
-
-function DiscussionPanel ()
+/*
+discussion id
+avatar
+name
+last message
+status
+*/
+function DiscussionPanel ({DiscussionPanel})
 {
     return (
-    <div className={style.discussion_panel}>
-        <Avatar messageOwnerAvatar={avatar} avatarToRight={false}/>
+    <li key={DiscussionPanel.id} className={style.discussion_panel}>
+        <Avatar messageOwnerAvatar={`/images/${DiscussionPanel.avatar}`} avatarToRight={false}/>
         <div className={style.panel_central_part}>
-            <h3>User_5412</h3>
-            <PaneLastMessage message={panelLastMsg}></PaneLastMessage>
+            <h3>{DiscussionPanel.name}</h3>
+            <PaneLastMessage message={DiscussionPanel.lastMessage}/>
         </div>
         <div className={style.panel_last_part}>
             <button>...</button>
             <TimeStamp time={"12:22pm"}/>
             <div className={style.panel_message_notifier}>new</div>
         </div>
-    </div>
+    </li>
     )
 }
 

@@ -9,8 +9,15 @@ const avatar = "/images/avatar.png";
 // const sentMessage = false;
 const timeStamp = "16:35";
 
+/*    user_id :string    
+    dm_id? : string
+    channel_id? : string
+    content : string
+    created_at? : Date
+    is_read? : boolean
+ */
 
-function MessageBubble({ messageContent: string, isMessageSent }) {
+function MessageBubble({ messageContent, isMessageSent }) {
   const bubbleStylingClass = clsx({
     [style.message_bubble]: true,
     [style.message_bubble___sent_style]: !isMessageSent,
@@ -22,18 +29,18 @@ function MessageBubble({ messageContent: string, isMessageSent }) {
   return <div className={bubbleStylingClass}>{messageContent}</div>;
 }
 
-function Message({ sentMessage }) {
+function Message({ messageData, sentMessage }) {
   const messagePositionStyle = sentMessage ? `${style.message__to_right}` : "";
   return (
-    <div className={`${style.message} ${messagePositionStyle} `}>
-      <Avatar messageOwnerAvatar={avatar} avatarToRight={sentMessage} />
+    <div className={`${style.message} ${messagePositionStyle}`}>
+      <Avatar messageOwnerAvatar={messageData.owenerAvatar} avatarToRight={sentMessage} />
       <div className={style.message_body}>
-        <span className={style.message_username__style}>samajat</span>
+        <span className={style.message_username__style}>{messageData.name}</span>
         <MessageBubble
-          messageContent={messageContent}
+          messageContent={messageData.content}
           isMessageSent={sentMessage}
         />
-        <TimeStamp time={timeStamp} />
+        <TimeStamp time={messageData.date} />
       </div>
     </div>
   );

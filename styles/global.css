@@ -30,7 +30,7 @@
 }
 
 html,
-body {
+body,ul {
   padding: 0;
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
@@ -39,32 +39,3 @@ body {
   overflow: hidden;
 }
 
-.all {
-  display: flex;
-}
-
-.bar_part {
-  width: 40%; 
-  height: 100vh;
-  overflow-y: auto;
-  
-}
-
-.bar_part::-webkit-scrollbar {
-  width: 0; /* Adjust the width as needed */
-}
-
-
-.chat_field {
-  width: 60%; 
-  height: 100vh;
-  overflow: auto;
-}
-
-.chat_field::-webkit-scrollbar {
-  width: 0.5em; /* Adjust the width as needed */
-}
-
-.messages {
-  margin-bottom: 50px;
-}

@@ -1,84 +1,72 @@
-
 import { useEffect, useState } from "react";
 import ChatTextBox from "../shared/ChatTextbox/ChatTextbox";
 import DiscussionPanel from "../shared/DiscussionPanel/DiscussionPanel";
+import style from "./DirectMsgMain.module.css";
 import Message from "../shared/Message/Message";
-import style from "./DirectMsgMain.module.css"
-import { GetServerSideProps, InferGetServerSidePropsType } from 'next'
-import { CONFIG_FILES } from "next/dist/shared/lib/constants";
-import dataFile from '../../data/dataBar.json'
 
 
-type Discussion = {
-  id : string
-  user1_id :string
-  user2_id :string
-  status : 'ALLOWED' | 'BANNED'
-  createdAt: string
-  updatedAt: string
-}
-
-function DiscussionsBar ({discussionPanels })
-{
-
+function DiscussionsBar({ discussionPanels }) {
   return (
     <ul className={style.discussion_panel_bar}>
-      {
-        discussionPanels.map ( (panelElement) => {
-          return <DiscussionPanel DiscussionPanel={panelElement} />
-      })
-      }
-      {/* <DiscussionPanel DiscussionPanel={discussionPanels[0]} /> */}
+      {discussionPanels.map((panelElement) => {
+        return <DiscussionPanel DiscussionPanel={panelElement} />;
+      })}
     </ul>
-  )
+  );
 }
 
-function MessagesHistory ()
-{
+function MessagesHistory({messages}) {
   return (
-    <div className={style.messages_history}>  
-      {/* <Message sentMessage={true}/> */}
+    <div className={style.messages_history}>
+      {
+        messages.map ( (messageElement) =>{
+          return <Message messageData= {messageElement} sentMessage={true}/>
+        })
+      }
     </div>
-  )
+  );
 }
 
-function ChattingField ()
-{
+function ChattingField({selectedDiscussion}) {
+  const lol = selectedDiscussion;
+  const [messagesHistory, setMessageHistory] = useState ([])
+
+  useEffect(() => {
+    async function fetchDataAsync() {
+      const result = await fetch("dataMessage.json");
+      const data = await result.json();
+      setMessageHistory(data)
+    }
+    fetchDataAsync();
+  }, []);
+
   return (
     <div className={style.chat_field}>
-      <MessagesHistory/>
-      <ChatTextBox/>
+      <MessagesHistory messages={messagesHistory}/>
+      <ChatTextBox />
     </div>
-
-  )
+  );
 }
 
-// const rooms_data = [{      
-//               id: "1",
-//               user1_id: "user1",
-//               user2_id: "user2",
-//               status: "SENT",
-//               createdAt: "2023-09-10T08:00:00Z",
-//               updatedAt: "2023-09-10T08:00:00Z"}]
+function DirectMesgMain() {
+  const [desPanels_data, setDiscussionRooms] = useState([]);
+  const [selectedDiscussionPanel, setDiscussionPanel] = useState("")
 
-function DirectMesgMain()
-{
-    const [rooms_data, setRoom] = useState([])
-    useEffect(() => {
-      async function fetchDataAsync() {
-          const result = await fetch('data/dataBar.json');
-          const data = await result.json();
-          setRoom(data);
-      }
-        fetchDataAsync();
-      }, [])
-  
-    return (
-        <div className={style.direct_msg_main}>
-          <DiscussionsBar discussionPanels={rooms_data} />
-          <ChattingField/>
-        </div>
-    )
+  useEffect(() => {
+    async function fetchDataAsync() {
+      const result = await fetch("dataBar.json");
+      const data = await result.json();
+      setDiscussionRooms(data);
+    }
+    fetchDataAsync();
+  }, []);
+
+  return (
+    <div className={style.direct_msg_main}>
+      <DiscussionsBar discussionPanels={desPanels_data} />
+      <ChattingField selectedDiscussion={selectedDiscussionPanel}/>
+    </div>
+  );
 }
 
 export default DirectMesgMain;

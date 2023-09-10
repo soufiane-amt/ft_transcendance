@@ -1,0 +1,23 @@
+[
+  {
+    "id": "1",
+    "avatar": "avatar.png",
+    "name": "John Doe",
+    "lastMessage": "Hello there!",
+    "status": "ALLOWED"
+  },
+  {
+    "id": "2",
+    "avatar": "avatar2.png",
+    "name": "Jane Smith",
+    "lastMessage": "Hi, how are you?",
+    "status": "ALLOWED"
+  },
+  {
+    "id": "3",
+    "avatar": "avatar3.jpeg",
+    "name": "Alice Johnson",
+    "lastMessage": "Good morning!",
+    "status": "BANNED"
+  }
+]
