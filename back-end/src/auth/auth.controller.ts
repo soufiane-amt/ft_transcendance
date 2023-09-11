@@ -1,4 +1,4 @@
-import { Controller, Get, Req, Res, UseGuards } from '@nestjs/common';
+import { Controller, Get, Post, Req, Res, UseGuards } from '@nestjs/common';
 import FortytwoOauthGuard from './guards/Fortytwo-Oauth.guard';
 import { AuthService } from './auth.service';
 import { Response } from 'express';
@@ -51,11 +51,14 @@ export class AuthController {
     // return response.status(200).send('done');
   }
 
-  // @Get('updatecredentials')
-  // @UseGuards(JwtAuthGuard)
-  // HandleChangeDataFirstLogin(@Req() request, @Res() response: Response){
+  @Post('updatecredentials')
+  @UseGuards(JwtAuthGuard)
+  HandleChangeDataFirstLogin(@Req() request, @Res() response: Response){
+    const data = request.body.data;
+    console.log(data);
 
-  // }
+    return response.status(200).send();
+  }
 
   @Get('user')
   @UseGuards(JwtAuthGuard)
