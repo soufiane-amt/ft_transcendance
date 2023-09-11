@@ -9,14 +9,12 @@ function DiscussionsBar({discussionPanelState, discussionPanels }) {
   const [selectedDiscussionPanel, selectDiscussionPanel] = discussionPanelState;
 
   const handlePanelClick = (panelData) =>{
-    console.log ("This one is called...")
     selectDiscussionPanel(panelData);
   }
   return (
     <ul className={style.discussion_panel_bar}>
       {discussionPanels.map((panelElement) => {
-        // console.log(selectedDiscussionPanel.id)
-        return <DiscussionPanel  onSelect={handlePanelClick} DiscussionPanel={panelElement} isSelected={(panelElement && panelElement?.id === selectedDiscussionPanel?.id)}/>;
+        return <DiscussionPanel key={panelElement.id} onSelect={handlePanelClick} DiscussionPanel={panelElement} isSelected={(panelElement?.id === selectedDiscussionPanel?.id)}/>;
       })}
     </ul>
   );
@@ -27,6 +25,7 @@ function MessagesHistory({messages}) {
     <div className={style.messages_history}>
       {
         messages.map ( (messageElement) =>{
+          //Don't forget to add key attribute to messages
           return <Message messageData= {messageElement} sentMessage={messageElement.name === "samajat"}/>
         })
       }
@@ -35,22 +34,25 @@ function MessagesHistory({messages}) {
 }
 
 function ChattingField({selectedDiscussion}) {
-  const lol = selectedDiscussion;
   const [messagesHistory, setMessageHistory] = useState ([])
 
   useEffect(() => {
     async function fetchDataAsync() {
-      const result = await fetch("dataMessage.json");
-      const data = await result.json();
-      setMessageHistory(data)
+
+      if (selectedDiscussion !== null)
+      {
+        const result = await fetch("dataMessage"+selectedDiscussion?.id+".json");
+        const data = await result.json();
+        setMessageHistory(data)
+      }
     }
     fetchDataAsync();
-  }, []);
+  }, [selectedDiscussion]);
 
   return (
-    <div className={style.chat_field}>
-      <MessagesHistory messages={messagesHistory}/>
-      <ChatTextBox />
+    <div id="chatField" className={style.chat_field}>
+      <MessagesHistory  messages={messagesHistory}/>
+      <ChatTextBox messagesHistoryState={[messagesHistory, setMessageHistory]}/>
     </div>
   );
 }
@@ -69,10 +71,12 @@ function DirectMesgMain() {
     }
     fetchDataAsync();
   }, []);
+
+
   return (
     <div className={style.direct_msg_main}>
       <DiscussionsBar discussionPanelState={[selectedDiscussionPanel, selectDiscussionPanel]}  discussionPanels={roomPanels_data} />
-      {/* <ChattingField selectedDiscussion={selectedDiscussionPanel}/> */}
+      <ChattingField selectedDiscussion={selectedDiscussionPanel}/>
     </div>
   );
 }
