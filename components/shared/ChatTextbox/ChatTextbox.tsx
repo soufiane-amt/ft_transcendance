@@ -5,12 +5,15 @@ import style from './ChatTextbox.module.css'
 function ChatTextBox ({messagesHistoryState})
 {
   const [messagesHistory, setMessageHistory] = messagesHistoryState
-  const [newMessage, createNewMessage] = useState ({name:"", content:"", created_at: "", avatar: ""})
-  // const newMessage = {name:"samajat", content:"give me my money back you motherfucker!", created_at: "2023-09-10T08:00:00Z", avatar: "/images/avatar.png"};
+  const defaultMessageValue = {name:"", content:"", created_at: "", avatar: ""}
+  const [newMessage, setNewMessage] = useState (defaultMessageValue)
 
-  const  handleSendMessage = () =>{ setMessageHistory([...messagesHistory, newMessage])}
+  const  handleSendMessage = () =>{ 
+    setMessageHistory([...messagesHistory, newMessage])
+    setNewMessage(defaultMessageValue)
+  }
 
-    const sendMsgIcon = <svg  onClick={handleSendMessage}
+  const sendMsgIcon = <svg  onClick={handleSendMessage}
     className={`${style.message_send_icon__init_fill} ${style.message_send_icon}`}
     viewBox="26 14 184 186"
   >
@@ -27,7 +30,8 @@ function ChatTextBox ({messagesHistoryState})
         <div id="box" className={`${style.message_bar} ${style.middlePos}`}>
             <textarea className={`${style.message_input_bar} `} 
             placeholder='Type a message...'
-            onBlur={(e) => createNewMessage({name:"samajat", content:e.target.value, created_at: "2023-09-10T08:00:00Z", avatar: "/images/avatar.png"})}
+            value={newMessage.content}
+            onChange={(e) => setNewMessage({name:"samajat", content:e.target.value, created_at: "2023-09-10T08:00:00Z", avatar: "/images/avatar.png"})}
             />
             {sendMsgIcon}
         </div>
