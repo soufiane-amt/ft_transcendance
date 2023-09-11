@@ -1,0 +1,26 @@
+.action_button {
+    display: flex;
+    align-items: center;
+    
+    border: none;
+    border-radius: 17px;
+    
+    gap: 20px;
+
+    color: white;
+    font-size: large;
+    font-weight: bold;
+
+    cursor: pointer;
+    padding: 4px 10px;
+}
+
+.interaction_buttons {
+    display: flex;
+    justify-content: space-around;
+}
+
+
+.action_targeted_user {
+    display: flex;
+}
