@@ -1,0 +1,122 @@
+[
+  {
+    "name": "samajat",
+    "content": "Hi there!",
+    "created_at": "2023-09-10T08:00:00Z",
+    "avatar": "/images/avatar.png"
+  },
+  {
+    "name": "Jane Smith",
+    "content": "Hello!",
+    "created_at": "2023-09-10T08:05:00Z",
+    "avatar": "/images/avatar2.png"
+  },
+  {
+    "name": "samajat",
+    "content": "How are you?",
+    "created_at": "2023-09-10T08:10:00Z",
+    "avatar": "/images/avatar.png"
+  },
+  {
+    "name": "Jane Smith",
+    "content": "I'm good, thanks!",
+    "created_at": "2023-09-10T08:15:00Z",
+    "avatar": "/images/avatar2.png"
+  },
+  {
+    "name": "samajat",
+    "content": "Hey!",
+    "created_at": "2023-09-10T08:20:00Z",
+    "avatar": "/images/avatar.png"
+  },
+  {
+    "name": "Jane Smith",
+    "content": "Hi, what's up?",
+    "created_at": "2023-09-10T08:25:00Z",
+    "avatar": "/images/avatar2.png"
+  },
+  {
+    "name": "samajat",
+    "content": "Not much, just working.",
+    "created_at": "2023-09-10T08:30:00Z",
+    "avatar": "/images/avatar.png"
+  },
+  {
+    "name": "Jane Smith",
+    "content": "Cool, same here!",
+    "created_at": "2023-09-10T08:35:00Z",
+    "avatar": "/images/avatar2.png"
+  },
+  {
+    "name": "samajat",
+    "content": "Hello!",
+    "created_at": "2023-09-10T08:40:00Z",
+    "avatar": "/images/avatar.png"
+  },
+  {
+    "name": "Jane Smith",
+    "content": "Hi, how's it going?",
+    "created_at": "2023-09-10T08:45:00Z",
+    "avatar": "/images/avatar2.png"
+  },
+  {
+    "name": "samajat",
+    "content": "I'm doing well, thanks!",
+    "created_at": "2023-09-10T08:50:00Z",
+    "avatar": "/images/avatar.png"
+  },
+  {
+    "name": "Jane Smith",
+    "content": "Glad to hear that!",
+    "created_at": "2023-09-10T08:55:00Z",
+    "avatar": "/images/avatar2.png"
+  },
+  {
+    "name": "samajat",
+    "content": "Hi!",
+    "created_at": "2023-09-10T09:00:00Z",
+    "avatar": "/images/avatar.png"
+  },
+  {
+    "name": "Jane Smith",
+    "content": "Hello!",
+    "created_at": "2023-09-10T09:05:00Z",
+    "avatar": "/images/avatar2.png"
+  },
+  {
+    "name": "samajat",
+    "content": "How's your day going?",
+    "created_at": "2023-09-10T09:10:00Z",
+    "avatar": "/images/avatar.png"
+  },
+  {
+    "name": "Jane Smith",
+    "content": "It's going great!",
+    "created_at": "2023-09-10T09:15:00Z",
+    "avatar": "/images/avatar2.png"
+  },
+  {
+    "name": "samajat",
+    "content": "Hey!",
+    "created_at": "2023-09-10T09:20:00Z",
+    "avatar": "/images/avatar.png"
+  },
+  {
+    "name": "Jane Smith",
+    "content": "Hello!",
+    "created_at": "2023-09-10T09:25:00Z",
+    "avatar": "/images/avatar2.png"
+  },
+  {
+    "name": "samajat",
+    "content": "What's up?",
+    "created_at": "2023-09-10T09:30:00Z",
+    "avatar": "/images/avatar.png"
+  },
+  {
+    "name": "Jane Smith",
+    "content": "Not much, just chilling.",
+    "created_at": "2023-09-10T09:35:00Z",
+    "avatar": "/images/avatar2.png"
+  }
+]
