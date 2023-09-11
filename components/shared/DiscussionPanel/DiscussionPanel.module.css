@@ -5,7 +5,7 @@
     flex-direction: row;
     align-items: center;
     background-color: var(--discussion_panel_back_color);
-    color: white;
+    color: var(--discussion_panel_element_color);
     gap:10px;
     width: 96%;
     height: 80px;

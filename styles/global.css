@@ -26,8 +26,12 @@
 
     /*Discussion Panel*/
     --discussion_panel_back_color: #5C5B8B;
-    
-}
+    --discussion_panel_element_color: white;
+
+    /*Discussion Panel*//*under selection*/
+    --discussion_panel_selection_color : rgb(224, 216, 216);
+    --discussion_panel_element_selection_color : rgb(0, 0, 0);
+  }
 
 html,
 body,ul {
