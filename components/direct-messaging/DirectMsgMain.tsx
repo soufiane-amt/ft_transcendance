@@ -9,12 +9,14 @@ function DiscussionsBar({discussionPanelState, discussionPanels }) {
   const [selectedDiscussionPanel, selectDiscussionPanel] = discussionPanelState;
 
   const handlePanelClick = (panelData) =>{
+    console.log ("This one is called...")
     selectDiscussionPanel(panelData);
   }
   return (
     <ul className={style.discussion_panel_bar}>
       {discussionPanels.map((panelElement) => {
-        return <DiscussionPanel  onSelect={handlePanelClick} DiscussionPanel={panelElement} isSelected={panelElement.id === selectedDiscussionPanel.id}/>;
+        // console.log(selectedDiscussionPanel.id)
+        return <DiscussionPanel  onSelect={handlePanelClick} DiscussionPanel={panelElement} isSelected={(panelElement && panelElement?.id === selectedDiscussionPanel?.id)}/>;
       })}
     </ul>
   );
@@ -57,7 +59,7 @@ function ChattingField({selectedDiscussion}) {
 
 function DirectMesgMain() {
   const [roomPanels_data, setDiscussionRooms] = useState([]);
-  const [selectedDiscussionPanel, selectDiscussionPanel] = useState({id:"", avatar:""})
+  const [selectedDiscussionPanel, selectDiscussionPanel] = useState(null)
 
   useEffect(() => {
     async function fetchDataAsync() {
@@ -67,7 +69,6 @@ function DirectMesgMain() {
     }
     fetchDataAsync();
   }, []);
-
   return (
     <div className={style.direct_msg_main}>
       <DiscussionsBar discussionPanelState={[selectedDiscussionPanel, selectDiscussionPanel]}  discussionPanels={roomPanels_data} />

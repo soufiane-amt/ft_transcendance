@@ -62,11 +62,10 @@ function DiscussionPanel ({onSelect, DiscussionPanel, isSelected})
 {    
     const defaultPanelColors = {backgroundColor: 'var(--discussion_panel_back_color)', color:'var(--discussion_panel_element_color)'}
     const selectionPanelColors = {backgroundColor: 'var(--discussion_panel_selection_color)', color:'var(--discussion_panel_element_selection_color)'}
-
     const panelTheme = isSelected ? selectionPanelColors : defaultPanelColors;
 
     return (
-    <li key={DiscussionPanel.id} className={style.discussion_panel} onClick={onSelect(DiscussionPanel)} style={panelTheme}>
+    <li key={DiscussionPanel.id} className={style.discussion_panel} onClick={ () => onSelect(DiscussionPanel)} style={panelTheme}>
 
         <Avatar messageOwnerAvatar={`/images/${DiscussionPanel.avatar}`} avatarToRight={false}/>
 
