@@ -21,8 +21,8 @@ export default function Home() {
   const [NickName, setNickName] = useState("");
   const [error, setError] = useState("");
   const [uploaded, setUploaded] = useState("");
-  const [ProfilePicture, setProfilePicture] = useState();
-  const FileInput = useRef();
+  const [ProfilePicture, setProfilePicture]: any = useState(null);
+  const FileInput: any = useRef();
 
   useEffect(() => {
     async function getUserData() {
@@ -46,25 +46,26 @@ export default function Home() {
   const HandleSubmit = async (event: any) => {
     event.preventDefault();
 
-    const Data = {
-      Firstname: FirstName,
-      LastName: LastName,
-      Login: NickName,
-      avatar: ProfilePicture,
-    };
+    const Data: any = new FormData();
+    Data.append("FirstName", FirstName);
+    Data.append("LastName", LastName);
+    Data.append("NickName", NickName);
+    Data.append("ProfilePicture", ProfilePicture);
+
     try {
-      if (!Data.avatar) setError("Click the picture to select a file.");
+      if (!ProfilePicture) setError("Click the picture to select a file.");
       else {
+        // console.log("FormData entries:");
+        // for (const [key, value] of Data.entries()) {
+        //   console.log(key, value);
+        // }
         await axios.post(
           `${process.env.NEXT_PUBLIC_BACKEND_SERV}/auth/updatecredentials`,
-          {
-            data: {
-              ...Data,
-            },
-          },
+          Data,
           {
             headers: {
               Authorization: `Bearer ${jwtToken}`,
+              "Content-Type": "multipart/form-data", // Important for file uploads
             },
           }
         );
@@ -75,9 +76,9 @@ export default function Home() {
   };
 
   return (
-    <div className="bg-gradient-to-br from-[#0D0149] via-[#1b0297] to-[#0D0149] min-w-[100vw] h-[100vh]  flex  items-center p-[5%] overflow-scroll flex-col">
+    <div className="bg-gradient-to-br from-[#2003b0] via-[#0D0149] to-[#2003b0] min-w-[100vw] h-[100vh]  flex  items-center p-[5%] overflow-scroll flex-col">
       <motion.form
-        className="w-[80vw]  h-[70vh] min-h-[600px] max-w-[600px] bg-[#ccc4f7] rounded-xl flex justify-evenly items-center text-[#0D0149] flex-col  my-auto p-[3%]"
+        className=" card-shadow w-[80vw]  h-[70vh] min-h-[600px] max-w-[600px] bg-[#ccc4f7] rounded-xl flex justify-evenly items-center text-[#0D0149] flex-col  my-auto p-[3%]"
         onSubmit={HandleSubmit}
         initial={{
           opacity: 0,
@@ -94,20 +95,20 @@ export default function Home() {
         <h1
           className={`${mono.className} text-[#0D0149] text-center m-[8px] font-semibold text-[18px] mt-[25px]`}
         >
-          Do want to update your data ?
+          Want to update Credentials?
         </h1>
         <label
           className=" m-[8px] w-full h-[190px] flex items-center justify-center flex-col"
           htmlFor="avatar"
         >
           {" "}
-          <div className="flex justify-center items-center w-[165px] h-[165px]">
+          <div className="flex justify-center items-center w-[170px] h-[170px] mb-[6px]">
             <Image
               src={User.avatar || "/ProfileUser.png"}
               width={160}
               height={160}
               alt="Profile Pic"
-              className="rounded-full hover:opacity-40 hover:cursor-pointer hover:w-[155px] hover:h-[155px] border-[#0D0149] border-dashed border-4 m-[2px]"
+              className=" card-shadow rounded-full hover:opacity-40 hover:cursor-pointer hover:w-[155px] hover:h-[155px]"
               priority
             />
           </div>
@@ -121,7 +122,7 @@ export default function Home() {
           )}
           <input
             type="file"
-            name="avatar"
+            name="ProfilePicture"
             id="avatar"
             accept="image/*"
             ref={FileInput}
@@ -137,8 +138,8 @@ export default function Home() {
           <label className="flex flex-col text-center h-[45px] mt-[15px]">
             <input
               type="text"
-              name="firstname"
-              className={`h-[40px] rounded-xl ${mono.className} placeholder:text-slate-400 pl-[20px] focus:outline-none focus:translate-x-6`}
+              name="FirstName"
+              className={`h-[40px] rounded-xl ${mono.className} placeholder:text-slate-400 pl-[20px] focus:outline-none focus:translate-x-6 card-shadow`}
               placeholder="First Name"
               required
               value={FirstName}
@@ -148,8 +149,8 @@ export default function Home() {
           <label className="flex flex-col text-center h-[45px] mt-[15px]">
             <input
               type="text"
-              name="lastname"
-              className={`h-[40px] rounded-xl ${mono.className} placeholder:text-slate-400 pl-[20px] focus:outline-none focus:translate-x-6`}
+              name="LastName"
+              className={`h-[40px] rounded-xl ${mono.className} placeholder:text-slate-400 pl-[20px] focus:outline-none focus:translate-x-6 card-shadow`}
               placeholder="Last Name"
               required
               value={LastName}
@@ -159,8 +160,8 @@ export default function Home() {
           <label className="flex flex-col text-center h-[45px] mt-[15px]">
             <input
               type="text"
-              name="login"
-              className={`h-[40px] rounded-xl ${mono.className} placeholder:text-slate-400 pl-[20px] focus:outline-none focus:translate-x-6`}
+              name="NickName"
+              className={`h-[40px] rounded-xl ${mono.className} placeholder:text-slate-400 pl-[20px] focus:outline-none focus:translate-x-6 card-shadow`}
               placeholder="Nickname"
               required
               value={NickName}
@@ -170,7 +171,7 @@ export default function Home() {
         </div>
         <button
           type="submit"
-          className={`text-[18px] font-semibold  bg-white px-[15px] py-[3px] rounded-xl hover:bg-[#0D0149] hover:text-white ${mono.className} mt-[20px]`}
+          className={`text-[18px] font-semibold  bg-white px-[15px] py-[3px] rounded-xl hover:bg-[#0D0149] hover:text-white ${mono.className} mt-[20px] card-shadow`}
         >
           Submit
         </button>

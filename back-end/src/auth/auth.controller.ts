@@ -17,8 +17,6 @@ import { JwtAuthGuard } from './guards/jwt-aut.guard';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
-import { get } from 'http';
-
 
 @Controller('auth')
 export class AuthController {
@@ -70,46 +68,47 @@ export class AuthController {
   //============================================================================
   @Post('updatecredentials')
   @UseGuards(JwtAuthGuard)
-  @UseInterceptors(FileInterceptor('ProfilePicture', {
-    storage: diskStorage({
-      destination: './uploads',
-      filename: (req , file, cb) => {
-        const parts = file.originalname.split('.');
-        const fileExtension = parts.pop(); // Get the last part as the extension
-        const name = parts.join('.'); // Join the remaining parts as the name
+  @UseInterceptors(
+    FileInterceptor('ProfilePicture', {
+      storage: diskStorage({
+        destination: './uploads',
+        filename: (req, file, cb) => {
+          const parts = file.originalname.split('.');
+          const fileExtension = parts.pop(); // Get the last part as the extension
+          const name = parts.join('.'); // Join the remaining parts as the name
 
-
-        const newFileName = name.split(" ").join('_')+'_'+Date.now()+'.'+fileExtension;
-        cb(null, newFileName);
-      }
+          const newFileName =
+            name.split(' ').join('_') + '_' + Date.now() + '.' + fileExtension;
+          cb(null, newFileName);
+        },
+      }),
+      fileFilter: (request, file, cb) => {
+        if (!file.originalname.match(/\.(jpg|jpeg|png|gif)$/)) {
+          return cb(null, false);
+        }
+        cb(null, true);
+      },
     }),
-    fileFilter: (request, file, cb) => {
-      if (!file.originalname.match(/\.(jpg|jpeg|png|gif)$/)) {
-        return cb(null, false);
-      }
-      cb(null, true);
-    }
-  }))
+  )
   HandleChangeDataFirstLogin(
     @Req() request,
     @Res() response: Response,
-    @UploadedFile() file : Express.Multer.File,
+    @UploadedFile() file: Express.Multer.File,
   ) {
     try {
-      if(!file)
-        throw new BadRequestException('File is not an image ');
-      else 
-        console.log({
-      filepath: `http://localhost:3001/auth/uploads/${file.filename}`
-      })
-
-      console.log({ ...request.body});
-      response.json({ message: 'Credentials updated successfully' });
+      if (!file) throw new BadRequestException('File is not an image ');
+      else {
+        const UpdatedData: any = {
+          AvatarPath: `http://localhost:3001/auth/uploads/${file.filename}`, // put backend domain in the env
+          ...request.body,
+        };
+        console.log(UpdatedData);
+        response.json({ message: 'Credentials updated successfully' });
+      }
     } catch (error) {
       response.status(500).json({ message: 'Error updating credentials' });
     }
   }
-
 
   //===================================================================================
   @Get('user')
@@ -126,11 +125,12 @@ export class AuthController {
     return response.status(200).send(user);
   }
 
-
   //===============================
   @Get('uploads/:filename')
   @UseGuards(JwtAuthGuard)
-  async getPicture(@Param('filename') filename, @Res() response : Response) {
-      response.sendFile(filename, {root : './uploads'});
+  async getPicture(@Param('filename') filename, @Res() response: Response) {
+    response.sendFile(filename, { root: './uploads' });
   }
 }
+
+//TODO: finish first time auth feature and update user data , handle skip , creat page to display user data, , handle first time not first time, start in handling protected routes, review code , start 2fa
