@@ -1,9 +1,24 @@
-import { Controller, Get, Post, Req, Res, UseGuards } from '@nestjs/common';
+import {
+  BadRequestException,
+  Controller,
+  Get,
+  Param,
+  Post,
+  Req,
+  Res,
+  UploadedFile,
+  UseGuards,
+  UseInterceptors,
+} from '@nestjs/common';
 import FortytwoOauthGuard from './guards/Fortytwo-Oauth.guard';
 import { AuthService } from './auth.service';
 import { Response } from 'express';
 import { JwtAuthGuard } from './guards/jwt-aut.guard';
 import { PrismaService } from 'src/prisma/prisma.service';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { diskStorage } from 'multer';
+import { get } from 'http';
+
 
 @Controller('auth')
 export class AuthController {
@@ -11,10 +26,12 @@ export class AuthController {
     private readonly authservice: AuthService,
     private readonly service: PrismaService,
   ) {}
+  //===================================================================================
 
   @Get('login')
   @UseGuards(FortytwoOauthGuard)
   async HandleLogin() {}
+  //===================================================================================
 
   @Get('redirect')
   @UseGuards(FortytwoOauthGuard)
@@ -50,27 +67,70 @@ export class AuthController {
     // return response.redirect('http://localhost:3001/profile');
     // return response.status(200).send('done');
   }
-
+  //============================================================================
   @Post('updatecredentials')
   @UseGuards(JwtAuthGuard)
-  HandleChangeDataFirstLogin(@Req() request, @Res() response: Response){
-    const data = request.body.data;
-    console.log(data);
+  @UseInterceptors(FileInterceptor('ProfilePicture', {
+    storage: diskStorage({
+      destination: './uploads',
+      filename: (req , file, cb) => {
+        const parts = file.originalname.split('.');
+        const fileExtension = parts.pop(); // Get the last part as the extension
+        const name = parts.join('.'); // Join the remaining parts as the name
 
-    return response.status(200).send();
+
+        const newFileName = name.split(" ").join('_')+'_'+Date.now()+'.'+fileExtension;
+        cb(null, newFileName);
+      }
+    }),
+    fileFilter: (request, file, cb) => {
+      if (!file.originalname.match(/\.(jpg|jpeg|png|gif)$/)) {
+        return cb(null, false);
+      }
+      cb(null, true);
+    }
+  }))
+  HandleChangeDataFirstLogin(
+    @Req() request,
+    @Res() response: Response,
+    @UploadedFile() file : Express.Multer.File,
+  ) {
+    try {
+      if(!file)
+        throw new BadRequestException('File is not an image ');
+      else 
+        console.log({
+      filepath: `http://localhost:3001/auth/uploads/${file.filename}`
+      })
+
+      console.log({ ...request.body});
+      response.json({ message: 'Credentials updated successfully' });
+    } catch (error) {
+      response.status(500).json({ message: 'Error updating credentials' });
+    }
   }
 
+
+  //===================================================================================
   @Get('user')
   @UseGuards(JwtAuthGuard)
   async HandleProfilepic(@Req() request, @Res() response: Response) {
-    const JwtToken : string  = request.headers.authorization.split(' ')[1];
+    const JwtToken: string = request.headers.authorization.split(' ')[1];
 
-    const payload : any =  this.authservice.extractPayload(JwtToken);
+    const payload: any = this.authservice.extractPayload(JwtToken);
     const user = await this.service.user.findUnique({
       where: {
         email: payload.email,
       },
     });
     return response.status(200).send(user);
+  }
+
+
+  //===============================
+  @Get('uploads/:filename')
+  @UseGuards(JwtAuthGuard)
+  async getPicture(@Param('filename') filename, @Res() response : Response) {
+      response.sendFile(filename, {root : './uploads'});
   }
 }
