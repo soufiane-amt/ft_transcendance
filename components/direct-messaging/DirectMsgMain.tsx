@@ -5,12 +5,15 @@ import style from "./DirectMsgMain.module.css";
 import Message from "../shared/Message/Message";
 import UserActionModalMain from "./UserActionModal/UserActionModal";
 
+    /*stopPropagation is used here to prevent the click event to take way up to the parent it got limited right here */
 
 function DiscussionsBar({discussionPanelState, discussionPanels }) {
   const [selectedDiscussionPanel, selectDiscussionPanel] = discussionPanelState;
+  
   const [modalIsVisible, setModalAsVisible] = useState(false)
 
-  const displayActionModal = ()=>{
+  const displayActionModal = (e)=>{
+    // e.stopPropagation()
     setModalAsVisible(true)
   }
   const handlePanelClick = (panelData) =>{
@@ -19,7 +22,9 @@ function DiscussionsBar({discussionPanelState, discussionPanels }) {
   return (
       <ul className={style.discussion_panel_bar}>
         {discussionPanels.map((panelElement) => {
-          return <DiscussionPanel key={panelElement.id} onSelect={handlePanelClick}  DiscussionPanel={panelElement} isSelected={(panelElement?.id === selectedDiscussionPanel?.id)} showUserActionModal={displayActionModal}/>;
+          const isSelected = (panelElement?.id === selectedDiscussionPanel?.id)
+          return <DiscussionPanel key={panelElement.id} onSelect={handlePanelClick}  DiscussionPanel={panelElement} 
+                                  isSelected={isSelected} showUserActionModal={displayActionModal}/>;
         })}
         <UserActionModalMain userData={selectedDiscussionPanel} modalState={[modalIsVisible, setModalAsVisible]}/>
       </ul>

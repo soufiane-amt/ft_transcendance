@@ -24,7 +24,7 @@ function ActionButton({buttonData}) /*button title, icon, backGroundColor */
 
 
 const avatar = "/images/avatar.png"
-function UserActionModal ()
+function UserActionModal ({targetedUserData})
 {
     const playButton = {title:"Play", icon:"/images/icons/play.png", backgroundColor:"#14C201"}
     const banButton = {title:"Ban", icon:"/images/icons/ban.png", backgroundColor:"red"}
@@ -32,8 +32,8 @@ function UserActionModal ()
     return (
         <div className={style.user_action_modal} onClick={(e)=>{ e.stopPropagation()}}>
             <div className={style.action_targeted_user}>
-                <Avatar avatarSrc={avatar} avatarToRight={false}/>
-                <h1>User_5432</h1>
+                <Avatar avatarSrc={`/images/${targetedUserData?.avatar}`} avatarToRight={false}/>
+                <h1>{targetedUserData?.id}</h1>
             </div>
             <div className={style.interaction_buttons}> 
                 <ActionButton buttonData={playButton}/>
@@ -54,7 +54,7 @@ function UserActionModalMain({userData, modalState})
 
     return (
       <div className={style.user_action_main_modal} onClick={handleModalVisibility} style={!isVisible? { display:"none"} : null}>
-        <UserActionModal />
+        <UserActionModal targetedUserData={userData}/>
       </div>
       )
   }
