@@ -5,8 +5,7 @@ import UserActionModalMain from "../components/direct-messaging/UserActionModal/
 
 export default function Home() {
 
-  // <DirectMesgMain/>
   return (
-    <UserActionModalMain/>
+    <DirectMesgMain/>
     )
 }

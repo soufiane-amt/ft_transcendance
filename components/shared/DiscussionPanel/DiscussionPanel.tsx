@@ -2,6 +2,7 @@ import style from './DiscussionPanel.module.css'
 import Avatar from '../Avatar/Avatar';
 import TimeStamp from '../TimeStamp/TimeStamp';
 import { useState } from 'react';
+import UserActionModalMain from '../../direct-messaging/UserActionModal/UserActionModal';
 
 
 const avatar = "/images/avatar.png";
@@ -24,7 +25,8 @@ name
 last message
 status
 */
-function DiscussionPanel ({onSelect, DiscussionPanel, isSelected})
+
+function DiscussionPanel ({onSelect, DiscussionPanel, isSelected, showUserActionModal})
 {    
     const defaultPanelColors = {backgroundColor: 'var(--discussion_panel_back_color)', color:'var(--discussion_panel_element_color)'}
     const selectionPanelColors = {backgroundColor: 'var(--discussion_panel_selection_color)', color:'var(--discussion_panel_element_selection_color)'}
@@ -40,12 +42,11 @@ function DiscussionPanel ({onSelect, DiscussionPanel, isSelected})
             <PaneLastMessage message={DiscussionPanel.lastMessage}/>
         </div>
         <div className={style.panel_last_part}>
-            <button style={panelTheme}>...</button>
+            <button style={panelTheme} onClick={showUserActionModal}>...</button>
             <TimeStamp time={"12:22pm"}/>
             {!isSelected ? (
               <div className={style.panel_message_notifier}>new</div>
             ) : null}
-            {/* <div className={style.panel_message_notifier} style={isSelected && {display:"none"}}>new</div> */}
         </div>
     
     </li>

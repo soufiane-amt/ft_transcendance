@@ -3,22 +3,31 @@ import ChatTextBox from "../shared/ChatTextbox/ChatTextbox";
 import DiscussionPanel from "../shared/DiscussionPanel/DiscussionPanel";
 import style from "./DirectMsgMain.module.css";
 import Message from "../shared/Message/Message";
+import UserActionModalMain from "./UserActionModal/UserActionModal";
 
 
 function DiscussionsBar({discussionPanelState, discussionPanels }) {
   const [selectedDiscussionPanel, selectDiscussionPanel] = discussionPanelState;
+  const [modalIsVisible, setModalAsVisible] = useState(false)
 
+  const displayActionModal = ()=>{
+    setModalAsVisible(true)
+  }
   const handlePanelClick = (panelData) =>{
     selectDiscussionPanel(panelData);
   }
   return (
-    <ul className={style.discussion_panel_bar}>
-      {discussionPanels.map((panelElement) => {
-        return <DiscussionPanel key={panelElement.id} onSelect={handlePanelClick} DiscussionPanel={panelElement} isSelected={(panelElement?.id === selectedDiscussionPanel?.id)}/>;
-      })}
-    </ul>
+      <ul className={style.discussion_panel_bar}>
+        {discussionPanels.map((panelElement) => {
+          return <DiscussionPanel key={panelElement.id} onSelect={handlePanelClick}  DiscussionPanel={panelElement} isSelected={(panelElement?.id === selectedDiscussionPanel?.id)} showUserActionModal={displayActionModal}/>;
+        })}
+        <UserActionModalMain userData={selectedDiscussionPanel} modalState={[modalIsVisible, setModalAsVisible]}/>
+      </ul>
   );
 }
+
+
+
 
 function MessagesHistory({messages}) {
   const scrollDown = useRef(null)
@@ -45,11 +54,12 @@ function MessagesHistory({messages}) {
         
       }
       <div   style={{marginTop:"100px"}} ref={scrollDown}></div>
-
-
     </div>
   );
 }
+
+
+
 
 function ChattingField({selectedDiscussion}) {
   const [messagesHistory, setMessageHistory] = useState ([])
@@ -81,7 +91,7 @@ function ChattingField({selectedDiscussion}) {
 
 function DirectMesgMain() {
   const [roomPanels_data, setDiscussionRooms] = useState([]);
-  const [selectedDiscussionPanel, selectDiscussionPanel] = useState(null)
+  const [selectedDiscussionPanel, selectDiscussionPanel] = useState(null)//this must be the id of the channel
 
   useEffect(() => {
     async function fetchDataAsync() {

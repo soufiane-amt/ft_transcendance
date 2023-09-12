@@ -28,6 +28,7 @@ function UserActionModal ()
 {
     const playButton = {title:"Play", icon:"/images/icons/play.png", backgroundColor:"#14C201"}
     const banButton = {title:"Ban", icon:"/images/icons/ban.png", backgroundColor:"red"}
+    /*stopPropagation is used here to prevent the click event to take way up to the parent it got limited right here */
     return (
         <div className={style.user_action_modal} onClick={(e)=>{ e.stopPropagation()}}>
             <div className={style.action_targeted_user}>
@@ -43,17 +44,17 @@ function UserActionModal ()
 }
 
 /*This container does the same as UserActionModal execpt that it adds visibility managment*/
-function UserActionModalMain()
-{
-    const [itemIsVisible, setVisible] = useState(true)
-    const handleVisibility = () => {
-      setVisible(false)
-    }
-    // <DirectMesgMain/>
+function UserActionModalMain({userData, modalState})
+{  
+    const [isVisible, setAsVisible] = modalState;
+
+    const handleModalVisibility = () => {
+        setAsVisible(false)
+  }
+
     return (
-      <div className={style.user_action_main_modal} onClick={handleVisibility}>
-        {itemIsVisible && <UserActionModal />}
-  
+      <div className={style.user_action_main_modal} onClick={handleModalVisibility} style={!isVisible? { display:"none"} : null}>
+        <UserActionModal />
       </div>
       )
   }
