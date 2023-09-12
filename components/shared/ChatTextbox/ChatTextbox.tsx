@@ -1,5 +1,6 @@
-import { useState } from 'react'
+import { useRef, useState } from 'react'
 import style from './ChatTextbox.module.css'
+import { NoFallbackError } from 'next/dist/server/base-server'
 
 
 function ChatTextBox ({messagesHistoryState})
@@ -11,6 +12,7 @@ function ChatTextBox ({messagesHistoryState})
   const  handleSendMessage = () =>{ 
     setMessageHistory([...messagesHistory, newMessage])
     setNewMessage(defaultMessageValue)
+
   }
 
   const sendMsgIcon = <svg  onClick={handleSendMessage}
@@ -27,7 +29,7 @@ function ChatTextBox ({messagesHistoryState})
 
         
     return (
-        <div id="box" className={`${style.message_bar} ${style.middlePos}`}>
+        <div className={`${style.message_bar} ${style.middlePos}`} >
             <textarea className={`${style.message_input_bar} `} 
             placeholder='Type a message...'
             value={newMessage.content}

@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import ChatTextBox from "../shared/ChatTextbox/ChatTextbox";
 import DiscussionPanel from "../shared/DiscussionPanel/DiscussionPanel";
 import style from "./DirectMsgMain.module.css";
@@ -21,20 +21,39 @@ function DiscussionsBar({discussionPanelState, discussionPanels }) {
 }
 
 function MessagesHistory({messages}) {
+  const scrollDown = useRef(null)
+
+  const scrollToBottom = ()=>{
+    if (scrollDown.current != null)
+      scrollDown.current.scrollIntoView({
+          block: 'end'
+        });
+  }
+
+  useEffect (()=>
+    {
+      scrollToBottom ();
+    }, [messages]
+  )
   return (
     <div className={style.messages_history}>
       {
-        messages.map ( (messageElement) =>{
+        messages.map ( (messageElement, index) =>{
           //Don't forget to add key attribute to messages
-          return <Message messageData= {messageElement} sentMessage={messageElement.name === "samajat"}/>
+          return <Message key={index} messageData= {messageElement} sentMessage={messageElement.name === "samajat"}/>
         })
+        
       }
+      <div   style={{marginTop:"100px"}} ref={scrollDown}></div>
+
+
     </div>
   );
 }
 
 function ChattingField({selectedDiscussion}) {
   const [messagesHistory, setMessageHistory] = useState ([])
+
 
   useEffect(() => {
     async function fetchDataAsync() {
@@ -50,9 +69,10 @@ function ChattingField({selectedDiscussion}) {
   }, [selectedDiscussion]);
 
   return (
-    <div id="chatField" className={style.chat_field}>
+    <div className={style.chat_field}>
       <MessagesHistory  messages={messagesHistory}/>
-      <ChatTextBox messagesHistoryState={[messagesHistory, setMessageHistory]}/>
+
+      <ChatTextBox messagesHistoryState={[messagesHistory, setMessageHistory]} />
     </div>
   );
 }

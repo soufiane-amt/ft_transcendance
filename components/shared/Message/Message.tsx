@@ -26,7 +26,7 @@ function Message({ messageData, sentMessage }) {
   const messagePositionStyle = sentMessage ? `${style.message__to_right}` : "";
   return (
     <div className={`${style.message} ${messagePositionStyle}`}>
-      <Avatar messageOwnerAvatar={messageData.avatar} avatarToRight={sentMessage} />
+      <Avatar avatarSrc={messageData.avatar} avatarToRight={sentMessage} />
       <div className={style.message_body}>
         <span className={style.message_username__style}>{messageData.name}</span>
         <MessageBubble

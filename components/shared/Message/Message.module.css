@@ -1,9 +1,10 @@
 .message {
   display: flex;
   flex-direction: row;
-  max-width: 50%;
+  width: 50%;
   gap: var(--message_header_body_spacing);
-
+  word-break: break-all;
+  margin-bottom: 40px;
 }
 
 
@@ -14,12 +15,12 @@
   flex-direction: column;
 }
 
+
 /*This class styles the main element of message container*/
 .message_bubble {
   display: inline-block; /*Making the parent container resizes based on the size of its content*/
   padding: 10px 50px;
-  /* max-width: 50%; */
-
+  
   border-radius: 20px;
 
   margin-top: calc(var(--avatar_size) / 2);
@@ -76,7 +77,6 @@
 /***- utils -**/
 
 .message__to_right {
-
   justify-content: end;
 
   margin-left: auto;

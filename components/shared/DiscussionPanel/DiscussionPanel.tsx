@@ -33,7 +33,7 @@ function DiscussionPanel ({onSelect, DiscussionPanel, isSelected})
     return (
     <li key={DiscussionPanel.id} className={style.discussion_panel} onClick={ () => onSelect(DiscussionPanel)} style={panelTheme}>
 
-        <Avatar messageOwnerAvatar={`/images/${DiscussionPanel.avatar}`} avatarToRight={false}/>
+        <Avatar avatarSrc={`/images/${DiscussionPanel.avatar}`} avatarToRight={false}/>
 
         <div className={style.panel_central_part}>
             <h3>{DiscussionPanel.name}</h3>
