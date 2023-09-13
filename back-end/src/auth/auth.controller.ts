@@ -60,7 +60,7 @@ export class AuthController {
       });
       return response.redirect(`${process.env.FRONT_SERV}/updatecredentials`);
     } else
-      return response.redirect(`${process.env.FRONT_SERV}/updatecredentials`);
+      return response.redirect(`${process.env.FRONT_SERV}/dashboard`);
 
     // return response.redirect('http://localhost:3001/profile');
     // return response.status(200).send('done');
@@ -82,29 +82,38 @@ export class AuthController {
           cb(null, newFileName);
         },
       }),
-      fileFilter: (request, file, cb) => {
-        if (!file.originalname.match(/\.(jpg|jpeg|png|gif)$/)) {
-          return cb(null, false);
-        }
-        cb(null, true);
-      },
     }),
   )
-  HandleChangeDataFirstLogin(
+  async HandleUpdateCredentials(
     @Req() request,
     @Res() response: Response,
     @UploadedFile() file: Express.Multer.File,
   ) {
     try {
-      if (!file) throw new BadRequestException('File is not an image ');
-      else {
-        const UpdatedData: any = {
-          AvatarPath: `http://localhost:3001/auth/uploads/${file.filename}`, // put backend domain in the env
-          ...request.body,
-        };
-        console.log(UpdatedData);
-        response.json({ message: 'Credentials updated successfully' });
+      const UpdatedData: any = {
+        AvatarPath: `http://localhost:3001/auth/uploads/${file.filename}`, // put backend domain in the env
+        ...request.body,
+      };
+
+      const JwtToken: string = request.headers.authorization.split(' ')[1];
+      const payload: any = this.authservice.extractPayload(JwtToken);
+
+      try {
+        await this.service.user.update({
+          where: {
+            email: payload.email,
+          },
+          data: {
+            login: UpdatedData.NickName,
+            firstname: UpdatedData.FirstName,
+            lastname: UpdatedData.LastName,
+            avatar: UpdatedData.AvatarPath,
+          },
+        });
+      } catch (error) {
+        response.status(500).json({ message: 'Error saving credentials' });
       }
+      response.json({ message: 'Credentials updated successfully' });
     } catch (error) {
       response.status(500).json({ message: 'Error updating credentials' });
     }
@@ -132,5 +141,3 @@ export class AuthController {
     response.sendFile(filename, { root: './uploads' });
   }
 }
-
-//TODO: finish first time auth feature and update user data , handle skip , creat page to display user data, , handle first time not first time, start in handling protected routes, review code , start 2fa

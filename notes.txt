@@ -45,8 +45,11 @@ Examples
   Format your Prisma schema
   $ prisma format
 
-TODO: ----------------- fix errors, review code , start animations
-TODO: backend to check if the is login or not
-TODO: start working in 2fa
 
 
+
+//TODO: start in handling protected routes
+review code : frontend handle errors and try catch them, use types ; backend handle errors and try catch them, use types
+-> merge
+-> 2fa
+-> game

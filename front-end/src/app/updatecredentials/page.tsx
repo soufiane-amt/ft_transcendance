@@ -1,11 +1,11 @@
 "use client";
-import "../globals.css";
 import { Space_Mono } from "next/font/google";
 import axios from "axios";
 import { useState, useEffect, useRef } from "react";
-import Image from "next/image";
+// import Image from "next/image";
 import Cookies from "js-cookie";
 import { motion } from "framer-motion";
+import { useRouter } from 'next/navigation'
 
 const mono = Space_Mono({
   subsets: ["latin"],
@@ -14,7 +14,6 @@ const mono = Space_Mono({
 });
 
 export default function Home() {
-  const jwtToken = Cookies.get("access_token");
   const [User, setUser] = useState<any>({});
   const [FirstName, setFirstName] = useState("");
   const [LastName, setLastName] = useState("");
@@ -23,6 +22,9 @@ export default function Home() {
   const [uploaded, setUploaded] = useState("");
   const [ProfilePicture, setProfilePicture]: any = useState(null);
   const FileInput: any = useRef();
+  const router = useRouter();
+  const jwtToken = Cookies.get("access_token");
+  
 
   useEffect(() => {
     async function getUserData() {
@@ -53,13 +55,13 @@ export default function Home() {
     Data.append("ProfilePicture", ProfilePicture);
 
     try {
-      if (!ProfilePicture) setError("Click the picture to select a file.");
+      if (!ProfilePicture) setError("Select an image");
       else {
         // console.log("FormData entries:");
         // for (const [key, value] of Data.entries()) {
         //   console.log(key, value);
         // }
-        await axios.post(
+        const response  = await axios.post(
           `${process.env.NEXT_PUBLIC_BACKEND_SERV}/auth/updatecredentials`,
           Data,
           {
@@ -69,11 +71,24 @@ export default function Home() {
             },
           }
         );
+        if(response.status === 201)
+          router.push('/dashboard');
+        else
+          console.log('error');
+          
       }
     } catch (error) {
       console.log(error);
     }
   };
+
+
+  const handleSkip = () => {
+    router.push('/dashboard')
+  }
+    
+
+
 
   return (
     <div className="bg-gradient-to-br from-[#2003b0] via-[#0D0149] to-[#2003b0] min-w-[100vw] h-[100vh]  flex  items-center p-[5%] overflow-scroll flex-col">
@@ -98,19 +113,19 @@ export default function Home() {
           Want to update Credentials?
         </h1>
         <label
-          className=" m-[8px] w-full h-[190px] flex items-center justify-center flex-col"
+          className=" m-[8px] w-[190px] h-[190px] flex items-center justify-center flex-col"
           htmlFor="avatar"
         >
           {" "}
           <div className="flex justify-center items-center w-[170px] h-[170px] mb-[6px]">
-            <Image
+            {User && <img
               src={User.avatar || "/ProfileUser.png"}
               width={160}
               height={160}
               alt="Profile Pic"
-              className=" card-shadow rounded-full hover:opacity-40 hover:cursor-pointer hover:w-[155px] hover:h-[155px]"
-              priority
-            />
+              className=" card-shadow rounded-full hover:opacity-40 hover:cursor-pointer hover:w-[155px] hover:h-[155px] w-[160px] h-[160px]"
+              // priority
+            />}
           </div>
           {error && (
             <p className={`${mono.className} text-rose-700 text-sm`}>{error}</p>
@@ -177,6 +192,8 @@ export default function Home() {
         </button>
 
         <button
+          type="button"
+          onClick={handleSkip}
           className={`text-[18px] font-semibold text-gray-950 hover:opacity-30 ${mono.className} m-[20px]`}
         >
           Skip
