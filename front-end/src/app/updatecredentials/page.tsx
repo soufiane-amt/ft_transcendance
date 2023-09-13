@@ -88,8 +88,6 @@ export default function Home() {
   }
     
 
-
-
   return (
     <div className="bg-gradient-to-br from-[#2003b0] via-[#0D0149] to-[#2003b0] min-w-[100vw] h-[100vh]  flex  items-center p-[5%] overflow-scroll flex-col">
       <motion.form
