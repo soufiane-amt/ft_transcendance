@@ -4,7 +4,7 @@ import axios from "axios";
 import Cookies from "js-cookie";
 import { useEffect, useState } from "react";
 
-const dashboard = () => {
+const Dashboard = () => {
   const jwtToken = Cookies.get("access_token");
   const [User, setUser] = useState<any>({});
 
@@ -30,15 +30,15 @@ const dashboard = () => {
   return (
     <div className="flex justify-evenly items-center flex-col">
       <div>
-        <h1>"login: {User.login}"</h1>
-        <h1>"FisrtName: {User.firstname}"</h1>
-        <h1>"LastName: {User.lastname}"</h1>
-        <h1>"FullName: {User.fullname}"</h1>
-        <h1>"Email: {User.email}"</h1>
+        <h1>login: {User.login}</h1>
+        <h1>FisrtName: {User.firstname}</h1>
+        <h1>LastName: {User.lastname}</h1>
+        <h1>FullName: {User.fullname}</h1>
+        <h1>Email: {User.email}</h1>
         <img src={User.avatar || "/ProfileUser.png"} alt="picture" className=" card-shadow rounded-full w-[160px] h-[160px]"/>
       </div>
     </div>
   );
 }
 
-export default withAuth(dashboard);
+export default withAuth(Dashboard);

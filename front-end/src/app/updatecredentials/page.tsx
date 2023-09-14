@@ -1,7 +1,7 @@
 "use client";
 import { Space_Mono } from "next/font/google";
 import axios from "axios";
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, use } from "react";
 // import Image from "next/image";
 import Cookies from "js-cookie";
 import { motion } from "framer-motion";
@@ -22,8 +22,8 @@ const  Home = () => {
   const [LastName, setLastName] = useState("");
   const [NickName, setNickName] = useState("");
   const [error, setError] = useState("");
-  const [uploaded, setUploaded] = useState("");
   const [ProfilePicture, setProfilePicture]: any = useState(null);
+  const [ProfileSrc, setProfileSrc]: any = useState("");
   const FileInput: any = useRef();
   const router = useRouter();
   const jwtToken = Cookies.get("access_token");
@@ -41,6 +41,7 @@ const  Home = () => {
           }
         );
         setUser(response.data);
+        setProfileSrc(response.data.avatar);
       } catch (error) {
         console.log(error);
       }
@@ -75,13 +76,10 @@ const  Home = () => {
           }
         );
         if(response.status === 201)
-          router.push('/dashboard');
-        else
-          console.log('error');
-          
+          router.push('/dashboard');          
       }
     } catch (error) {
-      console.log(error);
+      console.clear();
     }
   };
 
@@ -120,21 +118,16 @@ const  Home = () => {
           {" "}
           <div className="flex justify-center items-center w-[170px] h-[170px] mb-[6px]">
             {User && <img
-              src={User.avatar || "/ProfileUser.png"}
+              src={ProfileSrc || "/ProfileUser.png"}
               width={160}
               height={160}
               alt="Profile Pic"
-              className=" card-shadow rounded-full hover:opacity-40 hover:cursor-pointer hover:w-[155px] hover:h-[155px] w-[160px] h-[160px]"
+              className=" card-shadow rounded-full  hover:cursor-pointer hover:w-[155px] hover:h-[155px] w-[160px] h-[160px]"
               // priority
             />}
           </div>
           {error && (
             <p className={`${mono.className} text-rose-700 text-sm`}>{error}</p>
-          )}
-          {uploaded && (
-            <p className={`${mono.className} text-[#0D0149] text-sm`}>
-              {uploaded}
-            </p>
           )}
           <input
             type="file"
@@ -145,8 +138,10 @@ const  Home = () => {
             className="hidden"
             onChange={(e: any) => {
               setProfilePicture(e.target.files[0]);
-              setUploaded("Done!");
               setError("");
+              const reader = new FileReader();
+              reader.onloadend = () => { setProfileSrc(reader.result)}
+              reader.readAsDataURL(e.target.files[0]);
             }}
           />
         </label>

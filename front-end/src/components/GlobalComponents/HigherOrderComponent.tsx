@@ -2,28 +2,54 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Cookies from "js-cookie";
+import axios from "axios";
+import Loading from "./Loading";
 
-
-const withAuth = (WrappedComponent : any) => {
-  return (props : any) => {
+const withAuth = (WrappedComponent: any) => {
+  const WithAuth = (props: any) => {
     const Router = useRouter();
-    const [loading, setLoading] = useState(true);
+    const [loadingToken, setLoadingToken] = useState(true);
+    const [loadingData, setLoadingData] = useState(true);
+    const JwtToken = Cookies.get("access_token");
 
-    
     useEffect(() => {
-      const token = Cookies.get("access_token");
-      if (!token) {
+      if (!JwtToken) {
         Router.replace("/");
       } else {
-        setLoading(false);
+        setTimeout(() => setLoadingToken(false), 1000);
       }
-    }, []);
+    }, [JwtToken, Router]);
 
-    if (loading) {
-      return <p>Loading...</p>;
+    useEffect(() => {
+      async function getUserData() {
+        try {
+          await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_SERV}/auth/user`, {
+            headers: {
+              Authorization: `Bearer ${JwtToken}`,
+            },
+          });
+          setTimeout(() => setLoadingData(false), 2000);
+        } catch (error) {
+          Router.replace("/");
+          console.clear();
+        }
+      }
+      getUserData();
+    }, [JwtToken, Router]);
+
+    if (loadingToken || loadingData) {
+      return <Loading />;
     }
     return <WrappedComponent {...props} />;
   };
+
+  WithAuth.displayName = `WithAuth(${getDisplayName(WrappedComponent)})`;
+
+  return WithAuth;
 };
+
+function getDisplayName(WrappedComponent: any) {
+  return WrappedComponent.displayName || WrappedComponent.name || "Component";
+}
 
 export default withAuth;
