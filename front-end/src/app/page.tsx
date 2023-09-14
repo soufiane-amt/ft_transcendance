@@ -1,5 +1,5 @@
 import HomePage from "@/components/HomePage/HomePage";
-import HomePageNav from "../components/HomePage/HomePageNav";
+import HomePageNav from "@/components/HomePage/HomePageNav";
 
 export default function Home() {
   return (

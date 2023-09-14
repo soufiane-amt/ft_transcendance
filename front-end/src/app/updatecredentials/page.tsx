@@ -6,6 +6,9 @@ import { useState, useEffect, useRef } from "react";
 import Cookies from "js-cookie";
 import { motion } from "framer-motion";
 import { useRouter } from 'next/navigation'
+import withAuth from "@/components/GlobalComponents/HigherOrderComponent";
+
+
 
 const mono = Space_Mono({
   subsets: ["latin"],
@@ -13,7 +16,7 @@ const mono = Space_Mono({
   weight: ["400", "700"],
 });
 
-export default function Home() {
+const  Home = () => {
   const [User, setUser] = useState<any>({});
   const [FirstName, setFirstName] = useState("");
   const [LastName, setLastName] = useState("");
@@ -200,3 +203,6 @@ export default function Home() {
     </div>
   );
 }
+
+
+export default withAuth(Home);

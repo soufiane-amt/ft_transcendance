@@ -1,9 +1,10 @@
 "use client";
+import withAuth from "@/components/GlobalComponents/HigherOrderComponent";
 import axios from "axios";
 import Cookies from "js-cookie";
 import { useEffect, useState } from "react";
 
-export default function dashboard() {
+const dashboard = () => {
   const jwtToken = Cookies.get("access_token");
   const [User, setUser] = useState<any>({});
 
@@ -39,3 +40,5 @@ export default function dashboard() {
     </div>
   );
 }
+
+export default withAuth(dashboard);
