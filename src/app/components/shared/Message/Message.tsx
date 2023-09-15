@@ -9,8 +9,11 @@ const avatar = "/images/avatar.png";
 // const sentMessage = false;
 const timeStamp = "16:35";
 
-
-function MessageBubble({ messageContent, isMessageSent }) {
+interface MessageBubbleProps{
+  messageContent : string
+  isMessageSent : boolean
+}
+function MessageBubble({ messageContent, isMessageSent }: MessageBubbleProps) {
   const bubbleStylingClass = clsx({
     [style.message_bubble]: true,
     [style.message_bubble___sent_style]: !isMessageSent,
@@ -22,13 +25,18 @@ function MessageBubble({ messageContent, isMessageSent }) {
   return <div className={bubbleStylingClass}>{messageContent}</div>;
 }
 
-function Message({ messageData, sentMessage }) {
+interface MessageProps{
+  messageData :  messageDto
+  sentMessage : boolean
+}
+function Message({ messageData, sentMessage }: MessageProps) {
   const messagePositionStyle = sentMessage ? `${style.message__to_right}` : "";
   return (
     <div className={`${style.message} ${messagePositionStyle}`}>
-      <Avatar avatarSrc={messageData.avatar} avatarToRight={sentMessage} />
+      {/* change to avatar to context */}
+      <Avatar avatarSrc={avatar} avatarToRight={sentMessage} />
       <div className={style.message_body}>
-        <span className={style.message_username__style}>{messageData.name}</span>
+        <span className={style.message_username__style}>{messageData.username}</span>
         <MessageBubble
           messageContent={messageData.content}
           isMessageSent={sentMessage}

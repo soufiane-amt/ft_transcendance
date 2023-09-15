@@ -6,6 +6,7 @@
     width: 100%;
     background-color: var(--chat_field_back_color);
     border-top: 0.1px solid black;
+    z-index: 1;
 }
 
 .message_input_bar{

@@ -2,22 +2,22 @@
   {
     "id": "1",
     "avatar": "avatar.png",
-    "name": "John Doe",
-    "lastMessage": "Hello there!",
+    "username": "John Doe",
+    "last_message": {"content": "Hello there!"},
     "status": "ALLOWED"
   },
   {
     "id": "2",
     "avatar": "avatar2.png",
-    "name": "Jane Smith",
-    "lastMessage": "Hi, how are you?",
+    "username": "Jane Smith",
+    "last_message": {"content": "Hi, how are you?"},
     "status": "ALLOWED"
   },
   {
     "id": "3",
     "avatar": "avatar3.jpeg",
-    "name": "Alice Johnson",
-    "lastMessage": "Good morning!",
+    "username": "Alice Johnson",
+    "last_message": {"content": "Good morning!"},
     "status": "BANNED"
   }
 ]

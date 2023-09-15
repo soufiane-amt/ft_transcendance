@@ -1,24 +1,27 @@
 {
+  "name": "my-app",
+  "version": "0.1.0",
   "private": true,
-  "engines": {
-    "node": ">=18"
-  },
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "start": "next start"
+    "start": "next start",
+    "lint": "next lint"
   },
   "dependencies": {
+    "@svgr/core": "^8.1.0",
+    "@svgr/webpack": "^8.1.0",
+    "@types/react-dom": "18.2.7",
     "clsx": "^2.0.0",
-    "date-fns": "^2.29.3",
-    "gray-matter": "^4.0.3",
-    "next": "latest",
+    "eslint": "8.49.0",
+    "eslint-config-next": "13.4.19",
+    "next": "13.4.19",
     "react": "18.2.0",
-    "react-dom": "18.2.0",
-    "remark": "^14.0.2",
-    "remark-html": "^15.0.1"
+    "react-dom": "18.2.0"
   },
   "devDependencies": {
-    "@types/react": "18.2.21"
+    "@types/node": "^20.6.0",
+    "@types/react": "^18.2.21",
+    "typescript": "^5.2.2"
   }
 }
