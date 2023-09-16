@@ -97,7 +97,7 @@ export class AuthController {
           'Invalid file type. Only jpg, jpeg, png, gif, bmp, tiff images are allowed.',
         );
       const UpdatedData: any = {
-        AvatarPath: `http://localhost:3001/auth/uploads/${file.filename}`, // put backend domain in the env
+        AvatarPath: `${process.env.BACKEND_SERV}/auth/uploads/${file.filename}`, // put backend domain in the env
         ...request.body,
       };
 
