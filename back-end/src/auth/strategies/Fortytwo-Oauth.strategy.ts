@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
-import { Strategy, VerifyCallback } from 'passport-42';
+import { Strategy } from 'passport-42';
 
 @Injectable()
 export class Fortytwostrategy extends PassportStrategy(Strategy) {
