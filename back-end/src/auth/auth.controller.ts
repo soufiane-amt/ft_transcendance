@@ -47,7 +47,6 @@ export class AuthController {
       },
     });
 
-    // here i will redirect the user to the profile page
     if (user.firstauth) {
       // here I will redirect the user to change the data
       await this.service.user.update({
@@ -59,6 +58,7 @@ export class AuthController {
         },
       });
       return response.redirect(`${process.env.FRONT_SERV}/updatecredentials`);
+      // here i will redirect the user to the profile page
     } else
       return response.redirect(`${process.env.FRONT_SERV}/dashboard`);
 
