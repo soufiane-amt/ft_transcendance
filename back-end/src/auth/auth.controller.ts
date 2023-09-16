@@ -48,7 +48,7 @@ export class AuthController {
       },
     });
 
-    if (user.firstauth) {
+    if (user.firstauth === true) {
       // here I will redirect the user to change the data
       await this.service.user.update({
         where: {
