@@ -2,13 +2,10 @@
 import { Space_Mono } from "next/font/google";
 import axios from "axios";
 import { useState, useEffect, useRef, use } from "react";
-// import Image from "next/image";
 import Cookies from "js-cookie";
 import { motion } from "framer-motion";
-import { useRouter } from 'next/navigation'
+import { useRouter } from "next/navigation";
 import withAuth from "@/components/GlobalComponents/HigherOrderComponent";
-
-
 
 const mono = Space_Mono({
   subsets: ["latin"],
@@ -16,7 +13,7 @@ const mono = Space_Mono({
   weight: ["400", "700"],
 });
 
-const  Home = () => {
+const Home = () => {
   const [User, setUser] = useState<any>({});
   const [FirstName, setFirstName] = useState("");
   const [LastName, setLastName] = useState("");
@@ -27,7 +24,6 @@ const  Home = () => {
   const FileInput: any = useRef();
   const router = useRouter();
   const jwtToken = Cookies.get("access_token");
-  
 
   useEffect(() => {
     async function getUserData() {
@@ -65,7 +61,7 @@ const  Home = () => {
         // for (const [key, value] of Data.entries()) {
         //   console.log(key, value);
         // }
-        const response  = await axios.post(
+        const response = await axios.post(
           `${process.env.NEXT_PUBLIC_BACKEND_SERV}/auth/updatecredentials`,
           Data,
           {
@@ -75,19 +71,19 @@ const  Home = () => {
             },
           }
         );
-        if(response.status === 201)
-          router.push('/dashboard');          
+        if (response.status === 201) router.push("/dashboard");
       }
-    } catch (error) {
+    } catch (error: any) {
+      console.log(`\n error: ${error}\n`);
+      if (error.response && error.response.status === 415)
+        setError("invalid file type");
       console.clear();
     }
   };
 
-
   const handleSkip = () => {
-    router.push('/dashboard')
-  }
-    
+    router.push("/dashboard");
+  };
 
   return (
     <div className="bg-gradient-to-br from-[#2003b0] via-[#0D0149] to-[#2003b0] min-w-[100vw] h-[100vh]  flex  items-center p-[5%] overflow-scroll flex-col">
@@ -117,14 +113,15 @@ const  Home = () => {
         >
           {" "}
           <div className="flex justify-center items-center w-[170px] h-[170px] mb-[6px]">
-            {User && <img
-              src={ProfileSrc || "/ProfileUser.png"}
-              width={160}
-              height={160}
-              alt="Profile Pic"
-              className=" card-shadow rounded-full  hover:cursor-pointer hover:w-[155px] hover:h-[155px] w-[160px] h-[160px]"
-              // priority
-            />}
+            {User && (
+              <img
+                src={ProfileSrc || "/ProfileUser.png"}
+                width={160}
+                height={160}
+                alt="Profile Pic"
+                className=" card-shadow rounded-full  hover:cursor-pointer hover:w-[155px] hover:h-[155px] w-[160px] h-[160px]"
+              />
+            )}
           </div>
           {error && (
             <p className={`${mono.className} text-rose-700 text-sm`}>{error}</p>
@@ -139,9 +136,13 @@ const  Home = () => {
             onChange={(e: any) => {
               setProfilePicture(e.target.files[0]);
               setError("");
-              const reader = new FileReader();
-              reader.onloadend = () => { setProfileSrc(reader.result)}
-              reader.readAsDataURL(e.target.files[0]);
+              if (e.target.files[0]) {
+                const reader = new FileReader();
+                reader.onloadend = () => {
+                  setProfileSrc(reader.result);
+                };
+                reader.readAsDataURL(e.target.files[0]);
+              }
             }}
           />
         </label>
@@ -197,7 +198,6 @@ const  Home = () => {
       </motion.form>
     </div>
   );
-}
-
+};
 
 export default withAuth(Home);

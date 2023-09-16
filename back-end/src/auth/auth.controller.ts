@@ -6,6 +6,7 @@ import {
   Post,
   Req,
   Res,
+  UnsupportedMediaTypeException,
   UploadedFile,
   UseGuards,
   UseInterceptors,
@@ -59,11 +60,7 @@ export class AuthController {
       });
       return response.redirect(`${process.env.FRONT_SERV}/updatecredentials`);
       // here i will redirect the user to the profile page
-    } else
-      return response.redirect(`${process.env.FRONT_SERV}/dashboard`);
-
-    // return response.redirect('http://localhost:3001/profile');
-    // return response.status(200).send('done');
+    } else return response.redirect(`${process.env.FRONT_SERV}/dashboard`);
   }
   //============================================================================
   @Post('updatecredentials')
@@ -82,6 +79,11 @@ export class AuthController {
           cb(null, newFileName);
         },
       }),
+      fileFilter(req, file, cb) {
+        if (!file.originalname.match(/\.(jpg|jpeg|png|gif|bmp|tiff)$/))
+          cb(null, false);
+        else cb(null, true);
+      },
     }),
   )
   async HandleUpdateCredentials(
@@ -90,6 +92,10 @@ export class AuthController {
     @UploadedFile() file: Express.Multer.File,
   ) {
     try {
+      if (!file)
+        throw new UnsupportedMediaTypeException(
+          'Invalid file type. Only jpg, jpeg, png, gif, bmp, tiff images are allowed.',
+        );
       const UpdatedData: any = {
         AvatarPath: `http://localhost:3001/auth/uploads/${file.filename}`, // put backend domain in the env
         ...request.body,
@@ -111,11 +117,11 @@ export class AuthController {
           },
         });
       } catch (error) {
-        response.status(500).json({ message: 'Error saving credentials' });
+        throw new BadRequestException('database error');
       }
       response.json({ message: 'Credentials updated successfully' });
     } catch (error) {
-      response.status(500).json({ message: 'Error updating credentials' });
+      response.status(error.status).json({ message: error.message });
     }
   }
 
