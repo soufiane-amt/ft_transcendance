@@ -48,8 +48,7 @@ Examples
 
 
 
-//TODO: start in handling protected routes
-review code : frontend handle errors and try catch them, use types ; backend handle errors and try catch them, use types
+//TODO: 
 -> merge
 -> 2fa
 -> game
