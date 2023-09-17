@@ -4,8 +4,9 @@ import React, { createContext, useContext, useState } from 'react';
 interface UserContactDto {
   username: string,
   avatar: string,
-  status: 'ONLINE' | 'OFFLINE',
+  status?: 'ONLINE' | 'OFFLINE',
 }
+
 
 // The key value will represent the user_id
 const UserContactsContext = createContext<{
@@ -15,8 +16,35 @@ const UserContactsContext = createContext<{
 
 export function UserContactsProvider({ children }: { children: React.ReactNode }) {
   const [userContactsBook, setUserContactsBook] = useState<Map<string, UserContactDto>>(
-    new Map()
-  );
+    () => {
+      const userData = [
+        {
+          id: '1',
+          username: 'samajat',
+          avatar: '/images/avatar.png',
+        },
+        {
+          id: '2',
+          username: 'Jane Smith',
+          avatar: '/images/avatar2.png',
+        },
+        {
+          id: '3',
+          username: 'Alice Johnson',
+          avatar: '/images/avatar3.jpeg',
+        },
+      ];
+  
+      const map = new Map();
+      userData.forEach((user) => {
+        map.set(user.id, {
+          username: user.username,
+          avatar: user.avatar,
+        });
+      });
+      console.log (map)
+      return map;
+    });
 
   const updateUserContact = (key: string, value: UserContactDto) => {
     setUserContactsBook((prevState) => {
@@ -26,10 +54,13 @@ export function UserContactsProvider({ children }: { children: React.ReactNode }
     });
   };
 
+
   const contextValue = {
     userContacts: userContactsBook,
     updateUserContact,
   };
+
+
 
   return (
     <UserContactsContext.Provider value={contextValue}>

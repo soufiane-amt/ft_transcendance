@@ -3,15 +3,8 @@ import style from "./Message.module.css";
 import Avatar from "../Avatar/Avatar";
 import TimeStamp from "../TimeStamp/TimeStamp";
 import {
-  useUserContactContext,
   useUserContacts,
 } from "../../../context/UsersContactBookContext";
-
-// const messageContent = "Hello world! Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!"
-const messageContent = "Hello world!";
-const avatar = "/images/avatar.png";
-// const sentMessage = false;
-const timeStamp = "16:35";
 
 interface MessageBubbleProps {
   messageContent: string;
@@ -35,20 +28,23 @@ interface MessageProps {
   messageData: messageDto;
   sentMessage: boolean;
 }
+
 function Message({ messageData, sentMessage }: MessageProps) {
   const messagePositionStyle = sentMessage ? `${style.message__to_right}` : "";
 
-  // const userContacts = useUserContacts();
+  const userContacts = useUserContacts();
+  const user = userContacts.get(messageData.user_id);
 
-  // Use the get() method to retrieve a user by their key (userId)
-  // const user = userContacts.get(messageData.user_id);
+  if (!user)
+    return <div className={`${style.message} ${messagePositionStyle}`}>Message User owner not found</div>;
+
 
   return (
     <div className={`${style.message} ${messagePositionStyle}`}>
-      <Avatar avatarSrc={avatar} avatarToRight={sentMessage} />
+      <Avatar avatarSrc={user.avatar} avatarToRight={sentMessage} />
       <div className={style.message_body}>
         <span className={style.message_username__style}>
-          {messageData.username}
+          {user.username}
         </span>
         <MessageBubble
           messageContent={messageData.content}

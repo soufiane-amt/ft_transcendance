@@ -6,9 +6,7 @@ import Message from "../shared/Message/Message";
 import UserActionModalMain from "./UserActionModal/UserActionModal";
 import { DiscussionDto } from "../../interfaces/DiscussionPanel";
 import {
-  SelectedDiscussionContextType,
-  SelectedDiscussionProvider,
-  useSelectDiscussion,
+  UserContactsProvider,
 } from "../../context/UsersContactBookContext";
 
 /*stopPropagation is used here to prevent the click event to take way up to the parent it got limited right here */
@@ -62,6 +60,8 @@ function DiscussionsBar({
     </ul>
   );
 }
+
+
 
 function MessagesHistory({ messages }: { messages: messageDto[] }) {
   const scrollDown = useRef<HTMLDivElement>(null);
@@ -136,7 +136,7 @@ function DirectMesgMain() {
   const [selectedDiscussion, setSelectedDiscussion] = useState<DiscussionDto>({
     id: "",
     user_id: "",
-    username: "",
+    room_name: "",
     avatar: "",
   });
 
@@ -150,13 +150,16 @@ function DirectMesgMain() {
   }, [roomPanels_data]);
 
   return (
-    <div className={style.direct_msg_main}>
-      <DiscussionsBar
-        selectedDiscussionState={[selectedDiscussion, setSelectedDiscussion]}
-        discussionPanels={roomPanels_data}
-      />
-      <ChattingField selectedDiscussion={selectedDiscussion} />
-    </div>
+    <UserContactsProvider>
+
+      <div className={style.direct_msg_main}>
+        <DiscussionsBar
+          selectedDiscussionState={[selectedDiscussion, setSelectedDiscussion]}
+          discussionPanels={roomPanels_data}
+        />
+        <ChattingField selectedDiscussion={selectedDiscussion} />
+      </div>
+    </UserContactsProvider>
   );
 }
 

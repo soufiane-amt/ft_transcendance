@@ -42,10 +42,10 @@ function DiscussionPanel ({onSelect, DiscussionPanel, isSelected, showUserAction
     return (
     <li key={DiscussionPanel.id} className={style.discussion_panel} onClick={ () => onSelect(DiscussionPanel)} style={panelTheme}>
 
-        <Avatar avatarSrc={`/images/${DiscussionPanel.avatar}`} avatarToRight={false}/>
+        <Avatar avatarSrc={DiscussionPanel.avatar} avatarToRight={false}/>
 
         <div className={style.panel_central_part}>
-            <h3>{DiscussionPanel.username}</h3>
+            <h3>{DiscussionPanel.room_name}</h3>
             <PaneLastMessage last_message_content={DiscussionPanel.last_message.content}/>
         </div>
         <div className={style.panel_last_part}>

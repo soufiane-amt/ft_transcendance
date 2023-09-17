@@ -6,8 +6,8 @@ interface MessageMinData {
 
 export interface DiscussionDto {
   id: string;
+  room_name: string;
   user_id: string;
-  username: string;
   avatar: string;
   last_message?: MessageMinData;
 }

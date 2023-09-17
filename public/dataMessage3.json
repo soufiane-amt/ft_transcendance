@@ -1,140 +1,140 @@
 [
   {
-    "id": 1,
-    "user_id": 1,
+    "id": "1",
+    "user_id": "1",
     "username": "samajat",
     "content": "Hi there!",
     "created_at": "time"
   },
   {
-    "id": 2,
-    "user_id": 3,
+    "id": "2",
+    "user_id": "3",
     "username": "Jane Smith",
     "content": "Hello!",
     "created_at": "time"
   },
   {
-    "id": 3,
-    "user_id": 1,
+    "id": "3",
+    "user_id": "1",
     "username": "samajat",
     "content": "How are you?",
     "created_at": "time"
   },
   {
-    "id": 4,
-    "user_id": 3,
+    "id": "4",
+    "user_id": "3",
     "username": "Jane Smith",
     "content": "I'm good, thanks!",
     "created_at": "time"
   },
   {
-    "id": 5,
-    "user_id": 1,
+    "id": "5",
+    "user_id": "1",
     "username": "samajat",
     "content": "Hey!",
     "created_at": "time"
   },
   {
-    "id": 6,
-    "user_id": 3,
+    "id": "6",
+    "user_id": "3",
     "username": "Jane Smith",
     "content": "Hi, what's up?",
     "created_at": "time"
   },
   {
-    "id": 7,
-    "user_id": 1,
+    "id": "7",
+    "user_id": "1",
     "username": "samajat",
     "content": "Not much, just working.",
     "created_at": "time"
   },
   {
-    "id": 8,
-    "user_id": 3,
+    "id": "8",
+    "user_id": "3",
     "username": "Jane Smith",
     "content": "Cool, same here!",
     "created_at": "time"
   },
   {
-    "id": 9,
-    "user_id": 1,
+    "id": "9",
+    "user_id": "1",
     "username": "samajat",
     "content": "Hello!",
     "created_at": "time"
   },
   {
-    "id": 10,
-    "user_id": 3,
+    "id": "10",
+    "user_id": "3",
     "username": "Jane Smith",
     "content": "Hi, how's it going?",
     "created_at": "time"
   },
   {
-    "id": 11,
-    "user_id": 1,
+    "id": "11",
+    "user_id": "1",
     "username": "samajat",
     "content": "I'm doing well, thanks!",
     "created_at": "time"
   },
   {
-    "id": 12,
-    "user_id": 3,
+    "id": "12",
+    "user_id": "3",
     "username": "Jane Smith",
     "content": "Glad to hear that!",
     "created_at": "time"
   },
   {
-    "id": 13,
-    "user_id": 1,
+    "id": "13",
+    "user_id": "1",
     "username": "samajat",
     "content": "Hi!",
     "created_at": "time"
   },
   {
-    "id": 14,
-    "user_id": 3,
+    "id": "14",
+    "user_id": "3",
     "username": "Jane Smith",
     "content": "Hello!",
     "created_at": "time"
   },
   {
-    "id": 15,
-    "user_id": 1,
+    "id": "15",
+    "user_id": "1",
     "username": "samajat",
     "content": "How's your day going?",
     "created_at": "time"
   },
   {
-    "id": 16,
-    "user_id": 3,
+    "id": "16",
+    "user_id": "3",
     "username": "Jane Smith",
     "content": "It's going great!",
     "created_at": "time"
   },
   {
-    "id": 17,
-    "user_id": 1,
+    "id": "17",
+    "user_id": "1",
     "username": "samajat",
     "content": "Hey!",
     "created_at": "time"
   },
   {
-    "id": 18,
-    "user_id": 3,
+    "id": "18",
+    "user_id": "3",
     "username": "Jane Smith",
     "content": "Hello!",
     "created_at": "time"
   },
   {
-    "id": 19,
-    "user_id": 1,
+    "id": "19",
+    "user_id": "1",
     "username": "samajat",
     "content": "What's up?",
     "created_at": "time"
   },
   {
-    "id": 20,
-    "user_id": 3,
+    "id": "20",
+    "user_id": "3",
     "username": "Jane Smith",
     "content": "Not much, just chilling.",
     "created_at": "time"

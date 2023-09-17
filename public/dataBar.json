@@ -1,22 +1,22 @@
 [
   {
     "id": "1",
-    "avatar": "avatar.png",
-    "username": "John Doe",
+    "avatar": "/images/avatar.png",
+    "room_name": "John Doe",
     "last_message": {"content": "Hello there!"},
     "status": "ALLOWED"
   },
   {
     "id": "2",
-    "avatar": "avatar2.png",
-    "username": "Jane Smith",
+    "avatar": "/images/avatar2.png",
+    "room_name": "Jane Smith",
     "last_message": {"content": "Hi, how are you?"},
     "status": "ALLOWED"
   },
   {
     "id": "3",
-    "avatar": "avatar3.jpeg",
-    "username": "Alice Johnson",
+    "avatar": "/images/avatar3.jpeg",
+    "room_name": "Alice Johnson",
     "last_message": {"content": "Good morning!"},
     "status": "BANNED"
   }
