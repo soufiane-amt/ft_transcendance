@@ -1,3 +1,4 @@
+import "../styles/Homepage.css";
 import HomePage from "@/components/HomePage/HomePage";
 import HomePageNav from "@/components/HomePage/HomePageNav";
 

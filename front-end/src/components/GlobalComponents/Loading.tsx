@@ -3,7 +3,7 @@ import LoadingAnimation from "../../../public/LoadingAnimation.json";
 
 export default function Loading() {
   return (
-    <div className="w-[100vw] h-[100vh] bg-[#ccc4f7] flex justify-center items-center">
+    <div className="loading">
       <Lottie
         loop
         animationData={LoadingAnimation}

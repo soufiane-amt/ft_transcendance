@@ -1,0 +1,2414 @@
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+@import '../components/GlobalComponents/ProfileNavBar/Setting.module.css';
+@import '../components//GlobalComponents/ProfileNavBar/NavBar.module.css';
+
+#myp
+{
+    background-color: red;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+}
+
+*
+{
+    margin: 0;
+    padding: 0;
+    font-family: 'Open Sans', sans-serif;
+}
+
+*::-webkit-scrollbar {
+    width: 0.4em;
+    background-color: transparent;
+  }
+  
+  *::-webkit-scrollbar-thumb {
+    background-color: rgba(255, 255, 255, 0.4);
+    border-radius: 6px;
+    border: 2px solid transparent;
+  }
+  
+  *::-webkit-scrollbar-thumb:hover {
+    background-color: rgba(255, 255, 255, 0.4);
+  }
+
+  *::-webkit-scrollbar-thumb:active {
+    background-color: white;
+  }
+
+body
+{
+    background-color: #0D0149;
+}
+
+.myaside:nth-child(1)
+{
+    margin-left: 5px;
+}
+
+#notification-nameuser
+{
+    font-weight: 600;
+    font-family: 'Open Sans', sans-serif;
+    margin-bottom: 3px;
+}
+
+
+#notification-line
+{
+    width: 100%;
+    opacity: 0.2;
+}
+
+.click-notification
+{
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.flag
+{
+    width: 17px;
+    height: 17px;
+    margin-bottom: 3px;
+}
+
+.section-background
+{
+    position: absolute;
+    color: white;
+    font-size: 12px;
+    font-weight: 600;
+    visibility: hidden;
+    font-family: 'Open Sans', sans-serif;
+    width: 234px;
+    height: 2%;
+}
+
+.section-background label
+{
+    position: absolute;
+    width: 100%;
+    height: 7;
+    cursor: pointer;
+    font-size: 17px;
+}
+
+.section-image:hover .section-background
+{
+    visibility: visible;
+}
+
+.parent-identification-user
+{
+    position: relative;
+    width: 1px;
+    right: 57px;
+}
+
+
+/* .click-img.choice
+{
+   display: flex;
+   flex-direction: row;
+   justify-content: center;
+   align-items: center;
+} */
+
+svg.svg-inline--fa.fa-shield-halved
+{
+    width: 10%;
+}
+
+
+
+aside
+{
+    background-color: #24234F;
+    height: 100%;
+    position: fixed;
+    width: 19%;
+    border-top: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.parent-section-background
+{
+    width: 1px;
+    position: absolute;
+    left: 52%;
+}
+
+.myaside
+{
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 20px;
+    padding: 5px;
+    width: 100%;
+    margin-top: 15px;
+}
+
+.myaside1, .myaside2
+{
+    display: flex;
+    align-content: center;
+    justify-content: flex-start;
+    margin-bottom: 10px;
+}
+
+.myaside1 p, .myaside2 p
+{
+    margin-left: 4px;
+    font-size: 12px;
+    color: white;
+    font-weight: 600;
+}
+
+.myaside1 span, .myaside2 span
+{
+    margin-right: 6px;
+    font-size: 12px;
+}
+
+.myaside1 img, .myaside2 img
+{
+    margin-right: 3px;
+    margin-top: 1px;
+}
+
+
+.myaside1.aside img
+{
+    cursor: pointer;
+    margin-right: 10px;
+}
+
+#section-line,
+#aside-line{
+    margin-bottom: 10px;
+    width: 100%;
+    background-color: #7270A8;
+    border: none;
+    height: 1px;
+}
+
+#gameplay
+{
+    width: 80%;
+    margin: 0;
+    padding: 0;
+}
+
+.myaside1.aside
+{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.myaside1.aside h3
+{
+    color: #7270A8;
+    margin-left: 13px;
+}
+
+.homepage
+{
+    width: 100%;
+    margin-bottom: 17px;
+    margin-top: 6px;
+    margin-left: 15px;
+    display: flex;
+}
+
+.homepage img
+{
+    cursor: pointer;
+}
+
+.homepage button
+{
+    border: none;
+    background: none;
+    font-size: 14px;
+    margin-left: 8px;
+    color: #DCDCF8;
+    cursor: pointer;
+    margin-top: 3px;
+}
+
+.section-container
+{
+    
+    width: 70%;
+    height: 100%;
+    margin-top: 20px;
+    margin-left: 24%;
+}
+
+.section-image
+{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+}
+
+.section-image img
+{
+    width: 100%;
+    height: 370px;
+    margin: 0 38px;
+    z-index: -1;
+    border-top-left-radius: 16px;
+    border-top-right-radius: 16px;
+}
+
+.identification-user
+{
+    position: absolute;
+    top: -223%;
+    left: 56%;
+    width: 115px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 168px;
+}
+
+.identification-information.rank
+{
+    margin-right: 40px;
+}
+
+.identification-user img
+{
+    --color: rgba(255, 255, 255, 0.8);
+    border-radius: 50%;
+    --border: 4px;
+    --offset: 10px;
+    --gap: 5px;
+    border-radius: 50%;
+    cursor: pointer;
+    padding: calc(var(--border) + var(--gap));
+    border: var(--offset) solid #0000;
+    --_m: radial-gradient(circle closest-side at 50% 50%, #000 calc(100% - var(--offset)), #0000 calc(100% - var(--border)));
+    -webkit-mask: var(--_m);
+    mask: var(--_m);
+    --_g: #0000 calc(99% - var(--border)), var(--color) calc(100% - var(--border)) 99%, #0000;
+    --_s: var(--offset);
+    --_r: 100% 100% at;
+    background: radial-gradient(var(--_r) 0 0, var(--_g)) calc(100% + var(--_s)) calc(100% + var(--_s)),
+                radial-gradient(var(--_r) 100% 0, var(--_g)) calc(0% - var(--_s)) calc(100% + var(--_s)),
+                radial-gradient(var(--_r) 0 100%, var(--_g)) calc(100% + var(--_s)) calc(0% - var(--_s)),
+                radial-gradient(var(--_r) 100% 100%, var(--_g)) calc(0% - var(--_s)) calc(0% - var(--_s));
+    background-size: 50% 50%;
+    background-repeat: no-repeat;
+    transition: .4s;
+    width: 100%;
+}
+
+.identification-user img:hover
+{
+    --_s: 0px   
+}
+.identification-user p
+{
+    letter-spacing: 0.5px;
+    font-weight: 600;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif
+}
+
+.level
+{
+    background: #24234F;
+    border: 1px solid white;
+    border-radius: 50%;
+    width: 25px;
+    height: 25px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: absolute;
+    top: 64%;
+    left: 67%;
+    opacity: 0;
+    transition: opacity 0.5s;
+}
+
+.recharts-wrapper
+{
+    width: 1270px;
+    height: 350px;
+}
+
+.identification-user:hover .level
+{
+    opacity: 1;
+}
+
+.identification-user div p
+{
+    color: white;
+    font-size: 15px;
+}
+
+.identification
+{
+    background-color: #24244F;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    padding: 12px;
+    border-radius: 14px;
+    
+}
+
+.identification-header:nth-child(1) 
+{
+    width: 41%;
+    margin-left: 10px;
+}
+
+.identification-header
+{
+    display: flex;
+    justify-content: space-between;
+    margin-right: 10px;
+}
+
+.identification-header.one
+{
+    width: 35%;
+    margin-top: 4px;
+}
+
+.identification-header.two
+{
+    width: 32%;
+    margin-right: 52px;
+    margin-top: 4px;
+}
+
+
+.Statistic {
+    max-width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.chart-wrapper
+{
+    width: 1256px;
+}
+.chart-container {
+    /* Allow horizontal scrolling when the chart overflows its container */
+    overflow-x: auto;
+    /* Add a maximum width for the chart to prevent it from stretching too wide */
+    max-width: 1265px; /* Adjust to match the chart's width */
+}
+
+/* .chart-container::-webkit-scrollbar-thumb
+{
+
+} */
+
+.chart-container::-webkit-scrollbar
+{
+    display: none;
+}
+
+
+.identification-information
+{
+    margin-left: 10px;
+}
+
+.identification #section-line
+{
+  width: 1px;
+  height: 45px; 
+  border: none;
+  font-weight: 100;
+  background-color: #7270A8;
+  margin-bottom: 2px;
+}
+
+.identification-information h3
+{
+    color: #5C5B8B;
+    text-align: center;
+    font-family: 'Open Sans', sans-serif;
+    margin-bottom: 14px;
+    font-size: 14px;
+}
+
+
+.identification-information p
+{
+    font-family: 'Open Sans', sans-serif;
+    font-size: 14px;
+    color: white;
+    font-weight: 600;
+    text-align: center;
+}
+
+.location
+{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 16px;
+}
+
+.location p
+{
+    margin-left: 5px;
+    font-size: 15px;
+    margin-bottom: 3px;
+}
+
+.home-page{
+    background: rgba(11, 1, 59, 0.8);
+    margin-left: 24%;
+    margin-top: 43px;
+    margin-right: 10px;
+    width: 70%;
+    height: 100%;
+    padding-top: 18px;
+}
+
+.home-page-counting
+{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 8px 35px;
+    margin-bottom: 28px;
+}
+
+.home-page-search
+{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #2A2D69;
+    border-radius: 5px;
+    width: 210px;
+    height: 38px;
+    margin-right: 10px;
+}
+
+.home-page-search input
+{
+    height: 17px;
+    background: none;
+    color: white;
+    border: none;
+    font-family: 'Open Sans', sans-serif;
+    width: 80%;
+    margin-left: 7px;
+    font-size: 13px;
+}
+
+#pet-select option
+{
+    border: none;
+    outline: none;
+}
+
+.home-page-search button
+{
+    background: none;
+    outline: none;
+    border: none;
+    padding-right: 5px;
+    width: 20px;
+    margin-top: 3px;
+    color: rgba(220, 220, 248, 0.4);
+}
+
+#nameuser
+{
+    font-size: 15px;
+    font-weight: 600;
+    color: white;
+    text-align: right;
+}
+
+/* .home-page-search input:hover
+{
+    border: 1px solid #24244F;
+} */
+
+.home-page-search input:focus
+{
+    outline: none;
+}
+
+#pet-select
+{
+    padding: 5px;
+    color: #DCDCF8;
+}
+
+#pet-select:focus
+{
+    outline: none;
+}
+
+.home-page-search input::placeholder
+{
+    color: #DCDCF8;
+    padding: 0;
+    width: 70%;
+}
+
+.home-page-search img
+{
+    background-color: #2A2D69;
+}
+
+.home-page-choose select
+{
+    background-color: #2A2D69;
+    color: #FFFFFF;
+    height: 38px;
+    width: 200px;
+    border: none;
+    font-family: 'Open Sans', sans-serif;
+}
+
+.informationaboutuser
+{
+    border-radius: 20px;
+    display: flex;
+    flex-direction: column;
+    width: 80%;
+    margin-left: 11%;
+    margin-top: 2%;
+}
+
+.container-user
+{
+    background-color: #6C6AA2;
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    border-radius: 55px;
+}
+
+.container-user:hover,
+.container-user.friend:hover
+{
+    background: rgba(228, 231, 255, 0.2);
+    border: 0.1px solid rgba(255, 255, 255, 0.7);
+}
+
+.container-user.friend:hover .information-user div p, 
+.container-user.friend:hover .information-friend div p
+{
+    color: white;
+}
+
+.nameuser
+{
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    margin-left: 15px;
+}
+
+.nameuser h2
+{
+    font-size: 15px;
+    color: #FFF;
+    margin-left: 8px;
+    font-family: 'Open Sans', sans-serif;
+}
+
+.nameuser img
+{
+    border-radius: 50%;
+    padding: 10px;
+}
+
+.isconnected
+{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-right: 30px;
+    border: 1px solid #D46D0A;
+    padding: 5px;
+    border-radius: 13px;
+}
+
+.isconnected h2
+{
+    font-size: 13px;
+    margin-left: 7px;
+    color: #D46D0A;
+}
+
+.isconnected.online,
+.isconnected.offline
+{
+    padding-right: 30px;
+    margin-right: 25px;
+    border: 1px solid #1AE304;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 18px;
+}
+
+.isconnected.online img,
+.isconnected.offline img
+{
+    margin-left: 5px;
+}
+
+.isconnected.online h2
+{
+    color: #1AE304;
+}
+
+.isconnected.offline
+{   
+    border: 1px solid #E8DE28;
+}
+
+.isconnected.offline h2
+{
+    color: #E8DE28;
+}
+
+.isconnected.ingame img
+{
+    margin-left: 5px;
+}
+
+.isconnected.ingame h2
+{
+    margin-right: 5px;
+}
+
+.container-user.friend
+{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #C5C5FF;
+    height: 72px;
+}
+
+.information-user
+{
+    margin-left: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.information-user div,
+.information-friend div
+{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin-right: 10px;
+    margin-bottom: 5px;
+}
+
+.information-friend div
+{
+    margin-right: 21px;
+    width: 68px;
+    
+}
+
+#crown-score
+{
+    position: absolute;
+    margin-left: 110px;   
+    margin-bottom: 8px;
+}
+
+
+#crown-score-friend
+{
+    position: absolute;
+    margin-right: 142px;
+    margin-top: 3px;
+}
+
+.information-user div img,
+.information-friend div img
+{
+    margin-bottom: 8px;
+    border-radius: 50%;
+    margin-top: 7px;
+    width: 45px;
+    height: 44px;
+}
+
+.information-user div p,
+.information-friend div p
+{
+    font-size: 11px;
+    color: black;
+    font-weight: 600;
+    font-family: 'Open Sans', sans-serif;
+}
+
+.information-friend
+{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-right: 7px;
+}
+
+.information-friend img
+{
+    margin-bottom: 13px;
+    margin-right: 8px;
+}
+
+.score-friend
+{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin-top: 4px;
+}
+
+.score-friend p:nth-child(1)
+{
+    font-family: 'Press Start 2P', cursive;
+    font-size: 18px;
+    color: #15A679;
+    font-weight: 600;
+    margin-bottom: 10px;
+}
+
+.score-friend p:nth-child(2)
+{
+    font-size: 20px;
+    display: flex;
+    font-family: Anton, sans-serif;
+    color: #15A679;
+    font-weight: 700;
+}
+
+.score-friend span
+{
+    margin: 0 8px;
+}
+
+
+.statistic-diagram
+{
+    width: 100%;
+    height: 100%;
+    /* overflow-x: auto;
+    white-space: nowrap; */
+}
+
+
+/* .statistic-diagram::-webkit-scrollbar {
+    width: 12px;
+  }
+  
+.statistic-diagram::-webkit-scrollbar-thumb {
+    background-color: #888;
+    border-radius: 6px;
+  }
+  
+.statistic-diagram::-webkit-scrollbar-track {
+    background-color: #f1f1f1;
+  } */
+
+
+#choose
+{
+    display: none;
+}
+
+.Add-user
+{
+    background-color: #6361A2;
+    width: 100%;
+    position: absolute;
+    height: auto;
+    top: 8%;
+}
+.usercomponent
+{
+    width: 79%;
+    position: absolute;
+    left: 20%;
+    /* height: 100vh; */
+    height: 80%;
+    top: 14%;
+    z-index: -1;
+}
+
+.userheader
+{
+    z-index: -1;
+}
+
+.userheader h3
+{
+    color: white;
+    padding-left: 23px;
+    font-family: 'Open Sans', sans-serif;
+    font-size: 30px;
+    font-weight: 500;
+    margin-bottom: 10px;
+}
+
+.userheader hr
+{
+    opacity: 0.4;
+    width: 98%;
+    margin-left: 13px;
+}
+
+.add-user-button
+{
+    width: 98%;
+    height: 40px;
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 40px;
+    margin-top: 20px;
+}
+
+.add-user-button div
+{
+    background-color: #4A4A7B;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 14px;
+}
+
+.add-user-button div:hover
+{
+    border: 1px solid white;
+}
+
+.add-user-button input
+{
+    outline: none;
+    border: none;
+    width: 190px;
+    background: none;
+    margin-left: 12px;
+    color: white;
+}
+
+.add-user-button input::placeholder
+{
+    color: white;
+    opacity: 0.7;
+    font-family: 'Open Sans', sans-serif;
+}
+
+.add-user-button button
+{
+    border: none;
+    background: none;
+    color: white;
+    margin-right: 8px;
+    opacity: 0.7;
+}
+
+.add-user-list
+{
+    display: flex;
+    flex-wrap: wrap;
+    height: 88%;
+    width: 88%;
+    margin-left: 9%;
+}
+
+section.add-user-list-card
+{
+    margin-left: 22px;
+}
+
+.add-user-card
+{
+    background: #C9CDF8;
+    height: 281px;
+    width: 220px;
+    display: flex;
+    flex-direction: column;
+    align-content: center;
+    justify-content: center;
+    transition: all 0.7s ease-in-out;
+    overflow: hidden;
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+    position: relative;
+    border-radius: 10px;
+    margin-right: 7%;
+    margin-bottom: 15px;
+}
+
+.add-user-card::before
+{
+    content: "";
+    position: relative;
+    height: 42%;
+    width: 100%;
+    background-color: #24234F;
+    top: 68%;
+    right: 10;
+    transform: translateY(80px);
+    border-radius: 100%;
+    transition: all 0.7s ease-in-out;
+}
+
+.add-user-card.online div:nth-child(2) img,
+.add-user-card.offline div:nth-child(2) img
+{
+    width: 12px;
+    height: 12px;
+}
+
+.add-user-card.online div:nth-child(2) h2
+{
+    font-size: 14px;
+    color: #19CC05;
+}
+
+.add-user-card.offline div:nth-child(2) h2
+{
+    font-size: 14px;
+    color: #fff201;
+}
+
+.add-user-card:hover::before
+{
+    transform: scale(22) translate(-20px);
+}
+
+.add-user-card:hover
+{
+    box-shadow: 1px -5px 5px 5px #9fe4e44a;
+    color: #f3f3f3;
+}
+
+.add-user-card:hover div:nth-child(3)
+{
+    opacity: 1;
+}
+
+.add-user-card-inde
+{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    z-index: 2;
+}
+
+.add-user-card-inde img
+{
+    border-radius: 50%;
+    width: 85px;
+    height: 85px;
+    margin: 15px 0;
+}
+
+.add-user-card-inde p
+{
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.add-user-card div:nth-child(2)
+{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 17px;
+}
+
+.add-user-card div:nth-child(2) img
+{
+    width: 17px;
+    height: 17px;
+    margin-right: 5px;
+}
+
+.add-user-card div:nth-child(2) h2
+{
+    font-size: 13px;
+    color: #D46D0A;
+    font-family: 'Open Sans', sans-serif;
+}
+
+.add-user-card div:nth-child(3)
+{
+    width: 100%;
+    height: 105px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    opacity: 0;
+    transition: opacity 1s;
+    z-index: 2;
+    margin-bottom: 62px;
+    margin-left: 3px;
+}
+
+.add-user-card div:nth-child(3) div
+{
+    background-color: #68C4F4;
+    height: 100%;
+    width: 52%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 10px;
+    cursor: pointer;
+}
+
+.add-user-card div:nth-child(3).svg
+{
+    color: white;
+}
+
+svg.svg-inline--fa.fa-user-plus
+{
+    color: white;
+    width: 17px;
+    height: 17px;
+    margin-right: 3px;
+    cursor: pointer;
+}
+
+.add-user-card div:nth-child(3) button
+{
+    background: none;
+    border: none;
+    outline: none;
+    font-size: 10px;
+    color: white;
+    margin-left: 6px;
+    font-weight: 600;
+    margin-top: 2px;
+    cursor: pointer;
+}
+
+
+
+
+@media screen and (max-width: 1190px)
+{
+
+    .identification-header.two
+    {
+        margin: 0px;
+        margin-top: 3px;
+        margin-right: 11px;
+    }
+    .identification #section-line
+    {
+        height: 37px;
+        margin-top: 4px;
+    }
+    .identification-user
+    {
+        top: -232%;
+    }
+    .identification-information h3
+    {
+        font-size: 13px;
+    }
+    .add-user-list
+    {
+        align-items: center;
+        justify-content: center;
+        margin-left: 7%;
+    }
+}
+
+@media screen and (max-width: 1091px) and (min-width: 863px)
+{
+    .identification-user
+    {
+        top: -233%;
+        width: 109px;
+        height: 163px;
+    }
+    .section-image img
+    {
+        width: 94%;
+        height: 312px;
+    }
+    .identification
+    {
+        padding: 7px;
+    }
+    .parent-identification-user
+    {
+        right: 51px;
+    }
+    .parent-section-background
+    {
+        left: 49%;
+    }
+}
+
+
+/**********  Phone Screen   ****************/
+
+@media screen and  (max-width: 400px) and (max-width: 400px) {
+ 
+    .add-user-list
+    {
+        justify-content: flex-start;
+        width: 100%;
+        margin: 0;
+    }
+    section.add-user-list-card
+    {
+        margin: 0;
+        width: 100%;
+        height: 54px;
+        margin-bottom: 8px;
+    }
+
+    aside
+    {
+        width: 19%;
+        height: 100%;
+        border-top: 1px solid rgba(255, 255, 255, 0.1);
+        padding: 0;
+    }
+
+    .section-background label
+    {
+        font-size: 11px;
+        width: 148px;
+    }
+    
+    .identification-user
+    {
+        width: 67px;
+    }
+
+    .parent-section-background
+    {
+        left: 43%;
+    }
+
+    .usercomponent
+    {
+        top: 11%;
+    }
+    .Add-user
+    {
+        top: 7%;
+    }
+
+    .add-user-card.offline div:nth-child(2) h2,
+    .add-user-card.online div:nth-child(2) h2,
+    .add-user-card-inde div:nth-child(2) p
+    {
+        font-size: 10px;
+        margin-top: 3px;
+    }
+
+    .add-user-card.offline div:nth-child(2) img,
+    .add-user-card.online div:nth-child(2) img
+    {
+        width: 10px;
+        height: 10px;
+    }
+
+    .myaside
+    {
+        padding: 0;
+    }
+
+    .myaside1
+    {
+        padding-right: 4px;
+    }
+
+    .flag
+    {
+        width: 11px;
+    }
+
+    .myaside:nth-child(1) div
+    {
+        display: flex;
+        margin-bottom: 10px;
+        align-items: center;
+        justify-content: flex-start;    
+    }
+
+    .myaside1 span,
+    .myaside2 span
+    {
+        margin-right: 4px;
+        font-size: 8px;
+    }
+
+    .myaside1 img,
+    .myaside2 img
+    {
+        width: 5px;
+        height: 5px;
+        margin-bottom: 2px;
+    }
+
+
+    .myaside1 p, .myaside2 p
+    {
+        font-size: 7px;
+        margin: 0;
+    }
+
+    .myaside1.aside 
+    {
+        justify-content: center;
+    }
+
+    .myaside1.aside h3
+    {
+        font-size: 9px;
+    }
+
+    #dashboard
+    {
+        font-size: 9px;
+    }
+
+    .myaside1.aside img
+    {
+        display: none;
+    }
+    .homepage button
+    {
+        display: none;
+    } 
+    .homepage
+    {
+        justify-content: center;
+        margin-bottom: 7px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-left: 4px;
+    }
+
+    .section-background
+    {
+        color: rgba(255, 255, 255, 1);
+        font-size: 9px;
+        left: 48%;
+        top: 22%;
+        width: 32%;
+    }
+
+    .homepage img
+    {
+        width: 15px;
+        height: 15px;
+    }
+
+    .section-container
+    {
+        margin-top: 8px;
+        width: 76%;
+        margin-left: 22%;
+    }
+    .section-image
+    {
+        height: 40%;
+    }
+    .section-image img
+    {
+        width: 93%;
+        height: 144px;
+        margin: 0;
+    }
+
+    .identification
+    {
+        width: 100%;
+        height: 35px;
+        padding: 0;
+    }
+
+    .identification-information
+    {
+        margin-left: 5px;
+    }
+
+    .identification-information h3
+    {
+        font-size: 8px;
+        margin-bottom: 8px;
+    }
+
+    .identification-information p
+    {
+        font-size: 8px;
+        margin-left: 3px;
+    }
+
+
+    .identification-user
+    {
+        top: -152%;
+        height: 98px;
+    }
+
+    .identification-user #nameuser
+    {
+        font-size: 9px;
+    }
+
+    .identification-user img
+    {
+        width: 65px;
+        height: 65px;
+        padding: 0;
+    }
+
+    .level
+    {
+        width: 15px;
+        height: 15px;
+        top: 62%;
+        left: 61%;
+    }
+
+    .identification-user div p
+    {
+        font-size: 12px;
+        font-weight: 500;
+    }
+
+    .identification #section-line
+    {
+        display: none;
+    }
+
+    .identification-header.one
+    {
+        width: 39%;
+        margin: 0;
+        align-items: center;
+    }
+    .identification-information .location img
+    {
+        width: 10px;
+        height: 10px;
+    }
+    .parent-identification-user
+    {
+        margin-left: 0;
+        height: 44px;
+        right: 29px;
+    }
+     .identification-header.two
+    {
+        width: 31%;
+        display: flex;
+        align-items: center;
+        margin: 0;
+        padding: 0px;
+    }
+    .home-page
+    {
+        margin-top: 10px;
+        width: 77%;
+        height: 46vh;
+        margin-left: 22%;
+    }
+    .home-page-choose
+    {
+        margin: 0;
+        padding: 0;
+        width: 17px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 28px;
+        margin-left: 7px;
+    }
+    #pet-select
+    {
+        width: 100%;
+        height: 100%;
+    }
+    .home-page-search
+    {
+        width: 86%;
+        height: 26px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-left: 6px;
+    }
+
+    .home-page-search input
+    {
+        font-size: 11px;
+        margin: 0;
+    }
+    .home-page-search button
+    {
+        width: 14px;
+        height: 13px;
+        margin: 0;
+        margin-left: 10px;
+    }
+    .home-page-search button svg
+    {
+        width: 11px;
+        height: 11px;
+    }
+
+    .informationaboutuser
+    {
+        margin: 0;
+        width: 100%;
+    }
+    .nameuser
+    {
+        width: 100px;
+    }
+    .nameuser img
+    {
+        width: 28px;
+        height: 28px;
+        padding: 0;
+    }
+    .nameuser h2
+    {
+        font-size: 9px;
+        width: 56px;
+    }
+    .isconnected img
+    {
+        width: 13px;
+        height: 13px;
+    }
+    .isconnected h2
+    {
+        width: 10px;
+        height: 10px;
+    }
+    .isconnected.ingame
+    {
+        display: flex;
+        border: none;
+        height: 15px;
+        margin-right: 0;
+        width: 70px;
+    }
+    .isconnected.online,
+    .isconnected.offline
+    {
+        margin-right: 11px;
+        border: none;
+        width: 89px;
+        height: 15px;
+        margin: 0;
+        padding: 0;
+        margin-right: 15px;
+    }
+    .isconnected.online img,
+    .isconnected.offline img
+    {
+        width: 8px;
+        height: 8px;
+    }
+    .isconnected.online h2,
+    .isconnected.offline h2
+    {
+        font-size: 10px;
+        margin-left: 3px;
+        margin-top: 1px;
+    }
+    .isconnected.ingame h2
+    {
+        font-size: 10px;
+        padding: 0;
+        width: 100%;
+        margin-left: 3px;
+    }
+
+    .click-notification div p
+    {
+        font-size: 8px;
+    }
+    #notification-nameuser
+    {
+        font-size: 9px;
+    }
+    #aside-line
+    {
+        width: 100%;
+        padding: 0;
+        position: relative;
+    }
+   
+    .home-page-counting
+    {
+        padding: 0;
+        margin: 0 15px;
+        margin-bottom: 19px;
+    }
+    .container-user
+    {
+        width: 91%;
+        height: 34px;
+        margin-left: 16px;
+    }
+    .information-user,
+    .information-friend
+    {
+        margin: 0;
+        width: 30%;
+        margin-top: 4px;
+    }
+    .recharts-responsive-container
+    {
+        width: 500px;
+    }
+    .information-friend
+    {
+        width: 30%;
+        margin-right: 7px;
+    }
+    img#crown-score
+    {
+        margin-left: 95px;
+        margin-bottom: 7px;
+        width: 21px;
+        height: 22px;
+    }
+    .information-friend div
+    {
+        width: 100%;
+        height: 41px;
+        margin: 0;
+        display: flex;
+        align-content: center;
+        flex-direction: row-reverse;
+        margin-bottom: 5px;
+    }
+    .information-user div
+    {
+        margin-left: 14px;
+        margin-bottom: 7px;
+        height: 46px;
+        width: 72px;
+        flex-direction: row;
+        align-items: center;
+        justify-content: flex-start;
+    }
+    .information-user img,
+    .information-friend img
+    {
+        width: 18px;
+        height: 18px;
+    }
+    .information-user img
+    {
+        margin-bottom: 5px;
+    }
+    .information-friend img
+    {
+        margin: 0;
+        margin-bottom: 5px;
+        margin-left: 6px;
+    }
+    .information-user div p
+    {
+        margin-top: 5px;
+        margin-left: 8px;
+        font-size: 11px;
+        opacity: 0.8;
+    }
+    .information-friend div p
+    {
+        margin-right: 7px;
+        opacity: 0.8;
+        font-size: 11px;
+        margin-top: 4px;
+    }
+
+    #crown-score-friend
+    {
+        margin-top: 0px;
+        width: 21px;
+        height: 21px;
+        margin-right: 112px;
+    }
+    
+    .score-friend
+    {
+        width: 29%;
+        height: 30px;
+    }
+    .score-friend p span
+    {
+        font-size: 13px;
+        font-weight: 600;
+    }
+
+    /*  here  */
+    .score-friend p:nth-child(1)
+    {
+        font-size: 9px;
+        margin-bottom: 6px;
+    }
+    .score-friend p:nth-child(2)
+    {
+        font-size: 13px;
+        margin: 0;
+    }
+    .information-user div img,
+    .information-friend div img
+    {
+        width: 32px;
+        height: 34px;
+        margin: 0;
+    }
+    .container-user.friend
+    {
+        height: 44px;
+        width: 100%;
+        margin: 0;
+        margin-bottom: 17px;
+    }
+    .recharts-wrapper
+    {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    .userheader
+    {
+        width: 96%;
+        height: 32px;
+        margin: 0;
+        margin-top: 5px;
+    }
+    .userheader h3
+    {
+        font-size: 18px;
+        margin: 0;
+        padding: 0;
+        margin-left: 12px;
+        margin-bottom: 8px;
+    }
+    .userheader hr
+    {
+        margin-left: 9px;
+    }
+    
+    .add-user-card
+    {
+        width: 96%;
+        height: 54px;
+        flex-direction: row;
+        align-items: center;
+        justify-content: flex-start;
+        margin-left: 7px;
+    }
+    .add-user-card::before
+    {
+        width: 0;
+        display: none;
+    }
+    .add-user-card:hover
+    {
+        box-shadow: none;
+    }
+    .add-user-card
+    {
+        transition: none;
+        justify-content: space-between;
+        margin: 0;
+        margin-left: 7px;
+    }
+    .add-user-card-inde
+    {
+        margin: 0;
+        height: 100%;
+        flex-direction: row;
+        align-items: center;
+        margin-left: 14px;
+        /* width: 130px; */
+    }
+    .add-user-card-inde img
+    {
+        width: 35px;
+        height: 35px;
+        margin-right: 7px;
+    }
+    .add-user-card-inde p
+    {
+        font-size: 11px;
+        color: rgba(0, 0, 0, 0.9);
+    }
+    .add-user-card div:nth-child(2)
+    {
+        margin: 0;
+        width: 59px;
+    }
+    .add-user-card div:nth-child(3)
+    {
+        width: 8%;
+        margin: 0;
+        height: 52px;
+        opacity: 1;
+        margin-right: 12px;
+    }
+    .add-user-card div:nth-child(3) div
+    {
+        background: none; 
+        width: 100%;
+    }
+    .add-user-card div:nth-child(3) div svg
+    {
+        margin: 0;
+        color: rgba(0, 0, 0, 0.7);
+    }
+    .add-user-card div:nth-child(3) button
+    {
+        display: none;
+    }
+    .add-user-card div:nth-child(2) h2
+    {
+        font-size: 10px;
+    }
+    .add-user-card div:nth-child(2) img
+    {
+        width: 13px;
+        height: 13px;
+    }
+    .add-user-button
+    {
+        height: 30px;
+        margin-bottom: 16px;
+    }
+    .add-user-button div
+    {
+        width: 97%;
+        height: 26px;
+        display: flex;
+        align-items: center;
+        justify-content: space-around;
+        border-radius: 1px;
+    }
+    .add-user-button input
+    {
+        margin: 0;
+        opacity: 0.7;
+    }
+    .add-user-button button
+    {
+        opacity: 0.4;
+        margin: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 20px;
+        height: 20px;
+        margin-left: 28px;
+    }
+    .add-user-button button svg
+    {
+        width: 11px;
+        height: 11px;
+    }
+    .add-user-card.online div:nth-child(2)
+    {
+        margin-left: 1px;
+    }
+    svg.svg-inline--fa.fa-shield-halved
+    {
+        width: 11px;
+        height: 12px;
+    }
+}
+
+@media screen and (max-width: 862px) and (min-width: 400px) {
+    
+    .parent-section-background
+    {
+        left: 80%;
+    }
+
+    .identification-user img
+    {
+        padding: 0;
+        margin: 0;
+        width: 103px;
+        height: 99px;
+    }
+
+    .home-page
+    {
+        margin-top: 23px;
+        width: 71%;
+        margin-left: 25%;
+    }
+    
+    .identification-user
+    {
+        top: -251%;
+        width: 100%;
+    }
+    .identification #section-line
+    {
+        display: none;
+    }
+    .parent-identification-user
+    {
+        height: 44px;
+        right: 1px;
+    }
+    .identification-information h3
+    {
+        font-size: 11px;
+    }
+    .section-image img
+    {
+        width: 94%;
+        height: 254px;
+    }
+    .identification
+    {
+        padding: 6px;
+    }
+    .myaside1.aside img
+    {
+        visibility: hidden;
+    }
+    .myaside1.aside
+    {
+        justify-content: center;
+    }
+    .myaside1.aside h3
+    {
+        font-size: 13px;
+    }
+    .homepage button
+    {
+        display: none;
+    }
+    .homepage
+    {
+        width: 96%;
+        margin-left: 0px;
+        align-items: center;
+        justify-content: center;
+    }
+    .myaside
+    {
+        margin-bottom: 8px;
+    }
+    .level
+    {
+        width: 20px;
+        height: 20px;
+        top: 61%;
+        left: 18px;
+    }
+    .identification-user div p
+    {
+        font-size: 14px;
+    }
+    .section-container
+    {
+        margin-top: 15px;
+        width: 77%;
+        margin-left: 21%;
+    }
+    .home-page-search
+    {
+        height: 33px;
+    }
+    .home-page-choose select
+    {
+        height: 33px;
+    }
+    .section-background label
+    {
+        font-size: 13px;
+    }
+    .flag
+    {
+        width: 14px;
+        height: 17px;
+    }
+    .information-user
+    {
+        margin-left: 17px;
+    }
+    .information-friend div
+    {
+        margin-right: 0;
+    }
+    #crown-score
+    {
+        margin-left: 81px;
+        margin-bottom: 6px;
+        width: 30px;
+        height: 30px;
+    }
+    #crown-score-friend
+    {
+        margin-right: 108px;
+        margin-top: 1px;
+        width: 30px;
+        height: 30px;
+    }
+    .information-user div img, .information-friend div img
+    {
+        width: 40px;
+        height: 38px;
+        margin-bottom: 5px;
+    }
+    .informationaboutuser
+    {
+        width: 91%;
+        margin-left: 4%;
+    }
+    .container-user.friend
+    {
+        height: 61px;
+    }
+    .identification-information p
+    {
+        font-size: 12px;
+    }
+    .add-user-button div
+    {
+        width: 94%;
+        justify-content: space-between;
+        height: 34px;
+        margin-right: 12px;
+    }
+    .add-user-button button
+    {
+        margin-right: 13px;
+        opacity: 0.4;
+    }
+    .container-user
+    {
+        height: 57px;
+    }
+    .section-background
+    {
+        right: 9%;
+    }
+    .add-user-card
+    {
+        height: 271px;
+        width: 209px;   
+    }
+}
+
+@media screen and (max-width: 681px) and (min-width: 401px)
+{
+    .identification-header.one .identification-information:nth-child(1)
+    {
+        /* background-color: red; */
+        margin: 0;
+    }
+    .parent-section-background
+    {
+        left: 83%;
+    }
+    .home-page-search
+    {
+        width: 200px;
+    }
+    .home-page-choose select
+    {
+        width: 135px;
+    }
+    .informationaboutuser
+    {
+        width: 90%;
+        margin-left: 18px;
+    }
+    .home-page-counting
+    {
+        margin: 8px 14px;
+        margin-bottom: 28px;
+    }
+    
+    .section-background
+    {
+        font-size: 10px;
+        right: 5%;
+        top: 15.4%;
+    }
+    .myaside1 p, .myaside2 p
+    {
+        font-size: 10px;
+    }
+    .myaside1 span, .myaside2 span
+    {
+        font-size: 11px;
+    }
+    .myaside1 img, .myaside2 img
+    {
+        margin-right: 2px;
+        width: 8px;
+        height: 8px;
+        margin-top: 1px;
+    }
+    .container-user.friend
+    {
+        height: 60px;
+    }
+    .information-user
+    {
+        margin-left: 17px;
+    }
+    .information-friend div
+    {
+        margin-right: 0;
+    }
+    #crown-score
+    {
+        margin-left: 93px;
+        margin-bottom: 6px;
+    }
+    #crown-score-friend
+    {
+        margin-right: 90px;
+        margin-top: 1px;
+    }
+    .information-user div img, .information-friend div img
+    {
+        width: 40px;
+        height: 38px;
+    }
+    .section-background
+    {
+        right: 5%;
+    }
+    .score-friend p:nth-child(1)
+    {
+        font-size: 16px;
+    }
+    .home-page
+    {
+        margin-top: 18px;
+    }
+}
+@media screen and (min-width: 400px) and (max-width: 551px)
+{
+    .identification-information
+    {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+    }
+    .identification-information h3
+    {
+        font-size: 10px;
+    }.identification-information p
+    {
+        font-size: 9px;
+    }
+    .identification-header
+    {
+        margin: 0;
+    }
+    .identification-header.one .identification-information:nth-child(1)
+    {
+        margin: 0;
+    }
+    .identification-header.one
+    {
+        margin: 0;
+        width: 37%;
+    }
+    .identification-header.two
+    {
+        width: 33%;
+    }
+    .identification-information p
+    {
+        font-size: 10px;
+    }
+    .identification-user
+    {
+        top: -245%;
+        width: 100px;
+    }
+    #nameuser
+    {
+        font-size: 12px;
+    }
+    .parent-identification-user
+    {
+        right: 44px;
+    }
+    .level
+    {
+        width: 18px;
+        height: 18px;
+    }
+    .section-container
+    {
+        width: 77%;
+        height: 100%;
+        margin-left: 21%;
+    }
+    .myaside1 span, .myaside2 span
+    {
+        margin-right: 3px;
+    }
+    .myaside1 span, .myaside2 span
+    {
+        font-size: 9px;
+    }
+    .myaside1.aside h3
+    {
+        font-size: 12px;
+    }
+    .home-page-choose select
+    {
+        width: 93px;
+        border-radius: 9px;
+    }
+    .myaside1 img, .myaside2 img
+    {
+        width: 7px;
+        height: 7px;
+    }
+    .myaside:nth-child(1)
+    {
+        margin-left: 1px;
+    }
+    .container-user
+    {
+        height: 52px;
+    }
+    .nameuser
+    {
+        margin-left: 0px;
+    }
+    .isconnected.online,
+    .isconnected.offline
+    {
+        padding-right: 15px;
+        margin-right: 10px;
+    }
+    .isconnected.ingame
+    {
+        margin-right: 9px;
+        padding: 4px;   
+    }
+    .isconnected.ingame img
+    {
+        width: 12px;
+        height: 12px;
+    }
+    .nameuser h2
+    {
+        font-size: 13px;
+    }
+    .score-friend p:nth-child(1)
+    {
+        font-size: 14px;
+        margin-bottom: 5px;
+    }
+    .score-friend p:nth-child(2)
+    {
+        font-size: 18px;
+    }
+    .home-page
+    {
+        margin-left: 22%;
+        margin-top: 19px;
+        width: 74%;
+    }
+    .home-page-search
+    {
+        height: 32px;
+    }
+    #pet-select
+    {
+        height: 32px;
+    }
+    .section-background
+    {
+        right: 2%;
+    }
+    .parent-section-background
+    {
+        left: 91%;
+    }
+    .section-background label
+    {
+        font-size: 12px;
+    }
+    .add-user-list
+    {
+        margin-left: 5%;
+    }
+}
+
+@media screen and (max-width: 362px)
+{
+    .identification-user
+    {
+        top: -143%;
+    }
+    .identification-user img
+    {
+        width: 58px;
+        height: 58px;
+    }
+    aside
+    {
+        width: 15.4%;
+    }
+    .myaside1.aside h3
+    {
+        display: none;
+    }
+    .myaside:nth-child(1)
+    {
+        margin-top: 32px;
+    }
+    .myaside:not(:first-child)
+    {
+        margin-bottom: 20px;
+        margin-top: 1px;
+    }
+    .myaside1 p, .myaside2 p
+    {
+        font-size: 7px;
+    }
+    .section-container
+    {
+        width: 82%;
+        margin-left: 17%;
+    }
+    .home-page
+    {
+        width: 81%;
+        margin-left: 16%;
+    }
+    .identification-information h3
+    {
+        font-size: 8px;
+    }
+    .container-user
+    {
+        height: 32px;
+        width: 94%;
+        margin-left: 10px;
+    }
+    .nameuser img
+    {
+        width: 25px;
+        height: 25px;
+    }
+    .nameuser
+    {
+        margin-left: 9px;
+    }
+    .nameuser h2
+    {
+        font-size: 11px;
+    }
+    .identification-header.one
+    {
+        width: 36%;
+        margin: 0;
+    }
+    .identification-header.two
+    {
+        width: 31%;
+        margin-right: 19px;
+    }
+    .identification-information.rank
+    {
+        margin-right: 0px;
+        margin-left: 5px;
+    }
+    .information-user div img, .information-friend div img
+    {
+        width: 28px;
+        height: 28px;
+    }
+    .information-friend div p,
+    .information-user div p
+    {
+        font-size: 9px;
+        opacity: 1;
+    }
+    img#crown-score
+    {
+        margin-left: 73px;
+    }
+    #crown-score-friend
+    {
+        margin-right: 102px;
+    }
+    .identification-header.one .identification-information:nth-child(1)
+    {
+        margin: 0;
+        width: 50px;
+    }
+    .identification-header.one .identification-information:nth-child(1) h3
+    {
+        font-size: 7px;
+    }
+    .parent-identification-user
+    {
+        right: 27px;
+    }
+    .isconnected.online, .isconnected.offline
+    {
+        margin-right: 3px;
+    }
+    .isconnected.ingame
+    {
+        margin-right: -9px;
+    }
+}
+
+@media screen and (max-width: 793px) and (min-width: 682px)
+{
+    .parent-section-background
+    {
+        left: 80%;
+    }
+}
