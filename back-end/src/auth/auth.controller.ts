@@ -35,14 +35,16 @@ export class AuthController {
   @Get('redirect')
   @UseGuards(FortytwoOauthGuard)
   async HandleRedirect(@Req() request, @Res() response: Response) {
-    const token = await this.authservice.signIn(request.user);
 
+
+    const token = await this.authservice.signIn(request.user); // error here !!!!!!!!
+    
     response.cookie('access_token', token, {
       maxAge: 86400000,
       secure: false,
     });
-
-    const user = await this.service.user.findUnique({
+    
+    const user = await this.service.prismaClient.user.findUnique({
       where: {
         email: request.user.email,
       },
@@ -50,7 +52,7 @@ export class AuthController {
 
     if (user.firstauth === true) {
       // here I will redirect the user to change the data
-      await this.service.user.update({
+      await this.service.prismaClient.user.update({
         where: {
           email: request.user.email,
         },
@@ -105,12 +107,12 @@ export class AuthController {
       const payload: any = this.authservice.extractPayload(JwtToken);
 
       try {
-        await this.service.user.update({
+        await this.service.prismaClient.user.update({
           where: {
             email: payload.email,
           },
           data: {
-            login: UpdatedData.NickName,
+            username: UpdatedData.NickName,
             firstname: UpdatedData.FirstName,
             lastname: UpdatedData.LastName,
             avatar: UpdatedData.AvatarPath,
@@ -132,7 +134,7 @@ export class AuthController {
     const JwtToken: string = request.headers.authorization.split(' ')[1];
 
     const payload: any = this.authservice.extractPayload(JwtToken);
-    const user = await this.service.user.findUnique({
+    const user = await this.service.prismaClient.user.findUnique({
       where: {
         email: payload.email,
       },
