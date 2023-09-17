@@ -1,7 +1,7 @@
 /*This interface presents the minimal message data that DiscussionDto needs for it to operate */
 interface MessageMinData {
   content: string;
-  timestamp: Date;
+  timestamp: string;
 }
 
 export interface DiscussionDto {

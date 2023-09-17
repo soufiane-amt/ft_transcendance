@@ -3,21 +3,21 @@
     "id": "1",
     "avatar": "/images/avatar.png",
     "room_name": "John Doe",
-    "last_message": {"content": "Hello there!"},
+    "last_message": {"content": "Hello there!", "timestamp":"16:09pm"},
     "status": "ALLOWED"
   },
   {
     "id": "2",
     "avatar": "/images/avatar2.png",
     "room_name": "Jane Smith",
-    "last_message": {"content": "Hi, how are you?"},
+    "last_message": {"content": "Hi, how are you?", "timestamp":"16:09pm"},
     "status": "ALLOWED"
   },
   {
     "id": "3",
     "avatar": "/images/avatar3.jpeg",
     "room_name": "Alice Johnson",
-    "last_message": {"content": "Good morning!"},
+    "last_message": {"content": "Good morning!", "timestamp":"16:09pm"},
     "status": "BANNED"
   }
 ]

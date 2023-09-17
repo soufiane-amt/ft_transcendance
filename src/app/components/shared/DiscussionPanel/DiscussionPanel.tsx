@@ -1,8 +1,7 @@
 import style from './DiscussionPanel.module.css'
 import Avatar from '../Avatar/Avatar';
 import TimeStamp from '../TimeStamp/TimeStamp';
-import React, { useState } from 'react';
-import UserActionModalMain from '../../direct-messaging/UserActionModal/UserActionModal';
+import React, { useEffect, useState } from 'react';
 import { DiscussionDto } from '../../../interfaces/DiscussionPanel';
 
 
@@ -11,7 +10,7 @@ const panelLastMsg:string = 'The behavior could be thought of as a minimum gutte
 // const panelLastMsg:string = 'The behavior could '
 
 
-function PaneLastMessage ( {last_message_content}:{last_message_content:string})
+function PaneLastMessage ( {last_message_content}:{last_message_content:string | undefined})
 {
     return (
         <p id="notifier" className={style.panel_last_message}>
@@ -34,23 +33,31 @@ function DiscussionPanel ({onSelect, DiscussionPanel, isSelected, showUserAction
 
     const [lastSeenTime, setLastSeen] = useState (new Date() )
 
-    const updateLastSeen = () =>{
-        if (!isSelected)
-            setLastSeen(new Date());
+    const handleDiscussionPanelClick = () =>{
+        onSelect(DiscussionPanel)
     }
 
+    useEffect (()=>{
+        if (isSelected)
+        {
+            setLastSeen(new Date());
+            console.log (`${DiscussionPanel.id} = `,lastSeenTime)
+        }
+
+    }, [lastSeenTime])
+    
     return (
-    <li key={DiscussionPanel.id} className={style.discussion_panel} onClick={ () => onSelect(DiscussionPanel)} style={panelTheme}>
+    <li key={DiscussionPanel.id} className={style.discussion_panel} onClick={handleDiscussionPanelClick} style={panelTheme}>
 
         <Avatar avatarSrc={DiscussionPanel.avatar} avatarToRight={false}/>
 
         <div className={style.panel_central_part}>
             <h3>{DiscussionPanel.room_name}</h3>
-            <PaneLastMessage last_message_content={DiscussionPanel.last_message.content}/>
+            <PaneLastMessage last_message_content={DiscussionPanel.last_message?.content}/>
         </div>
         <div className={style.panel_last_part}>
             <button style={panelTheme} onClick={showUserActionModal}>•••</button>
-            <TimeStamp time={"12:22pm"}/>
+            <TimeStamp time={DiscussionPanel.last_message?.timestamp}/>
             {!isSelected ? (
               <div className={style.panel_message_notifier}>new</div>
             ) : null}

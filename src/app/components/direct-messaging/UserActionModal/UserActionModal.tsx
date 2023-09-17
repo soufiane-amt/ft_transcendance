@@ -30,8 +30,8 @@ function UserActionModal ({targetedUserData}:UserActionModalProp)
     return (
         <div className={style.user_action_modal} onClick={(e)=>{ e.stopPropagation()}}>
             <div className={style.action_targeted_user}>
-                <Avatar avatarSrc={`/images/${targetedUserData?.avatar}`} avatarToRight={false}/>
-                <h1>{targetedUserData?.username}</h1>
+                <Avatar avatarSrc={targetedUserData?.avatar} avatarToRight={false}/>
+                <h1>{targetedUserData?.room_name}</h1>
             </div>
             <div className={style.interaction_buttons}> 
                 <ActionButton buttonData={playButton}/>

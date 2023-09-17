@@ -42,7 +42,6 @@ export function UserContactsProvider({ children }: { children: React.ReactNode }
           avatar: user.avatar,
         });
       });
-      console.log (map)
       return map;
     });
 
