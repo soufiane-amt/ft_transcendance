@@ -2,7 +2,7 @@ import Image from "next/image";
 import style from "./Avatar.module.css";
 
 interface AvatarProps {
-  avatarSrc : string
+  avatarSrc : string ,
   avatarToRight : boolean
 }
 

@@ -5,29 +5,33 @@ import style from "./DirectMsgMain.module.css";
 import Message from "../shared/Message/Message";
 import UserActionModalMain from "./UserActionModal/UserActionModal";
 import { DiscussionDto } from "../../interfaces/DiscussionPanel";
-import { SelectedDiscussionContextType, SelectedDiscussionProvider, useSelectDiscussion } from "../../context/SelectDiscussionContext";
+import {
+  SelectedDiscussionContextType,
+  SelectedDiscussionProvider,
+  useSelectDiscussion,
+} from "../../context/UsersContactBookContext";
 
 /*stopPropagation is used here to prevent the click event to take way up to the parent it got limited right here */
 
 interface discussionPanelSelectType {
   id: string;
-  username:string
-  avatar:string
+  username: string;
+  avatar: string;
 }
 
 interface DiscussionsBarProps {
-  selectedDiscussionState: [DiscussionDto, React.Dispatch<React.SetStateAction<DiscussionDto> >];
-  discussionPanels : DiscussionDto[]
+  selectedDiscussionState: [
+    DiscussionDto,
+    React.Dispatch<React.SetStateAction<DiscussionDto>>
+  ];
+  discussionPanels: DiscussionDto[];
 }
-
-
 
 function DiscussionsBar({
   selectedDiscussionState,
   discussionPanels,
 }: DiscussionsBarProps) {
-
-  const [selectedDiscussion, setSelectedDiscussion] = selectedDiscussionState
+  const [selectedDiscussion, setSelectedDiscussion] = selectedDiscussionState;
   const [modalIsVisible, setModalAsVisible] = useState<boolean>(false);
 
   const displayActionModal = () => {
@@ -59,7 +63,7 @@ function DiscussionsBar({
   );
 }
 
-function MessagesHistory({ messages }:{messages:messageDto[]}) {
+function MessagesHistory({ messages }: { messages: messageDto[] }) {
   const scrollDown = useRef<HTMLDivElement>(null);
 
   const scrollToBottom = () => {
@@ -74,7 +78,7 @@ function MessagesHistory({ messages }:{messages:messageDto[]}) {
   }, [messages]);
   return (
     <div className={style.messages_history}>
-      {messages.map((messageElement : messageDto, index :number) => {
+      {messages.map((messageElement: messageDto, index: number) => {
         //Don't forget to add key attribute to messages
         return (
           <Message
@@ -123,17 +127,17 @@ function ChattingField({
 
 const selectedPanelDefault: discussionPanelSelectType = {
   id: "",
-  username:"",
-  avatar:""
+  username: "",
+  avatar: "",
 };
 
 function DirectMesgMain() {
   const [roomPanels_data, setDiscussionRooms] = useState<DiscussionDto[]>([]);
   const [selectedDiscussion, setSelectedDiscussion] = useState<DiscussionDto>({
-    id: '',
-    user_id: '',
-    username: '',
-    avatar: '',
+    id: "",
+    user_id: "",
+    username: "",
+    avatar: "",
   });
 
   useEffect(() => {
@@ -146,10 +150,13 @@ function DirectMesgMain() {
   }, [roomPanels_data]);
 
   return (
-      <div className={style.direct_msg_main}>
-        <DiscussionsBar selectedDiscussionState={[selectedDiscussion, setSelectedDiscussion]}  discussionPanels={roomPanels_data} />
-        <ChattingField selectedDiscussion={selectedDiscussion} />
-      </div>
+    <div className={style.direct_msg_main}>
+      <DiscussionsBar
+        selectedDiscussionState={[selectedDiscussion, setSelectedDiscussion]}
+        discussionPanels={roomPanels_data}
+      />
+      <ChattingField selectedDiscussion={selectedDiscussion} />
+    </div>
   );
 }
 
