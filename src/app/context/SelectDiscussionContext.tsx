@@ -1,34 +1,47 @@
-// import React, { createContext, useContext, useState } from 'react';
-// import { DiscussionDto } from '../interfaces/DiscussionPanel';
+import React, { createContext, useContext, useState } from 'react';
 
-// export interface SelectedDiscussionContextType {
-//   selectedDiscussion: DiscussionDto;
-//   setSelectedDiscussion: React.Dispatch<React.SetStateAction<DiscussionDto> >;
-// }
+/* This interface represents the minimum data needed for a user contact */
+interface UserContactDto {
+  username: string;
+  avatar: string;
+  status: 'ONLINE' | 'OFFLINE';
+}
 
-// const SelectedDiscussionContext = createContext<SelectedDiscussionContextType | undefined>(undefined);
+// The key value will represent the user_id
+const UserContactsContext = createContext<{
+  userContacts: Map<string, UserContactDto>;
+  updateUserContact: (key: string, value: UserContactDto) => void;
+} | undefined>(undefined);
 
-// export function SelectedDiscussionProvider({ children }: { children: React.ReactNode }) {
-//   const [selectedDiscussion, setSelectedDiscussion] = useState<DiscussionDto>({
-//     id: '',
-//     user_id: '',
-//     username: '',
-//     avatar: '',
-//   });
+export function UserContactsProvider({ children }: { children: React.ReactNode }) {
+  const [userContactsBook, setUserContactsBook] = useState<Map<string, UserContactDto>>(
+    new Map()
+  );
 
-//   const contextValue: SelectedDiscussionContextType = {
-//     selectedDiscussion,
-//     setSelectedDiscussion,
-//   };
+  const updateUserContact = (key: string, value: UserContactDto) => {
+    setUserContactsBook((prevState) => {
+      const newState = new Map(prevState);
+      newState.set(key, value);
+      return newState;
+    });
+  };
 
-//   return (
-//     <SelectedDiscussionContext.Provider value={contextValue}>
-//       {children}
-//     </SelectedDiscussionContext.Provider>
-//   );
-// }
+  const contextValue = {
+    userContacts: userContactsBook,
+    updateUserContact,
+  };
 
-// export function useSelectDiscussion () 
-// {
-//   return useContext(SelectedDiscussionContext) as SelectedDiscussionContextType;
-// }
+  return (
+    <UserContactsContext.Provider value={contextValue}>
+      {children}
+    </UserContactsContext.Provider>
+  );
+}
+
+export function useUserContactContext() {
+  const context = useContext(UserContactsContext);
+  if (!context) {
+    throw new Error('useUserContactContext must be used within a UserContactsProvider');
+  }
+  return context;
+}

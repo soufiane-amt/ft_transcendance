@@ -25,15 +25,21 @@ function MessageBubble({ messageContent, isMessageSent }: MessageBubbleProps) {
   return <div className={bubbleStylingClass}>{messageContent}</div>;
 }
 
+
+
+
+
+
 interface MessageProps{
   messageData :  messageDto
   sentMessage : boolean
 }
 function Message({ messageData, sentMessage }: MessageProps) {
   const messagePositionStyle = sentMessage ? `${style.message__to_right}` : "";
+  
+
   return (
     <div className={`${style.message} ${messagePositionStyle}`}>
-      {/* change to avatar to context */}
       <Avatar avatarSrc={avatar} avatarToRight={sentMessage} />
       <div className={style.message_body}>
         <span className={style.message_username__style}>{messageData.username}</span>
