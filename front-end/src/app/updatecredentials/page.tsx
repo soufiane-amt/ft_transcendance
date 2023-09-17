@@ -17,7 +17,6 @@ const Home = () => {
   const [User, setUser] = useState<any>({});
   const [FirstName, setFirstName] = useState("");
   const [LastName, setLastName] = useState("");
-  const [NickName, setNickName] = useState("");
   const [error, setError] = useState("");
   const [ProfilePicture, setProfilePicture]: any = useState(null);
   const [ProfileSrc, setProfileSrc]: any = useState("");
@@ -51,7 +50,6 @@ const Home = () => {
     const Data: any = new FormData();
     Data.append("FirstName", FirstName);
     Data.append("LastName", LastName);
-    Data.append("NickName", NickName);
     Data.append("ProfilePicture", ProfilePicture);
 
     try {
@@ -146,7 +144,7 @@ const Home = () => {
             }}
           />
         </label>
-        <div className=" w-[80%] h-[40%] flex flex-col justify-between m-[8px]">
+        <div className=" w-[80%] h-[40%] flex flex-col justify-evenly m-[8px]">
           <label className="flex flex-col text-center h-[45px] mt-[15px]">
             <input
               type="text"
@@ -167,17 +165,6 @@ const Home = () => {
               required
               value={LastName}
               onChange={(e) => setLastName(e.target.value)}
-            />
-          </label>
-          <label className="flex flex-col text-center h-[45px] mt-[15px]">
-            <input
-              type="text"
-              name="NickName"
-              className={`h-[40px] rounded-xl ${mono.className} placeholder:text-slate-400 pl-[20px] focus:outline-none focus:translate-x-6 card-shadow`}
-              placeholder="Nickname"
-              required
-              value={NickName}
-              onChange={(e) => setNickName(e.target.value)}
             />
           </label>
         </div>
