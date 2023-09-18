@@ -14,7 +14,7 @@ import { JwtModule, JwtService } from '@nestjs/jwt';
       signOptions: { expiresIn: process.env.TOOKEN_EXP },
     }),
   ],
-  providers: [AuthService, Fortytwostrategy, JwtStrategy, JwtService],
+  providers: [AuthService, Fortytwostrategy, JwtStrategy],
   controllers: [AuthController],
   exports: [AuthService],
 })
