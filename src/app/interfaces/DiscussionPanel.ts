@@ -9,5 +9,5 @@ export interface DiscussionDto {
   room_name: string;
   user_id: string;
   avatar: string;
-  last_message?: MessageMinData;
+  last_message: MessageMinData;
 }
