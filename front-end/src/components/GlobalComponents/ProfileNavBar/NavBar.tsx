@@ -6,7 +6,6 @@ import { Socket, io } from "socket.io-client";
 import Setting from "./Setting";
 import React, { useState, useEffect } from "react";
 import NavBarCSS from "./NavBar.module.css";
-import withAuth from "../HigherOrderComponent";
 
 function NavBar() {
   const [isVisible, setIsVisible] = useState(false);
