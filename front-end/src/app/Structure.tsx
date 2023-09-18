@@ -6,7 +6,7 @@ import React from "react";
 const Structure = ({ children }: { children: React.ReactNode }) => {
   return (
     <main>
-      <NavBar />
+      {/* <NavBar /> */}
       {children}
     </main>
   );
