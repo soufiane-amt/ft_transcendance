@@ -9,7 +9,58 @@ export class ChatCrudService
   constructor (@Inject (PrismaService) private readonly prisma:PrismaService ){}
 
     // Create a new chat channel (public, or password-protected).
-
+    async retrieveUserDmChannels(user_id) {
+      return await this.prisma.prismaClient.directMessaging.findMany({
+          where: {
+              OR: [
+                  { user1_id: user_id },
+                  { user2_id: user_id },
+              ]
+          },
+          orderBy: {
+              updatedAt: 'asc'
+          },
+          select: {
+              id: true,
+              user1_id: true,
+              user2_id: true,
+              messages: {}
+          }
+      });
+  }
+  async retreiveDmInitPanelData(user_id) {
+      const dmUsersIds = await this.prisma.prismaClient.directMessaging.findMany({
+          where: {
+              OR: [
+                  { user1_id: user_id },
+                  { user2_id: user_id },
+              ],
+          },
+          orderBy: {
+              updatedAt: 'asc',
+          },
+          select: {
+              id: true,
+              user1_id: true,
+              user2_id: true,
+              messages: {
+                  select: {
+                      id: true,
+                      content: true,
+                      createdAt: true,
+                  },
+                  orderBy: {
+                      createdAt: 'desc',
+                  },
+                  take: 1,
+              },
+          },
+      });
+      return dmUsersIds.map((dm_item) => {
+          const partner = user_id == dm_item.user1_id ? dm_item.user2_id : dm_item.user1_id;
+          return { id: dm_item.id, partner_id: partner, last_message: dm_item.messages };
+      });
+  }
 
     async   createChannel (user_id:string , data : channelDto)
     {
@@ -97,22 +148,6 @@ export class ChatCrudService
     }
 
 
-    async retrieveUserDmChannels (user_id: string)
-    {
-      return this.prisma.prismaClient.directMessaging.findMany(
-        {
-          where :{
-            OR :[
-              {user1_id : user_id}, 
-              {user2_id : user_id}, 
-            ]
-          },
-          orderBy :{
-            updatedAt : 'asc'
-          }
-        },
-      );
-    }
     //this method finds all the channels that exist in the server
     
     
