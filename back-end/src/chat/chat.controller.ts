@@ -1,11 +1,14 @@
 import { Controller, Get, Query,Post , Res,Req,  Param, Inject, UseGuards, Body, BadRequestException, ExecutionContext, CallHandler, SetMetadata } from '@nestjs/common';
 import { DmService } from './services/direct-messaging/dm.service';
-import { Request } from "express"
+import { Request, Response } from "express"
 import { dmGateway } from './services/direct-messaging/dm.gateway';
 import { FriendShipExistenceGuard, cookieGuard, userRoomSubscriptionGuard } from './guards/chat.guards';
 import { channelDto } from './dto/chat.dto';
 import { Reflector } from '@nestjs/core';
 import { ChatCrudService } from 'src/prisma/chat-crud.service';
+import * as path from 'path';
+import * as fs from 'fs';
+
 
 
 
@@ -20,15 +23,36 @@ export class ChatController
                     @Inject(dmGateway) private readonly dmGate : dmGateway, 
                     private readonly reflector: Reflector){}
 
-  @Get ("/direct_messaging")
-  async findAll (@Req() request : Request)
-  {
-    const rooms = await this.chatCrud.retrieveUserDmChannels (request.cookies["user.id"])
-    console.log(request.cookies["user.id"])
-    return (rooms)
-                  
+
+@Get('/image/:imagePth')
+async getUserImage(@Param('imagePth') imagePth: string, @Res() res: Response) {
+  const imagePath =  path.join(__dirname, '..', `../upload/${imagePth}`); // Go up two directories to reach the workspace root
+  if (!fs.existsSync(imagePath)) {
+    return res.status(404).send('Image not found');
   }
-                                                      
+
+  res.sendFile(imagePath);
+}
+  
+
+  @Get ("/direct_messaging/discussionsBar")
+  async findAllDiscussionPartners (@Req() request : Request)
+  {
+    const users = await this.chatCrud.retreiveDmInitPanelData (request.cookies["user.id"])
+    return (users)
+
+  }
+
+  @Get ("/direct_messaging/userContactsBook")
+  async findAllUsersInContact (@Req() request : Request)
+  {
+    const users = await this.chatCrud.retreiveDmInitPanelData (request.cookies["user.id"])
+    return (users)
+  }
+
+
+
+  
   @Get ("/direct_messaging/:uid")
   @UseGuards(FriendShipExistenceGuard)
   async getUserToDm (@Param("uid") userToDm: string ,@Req() request : Request, @Res() response )

@@ -8,7 +8,6 @@ export class ChatCrudService
 {
   constructor (@Inject (PrismaService) private readonly prisma:PrismaService ){}
 
-    // Create a new chat channel (public, or password-protected).
     async retrieveUserDmChannels(user_id) {
       return await this.prisma.prismaClient.directMessaging.findMany({
           where: {
@@ -24,7 +23,6 @@ export class ChatCrudService
               id: true,
               user1_id: true,
               user2_id: true,
-              messages: {}
           }
       });
   }
@@ -48,6 +46,7 @@ export class ChatCrudService
                       id: true,
                       content: true,
                       createdAt: true,
+                      is_read: true,
                   },
                   orderBy: {
                       createdAt: 'desc',
@@ -58,9 +57,11 @@ export class ChatCrudService
       });
       return dmUsersIds.map((dm_item) => {
           const partner = user_id == dm_item.user1_id ? dm_item.user2_id : dm_item.user1_id;
-          return { id: dm_item.id, partner_id: partner, last_message: dm_item.messages };
+          return { id: dm_item.id, partner_id: partner, last_message: dm_item.messages[0] };
       });
   }
+
+      // Create a new chat channel (public, or password-protected).
 
     async   createChannel (user_id:string , data : channelDto)
     {
