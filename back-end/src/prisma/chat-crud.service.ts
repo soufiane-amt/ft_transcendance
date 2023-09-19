@@ -8,7 +8,43 @@ export class ChatCrudService
 {
   constructor (@Inject (PrismaService) private readonly prisma:PrismaService ){}
 
-    async retrieveUserDmChannels(user_id) {
+
+    async retrieveUserContactBook (user_id :string) 
+    { 
+      const partnersIds = await this.prisma.prismaClient.directMessaging.findMany({
+        where: {
+            OR: [
+                { user1_id: user_id },
+                { user2_id: user_id },
+            ],
+        },
+        orderBy: {
+            updatedAt: 'asc',
+        },
+        select: {
+            user1_id: true,
+            user2_id: true,
+        },
+    });
+    //Promise.all waits for all map operations to end 
+      const partnerContactData =   Promise.all( partnersIds.map( async (dm_item) => {
+        //This next check which id belong to the parntner of the actual user
+        const partner_id = user_id == dm_item.user1_id ? dm_item.user2_id : dm_item.user1_id;
+        const partnerData =  await this.prisma.prismaClient.user.findUnique ({
+                where : {
+                  id : partner_id
+                },
+                select : {
+                  username :true,
+                  avatar :true
+                }})
+        return { id: partner_id, username: partnerData.username, avatar : partnerData.avatar};
+      })); 
+      return (partnerContactData);
+    }
+
+
+    async retrieveUserDmChannels(user_id :string) {
       return await this.prisma.prismaClient.directMessaging.findMany({
           where: {
               OR: [

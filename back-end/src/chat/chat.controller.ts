@@ -30,7 +30,7 @@ async getUserImage(@Param('imagePth') imagePth: string, @Res() res: Response) {
   if (!fs.existsSync(imagePath)) {
     return res.status(404).send('Image not found');
   }
-
+  console.log ("I'm here")
   res.sendFile(imagePath);
 }
   
@@ -39,6 +39,7 @@ async getUserImage(@Param('imagePth') imagePth: string, @Res() res: Response) {
   async findAllDiscussionPartners (@Req() request : Request)
   {
     const users = await this.chatCrud.retreiveDmInitPanelData (request.cookies["user.id"])
+
     return (users)
 
   }
@@ -46,7 +47,9 @@ async getUserImage(@Param('imagePth') imagePth: string, @Res() res: Response) {
   @Get ("/direct_messaging/userContactsBook")
   async findAllUsersInContact (@Req() request : Request)
   {
-    const users = await this.chatCrud.retreiveDmInitPanelData (request.cookies["user.id"])
+    const users = await this.chatCrud.retrieveUserContactBook (request.cookies["user.id"])
+    console.log (users)
+
     return (users)
   }
 
