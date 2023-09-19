@@ -1,0 +1,19 @@
+version: "3.8"
+services:
+  db:
+    image: postgres:13
+    ports:
+      - 5434:5432
+    networks:
+      - pingpong
+    env_file:
+      - .env
+    volumes:
+      - /Users/samajat/ft_tran/data-base/pg-data:/var/lib/postgresql/data
+    restart: on-failure
+
+networks:
+  pingpong:
+    driver: bridge
+
+# /Users/abellakr/goinfre/ft_transcendance/data-base
