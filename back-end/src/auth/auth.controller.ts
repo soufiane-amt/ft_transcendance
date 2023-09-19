@@ -49,7 +49,6 @@ export class AuthController {
         email: request.user.email,
       },
     });
-
     if (user.firstauth === true) {
       // here I will redirect the user to change the data
       await this.service.prismaClient.user.update({

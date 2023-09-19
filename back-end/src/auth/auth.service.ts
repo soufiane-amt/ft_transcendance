@@ -27,7 +27,7 @@ export class AuthService {
   async registerUser(user) {
     try {
       const newUser = await this.service.prismaClient.user.create({
-        data: { ...user, firstauth: true, background: '' },
+        data: { ...user, firstauth: true, background: '' , twoFactorAuthenticationSecret: ''},
       });
 
       return this.signToken(newUser.id, newUser.email);

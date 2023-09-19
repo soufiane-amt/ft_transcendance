@@ -24,6 +24,8 @@ model User {
   avatar      String
   background String
   firstauth   Boolean @default(false)
+  twoFactorAuthenticationSecret String
+  isTwoFactorAuthenticationEnabled Boolean @default(false)
 
   status  Status @default(ONLINE)
 
