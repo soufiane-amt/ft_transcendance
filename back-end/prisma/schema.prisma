@@ -1,0 +1,186 @@
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+
+enum Status {
+  IN_GAME
+  ONLINE
+  OFFLINE
+}
+
+model User {
+  id          String @id @default(uuid())
+  username       String @unique
+  firstname   String
+  lastname   String
+  email       String @unique
+  avatar      String
+  background String
+  firstauth   Boolean @default(false)
+
+  status  Status @default(ONLINE)
+
+  match_host  match[] @relation("Player1")
+  match_guest match[] @relation("Player2")
+
+  stats   Stats?
+  invited Friendships[] @relation("invited")
+  invitor Friendships[] @relation("invitor")
+
+  initiator DirectMessaging[] @relation("initiator")
+  receiver DirectMessaging[] @relation("receiver")
+
+  channels ChannelMembership[]
+  messages Message[]
+
+  notifications Notification[]
+}
+
+
+model match {
+  id String @id @default(uuid())
+
+  player_1    User   @relation("Player1", fields: [player_1_id], references: [id])
+  player_1_id String 
+
+  player_2    User   @relation("Player2", fields: [player_2_id], references: [id])
+  player_2_id String
+  result      String
+}
+
+
+model Stats {
+  id      String @id @default(uuid())
+  user    User   @relation(fields: [user_id], references: [id])
+  user_id String @unique
+
+  wins         Int @default(0)
+  losses       Int @default(0)
+  ladder_level Int @default(0)
+}
+
+
+enum RelationStatus {
+  PENDING
+  FRIENDS
+  BLOCK
+}
+
+model Friendships {
+  id      String @id @default(uuid())
+  user1    User   @relation("invited", fields: [user1_id], references: [id])
+  user1_id String @unique
+
+    user2    User   @relation("invitor", fields: [user2_id], references: [id])
+    user2_id String @unique
+
+    createdAt  DateTime @default(now())
+    relationStatus RelationStatus  @default(PENDING)
+}
+
+
+enum Role {
+  OWNER
+  ADMIN
+  USER
+}
+
+model ChannelMembership {
+  id String @id @default(uuid())
+
+  channel    Channel @relation(fields: [channel_id], references: [id])
+  channel_id String  
+
+  user    User   @relation(fields: [user_id], references: [id])
+  user_id String 
+
+  role      Role
+  joined_at DateTime @default(now())
+
+  is_banned Boolean @default(false)
+  banned_at DateTime?
+
+  @@unique([channel_id, user_id])
+}
+
+model Message {
+  id String @id @default(uuid())
+
+  user    User   @relation(fields: [user_id], references: [id])
+  user_id String 
+
+  channel    Channel?  @relation(fields: [channel_id], references: [id])
+  channel_id String?   
+
+  dm         DirectMessaging?  @relation(fields: [dm_id], references: [id])
+  dm_id      String?   
+
+  content    String
+  createdAt DateTime? @default(now())
+  is_read    Boolean ? @default(false)
+}
+
+enum Channel_type {
+  PUBLIC
+  PRIVATE
+  PROTECTED
+}
+
+model Channel {
+  id String @id @default(uuid())
+
+  type         Channel_type
+  name         String
+  image        String //(2)this attribiute is for storing image location in filesystem also check (1)
+  memeberShips ChannelMembership[]
+  messages     Message[]
+  password     String?
+  createdAt DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+}
+
+enum DmStatus {
+  ALLOWED
+  BANNED
+}
+
+model DirectMessaging {
+  id String @id @default(uuid())
+
+  
+  user1     User   @relation("initiator", fields: [user1_id], references: [id])
+  user1_id  String @unique
+
+  user2     User   @relation("receiver", fields: [user2_id], references: [id])
+  user2_id  String @unique
+
+  messages  Message[]
+
+  status    DmStatus @default(ALLOWED)
+  createdAt DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+}
+
+
+enum NotificationType {
+  ACCEPTED_INVITATION
+  GAME_INVITATION
+}
+
+model Notification {
+  id String @id @default(uuid())
+
+  user    User   @relation(fields: [user_id], references: [id])
+  user_id String @unique
+
+  //I still don't know how the source notification will be like
+  type       NotificationType
+  createdAt DateTime         @default(now())
+}
