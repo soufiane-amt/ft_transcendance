@@ -20,19 +20,20 @@
     "test:e2e": "jest --config ./test/jest-e2e.json"
   },
   "dependencies": {
-    "@nestjs/common": "^10.0.0",
+    "@nestjs/common": "^10.2.5",
     "@nestjs/config": "^3.1.1",
-    "@nestjs/core": "^10.0.0",
+    "@nestjs/core": "^10.2.5",
     "@nestjs/mapped-types": "*",
     "@nestjs/platform-express": "^10.0.0",
     "@nestjs/platform-socket.io": "^10.1.0",
-    "@nestjs/websockets": "^10.1.0",
-    "@prisma/client": "^5.0.0",
+    "@nestjs/websockets": "^10.2.5",
+    "@prisma/client": "^5.3.1",
     "cookie-parser": "^1.4.6",
+    "express": "^4.18.2",
     "prisma": "^5.0.0",
     "reflect-metadata": "^0.1.13",
     "rxjs": "^7.8.1",
-    "socket.io": "^4.7.1"
+    "socket.io": "^4.7.2"
   },
   "devDependencies": {
     "@nestjs/cli": "^10.0.0",
