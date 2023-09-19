@@ -1,4 +1,5 @@
-import React, { createContext, useContext, useState } from 'react';
+import React, { createContext, useContext, useEffect, useState } from 'react';
+import { fetchDataFromApi } from '../components/shared/api/exmple';
 
 /* This interface represents the minimum data needed for a user contact */
 interface UserContactDto {
@@ -15,35 +16,53 @@ const UserContactsContext = createContext<{
 } | undefined>(undefined);
 
 export function UserContactsProvider({ children }: { children: React.ReactNode }) {
-  const [userContactsBook, setUserContactsBook] = useState<Map<string, UserContactDto>>(
-    () => {
-      const userData = [
-        {
-          id: '1',
-          username: 'samajat',
-          avatar: '/images/avatar.png',
-        },
-        {
-          id: '2',
-          username: 'Jane Smith',
-          avatar: '/images/avatar2.png',
-        },
-        {
-          id: '3',
-          username: 'Alice Johnson',
-          avatar: '/images/avatar3.jpeg',
-        },
-      ];
-  
+  const [userContactsBook, setUserContactsBook] = useState<Map<string, UserContactDto>>(new Map())
+
+  useEffect (()=>{
+    async function fetchDataAsync() {
+
+      const userContactsBook_tmp = await fetchDataFromApi("http://localhost:3001/chat/direct_messaging/userContactsBook")
       const map = new Map();
-      userData.forEach((user) => {
+      userContactsBook_tmp.forEach((user : any) => {
         map.set(user.id, {
           username: user.username,
           avatar: user.avatar,
         });
       });
-      return map;
-    });
+
+      setUserContactsBook(map)
+      console.log (map)
+    }
+    fetchDataAsync();
+  }, []);
+    // () => {
+    //   const userData = [
+    //     {
+    //       id: '1',
+    //       username: 'samajat',
+    //       avatar: '/images/avatar.png',
+    //     },
+    //     {
+    //       id: '2',
+    //       username: 'Jane Smith',
+    //       avatar: '/images/avatar2.png',
+    //     },
+    //     {
+    //       id: '3',
+    //       username: 'Alice Johnson',
+    //       avatar: '/images/avatar3.jpeg',
+    //     },
+    //   ];
+  
+    //   const map = new Map();
+    //   userData.forEach((user) => {
+    //     map.set(user.id, {
+    //       username: user.username,
+    //       avatar: user.avatar,
+    //     });
+    //   });
+    //   return map;
+    // });
 
   const updateUserContact = (key: string, value: UserContactDto) => {
     setUserContactsBook((prevState) => {
@@ -77,6 +96,14 @@ export function useUserContacts() {
     throw new Error('useUserContacts must be used within a UserContactsProvider');
   }
   return context.userContacts;
+}
+
+export function findUserContacts(user_id :string) {
+  const context = useContext(UserContactsContext);
+  if (!context) {
+    throw new Error('useUserContacts must be used within a UserContactsProvider');
+  }
+  return context.userContacts.get(user_id);
 }
 
 //A getter to UserContacts update function

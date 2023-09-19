@@ -2,7 +2,6 @@
 const nextConfig = {}
 
 // next.config.js
-
 module.exports = {
     // Other Next.js configuration options...
     webpack(config) {
@@ -19,5 +18,10 @@ module.exports = {
       // Optionally specify the type-checker version
       ignoreBuildErrors: false, // Set to true to disable type-checking during production build
     },
+
+    images: {
+      domains: ['localhost'], // Add any other domains as needed
+    },
+  
   };
   

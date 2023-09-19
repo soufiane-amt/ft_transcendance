@@ -19,7 +19,6 @@ function ChatTextBox ({messagesHistoryState}: ChatTextBoxProps)
   const defaultMessageValue: messageDto = {
     id: "",
     user_id: "",
-    username: "",
     content: "",
     created_at: "",
   };
@@ -35,7 +34,7 @@ function ChatTextBox ({messagesHistoryState}: ChatTextBoxProps)
             <textarea className={`${style.message_input_bar} `} 
             placeholder='Type a message...'
             value={newMessage.content}
-            onChange={(e) => setNewMessage({id:"",user_id,  username, content:e.target.value, created_at: "time"})}
+            onChange={(e) => setNewMessage({id:"",user_id, content:e.target.value, created_at: "time"})}
             />
             <Send onClick={handleSendMessage} className={`${style.message_send_icon__init_fill} ${style.message_send_icon}`}/>
         </div>

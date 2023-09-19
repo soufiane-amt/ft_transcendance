@@ -12,6 +12,7 @@
     "@svgr/core": "^8.1.0",
     "@svgr/webpack": "^8.1.0",
     "@types/react-dom": "18.2.7",
+    "axios": "^1.5.0",
     "clsx": "^2.0.0",
     "eslint": "8.49.0",
     "eslint-config-next": "13.4.19",

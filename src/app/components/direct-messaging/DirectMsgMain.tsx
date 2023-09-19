@@ -1,3 +1,4 @@
+"use client";
 import React, { useEffect, useRef, useState } from "react";
 import ChatTextBox from "../shared/ChatTextbox/ChatTextbox";
 import DiscussionPanel from "../shared/DiscussionPanel/DiscussionPanel";
@@ -5,9 +6,9 @@ import style from "./DirectMsgMain.module.css";
 import Message from "../shared/Message/Message";
 import UserActionModalMain from "./UserActionModal/UserActionModal";
 import { DiscussionDto } from "../../interfaces/DiscussionPanel";
-import {
-  UserContactsProvider,
-} from "../../context/UsersContactBookContext";
+import { UserContactsProvider } from "../../context/UsersContactBookContext";
+import { fetchDataFromApi } from "../shared/api/exmple";
+import axios from "axios";
 
 /*stopPropagation is used here to prevent the click event to take way up to the parent it got limited right here */
 
@@ -60,6 +61,7 @@ function DiscussionsBar({
     </ul>
   );
 }
+
 
 
 
@@ -135,29 +137,26 @@ function DirectMesgMain() {
   const [roomPanels_data, setDiscussionRooms] = useState<DiscussionDto[]>([]);
   const [selectedDiscussion, setSelectedDiscussion] = useState<DiscussionDto>({
     id: "",
-    user_id: "",
-    room_name: "",
-    avatar: "",
+    partner_id: "",
+    last_message: { id:"", content: "", createdAt: "" },
   });
 
   useEffect(() => {
     async function fetchDataAsync() {
-      const result = await fetch("dataBar.json");
-      const data = await result.json();
-      setDiscussionRooms(data);
+      const roomPanels_data_tmp = await fetchDataFromApi("http://localhost:3001/chat/direct_messaging/discussionsBar")
+      setDiscussionRooms(roomPanels_data_tmp);
     }
     fetchDataAsync();
-  }, [roomPanels_data]);
+  }, []);
 
   return (
     <UserContactsProvider>
-
       <div className={style.direct_msg_main}>
         <DiscussionsBar
           selectedDiscussionState={[selectedDiscussion, setSelectedDiscussion]}
           discussionPanels={roomPanels_data}
         />
-        <ChattingField selectedDiscussion={selectedDiscussion} />
+        {/* <ChattingField selectedDiscussion={selectedDiscussion} /> */}
       </div>
     </UserContactsProvider>
   );

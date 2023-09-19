@@ -3,6 +3,7 @@ import style from './DiscussionPanel.module.css'; // Import styles
 import { DiscussionDto } from '../../../interfaces/DiscussionPanel';
 import Avatar from '../Avatar/Avatar';
 import TimeStamp from '../TimeStamp/TimeStamp';
+import { findUserContacts, useUserContacts } from '../../../context/UsersContactBookContext';
 
 
 const avatar = "/images/avatar.png";
@@ -35,10 +36,12 @@ function DiscussionPanel ({onSelect, DiscussionPanel, isSelected, showUserAction
     const selectionPanelColors = {backgroundColor: 'var(--discussion_panel_selection_color)', color:'var(--discussion_panel_element_selection_color)'}
     
     const panelTheme = isSelected ? selectionPanelColors : defaultPanelColors;
-    const last_message = 
     
     const [lastSeenTime, setLastSeen] = useState <number>(0)
 
+    const panelOwner = findUserContacts(DiscussionPanel.partner_id)
+    if (!panelOwner)
+        return (<div>User panel doesn't exist</div>)
     const handleDiscussionPanelClick = () =>{
         onSelect(DiscussionPanel)
     }
@@ -54,25 +57,27 @@ function DiscussionPanel ({onSelect, DiscussionPanel, isSelected, showUserAction
   
       // I update the ref with the current isSelected value for the next render
       prevIsSelectedRef.current = isSelected;
-  
-      console.log(`${DiscussionPanel.id} = `, lastSeenTime);
     }, [isSelected]);
   
-        
+    const enableUnseenMessage = ()=> {
+        const last_message_timestamp = new Date(DiscussionPanel.last_message.timestamp).getTime();
+        return (!isSelected &&  (last_message_timestamp > lastSeenTime))
+    }
+
     return (
     <li key={DiscussionPanel.id} className={style.discussion_panel} onClick={handleDiscussionPanelClick} style={panelTheme}>
 
-        <Avatar avatarSrc={DiscussionPanel.avatar} avatarToRight={false}/>
+        <Avatar avatarSrc={panelOwner.avatar} avatarToRight={false}/>
 
         <div className={style.panel_central_part}>
-            <h3>{DiscussionPanel.room_name}</h3>
+            <h3>{panelOwner.username}</h3>
             <PaneLastMessage last_message_content={DiscussionPanel.last_message?.content}/>
         </div>
         <div className={style.panel_last_part}>
             <button style={panelTheme} onClick={showUserActionModal}>•••</button>
-            <TimeStamp time={DiscussionPanel.last_message.timestamp}/>
+            <TimeStamp time={DiscussionPanel.last_message.createdAt}/>
             {
-                !isSelected &&  new Date(DiscussionPanel.last_message.timestamp).getTime()> lastSeenTime &&(
+                enableUnseenMessage() && (
               <div className={style.panel_message_notifier}>new</div>
             ) }
         </div>

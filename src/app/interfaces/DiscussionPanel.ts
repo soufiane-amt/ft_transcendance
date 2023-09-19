@@ -1,13 +1,13 @@
 /*This interface presents the minimal message data that DiscussionDto needs for it to operate */
-interface MessageMinData {
+interface MessageDto {
+  id: string;
   content: string;
-  timestamp: string;
+  createdAt: string;
+  is_read?: boolean;
 }
 
 export interface DiscussionDto {
   id: string;
-  room_name: string;
-  user_id: string;
-  avatar: string;
-  last_message: MessageMinData;
+  partner_id: string;
+  last_message: MessageDto;
 }
