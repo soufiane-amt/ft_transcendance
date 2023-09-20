@@ -1,4 +1,4 @@
-import { Inject, Injectable } from '@nestjs/common';
+import { Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from './prisma.service';
 import { MessageDto, channelDto, channelMembershipDto, dmDto } from 'src/chat/dto/chat.dto';
 
@@ -168,23 +168,28 @@ export class ChatCrudService
     }
 
 
-    async getDmTable ( user1_id: string, user2_id: string)
-    {
-        const Dm = await this.prisma.prismaClient.directMessaging.findUnique({
-        where :
-        {
-          user1_id :user1_id,
-          user2_id : user2_id
+    async getDmTable(user1_id: string, user2_id: string) {
+      const Dm = await this.prisma.prismaClient.directMessaging.findMany({
+        where: {
+          OR: [
+            {
+              user1_id: user1_id,
+              user2_id: user2_id,
+            },
+            {
+              user1_id: user2_id,
+              user2_id: user1_id,
+            },
+          ],
         },
-        select : {
-          id : true
-        }
-
-      })
-      return Dm ? (await Dm).id : null
+        select: {
+          id: true,
+        },
+      });
+    
+      return Dm ? Dm : null;
     }
-
-
+    
     //this method finds all the channels that exist in the server
     
     
@@ -255,7 +260,7 @@ export class ChatCrudService
       )
       }
       catch{
-        return {}
+        throw new NotFoundException(`Channel with ID ${room_id} not found.`);
       }
     }
 

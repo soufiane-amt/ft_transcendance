@@ -54,14 +54,22 @@ async getUserImage(@Param('imagePth') imagePth: string, @Res() res: Response) {
   }
 
 
-
+@Get (":roomid/messages")
+async findRoomMessages (@Param("roomid") roomid:string)
+{
+  console.log ("room id:", roomid)
+  return await this.chatCrud.retrieveRoomMessages(roomid);
+}
   
+
+
+  /*****Old fetching */
   @Get ("/direct_messaging/:uid")
   @UseGuards(FriendShipExistenceGuard)
   async getUserToDm (@Param("uid") userToDm: string ,@Req() request : Request, @Res() response )
   {
     const user_id  = request.cookies["user.id"]
-    var dmRoom_id :string  = await this.dmService.checkDmTableExistence (user_id, userToDm)
+    var dmRoom_id :string  = await this.dmService.checkDmTableExistence (user_id, userToDm)[0]
     if (!dmRoom_id)
     {
      dmRoom_id = await this.dmService.createDmTable (user_id, userToDm) 
