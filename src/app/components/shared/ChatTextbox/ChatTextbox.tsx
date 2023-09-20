@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import style from './ChatTextbox.module.css'
 import { Send } from '../../svgs'
+import { formatDateAndTime } from '../../../utils/dateUtils';
 
 
 const username ="samajat";
@@ -38,7 +39,7 @@ function ChatTextBox ({messagesHistoryState, showTextBox}: ChatTextBoxProps)
             <textarea className={`${style.message_input_bar} `} 
             placeholder='Type a message...'
             value={newMessage.content}
-            onChange={(e) => setNewMessage({id:"",user_id, content:e.target.value, created_at: "time"})}
+            onChange={(e) => setNewMessage({id:"",user_id, content:e.target.value, createdAt: formatDateAndTime(new Date().toString()) })}
             />
             <Send onClick={handleSendMessage} className={`${style.message_send_icon__init_fill} ${style.message_send_icon}`}/>
         </div>
