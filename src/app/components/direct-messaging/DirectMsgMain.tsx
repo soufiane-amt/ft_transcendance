@@ -8,14 +8,13 @@ import UserActionModalMain from "./UserActionModal/UserActionModal";
 import { DiscussionDto } from "../../interfaces/DiscussionPanel";
 import { UserContactsProvider } from "../../context/UsersContactBookContext";
 import { fetchDataFromApi } from "../shared/api/exmple";
-import axios from "axios";
 
 /*stopPropagation is used here to prevent the click event to take way up to the parent it got limited right here */
 
 interface discussionPanelSelectType {
   id: string;
-  username: string;
-  avatar: string;
+  partner_id: string;
+  last_message: { id:string, content: string, createdAt: string }
 }
 
 interface DiscussionsBarProps {
@@ -42,7 +41,8 @@ function DiscussionsBar({
 
   return (
     <ul className={style.discussion_panel_bar}>
-      {discussionPanels.map((panelElement) => {
+      {
+      discussionPanels.map((panelElement) => {
         const isSelected = panelElement?.id === selectedDiscussion.id;
         return (
           <DiscussionPanel
@@ -53,9 +53,10 @@ function DiscussionsBar({
             showUserActionModal={displayActionModal}
           />
         );
-      })}
+      })
+      }
       <UserActionModalMain
-        userData={selectedDiscussion}
+        userToActId={selectedDiscussion.partner_id}
         modalState={[modalIsVisible, setModalAsVisible]}
       />
     </ul>
@@ -86,7 +87,6 @@ function MessagesHistory({ messages }: { messages: messageDto[] }) {
           <Message
             key={index}
             messageData={messageElement}
-            sentMessage={messageElement.username === "samajat"}
           />
         );
       })}
@@ -95,6 +95,14 @@ function MessagesHistory({ messages }: { messages: messageDto[] }) {
     </div>
   );
 }
+
+const selectedPanelDefault: discussionPanelSelectType = {
+  id: "",
+  partner_id: "",
+  last_message: { id:"", content: "", createdAt: "" }
+};
+
+
 
 function ChattingField({
   selectedDiscussion,
@@ -105,41 +113,34 @@ function ChattingField({
 
   useEffect(() => {
     async function fetchDataAsync() {
-      if (selectedDiscussion !== null) {
-        const result = await fetch(
-          "dataMessage" + selectedDiscussion?.id + ".json"
-        );
-        const data = await result.json();
-        setMessageHistory(data);
-      }
+      const messagesHistory_tmp = await fetchDataFromApi(`http://localhost:3001/chat/${selectedDiscussion.id}/message`)
+
+      setMessageHistory(messagesHistory_tmp);
+
     }
-    fetchDataAsync();
+    if (selectedDiscussion != selectedPanelDefault)
+      fetchDataAsync();
   }, [selectedDiscussion]);
 
   return (
     <div className={style.chat_field}>
       <MessagesHistory messages={messagesHistory} />
 
-      <ChatTextBox
+      {/* <ChatTextBox
         messagesHistoryState={[messagesHistory, setMessageHistory]}
-      />
+      /> */}
     </div>
   );
 }
 
-const selectedPanelDefault: discussionPanelSelectType = {
-  id: "",
-  username: "",
-  avatar: "",
-};
+
+
+
 
 function DirectMesgMain() {
   const [roomPanels_data, setDiscussionRooms] = useState<DiscussionDto[]>([]);
-  const [selectedDiscussion, setSelectedDiscussion] = useState<DiscussionDto>({
-    id: "",
-    partner_id: "",
-    last_message: { id:"", content: "", createdAt: "" },
-  });
+  const [selectedDiscussion, setSelectedDiscussion] = useState<DiscussionDto>(selectedPanelDefault)
+
 
   useEffect(() => {
     async function fetchDataAsync() {
@@ -156,7 +157,7 @@ function DirectMesgMain() {
           selectedDiscussionState={[selectedDiscussion, setSelectedDiscussion]}
           discussionPanels={roomPanels_data}
         />
-        {/* <ChattingField selectedDiscussion={selectedDiscussion} /> */}
+        <ChattingField selectedDiscussion={selectedDiscussion} />
       </div>
     </UserContactsProvider>
   );

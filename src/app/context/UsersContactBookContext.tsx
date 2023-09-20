@@ -35,34 +35,9 @@ export function UserContactsProvider({ children }: { children: React.ReactNode }
     }
     fetchDataAsync();
   }, []);
-    // () => {
-    //   const userData = [
-    //     {
-    //       id: '1',
-    //       username: 'samajat',
-    //       avatar: '/images/avatar.png',
-    //     },
-    //     {
-    //       id: '2',
-    //       username: 'Jane Smith',
-    //       avatar: '/images/avatar2.png',
-    //     },
-    //     {
-    //       id: '3',
-    //       username: 'Alice Johnson',
-    //       avatar: '/images/avatar3.jpeg',
-    //     },
-    //   ];
-  
-    //   const map = new Map();
-    //   userData.forEach((user) => {
-    //     map.set(user.id, {
-    //       username: user.username,
-    //       avatar: user.avatar,
-    //     });
-    //   });
-    //   return map;
-    // });
+
+
+
 
   const updateUserContact = (key: string, value: UserContactDto) => {
     setUserContactsBook((prevState) => {
@@ -78,14 +53,13 @@ export function UserContactsProvider({ children }: { children: React.ReactNode }
     updateUserContact,
   };
 
-
-
   return (
     <UserContactsContext.Provider value={contextValue}>
       {children}
     </UserContactsContext.Provider>
   );
 }
+
 
 
 //A getter to UserContacts state

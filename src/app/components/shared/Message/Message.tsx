@@ -26,14 +26,17 @@ function MessageBubble({ messageContent, isMessageSent }: MessageBubbleProps) {
 
 interface MessageProps {
   messageData: messageDto;
-  sentMessage: boolean;
+
 }
 
-function Message({ messageData, sentMessage }: MessageProps) {
-  const messagePositionStyle = sentMessage ? `${style.message__to_right}` : "";
-
+function Message({ messageData }: MessageProps) {
+  
   const userContacts = useUserContacts();
   const user = userContacts.get(messageData.user_id);
+  
+  const sentMessage:boolean = user?.username === "samajat";
+  const messagePositionStyle = sentMessage ? `${style.message__to_right}` : "";
+  
 
   if (!user)
     return <div className={`${style.message} ${messagePositionStyle}`}>Message User owner not found</div>;

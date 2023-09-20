@@ -1,6 +1,5 @@
-import React, { useRef, useState } from 'react'
+import React, { useState } from 'react'
 import style from './ChatTextbox.module.css'
-import { NoFallbackError } from 'next/dist/server/base-server'
 import { Send } from '../../svgs'
 
 

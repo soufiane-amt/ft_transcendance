@@ -31,13 +31,25 @@ function PaneLastMessage ( {last_message_content}:{last_message_content:string |
 
 function DiscussionPanel ({onSelect, DiscussionPanel, isSelected, showUserActionModal} :DiscussionPanelProps)
 {    
+    const [lastSeenTime, setLastSeen] = useState <number>(0)
+    const prevIsSelectedRef = useRef<boolean>(isSelected);
+
+    useEffect(() => {
+      // Check if isSelected changed from true to false
+      if (prevIsSelectedRef.current && !isSelected) {
+            setLastSeen(Date.now());
+      }
+  
+      // I update the ref with the current isSelected value for the next render
+      prevIsSelectedRef.current = isSelected;
+    }, [isSelected]);
+  
     //styling toggles
     const defaultPanelColors = {backgroundColor: 'var(--discussion_panel_back_color)', color:'var(--discussion_panel_element_color)'}
     const selectionPanelColors = {backgroundColor: 'var(--discussion_panel_selection_color)', color:'var(--discussion_panel_element_selection_color)'}
     
     const panelTheme = isSelected ? selectionPanelColors : defaultPanelColors;
     
-    const [lastSeenTime, setLastSeen] = useState <number>(0)
 
     const panelOwner = findUserContacts(DiscussionPanel.partner_id)
     if (!panelOwner)
@@ -47,18 +59,7 @@ function DiscussionPanel ({onSelect, DiscussionPanel, isSelected, showUserAction
     }
 
     //I take a reference to the state of isSelected
-    const prevIsSelectedRef = useRef<boolean>(isSelected);
 
-    useEffect(() => {
-      // Check if isSelected changed from true to false
-      if (prevIsSelectedRef.current === true && isSelected === false) {
-        setLastSeen(Date.now());
-      }
-  
-      // I update the ref with the current isSelected value for the next render
-      prevIsSelectedRef.current = isSelected;
-    }, [isSelected]);
-  
     const enableUnseenMessage = ()=> {
         const last_message_timestamp = new Date(DiscussionPanel.last_message.timestamp).getTime();
         return (!isSelected &&  (last_message_timestamp > lastSeenTime))

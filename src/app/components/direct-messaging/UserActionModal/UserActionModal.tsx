@@ -3,6 +3,7 @@ import style from "./UserActionModal.module.css"
 import Avatar from "../../shared/Avatar/Avatar"
 import React, { useState } from "react"
 import { DiscussionDto } from "../../../interfaces/DiscussionPanel"
+import { findUserContacts } from "../../../context/UsersContactBookContext"
 
 
 type buttonType =  {title :string, icon :string, backgroundColor:string}
@@ -23,15 +24,16 @@ function ActionButton({buttonData}:ActionButtonProps) /*button title, icon, back
     )
 }
 
-type UserActionModalProp = {targetedUserData : DiscussionDto}
-function UserActionModal ({targetedUserData}:UserActionModalProp)
+function UserActionModal ({targetedUserId}:{targetedUserId : string})
 {
-    /*stopPropagation is used here to prevent the click event to take way up to the parent it got limited right here */
+    const userContact = findUserContacts (targetedUserId)
+    if (!userContact)
+        return <div>User action modal not found!</div>
     return (
         <div className={style.user_action_modal} onClick={(e)=>{ e.stopPropagation()}}>
             <div className={style.action_targeted_user}>
-                <Avatar avatarSrc={targetedUserData?.avatar} avatarToRight={false}/>
-                <h1>{targetedUserData?.room_name}</h1>
+                <Avatar avatarSrc={userContact.avatar} avatarToRight={false}/>
+                <h1>{userContact.username}</h1>
             </div>
             <div className={style.interaction_buttons}> 
                 <ActionButton buttonData={playButton}/>
@@ -45,11 +47,11 @@ function UserActionModal ({targetedUserData}:UserActionModalProp)
 
 type UserActionModalMainProps = 
         {
-            userData :DiscussionDto, 
+            userToActId :string, 
             modalState: [boolean, React.Dispatch<React.SetStateAction<boolean>>]
         }
 
-function UserActionModalMain({userData, modalState}: UserActionModalMainProps)
+function UserActionModalMain({userToActId, modalState}: UserActionModalMainProps)
 {  
     const [isVisible, setAsVisible] = modalState;
 
@@ -59,7 +61,7 @@ function UserActionModalMain({userData, modalState}: UserActionModalMainProps)
 
     return (
       <div className={style.user_action_main_modal} onClick={handleModalVisibility} style={!isVisible? { display:"none"}:undefined }>
-        <UserActionModal targetedUserData={userData}/>
+        <UserActionModal targetedUserId={userToActId}/>
       </div>
       )
   }
