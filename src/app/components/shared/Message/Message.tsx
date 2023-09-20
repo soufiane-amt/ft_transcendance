@@ -5,6 +5,7 @@ import TimeStamp from "../TimeStamp/TimeStamp";
 import {
   useUserContacts,
 } from "../../../context/UsersContactBookContext";
+import { useSessionUser } from "../../../context/SessionUserContext";
 
 interface MessageBubbleProps {
   messageContent: string;
@@ -32,28 +33,30 @@ interface MessageProps {
 function Message({ messageData }: MessageProps) {
   
   const userContacts = useUserContacts();
-  const user = userContacts.get(messageData.user_id);
+  const messageSender = userContacts.get(messageData.user_id);
+  const userSession = useSessionUser()
   
-  const sentMessage:boolean = user?.username === "samajat";
+  const sentMessage:boolean = (messageSender === undefined);
+  
+  
+  
+  var currentUser = sentMessage ? userSession : messageSender;
+  if (!currentUser)
+    return <div>Message User owner not found</div>;
+  
   const messagePositionStyle = sentMessage ? `${style.message__to_right}` : "";
-  
-
-  if (!user)
-    return <div className={`${style.message} ${messagePositionStyle}`}>Message User owner not found</div>;
-
-
   return (
     <div className={`${style.message} ${messagePositionStyle}`}>
-      <Avatar avatarSrc={user.avatar} avatarToRight={sentMessage} />
+      <Avatar avatarSrc={currentUser.avatar} avatarToRight={sentMessage} />
       <div className={style.message_body}>
         <span className={style.message_username__style}>
-          {user.username}
+          {currentUser.username}
         </span>
         <MessageBubble
           messageContent={messageData.content}
           isMessageSent={sentMessage}
         />
-        <TimeStamp time={messageData.created_at} />
+        <TimeStamp time={messageData.createdAt} />
       </div>
     </div>
   );

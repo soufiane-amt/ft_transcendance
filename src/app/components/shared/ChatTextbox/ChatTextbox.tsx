@@ -9,17 +9,18 @@ const user_id = "1"
 
 
 interface ChatTextBoxProps {
+  showTextBox :boolean
   messagesHistoryState : [messageDto[], React.Dispatch<React.SetStateAction<messageDto[]>>]
 }
 
-function ChatTextBox ({messagesHistoryState}: ChatTextBoxProps)
+function ChatTextBox ({messagesHistoryState, showTextBox}: ChatTextBoxProps)
 {
   const [messagesHistory, setMessageHistory] = messagesHistoryState
   const defaultMessageValue: messageDto = {
     id: "",
     user_id: "",
     content: "",
-    created_at: "",
+    createdAt: "",
   };
   const [newMessage, setNewMessage] = useState <messageDto> (defaultMessageValue)
 
@@ -28,7 +29,11 @@ function ChatTextBox ({messagesHistoryState}: ChatTextBoxProps)
     setNewMessage(defaultMessageValue)
   }
 
+
+  if (showTextBox === false)
+    return null;
     return (
+      
         <div className={`${style.message_bar} ${style.middlePos}`} >
             <textarea className={`${style.message_input_bar} `} 
             placeholder='Type a message...'

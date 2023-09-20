@@ -113,7 +113,9 @@ function ChattingField({
 
   useEffect(() => {
     async function fetchDataAsync() {
-      const messagesHistory_tmp = await fetchDataFromApi(`http://localhost:3001/chat/${selectedDiscussion.id}/message`)
+      const messagesHistory_tmp = await fetchDataFromApi(`http://localhost:3001/chat/${selectedDiscussion.id}/messages`)
+      console.log ("disc id:" + selectedDiscussion.id)
+      console.log ("Messages" + messagesHistory_tmp)
 
       setMessageHistory(messagesHistory_tmp);
 
@@ -126,9 +128,10 @@ function ChattingField({
     <div className={style.chat_field}>
       <MessagesHistory messages={messagesHistory} />
 
-      {/* <ChatTextBox
+      <ChatTextBox
         messagesHistoryState={[messagesHistory, setMessageHistory]}
-      /> */}
+        showTextBox={selectedDiscussion !== selectedPanelDefault}
+      />
     </div>
   );
 }
