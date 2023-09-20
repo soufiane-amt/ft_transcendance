@@ -253,6 +253,13 @@ export class ChatCrudService
               {dm_id : room_id}
             ]
           },
+          select : {
+            id:true,
+            user_id:true,
+            content :true,
+            createdAt :true,
+            is_read :true
+          },
           orderBy :{
             createdAt : 'asc'
           }
@@ -451,7 +458,6 @@ export class ChatCrudService
 
     async createMessage (data : MessageDto)
     {
-      console.log (data)
       return ( await this.prisma.prismaClient.message.create ({data}))
     }
   

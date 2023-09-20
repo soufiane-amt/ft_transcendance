@@ -3,7 +3,7 @@ import { DmService } from './services/direct-messaging/dm.service';
 import { Request, Response } from "express"
 import { dmGateway } from './services/direct-messaging/dm.gateway';
 import { FriendShipExistenceGuard, cookieGuard, userRoomSubscriptionGuard } from './guards/chat.guards';
-import { channelDto } from './dto/chat.dto';
+import { MessageDto, channelDto } from './dto/chat.dto';
 import { Reflector } from '@nestjs/core';
 import { ChatCrudService } from 'src/prisma/chat-crud.service';
 import * as path from 'path';
@@ -24,13 +24,22 @@ export class ChatController
                     private readonly reflector: Reflector){}
 
 
+@Get('/createDms')
+async create(@Req() request : Request) {
+
+  const newMessage:MessageDto = {user_id:"kkhfjkh78t78t34rjflsr9uw4jof", dm_id:"a5f51033-06ae-4f89-be3d-3d92450ab7ba", content :"hi , soufiane please call me"}
+  for (let index = 0; index < 20; index++) {
+    this.chatCrud.createMessage(newMessage)
+    
+  }
+}
+
 @Get('/image/:imagePth')
 async getUserImage(@Param('imagePth') imagePth: string, @Res() res: Response) {
   const imagePath =  path.join(__dirname, '..', `../upload/${imagePth}`); // Go up two directories to reach the workspace root
   if (!fs.existsSync(imagePath)) {
     return res.status(404).send('Image not found');
   }
-  console.log ("I'm here")
   res.sendFile(imagePath);
 }
   
@@ -48,7 +57,6 @@ async getUserImage(@Param('imagePth') imagePth: string, @Res() res: Response) {
   async findAllUsersInContact (@Req() request : Request)
   {
     const users = await this.chatCrud.retrieveUserContactBook (request.cookies["user.id"])
-    console.log (users)
 
     return (users)
   }
@@ -57,7 +65,7 @@ async getUserImage(@Param('imagePth') imagePth: string, @Res() res: Response) {
 @Get (":roomid/messages")
 async findRoomMessages (@Param("roomid") roomid:string)
 {
-  console.log ("room id:", roomid)
+  console.log (await this.chatCrud.retrieveRoomMessages(roomid))
   return await this.chatCrud.retrieveRoomMessages(roomid);
 }
   
@@ -77,7 +85,6 @@ async findRoomMessages (@Param("roomid") roomid:string)
     }
     else
       init_stat = `?init=false`
-    console.log (`/chat/direct_messaging/@me/${dmRoom_id}/${init_stat}`)
     response.redirect (`/chat/direct_messaging/@me/${dmRoom_id}/${init_stat}`)
   }
 
