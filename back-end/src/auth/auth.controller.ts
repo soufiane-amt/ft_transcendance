@@ -35,22 +35,17 @@ export class AuthController {
   @Get('redirect')
   @UseGuards(FortytwoOauthGuard)
   async HandleRedirect(@Req() request, @Res() response: Response) {
-
-
     const token = await this.authservice.signIn(request.user); // error here !!!!!!!!
-    
-    response.cookie('access_token', token, {
-      maxAge: 86400000,
-      secure: false,
-    });
-    
     const user = await this.service.prismaClient.user.findUnique({
       where: {
         email: request.user.email,
       },
     });
     if (user.firstauth === true) {
-      // here I will redirect the user to change the data
+      response.cookie('access_token', token, {
+        maxAge: 86400000,
+        secure: false,
+      });
       await this.service.prismaClient.user.update({
         where: {
           email: request.user.email,
@@ -60,8 +55,15 @@ export class AuthController {
         },
       });
       return response.redirect(`${process.env.FRONT_SERV}/updatecredentials`);
-      // here i will redirect the user to the profile page
-    } else return response.redirect(`${process.env.FRONT_SERV}/dashboard`);
+    } else if (user.isTwoFactorAuthenticationEnabled === true && request.cookies['access_token'] === undefined) {
+      return response.redirect(`${process.env.FRONT_SERV}/2fa`);
+    } else {
+      response.cookie('access_token', token, {
+        maxAge: 86400000,
+        secure: false,
+      });
+      return response.redirect(`${process.env.FRONT_SERV}/dashboard`);
+    }
   }
   //============================================================================
   @Post('updatecredentials')
