@@ -8,6 +8,7 @@ import { Reflector } from '@nestjs/core';
 import { ChatCrudService } from 'src/prisma/chat-crud.service';
 import * as path from 'path';
 import * as fs from 'fs';
+import { UserCrudService } from 'src/prisma/user-crud.service';
 
 
 
@@ -20,9 +21,13 @@ export class ChatController
 
   constructor (private readonly dmService :DmService, 
                     private readonly chatCrud : ChatCrudService,
+                    private readonly userCrud : UserCrudService,
+
                     @Inject(dmGateway) private readonly dmGate : dmGateway, 
                     private readonly reflector: Reflector){}
 
+@Get("/dm")
+hello(){}
 
 @Get('/createDms')
 async create(@Req() request : Request) {
@@ -34,9 +39,10 @@ async create(@Req() request : Request) {
   }
 }
 
-@Get('/image/:imagePth')
-async getUserImage(@Param('imagePth') imagePth: string, @Res() res: Response) {
-  const imagePath =  path.join(__dirname, '..', `../upload/${imagePth}`); // Go up two directories to reach the workspace root
+@Get('/image/:image_path')
+async getUserImage(@Param('image_path') image_path: string, @Res() res: Response) {
+  const imagePath =  path.join(__dirname, '..', `../upload/${image_path}`); // Go up two directories to reach the workspace root
+  console.log (imagePath)
   if (!fs.existsSync(imagePath)) {
     return res.status(404).send('Image not found');
   }
@@ -69,6 +75,13 @@ async findRoomMessages (@Param("roomid") roomid:string)
   return await this.chatCrud.retrieveRoomMessages(roomid);
 }
   
+
+@Get("/userData")
+async getUserData (@Req() request : Request)
+{
+  return (this.userCrud.findUserSessionDataByID(request.cookies["user.id"]))
+}
+
 
 
   /*****Old fetching */

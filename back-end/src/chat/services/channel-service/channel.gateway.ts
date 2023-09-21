@@ -11,7 +11,7 @@ import { UserCrudService } from "src/prisma/user-crud.service";
 
  
 
- @WebSocketGateway()
+ @WebSocketGateway({namespace:"chat/channels"})
 
  export class channelGateway implements OnGatewayConnection
  {

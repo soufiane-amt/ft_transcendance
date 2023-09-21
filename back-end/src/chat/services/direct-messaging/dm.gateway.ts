@@ -9,10 +9,11 @@ import {  bannedConversationGuard, userRoomSubscriptionGuard } from 'src/chat/gu
 import { UseGuards } from '@nestjs/common';
 import { UserCrudService } from 'src/prisma/user-crud.service';
 import { ChatCrudService } from 'src/prisma/chat-crud.service';
+import * as cookie from 'cookie';
 
 
 
-@WebSocketGateway()
+@WebSocketGateway({namespace:"chat/dm"})
 export class dmGateway implements OnGatewayConnection, OnGatewayDisconnect {
   @WebSocketServer()
   server: Server;
@@ -24,14 +25,19 @@ export class dmGateway implements OnGatewayConnection, OnGatewayDisconnect {
   //to use it to create an inbox of notifications and new dm's to be initiated
   
   async handleConnection(client: any, ...args: any[]) {
-    const user_id = client.handshake.query.id
-    // console.log ("user_id" + user_id)
-    if (await this.userCrud.findUserByID(user_id) == null)
+    const headers = client.handshake.headers;
+
+    // Parse the cookies from the request headers
+    const parsedCookies = cookie.parse(headers.cookie || '');
+  
+    // Access specific cookies by name
+    const userIdCookie = parsedCookies["user.id"];
+    if (await this.userCrud.findUserByID(userIdCookie) == null)
       throw new WsException ("User not existing")
-    console.log (`user ${user_id} connected\n`)
-    const inbox_id = "inbox-".concat(user_id)
+    console.log (`user ${userIdCookie} connected\n`)
+    const inbox_id = "inbox-".concat(userIdCookie)
     client.join (inbox_id);
-    (await this.chatCrud.retrieveUserDmChannels(user_id)).forEach(room => {
+    (await this.chatCrud.retrieveUserDmChannels(userIdCookie)).forEach(room => {
       client.join("dm-"+room.id)
     });
     

@@ -20,6 +20,37 @@ async findUserByID(userId: string)
     }
   )
 }
+async findUserAvatar(userId: string)
+{
+  return await this.prisma.prismaClient.user.findUnique (
+    {
+      where : {
+        id : userId
+      },
+      select: {
+        avatar:true,
+      }
+
+    }
+  )
+}
+
+async findUserSessionDataByID(userId: string)
+{
+  return await this.prisma.prismaClient.user.findUnique (
+    {
+      where : {
+        id : userId
+      },
+      select: {
+        id:true,
+        username:true,
+        avatar:true,
+
+      }
+    }
+  )
+}
 
 //ifindUser method finds user by username 
 async findUserByUsername(username: string) 
