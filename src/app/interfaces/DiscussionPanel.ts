@@ -11,3 +11,14 @@ export interface DiscussionDto {
   partner_id: string;
   last_message: MessageDto;
 }
+
+
+export interface discussionPanelSelectType {
+  id: string;
+  partner_id: string;
+  last_message: { id:string, content: string, createdAt: string }
+}
+export interface selectDiscStateType {
+  selectedDiscussion : discussionPanelSelectType,
+  setDiscussion : (discussion: DiscussionDto) => void;
+}

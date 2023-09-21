@@ -5,17 +5,12 @@ import DiscussionPanel from "../shared/DiscussionPanel/DiscussionPanel";
 import style from "./DirectMsgMain.module.css";
 import Message from "../shared/Message/Message";
 import UserActionModalMain from "./UserActionModal/UserActionModal";
-import { DiscussionDto } from "../../interfaces/DiscussionPanel";
+import { DiscussionDto, discussionPanelSelectType, selectDiscStateType } from "../../interfaces/DiscussionPanel";
 import { UserContactsProvider } from "../../context/UsersContactBookContext";
 import { fetchDataFromApi } from "../shared/api/exmple";
 
 /*stopPropagation is used here to prevent the click event to take way up to the parent it got limited right here */
 
-interface discussionPanelSelectType {
-  id: string;
-  partner_id: string;
-  last_message: { id:string, content: string, createdAt: string }
-}
 
 interface DiscussionsBarProps {
   selectedDiscussionState: [
@@ -96,6 +91,7 @@ function MessagesHistory({ messages }: { messages: messageDto[] }) {
   );
 }
 
+
 const selectedPanelDefault: discussionPanelSelectType = {
   id: "",
   partner_id: "",
@@ -103,12 +99,13 @@ const selectedPanelDefault: discussionPanelSelectType = {
 };
 
 
-
 function ChattingField({
-  selectedDiscussion,
+  selectDiscussionState,
 }: {
-  selectedDiscussion: discussionPanelSelectType;
-}) {
+  selectedDiscussion: DiscussionDto,
+  setSelectedDiscussion: React.Dispatch<React.SetStateAction<DiscussionDto>>}
+) {
+  const {selectedDiscussion} = selectDiscussionState;
   const [messagesHistory, setMessageHistory] = useState<messageDto[]>([]);
 
   useEffect(() => {
@@ -129,7 +126,7 @@ function ChattingField({
       <MessagesHistory messages={messagesHistory} />
 
       <ChatTextBox
-        selectedDiscussionId={selectedDiscussion.id}
+        selectDiscState={selectDiscussionState}
         messagesHistoryState={[messagesHistory, setMessageHistory]}
         showTextBox={selectedDiscussion !== selectedPanelDefault}
       />
@@ -145,12 +142,13 @@ function DirectMesgMain() {
   const [roomPanels_data, setDiscussionRooms] = useState<DiscussionDto[]>([]);
   const [selectedDiscussion, setSelectedDiscussion] = useState<DiscussionDto>(selectedPanelDefault)
 
-
+  const setDiscussion = (newSelectedDisc : DiscussionDto)=>{
+    setSelectedDiscussion(newSelectedDisc)
+  }
   useEffect(() => {
     async function fetchDataAsync() {
       const roomPanels_data_tmp = await fetchDataFromApi("http://localhost:3001/chat/direct_messaging/discussionsBar")
       setDiscussionRooms(roomPanels_data_tmp);
-      console.log ("===>", roomPanels_data_tmp)
     }
     fetchDataAsync();
   }, []);
@@ -162,7 +160,7 @@ function DirectMesgMain() {
           selectedDiscussionState={[selectedDiscussion, setSelectedDiscussion]}
           discussionPanels={roomPanels_data}
         />
-        <ChattingField selectedDiscussion={selectedDiscussion} />
+        <ChattingField selectDiscussionState={{selectedDiscussion, setSelectedDiscussion}} />
       </div>
     </UserContactsProvider>
   );
