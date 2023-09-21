@@ -129,6 +129,7 @@ function ChattingField({
       <MessagesHistory messages={messagesHistory} />
 
       <ChatTextBox
+        selectedDiscussionId={selectedDiscussion.id}
         messagesHistoryState={[messagesHistory, setMessageHistory]}
         showTextBox={selectedDiscussion !== selectedPanelDefault}
       />
@@ -149,6 +150,7 @@ function DirectMesgMain() {
     async function fetchDataAsync() {
       const roomPanels_data_tmp = await fetchDataFromApi("http://localhost:3001/chat/direct_messaging/discussionsBar")
       setDiscussionRooms(roomPanels_data_tmp);
+      console.log ("===>", roomPanels_data_tmp)
     }
     fetchDataAsync();
   }, []);

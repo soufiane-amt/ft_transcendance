@@ -33,7 +33,6 @@ export function UserContactsProvider({ children }: { children: React.ReactNode }
       });
 
       setUserContactsBook(map)
-      console.log (map)
     }
     fetchDataAsync();
   }, []);

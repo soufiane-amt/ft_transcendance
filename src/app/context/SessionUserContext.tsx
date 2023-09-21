@@ -1,6 +1,8 @@
-import { createContext, useContext, useState, ReactNode } from 'react';
+import { createContext, useContext, useState, ReactNode, useEffect } from 'react';
+import { fetchDataFromApi } from '../components/shared/api/exmple';
 //  the shape of the user data
 interface UserContactDto {
+  id: string;
   username: string;
   avatar: string;
   status?: 'ONLINE' | 'OFFLINE',
@@ -20,15 +22,24 @@ interface SessionUserProviderProps {
   children: ReactNode;
 }
 
-const defaultSessionUser : UserContactDto = {username:"samajat" , avatar :"/images/avatar.png"}
+const defaultSessionUser : UserContactDto = {id :"", username:"" , avatar :""}
 
 export function SessionUserProvider({ children }: SessionUserProviderProps) {
   const [userData, setUserData] = useState<UserContactDto>(defaultSessionUser);
 
-  //  set user data
-  const setUser = (user: UserContactDto) => {
-    setUserData(user);
-  };
+  const setUser = (user: UserContactDto)=>{
+    setUserData(user)
+  }
+
+  useEffect (()=>{
+    async function fetchDataAsync() {
+
+      const userSessiondata = await fetchDataFromApi("http://localhost:3001/chat/userData")
+
+      setUserData(userSessiondata)
+    }
+    fetchDataAsync();
+  }, []);
 
   return (
     <SessionUserContext.Provider value={{ userData, setUser }}>
