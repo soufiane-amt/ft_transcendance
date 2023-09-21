@@ -4,7 +4,7 @@ export interface MessageDto
     dm_id? : string
     channel_id? : string
     content : string
-    created_at? : Date
+    createdAt? : Date
     is_read? : boolean
 }
 

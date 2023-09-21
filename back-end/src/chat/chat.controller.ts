@@ -42,7 +42,6 @@ async create(@Req() request : Request) {
 @Get('/image/:image_path')
 async getUserImage(@Param('image_path') image_path: string, @Res() res: Response) {
   const imagePath =  path.join(__dirname, '..', `../upload/${image_path}`); // Go up two directories to reach the workspace root
-  console.log (imagePath)
   if (!fs.existsSync(imagePath)) {
     return res.status(404).send('Image not found');
   }
@@ -54,7 +53,6 @@ async getUserImage(@Param('image_path') image_path: string, @Res() res: Response
   async findAllDiscussionPartners (@Req() request : Request)
   {
     const users = await this.chatCrud.retreiveDmInitPanelData (request.cookies["user.id"])
-
     return (users)
 
   }
@@ -71,7 +69,6 @@ async getUserImage(@Param('image_path') image_path: string, @Res() res: Response
 @Get (":roomid/messages")
 async findRoomMessages (@Param("roomid") roomid:string)
 {
-  console.log (await this.chatCrud.retrieveRoomMessages(roomid))
   return await this.chatCrud.retrieveRoomMessages(roomid);
 }
   

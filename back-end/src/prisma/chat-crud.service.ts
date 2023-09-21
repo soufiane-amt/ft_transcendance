@@ -256,7 +256,6 @@ export class ChatCrudService
             ]
           },
           select : {
-            id:true,
             user_id:true,
             content :true,
             createdAt :true,
