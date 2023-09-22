@@ -1,4 +1,4 @@
-import { Controller, Get, Query,Post , Res,Req,  Param, Inject, UseGuards, Body, BadRequestException, ExecutionContext, CallHandler, SetMetadata } from '@nestjs/common';
+import { Controller, Get, Query,Post , Res,Req,  Param, Inject, UseGuards, Body, BadRequestException, ExecutionContext, CallHandler, SetMetadata, Put } from '@nestjs/common';
 import { DmService } from './services/direct-messaging/dm.service';
 import { Request, Response } from "express"
 import { dmGateway } from './services/direct-messaging/dm.gateway';
@@ -52,8 +52,18 @@ async getUserImage(@Param('image_path') image_path: string, @Res() res: Response
   @Get ("/direct_messaging/discussionsBar")
   async findAllDiscussionPartners (@Req() request : Request)
   {
-    const users = await this.chatCrud.retreiveDmInitPanelData (request.cookies["user.id"])
-    return (users)
+    const dms = await this.chatCrud.retreiveDmInitPanelData(request.cookies['user.id']);
+
+    const unreadMessagesPromises = dms.map(async (dmElement) => {
+      const unreadMessages = await this.chatCrud.getUnreadMessagesNumber(dmElement.id);
+      return { ...dmElement, unread_messages: unreadMessages };
+    });
+
+    // I wait for all promises to resolve
+    const discussions = await Promise.all(unreadMessagesPromises);
+
+    console.log(discussions);
+    return discussions;
 
   }
 
@@ -79,6 +89,12 @@ async getUserData (@Req() request : Request)
   return (this.userCrud.findUserSessionDataByID(request.cookies["user.id"]))
 }
 
+
+@Put("/messages/markAsRead")
+async markMessagesAsRead (@Body() room : {_id:string})
+{
+  await this.chatCrud.markRoomMessagesAsRead(room._id)
+}
 
 
   /*****Old fetching */
