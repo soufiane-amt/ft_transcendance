@@ -1,10 +1,9 @@
 import React, { useEffect, useState } from "react";
 import style from "./ChatTextbox.module.css";
 import { Send } from "../../svgs";
-import { formatDateAndTime } from "../../../utils/dateUtils";
 import { useSessionUser } from "../../../context/SessionUserContext";
 import { discussionPanelSelectType, selectDiscStateType } from "../../../interfaces/DiscussionPanel";
-import socket from "../../../socket/socket.ts"; // Import the socket object
+import socket from "../../../socket/socket"; // Import the socket object
 
 
 interface ChatTextBoxProps {
@@ -27,10 +26,10 @@ function ChatTextBox({ selectDiscState, messagesHistoryState, showTextBox }: Cha
   useEffect(() => {
     const handleNewMessage = (newMessage :messageDto) => {
       //Add message id later
-      const messageRoomId:string = newMessage.dm_id ? newMessage.dm_id: newMessage.channel_id;
+      const messageRoomId = newMessage.dm_id ? newMessage.dm_id: newMessage.channel_id;
       if (selectedDiscussion.id === messageRoomId)
           setMessageHistory((messagesHistory) => [...messagesHistory, newMessage]);
-      };  
+      };
                     
     socket.on("newMessage", handleNewMessage);
     return () => {
@@ -40,7 +39,7 @@ function ChatTextBox({ selectDiscState, messagesHistoryState, showTextBox }: Cha
 
 
   const handleSendMessage = () => {
-    const newMessage: messageDto = {
+    const newMessage = {
       user_id: userSession.id,
       content: newMessageContent,
       channel_id:selectedDiscussion.id,

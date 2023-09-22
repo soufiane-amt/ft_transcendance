@@ -59,7 +59,7 @@ function DiscussionPanel ({onSelect, DiscussionPanel, isSelected, showUserAction
     //I take a reference to the state of isSelected
 
     const enableUnseenMessage = ()=> {
-        const last_message_timestamp = new Date(DiscussionPanel.last_message.timestamp).getTime();
+        const last_message_timestamp = new Date(DiscussionPanel.last_message.createdAt).getTime();
         return (!isSelected &&  (last_message_timestamp > lastSeenTime))
     }
 
@@ -77,7 +77,7 @@ function DiscussionPanel ({onSelect, DiscussionPanel, isSelected, showUserAction
             <TimeStamp time={DiscussionPanel.last_message.createdAt}/>
             {
                 enableUnseenMessage() && (
-              <div className={style.panel_message_notifier}>new</div>
+              <div className={style.panel_message_notifier}>{DiscussionPanel.unread_messages}</div>
             ) }
         </div>
     

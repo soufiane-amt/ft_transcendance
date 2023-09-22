@@ -8,15 +8,15 @@ import UserActionModalMain from "./UserActionModal/UserActionModal";
 import { DiscussionDto, MinMessageDto, discussionPanelSelectType, selectDiscStateType } from "../../interfaces/DiscussionPanel";
 import { UserContactsProvider } from "../../context/UsersContactBookContext";
 import { fetchDataFromApi } from "../shared/api/exmple";
-import socket from "src/app/socket/socket.ts"; // Import the socket object
+import socket from "../../socket/socket" // Import the socket object
 
 /*stopPropagation is used here to prevent the click event to take way up to the parent it got limited right here */
 
 
 interface DiscussionsBarProps {
   selectedDiscussionState: [
-    DiscussionDto,
-    React.Dispatch<React.SetStateAction<DiscussionDto>>
+    discussionPanelSelectType,
+    React.Dispatch<React.SetStateAction<discussionPanelSelectType>>
   ];
 }
 
@@ -46,6 +46,10 @@ function DiscussionsBar({
                                                 content:newMessage.content,
                                                 createdAt:newMessage.createdAt}
           updatedRooms[indexToModify].last_message = messageContent;
+          //incrementing unread messages
+          updatedRooms[indexToModify].unread_messages += 1;
+
+
           const movedElement = updatedRooms.splice(indexToModify, 1)[0];
 
           // Insert it at the beginning of the array
@@ -61,12 +65,20 @@ function DiscussionsBar({
     };  
   }, [discussionPanels]);  
 
+
   const displayActionModal = () => {
     setModalAsVisible(true);
   };
   const handlePanelClick = (panelData: DiscussionDto) => {
     setSelectedDiscussion(panelData);
-  };
+    const updatedRooms = [...discussionPanels]
+
+    const indexToModify = updatedRooms.findIndex((item) => item.id === panelData.id);
+    if (indexToModify !== -1) {
+      updatedRooms[indexToModify].unread_messages = 0;
+      setDiscussionRooms (updatedRooms)
+      };
+    }
 
   return (
     <ul className={style.discussion_panel_bar}>
@@ -129,7 +141,7 @@ function MessagesHistory({ messages }: { messages: messageDto[] }) {
 const selectedPanelDefault: discussionPanelSelectType = {
   id: "",
   partner_id: "",
-  last_message: { id:"", content: "", createdAt: "" }
+  last_message: { id:"", content: "", createdAt: "" },
 };
 
 interface ChattingFieldPops {
@@ -172,11 +184,11 @@ function ChattingField({ selectDiscussionState} : ChattingFieldPops)
 
 
 function DirectMesgMain() {
-  const [selectedDiscussion, setSelectedDiscussion] = useState<DiscussionDto>(selectedPanelDefault)
+  const [selectedDiscussion, setSelectedDiscussion] = useState<discussionPanelSelectType>(selectedPanelDefault)
   
-  const setDiscussion = (newSelectedDisc : DiscussionDto)=>{
-    setSelectedDiscussion(newSelectedDisc)
-  }
+  // const setDiscussion = (newSelectedDisc : discussionPanelSelectType)=>{
+  //   setSelectedDiscussion(newSelectedDisc)
+  // }
   // useEffect (()=>{
   //   const roomToModify  = roomPanels_data.find (room => room.id === selectedDiscussion.id)
 

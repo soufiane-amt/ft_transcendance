@@ -10,6 +10,7 @@ export interface DiscussionDto {
   id: string;
   partner_id: string;
   last_message: MinMessageDto;
+  unread_messages:number;
 }
 
 
@@ -20,5 +21,5 @@ export interface discussionPanelSelectType {
 }
 export interface selectDiscStateType {
   selectedDiscussion : discussionPanelSelectType,
-  setSelectedDiscussion : React.Dispatch<React.SetStateAction<DiscussionDto>>  
+  setSelectedDiscussion : React.Dispatch<React.SetStateAction<discussionPanelSelectType>>  
 }
