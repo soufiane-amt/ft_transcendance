@@ -6,8 +6,8 @@ import TimeStamp from '../TimeStamp/TimeStamp';
 import { findUserContacts, useUserContacts } from '../../../context/UsersContactBookContext';
 
 
-const avatar = "/images/avatar.png";
-const panelLastMsg:string = 'The behavior could be thought of as a minimum gutter, as if the gutter is bigger somehow (because of something like justify-content: space-between;) then the gap will only take effect if that space would end up smaller.'
+const defaultPanelColors = {backgroundColor: 'var(--discussion_panel_back_color)', color:'var(--discussion_panel_element_color)'}
+const selectionPanelColors = {backgroundColor: 'var(--discussion_panel_selection_color)', color:'var(--discussion_panel_element_selection_color)'}
 
 interface DiscussionPanelProps {
     onSelect: (panel: DiscussionDto) => void;
@@ -44,8 +44,6 @@ function DiscussionPanel ({onSelect, DiscussionPanel, isSelected, showUserAction
     }, [isSelected]);
   
     //styling toggles
-    const defaultPanelColors = {backgroundColor: 'var(--discussion_panel_back_color)', color:'var(--discussion_panel_element_color)'}
-    const selectionPanelColors = {backgroundColor: 'var(--discussion_panel_selection_color)', color:'var(--discussion_panel_element_selection_color)'}
     
     const panelTheme = isSelected ? selectionPanelColors : defaultPanelColors;
     
@@ -54,6 +52,7 @@ function DiscussionPanel ({onSelect, DiscussionPanel, isSelected, showUserAction
     if (!panelOwner)
         return (<div>User panel doesn't exist</div>)
     const handleDiscussionPanelClick = () =>{
+        console.log("Discussion Panel>>", DiscussionPanel)
         onSelect(DiscussionPanel)
     }
 

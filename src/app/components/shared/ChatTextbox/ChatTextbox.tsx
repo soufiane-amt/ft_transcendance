@@ -26,26 +26,20 @@ function ChatTextBox({ selectDiscState, messagesHistoryState, showTextBox }: Cha
 
   useEffect(() => {
     const handleNewMessage = (newMessage :messageDto) => {
-      setMessageHistory((messagesHistory) => [...messagesHistory, newMessage]);
       //Add message id later
-      let messageRoomId:string| undefined = newMessage.channel_id ? newMessage.channel_id: newMessage.dm_id;
-      messageRoomId = messageRoomId ? messageRoomId : ""
-      const  discData: discussionPanelSelectType = 
-                    {id:messageRoomId, 
-                      partner_id :newMessage.user_id, 
-                      last_message:{id:"", //add Message id later
-                      content: newMessage.content, 
-                      createdAt: newMessage.createdAt }}
-                      
-                      // setSelectedDiscussion (discData)
-                      console.log ("SelectedDiscussion :", selectedDiscussion)
+      console.log ("*********", selectedDiscussion)
+      const messageRoomId:string = newMessage.dm_id ? newMessage.dm_id: newMessage.channel_id;
+      if (selectedDiscussion.id === messageRoomId)
+      {
+          setMessageHistory((messagesHistory) => [...messagesHistory, newMessage]);
+      }
       };  
                     
     socket.on("newMessage", handleNewMessage);
     return () => {
       socket.off("newMessage", handleNewMessage);
     };  
-  }, []);  
+  }, [selectedDiscussion]);  
 
 
   const handleSendMessage = () => {
