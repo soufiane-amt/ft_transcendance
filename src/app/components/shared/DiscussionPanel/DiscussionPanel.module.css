@@ -61,8 +61,10 @@
 .panel_message_notifier{
     background-color: red;
     border-radius: 50%;
-    padding: 3px 7px ;
-    /* display: none; */
+    
+    font-weight: bold;
+    padding: 3px 8px ;
+
 }
 
 

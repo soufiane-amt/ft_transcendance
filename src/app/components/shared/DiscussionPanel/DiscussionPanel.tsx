@@ -16,7 +16,11 @@ interface DiscussionPanelProps {
     showUserActionModal: () => void;
   }
   
-
+const badgeCount = (n :number)
+{
+    const unseenMassagesEdge :number = 9;
+    return (n > unseenMassagesEdge? unseenMassagesEdge+"+" : n)
+}
 
 function PaneLastMessage ( {last_message_content}:{last_message_content:string | undefined})
 {
