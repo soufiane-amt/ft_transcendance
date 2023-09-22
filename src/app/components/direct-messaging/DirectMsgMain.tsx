@@ -5,7 +5,7 @@ import DiscussionPanel from "../shared/DiscussionPanel/DiscussionPanel";
 import style from "./DirectMsgMain.module.css";
 import Message from "../shared/Message/Message";
 import UserActionModalMain from "./UserActionModal/UserActionModal";
-import { DiscussionDto, discussionPanelSelectType, selectDiscStateType } from "../../interfaces/DiscussionPanel";
+import { DiscussionDto, MinMessageDto, discussionPanelSelectType, selectDiscStateType } from "../../interfaces/DiscussionPanel";
 import { UserContactsProvider } from "../../context/UsersContactBookContext";
 import { fetchDataFromApi } from "../shared/api/exmple";
 import socket from "src/app/socket/socket.ts"; // Import the socket object
@@ -110,11 +110,11 @@ function MessagesHistory({ messages }: { messages: messageDto[] }) {
   }, [messages]);
   return (
     <div className={style.messages_history}>
-      {messages.map((messageElement: messageDto, index: number) => {
+      {messages.map((messageElement: messageDto) => {
         //Don't forget to add key attribute to messages
         return (
           <Message
-            key={index}
+            key={messageElement.id}
             messageData={messageElement}
           />
         );
