@@ -3,14 +3,9 @@ import style from "./ChatTextbox.module.css";
 import { Send } from "../../svgs";
 import { formatDateAndTime } from "../../../utils/dateUtils";
 import { useSessionUser } from "../../../context/SessionUserContext";
-import { io } from "socket.io-client";
 import { discussionPanelSelectType, selectDiscStateType } from "../../../interfaces/DiscussionPanel";
+import socket from "../../../socket/socket.ts"; // Import the socket object
 
-const socket = io("http://localhost:3001/chat", {
-  transports: ["websocket", "polling", "flashsocket"],
-
-  withCredentials: true,
-});
 
 interface ChatTextBoxProps {
   selectDiscState :selectDiscStateType,
@@ -22,7 +17,7 @@ interface ChatTextBoxProps {
 }
 
 function ChatTextBox({ selectDiscState, messagesHistoryState, showTextBox }: ChatTextBoxProps) {
-  const {selectedDiscussion, setDiscussion} = selectDiscState;
+  const {selectedDiscussion, setSelectedDiscussion} = selectDiscState;
   
   const userSession = useSessionUser();
 
@@ -35,22 +30,23 @@ function ChatTextBox({ selectDiscState, messagesHistoryState, showTextBox }: Cha
       //Add message id later
       let messageRoomId:string| undefined = newMessage.channel_id ? newMessage.channel_id: newMessage.dm_id;
       messageRoomId = messageRoomId ? messageRoomId : ""
-      let discData: discussionPanelSelectType = 
+      const  discData: discussionPanelSelectType = 
                     {id:messageRoomId, 
                       partner_id :newMessage.user_id, 
                       last_message:{id:"", //add Message id later
                       content: newMessage.content, 
                       createdAt: newMessage.createdAt }}
-                      console.log ("++++>>", discData.last_message);
-      setDiscussion(discData)
-
-    };  
-
+                      
+                      // setSelectedDiscussion (discData)
+                      console.log ("SelectedDiscussion :", selectedDiscussion)
+      };  
+                    
     socket.on("newMessage", handleNewMessage);
     return () => {
       socket.off("newMessage", handleNewMessage);
     };  
-  }, [setNewMessageContent]);  
+  }, []);  
+
 
   const handleSendMessage = () => {
     const newMessage: messageDto = {
@@ -60,7 +56,6 @@ function ChatTextBox({ selectDiscState, messagesHistoryState, showTextBox }: Cha
       dm_id:selectedDiscussion.id,
       createdAt: new Date().toISOString(),
     };  
-    // setMessageHistory([...messagesHistory, newMessage]);
     socket.emit ("sendMsgDm", newMessage)
     setNewMessageContent("");
   };

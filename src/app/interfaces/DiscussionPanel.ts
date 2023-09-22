@@ -1,5 +1,5 @@
 /*This interface presents the minimal message data that DiscussionDto needs for it to operate */
-interface MessageDto {
+export interface MinMessageDto {
   id: string;
   content: string;
   createdAt: string;
@@ -9,7 +9,7 @@ interface MessageDto {
 export interface DiscussionDto {
   id: string;
   partner_id: string;
-  last_message: MessageDto;
+  last_message: MinMessageDto;
 }
 
 
@@ -20,5 +20,5 @@ export interface discussionPanelSelectType {
 }
 export interface selectDiscStateType {
   selectedDiscussion : discussionPanelSelectType,
-  setDiscussion : (discussion: DiscussionDto) => void;
+  setSelectedDiscussion : React.Dispatch<React.SetStateAction<DiscussionDto>>  
 }

@@ -33,7 +33,6 @@ function DiscussionPanel ({onSelect, DiscussionPanel, isSelected, showUserAction
 {    
     const [lastSeenTime, setLastSeen] = useState <number>(0)
     const prevIsSelectedRef = useRef<boolean>(isSelected);
-
     useEffect(() => {
       // Check if isSelected changed from true to false
       if (prevIsSelectedRef.current && !isSelected) {

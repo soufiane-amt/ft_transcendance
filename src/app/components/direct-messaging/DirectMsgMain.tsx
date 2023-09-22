@@ -8,6 +8,7 @@ import UserActionModalMain from "./UserActionModal/UserActionModal";
 import { DiscussionDto, discussionPanelSelectType, selectDiscStateType } from "../../interfaces/DiscussionPanel";
 import { UserContactsProvider } from "../../context/UsersContactBookContext";
 import { fetchDataFromApi } from "../shared/api/exmple";
+import socket from "src/app/socket/socket.ts"; // Import the socket object
 
 /*stopPropagation is used here to prevent the click event to take way up to the parent it got limited right here */
 
@@ -17,15 +18,44 @@ interface DiscussionsBarProps {
     DiscussionDto,
     React.Dispatch<React.SetStateAction<DiscussionDto>>
   ];
-  discussionPanels: DiscussionDto[];
 }
+
 
 function DiscussionsBar({
   selectedDiscussionState,
-  discussionPanels,
 }: DiscussionsBarProps) {
-  const [selectedDiscussion, setSelectedDiscussion] = selectedDiscussionState;
+  const [discussionPanels, setDiscussionRooms] = useState<DiscussionDto[]>([]);
   const [modalIsVisible, setModalAsVisible] = useState<boolean>(false);
+  const [selectedDiscussion, setSelectedDiscussion] = selectedDiscussionState;
+
+  useEffect(() => {
+    async function fetchDataAsync() {//use enums instead of passing dircet links 
+      const roomPanels_data_tmp = await fetchDataFromApi("http://localhost:3001/chat/direct_messaging/discussionsBar")
+      setDiscussionRooms(roomPanels_data_tmp);
+    }
+    fetchDataAsync();
+  }, []);
+
+  useEffect(() => {
+    const handleNewMessage = (newMessage :messageDto) => {
+        const updatedRooms = [...discussionPanels]
+        const messageRoomId = newMessage.dm_id ? newMessage.dm_id : newMessage.channel_id;
+        const indexToModify = updatedRooms.findIndex((item) => item.id === messageRoomId);
+        if (indexToModify !== -1) {
+          // Modify the attribute of the element in the copy
+          const messageContent: MinMessageDto = {id : newMessage.id,
+                                                content:newMessage.content,
+                                                createdAt:newMessage.createdAt}
+          updatedRooms[indexToModify].last_message = messageContent;
+          setDiscussionRooms (updatedRooms)
+        }
+       };  
+                    
+    socket.on("newMessage", handleNewMessage);
+    return () => {
+      socket.off("newMessage", handleNewMessage);
+    };  
+  }, [discussionPanels]);  
 
   const displayActionModal = () => {
     setModalAsVisible(true);
@@ -98,14 +128,13 @@ const selectedPanelDefault: discussionPanelSelectType = {
   last_message: { id:"", content: "", createdAt: "" }
 };
 
+interface ChattingFieldPops {
+  selectDiscussionState: selectDiscStateType
 
-function ChattingField({
-  selectDiscussionState,
-}: {
-  selectedDiscussion: DiscussionDto,
-  setSelectedDiscussion: React.Dispatch<React.SetStateAction<DiscussionDto>>}
-) {
-  const {selectedDiscussion} = selectDiscussionState;
+}
+function ChattingField({ selectDiscussionState} : ChattingFieldPops)
+ {
+  const {selectedDiscussion, setSelectedDiscussion} = selectDiscussionState;
   const [messagesHistory, setMessageHistory] = useState<messageDto[]>([]);
 
   useEffect(() => {
@@ -139,26 +168,21 @@ function ChattingField({
 
 
 function DirectMesgMain() {
-  const [roomPanels_data, setDiscussionRooms] = useState<DiscussionDto[]>([]);
   const [selectedDiscussion, setSelectedDiscussion] = useState<DiscussionDto>(selectedPanelDefault)
-
+  
   const setDiscussion = (newSelectedDisc : DiscussionDto)=>{
     setSelectedDiscussion(newSelectedDisc)
   }
-  useEffect(() => {
-    async function fetchDataAsync() {
-      const roomPanels_data_tmp = await fetchDataFromApi("http://localhost:3001/chat/direct_messaging/discussionsBar")
-      setDiscussionRooms(roomPanels_data_tmp);
-    }
-    fetchDataAsync();
-  }, []);
+  // useEffect (()=>{
+  //   const roomToModify  = roomPanels_data.find (room => room.id === selectedDiscussion.id)
 
+  // })
   return (
     <UserContactsProvider>
       <div className={style.direct_msg_main}>
         <DiscussionsBar
           selectedDiscussionState={[selectedDiscussion, setSelectedDiscussion]}
-          discussionPanels={roomPanels_data}
+          
         />
         <ChattingField selectDiscussionState={{selectedDiscussion, setSelectedDiscussion}} />
       </div>
