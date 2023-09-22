@@ -34,7 +34,7 @@ export class TwoFactorAuthService {
 
   isTwoFactorAuthenticationCodeValid(twoFactorAuthenticationCode: string, user) {
     return authenticator.verify({
-      token: twoFactorAuthenticationCode,
+      token: twoFactorAuthenticationCode ,
       secret: user.twoFactorAuthenticationSecret
     })
   }

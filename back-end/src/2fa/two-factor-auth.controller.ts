@@ -2,6 +2,7 @@ import {
   Body,
   ClassSerializerInterceptor,
   Controller,
+  Get,
   Post,
   Req,
   Res,
@@ -24,8 +25,8 @@ export class TwoFactorAuthController {
     private readonly service: PrismaService,
   ) {}
 
-  @Post('generate')
-  // @UseGuards(JwtAuthGuard)
+  @Get('generate')
+  @UseGuards(JwtAuthGuard)
   async GenrateHandler(@Req() request, @Res() response) {
     try {
       const JwtToken: string = request.headers.authorization.split(' ')[1];
@@ -35,25 +36,25 @@ export class TwoFactorAuthController {
           email: payload.email,
         },
       });
-      const data = await this.twofaservice.generateTwoFactorAuthSecret(user);
+      const data : any = await this.twofaservice.generateTwoFactorAuthSecret(user);
       return this.twofaservice.pipeQrCodeStream(response, data.otpauthUrl);
     } catch (err) {
       console.log(err);
     }
   }
 
-  @Post('acivate')
-  // @UseGuards(JwtAuthGuard)
+  @Post('activate')
+  @UseGuards(JwtAuthGuard)
   async ActivateHandler(
     @Req() request,
     @Res() response: Response,
-    @Body() { twoFactorAuthenticationCode },
+    @Body() { twoFactorAuthenticationCode},
   ) {
     try {
       const JwtToken: string = request.headers.authorization.split(' ')[1];
       const payload: any = this.authservice.extractPayload(JwtToken);
-
-      const user = this.service.prismaClient.user.findUnique({
+      
+      const user = await this.service.prismaClient.user.findUnique({
         where: {
           email: payload.email,
         },
@@ -61,7 +62,7 @@ export class TwoFactorAuthController {
       const iscodevalid = this.twofaservice.isTwoFactorAuthenticationCodeValid(
         twoFactorAuthenticationCode,
         user,
-      );
+        );
 
       if (!iscodevalid)
         throw new UnauthorizedException('Wrong authentication code');
@@ -77,7 +78,7 @@ export class TwoFactorAuthController {
       }
       response.json({ message: 'Two factor auth activated succesfully' });
     } catch (error) {
-      console.log(error);
+      console.log(error.message);
       response.status(error.status).json({ message: error.message });
 
     }

@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faShieldAlt } from "@fortawesome/free-solid-svg-icons";
 import SettingCss from "./Setting.module.css";
+import DashboardTwoFa from "@/components/2fa/DashboardTwoFa";
 
 interface Settingprops {
   handleSettingData: (data: boolean) => void;
@@ -19,6 +20,8 @@ const Setting: React.FC<Settingprops> = ({ handleSettingData }) => {
   const [searchQuery, setsearchQuery] = useState("");
   const [twofactor, settwofactor] = useState(false);
   const [selectedFile, setSelectedFile] = useState(null);
+  const [twofa, setTwofa] = useState(false); /// by abdellah
+
 
   const handleFileChange = (event: any) => {
     setSelectedFile(event.target.files[0]);
@@ -49,10 +52,6 @@ const Setting: React.FC<Settingprops> = ({ handleSettingData }) => {
     sendData();
   };
 
-  function handleTwoFactorClick(event: any) {
-    event.preventDefault();
-    settwofactor(true);
-  }
   function handleImage(event: React.ChangeEvent<HTMLInputElement>) {
     const file = event.target.files?.[0];
     if (file) {
@@ -90,6 +89,7 @@ const Setting: React.FC<Settingprops> = ({ handleSettingData }) => {
   }
 
   return (
+    <>
     <div className={SettingCss.setting}>
       <div className={SettingCss.div_setting}>
         <div className={SettingCss.close_setting}>
@@ -119,7 +119,8 @@ const Setting: React.FC<Settingprops> = ({ handleSettingData }) => {
                 icon={faShieldAlt}
                 id={SettingCss.two_factor_icon}
               />
-              <button onClick={handleTwoFactorClick}>
+              {/* modified by abdellag */}
+              <button onClick={(event : any) => {event.preventDefault(); !twofa ? setTwofa(true): setTwofa(false)}}> 
                 two-factor authentication
               </button>
             </div>
@@ -130,6 +131,11 @@ const Setting: React.FC<Settingprops> = ({ handleSettingData }) => {
         </div>
       </div>
     </div>
+      {twofa &&  <DashboardTwoFa setTwoFa={setTwofa}></DashboardTwoFa>}
+
+      
+
+      </>
   );
 };
 
