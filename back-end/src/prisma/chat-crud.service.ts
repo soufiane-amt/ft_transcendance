@@ -71,7 +71,7 @@ export class ChatCrudService
               ],
           },
           orderBy: {
-              updatedAt: 'asc',
+              updatedAt: 'desc',
           },
           select: {
               id: true,

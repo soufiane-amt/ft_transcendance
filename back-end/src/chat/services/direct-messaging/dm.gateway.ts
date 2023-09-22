@@ -84,12 +84,12 @@ export class dmGateway implements OnGatewayConnection, OnGatewayDisconnect {
   // @UseGuards (userRoomSubscriptionGuard)
   // @UseGuards (bannedConversationGuard)
   @SubscribeMessage ("sendMsgDm")
-  handleSendMesDm(client: any,  message:MessageDto ) 
+  async handleSendMesDm(client: any,  message:MessageDto ) 
   {
     message.channel_id = null;
     console.log ("----message sent----", message)
-    this.chatCrud.createMessage(message)
-    this.server.to(`dm-${message.dm_id}`).emit('newMessage', message)
+    const messageToBrodcast = await this.chatCrud.createMessage(message)
+    this.server.to(`dm-${message.dm_id}`).emit('newMessage', messageToBrodcast)
   }  
   
   
