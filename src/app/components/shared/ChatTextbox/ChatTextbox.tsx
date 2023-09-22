@@ -27,12 +27,9 @@ function ChatTextBox({ selectDiscState, messagesHistoryState, showTextBox }: Cha
   useEffect(() => {
     const handleNewMessage = (newMessage :messageDto) => {
       //Add message id later
-      console.log ("*********", selectedDiscussion)
       const messageRoomId:string = newMessage.dm_id ? newMessage.dm_id: newMessage.channel_id;
       if (selectedDiscussion.id === messageRoomId)
-      {
           setMessageHistory((messagesHistory) => [...messagesHistory, newMessage]);
-      }
       };  
                     
     socket.on("newMessage", handleNewMessage);

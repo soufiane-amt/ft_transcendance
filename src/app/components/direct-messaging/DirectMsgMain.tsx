@@ -42,11 +42,15 @@ function DiscussionsBar({
         const messageRoomId = newMessage.dm_id ? newMessage.dm_id : newMessage.channel_id;
         const indexToModify = updatedRooms.findIndex((item) => item.id === messageRoomId);
         if (indexToModify !== -1) {
-          // Modify the attribute of the element in the copy
           const messageContent: MinMessageDto = {id : newMessage.id,
                                                 content:newMessage.content,
                                                 createdAt:newMessage.createdAt}
           updatedRooms[indexToModify].last_message = messageContent;
+          const movedElement = updatedRooms.splice(indexToModify, 1)[0];
+
+          // Insert it at the beginning of the array
+          updatedRooms.unshift(movedElement);
+      
           setDiscussionRooms (updatedRooms)
         }
        };  
