@@ -112,7 +112,7 @@ function DashboardTwoFa(props: any) {
       {/* this is the backdrop (the background opacity) */}
       <div className="absolute bg-black opacity-50"></div>
       {/* this is the main component */}
-      <div className="bg-[#E4E7FF] rounded shadow-lg w-[95vw] h-[90vh] flex flex-col   p-[20px] box-border overflow-scroll">
+      <div className="bg-[#E4E7FF] rounded shadow-lg w-[95vw] h-[90vh] flex flex-col   p-[20px] box-border overflow-scroll items-center">
         <div className="flex items-center w-full flex-row-reverse h-[3%]">
           <img
             src="/close.png"
@@ -124,7 +124,8 @@ function DashboardTwoFa(props: any) {
           />
         </div>
 
-        <div className="w-full h-[97%] flex flex-col">
+
+        <div className="w-full md:max-w-[800px] h-[97%] flex flex-col">
           <div className="m-[8px] mb-[20px] ">
             <h2 className={`${mono.className} text-sm`}>
               Two-Factor Authentication (2Fa) Setup
@@ -172,8 +173,11 @@ function DashboardTwoFa(props: any) {
           {/* <hr className="h-[3px] bg-black opacity-50 rounded-full border-none m-[15px]" /> */}
 
           <div className="flex  flex-col justify-evenly items-center md:flex-row  mb-[15px]  gap-8">
-            <div className=" h-full flex flex-col items-center md:gap-28">
-              <div className="flex flex-col items-center m-[15px]">
+            <div className=" h-full flex flex-col items-center md:gap-12">
+              <h3 className={`${mono.className} text-sm mb-[20px]`}>
+                Scan this Qr Code:
+              </h3>
+              <div className="flex flex-col items-center h-[260px]">
                 {qrcodeimg === "" && (
                   <Lottie
                     loop
@@ -193,7 +197,7 @@ function DashboardTwoFa(props: any) {
               </button>
             </div>
             {/* <hr className="h-[3px] bg-black opacity-50 rounded-full border-none m-[15px]" /> */}
-            <form className="flex flex-col  items-center h-full md:gap-28  gap-8">
+            <form className="flex flex-col  items-center h-full md:gap-32  gap-8">
               <h3 className={`${mono.className} text-sm mb-[20px]`}>
                 Enter 6-digits of verification code:
               </h3>
