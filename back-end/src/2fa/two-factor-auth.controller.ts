@@ -78,9 +78,48 @@ export class TwoFactorAuthController {
       }
       response.json({ message: 'Two factor auth activated succesfully' });
     } catch (error) {
-      console.log(error.message);
       response.status(error.status).json({ message: error.message });
+    }
+  }
 
+
+
+  @Post('desactivate')
+  @UseGuards(JwtAuthGuard)
+  async DesactivateHandler(
+    @Req() request,
+    @Res() response: Response,
+    @Body() { twoFactorAuthenticationCode},
+  ) {
+    try {
+      const JwtToken: string = request.headers.authorization.split(' ')[1];
+      const payload: any = this.authservice.extractPayload(JwtToken);
+      
+      const user = await this.service.prismaClient.user.findUnique({
+        where: {
+          email: payload.email,
+        },
+      });
+      const iscodevalid = this.twofaservice.isTwoFactorAuthenticationCodeValid(
+        twoFactorAuthenticationCode,
+        user,
+        );
+
+      if (!iscodevalid)
+        throw new UnauthorizedException('Wrong authentication code');
+      else {
+        await this.service.prismaClient.user.update({
+          where: {
+            email: payload.email,
+          },
+          data: {
+            isTwoFactorAuthenticationEnabled: false,
+          },
+        });
+      }
+      response.json({ message: 'Two factor auth activated succesfully' });
+    } catch (error) {
+      response.status(error.status).json({ message: error.message });
     }
   }
 }
