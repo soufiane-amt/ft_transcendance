@@ -80,7 +80,7 @@ function DashboardTwoFa(props: any) {
       // console.log(response);
     } catch (err) {
       setError("** Invalid Code **");
-      setTimeout(() => setError(""),1000);
+      setTimeout(() => setError(""), 1000);
       console.clear();
     }
   }
@@ -103,7 +103,7 @@ function DashboardTwoFa(props: any) {
       // console.log(response);
     } catch (err) {
       setError("** Invalid Code **");
-      setTimeout(() => setError(""),1000);
+      setTimeout(() => setError(""), 1000);
       console.clear();
     }
   }
@@ -209,29 +209,29 @@ function DashboardTwoFa(props: any) {
                   pattern="\d{6}"
                   required
                 />
-                {error !== "" && (
-                  <p
-                    className={`${mono.className} text-rose-700 text-sm text-center`}
-                  >
-                    {error}
-                  </p>
-                
-                )
-                }
-                {user && user.isTwoFactorAuthenticationEnabled && (
-                  <p
-                    className={`${mono.className} text-green-700 text-sm text-center`}
-                  >
-                    2Fa Enabled
-                  </p>
-                )}
-                {user && !user.isTwoFactorAuthenticationEnabled && (
-                  <p
-                    className={`${mono.className} text-red-700 text-sm text-center`}
-                  >
-                    2Fa Disabled
-                  </p>
-                )}
+                <div className="h-[40px]">
+                  {error !== "" && (
+                    <p
+                      className={`${mono.className} text-rose-700 text-sm text-center`}
+                    >
+                      {error}
+                    </p>
+                  )}
+                  {user && user.isTwoFactorAuthenticationEnabled && (
+                    <p
+                      className={`${mono.className} text-green-700 text-sm text-center`}
+                    >
+                      2Fa Enabled
+                    </p>
+                  )}
+                  {user && !user.isTwoFactorAuthenticationEnabled && (
+                    <p
+                      className={`${mono.className} text-red-700 text-sm text-center`}
+                    >
+                      2Fa Disabled
+                    </p>
+                  )}
+                </div>
               </label>
               <div className="flex justify-evenly w-full  mb-[20px] gap-14 md:gap-24">
                 <button
