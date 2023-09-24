@@ -271,10 +271,14 @@ export class ChatCrudService
         throw new NotFoundException(`Channel with ID ${room_id} not found.`);
       }
     }
-    async getUnreadMessagesNumber (room_id : string)
+
+    async getUnreadMessagesNumber (user_id : string, room_id : string)
     {
       const unreadMessageCount = await this.prisma.prismaClient.message.count({
         where: {
+          NOT :{
+            user_id:user_id
+          },
           OR:[
             {dm_id : room_id},
             {channel_id :room_id}
@@ -285,14 +289,18 @@ export class ChatCrudService
       return unreadMessageCount;
       }
 
-      async markRoomMessagesAsRead (room_id : string)
+      async markRoomMessagesAsRead (user_id : string, room_id : string)
       {
-        const unreadMessageCount = await this.prisma.prismaClient.message.updateMany({
+        const unreadMessages = await this.prisma.prismaClient.message.updateMany({
           where: {
-            OR:[
-              {dm_id : room_id},
-              {channel_id :room_id}
+            NOT :{
+              user_id:user_id
+            },
+              OR:[
+            {dm_id : room_id},
+            {channel_id :room_id}
             ],
+            is_read: false,
           },
           data :{
             is_read: true,
@@ -300,7 +308,7 @@ export class ChatCrudService
           }
 
         });
-        return unreadMessageCount;
+        return unreadMessages;
         }
 
 

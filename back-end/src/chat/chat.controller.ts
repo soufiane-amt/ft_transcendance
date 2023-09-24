@@ -53,16 +53,14 @@ async getUserImage(@Param('image_path') image_path: string, @Res() res: Response
   async findAllDiscussionPartners (@Req() request : Request)
   {
     const dms = await this.chatCrud.retreiveDmInitPanelData(request.cookies['user.id']);
-
     const unreadMessagesPromises = dms.map(async (dmElement) => {
-      const unreadMessages = await this.chatCrud.getUnreadMessagesNumber(dmElement.id);
+      const unreadMessages = await this.chatCrud.getUnreadMessagesNumber(request.cookies['user.id'], dmElement.id);//get the number of messages unread and unsent by this user
       return { ...dmElement, unread_messages: unreadMessages };
     });
 
     // I wait for all promises to resolve
     const discussions = await Promise.all(unreadMessagesPromises);
 
-    console.log(discussions);
     return discussions;
 
   }
@@ -91,9 +89,10 @@ async getUserData (@Req() request : Request)
 
 
 @Put("/messages/markAsRead")
-async markMessagesAsRead (@Body() room : {_id:string})
+async markMessagesAsRead (@Req() request : Request, @Body() room : {_id:string})
 {
-  await this.chatCrud.markRoomMessagesAsRead(room._id)
+  console.log("----markMessagesAsRead---")
+  await this.chatCrud.markRoomMessagesAsRead(request.cookies['user.id'], room._id) //mark the messages that unsent by this user as read
 }
 
 

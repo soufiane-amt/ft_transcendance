@@ -1,7 +1,16 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { PrismaService } from './prisma.service';
 import { userDto } from 'src/chat/dto/user.dto';
+import { NotificationType } from '@prisma/client';
 
+interface notificationType {
+
+  user1_id : string;
+
+  user2_id : string;
+
+  notificationType : NotificationType;
+}
 
 @Injectable()
 export class UserCrudService 
@@ -214,10 +223,41 @@ async changeVisibily (user_id : string,  status:  'IN_GAME' | 'ONLINE' | 'OFFLIN
     }
   })
 }
-//this function will remain commented untill I figure out what should it does exactly
-// async incrementLadderLevel ()
-// {
 
-// }
+  async createNotification(user1_id :string, user2_id :string, notificationType:NotificationType) {
+    const notification = await this.prisma.prismaClient.notification.create({
+      data: {
+        user1_id: user1_id ,
+        user2_id: user2_id ,
+        type: notificationType,
+      },
+    });
+    return notification;
+}
+
+async  getUserNotificationsWithUser2Data(userId: string) {
+    const notifications = await this.prisma.prismaClient.notification.findMany({
+      where: {
+          user1_id: userId ,
+      },
+      include: {
+        user2: true, // Include user2 data
+      },
+    });
+
+    const notificationsWithUser2Data = notifications.map((notification) => {
+      const user2Data = notification.user2;
+
+      return {
+        id: notification.id,
+        user2Username: user2Data.username,
+        user2Avatar: user2Data.avatar,
+        type: notification.type,
+        createdAt: notification.createdAt,
+      };
+    });
+
+    return notificationsWithUser2Data;
+}
 
 }
