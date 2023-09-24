@@ -36,7 +36,8 @@ export class TwoFactorAuthController {
           email: payload.email,
         },
       });
-      const data : any = await this.twofaservice.generateTwoFactorAuthSecret(user);
+      const data: any =
+        await this.twofaservice.generateTwoFactorAuthSecret(user);
       return this.twofaservice.pipeQrCodeStream(response, data.otpauthUrl);
     } catch (err) {
       console.log(err);
@@ -48,12 +49,12 @@ export class TwoFactorAuthController {
   async ActivateHandler(
     @Req() request,
     @Res() response: Response,
-    @Body() { twoFactorAuthenticationCode},
+    @Body() { twoFactorAuthenticationCode },
   ) {
     try {
       const JwtToken: string = request.headers.authorization.split(' ')[1];
       const payload: any = this.authservice.extractPayload(JwtToken);
-      
+
       const user = await this.service.prismaClient.user.findUnique({
         where: {
           email: payload.email,
@@ -62,7 +63,7 @@ export class TwoFactorAuthController {
       const iscodevalid = this.twofaservice.isTwoFactorAuthenticationCodeValid(
         twoFactorAuthenticationCode,
         user,
-        );
+      );
 
       if (!iscodevalid)
         throw new UnauthorizedException('Wrong authentication code');
@@ -82,19 +83,17 @@ export class TwoFactorAuthController {
     }
   }
 
-
-
   @Post('desactivate')
   @UseGuards(JwtAuthGuard)
   async DesactivateHandler(
     @Req() request,
     @Res() response: Response,
-    @Body() { twoFactorAuthenticationCode},
+    @Body() { twoFactorAuthenticationCode },
   ) {
     try {
       const JwtToken: string = request.headers.authorization.split(' ')[1];
       const payload: any = this.authservice.extractPayload(JwtToken);
-      
+
       const user = await this.service.prismaClient.user.findUnique({
         where: {
           email: payload.email,
@@ -103,7 +102,7 @@ export class TwoFactorAuthController {
       const iscodevalid = this.twofaservice.isTwoFactorAuthenticationCodeValid(
         twoFactorAuthenticationCode,
         user,
-        );
+      );
 
       if (!iscodevalid)
         throw new UnauthorizedException('Wrong authentication code');
@@ -120,6 +119,41 @@ export class TwoFactorAuthController {
       response.json({ message: 'Two factor auth activated succesfully' });
     } catch (error) {
       response.status(error.status).json({ message: error.message });
+    }
+  }
+
+  @Post('login')
+  async HandleLogin(@Req() request, @Res() response: Response, @Body() { twoFactorAuthenticationCode },) {
+    try {
+      const JwtToken: string = request.headers.authorization.split(' ')[1];
+      const payload: any = this.authservice.extractPayload(JwtToken);
+
+      const user = await this.service.prismaClient.user.findUnique({
+        where: {
+          email: payload.email,
+        },
+      });
+      const iscodevalid = this.twofaservice.isTwoFactorAuthenticationCodeValid(
+        twoFactorAuthenticationCode,
+        user,
+        );
+      if (!iscodevalid)
+        throw new UnauthorizedException('Wrong authentication code');
+      else
+      {
+        const token = await this.authservice.signToken(user.id, user.email);
+        // response.clearCookie('twofa_token');
+        // response.cookie('access_token', token, {
+        //   maxAge: 86400000,
+        //   secure: false,
+        // });
+
+
+        response.json({ message: 'Two factor auth activated succesfully' , accessToken: token});
+        // return response.redirect(`${process.env.FRONT_SERV}/dashboard`);
+      }
+    } catch (err) {
+      response.status(err.status).json({ message: err.message });
     }
   }
 }

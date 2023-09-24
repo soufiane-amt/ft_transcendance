@@ -18,28 +18,28 @@ export default function HomePageNav() {
     <nav className="bg-[#0D0149] flex justify-between items-center h-[90px] w-full fixed z-10">
       <Image
         src="/myWhiteLogo.png"
-        width={129.5}
-        height={105.7}
+        width={110}
+        height={95}
         alt="Logo"
         priority={true}
-        className="px-[15px] mx-[1%]"
+        className="p-[10px] mx-[1%]"
       />
       <div className="lg:flex hidden items-center space-x-20 text-white ml-[50px] mr-[20px] font-bold  p-[2%]">
         <Link
           href="#home"
-          className={`${quotefont.className} p-[10px] w-[195px] max-w-[226px] text-center mx-[20px]  rounded-md text-white bg-[#333989] font-black card-shadow hover:border-white hover:bg-white hover:text-[#0D0149] hover:cursor-pointer`}
+          className={`${quotefont.className} p-[10px] w-[195px] max-w-[226px] text-center mx-[20px]  rounded-md text-white bg-[#333989] font-black card-shadow hover:border-white hover:bg-white hover:text-[#0D0149] hover:cursor-pointer no-underline`}
         >
           Home
         </Link>
         <Link
           href="#history"
-          className={`${quotefont.className} p-[10px] w-[195px] max-w-[226px] text-center mx-[20px]  rounded-md text-white bg-[#333989] font-black card-shadow hover:border-white hover:bg-white hover:text-[#0D0149] hover:cursor-pointer`}
+          className={`${quotefont.className} p-[10px] w-[195px] max-w-[226px] text-center mx-[20px]  rounded-md text-white bg-[#333989] font-black card-shadow hover:border-white hover:bg-white hover:text-[#0D0149] hover:cursor-pointer no-underline`}
         >
           History
         </Link>
         <Link
           href="#about"
-          className={`${quotefont.className} p-[10px] w-[195px] max-w-[226px] text-center mx-[20px]  rounded-md text-white bg-[#DA343E] font-black card-shadow hover:border-white hover:bg-white hover:text-[#0D0149] hover:cursor-pointer`}
+          className={`${quotefont.className} p-[10px] w-[195px] max-w-[226px] text-center mx-[20px]  rounded-md text-white bg-[#DA343E] font-black card-shadow hover:border-white hover:bg-white hover:text-[#0D0149] hover:cursor-pointer no-underline`}
         >
           About
         </Link>
@@ -62,19 +62,19 @@ export default function HomePageNav() {
         >
           <Link
             href="#home"
-            className="bg-[#333989] px-[20px] py-[5px] rounded-lg hover:bg-[#6a70c8]  text-center"
+            className="bg-[#333989] px-[20px] py-[5px] rounded-lg hover:bg-[#6a70c8]  text-center no-underline text-white"
           >
             Home
           </Link>
           <Link
             href="#history"
-            className="bg-[#333989] px-[20px] py-[5px] rounded-lg hover:bg-[#6a70c8]  text-center"
+            className="bg-[#333989] px-[20px] py-[5px] rounded-lg hover:bg-[#6a70c8]  text-center no-underline text-white"
           >
             History
           </Link>
           <Link
             href="#about"
-            className="bg-[#DA343E] px-[20px] py-[5px] rounded-lg hover:bg-[#e36870]  text-center"
+            className="bg-[#DA343E] px-[20px] py-[5px] rounded-lg hover:bg-[#e36870]  text-center no-underline text-white"
           >
             About
           </Link>

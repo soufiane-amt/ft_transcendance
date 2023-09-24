@@ -151,7 +151,7 @@ const Home = () => {
             <input
               type="text"
               name="FirstName"
-              className={`h-[40px] rounded-xl ${mono.className} placeholder:text-slate-400 pl-[20px] focus:outline-none focus:translate-x-6 card-shadow`}
+              className={`h-[40px] rounded-xl ${mono.className} placeholder:text-slate-400 pl-[20px] focus:outline-none focus:translate-x-6 card-shadow border-none`}
               placeholder="First Name"
               required
               value={FirstName}
@@ -162,7 +162,7 @@ const Home = () => {
             <input
               type="text"
               name="LastName"
-              className={`h-[40px] rounded-xl ${mono.className} placeholder:text-slate-400 pl-[20px] focus:outline-none focus:translate-x-6 card-shadow`}
+              className={`h-[40px] rounded-xl ${mono.className} placeholder:text-slate-400 pl-[20px] focus:outline-none focus:translate-x-6 card-shadow  border-none`}
               placeholder="Last Name"
               required
               value={LastName}
@@ -172,7 +172,7 @@ const Home = () => {
         </div>
         <button
           type="submit"
-          className={`text-[18px] font-semibold  bg-white px-[15px] py-[3px] rounded-xl hover:bg-[#0D0149] hover:text-white ${mono.className} mt-[20px] card-shadow`}
+          className={`text-[18px] font-semibold  bg-white px-[15px] py-[3px] rounded-xl hover:bg-[#0D0149] hover:text-white ${mono.className} mt-[20px] card-shadow  border-none  hover:cursor-pointer`}
         >
           Submit
         </button>
@@ -180,7 +180,7 @@ const Home = () => {
         <button
           type="button"
           onClick={handleSkip}
-          className={`text-[18px] font-semibold text-gray-950 hover:opacity-30 ${mono.className} m-[20px]`}
+          className={`text-[18px] font-semibold text-gray-950 hover:opacity-30 ${mono.className} m-[20px]  border-none bg-transparent hover:cursor-pointer`}
         >
           Skip
         </button>

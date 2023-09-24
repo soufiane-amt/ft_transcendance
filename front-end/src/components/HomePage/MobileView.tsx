@@ -72,7 +72,7 @@ export default function MobileView() {
             style={{ width: 400, height: 275 }}
           />
         </motion.div>
-        <Link href={`${process.env.NEXT_PUBLIC_BACKEND_SERV}/auth/login`}>
+        <Link href={`${process.env.NEXT_PUBLIC_BACKEND_SERV}/auth/login`} className="no-underline">
           <HomePageIntraLoginButton />
         </Link>
       </section>
@@ -98,7 +98,7 @@ export default function MobileView() {
           }}
           src="/PongCodeTheClassics.png"
           alt="ping game"
-          height={300}
+          height={350}
           width={300}
           className="my-[30px] rounded-xl"
         />

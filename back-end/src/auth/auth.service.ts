@@ -62,6 +62,20 @@ export class AuthService {
     }
   }
 
+
+  async TwoFaToken(email: string) {
+    const payload = {
+      email: email,
+    };
+    
+    try {
+      const token = await this.jwtservice.signAsync(payload);
+      return token;
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
   extractPayload(token: string) {
     const payload = this.jwtservice.decode(token);
     return payload;

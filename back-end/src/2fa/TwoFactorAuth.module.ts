@@ -4,8 +4,8 @@ import { TwoFactorAuthController } from './two-factor-auth.controller';
 import { AuthModule } from 'src/auth/auth.module';
 
 @Module({
-  providers: [TwoFactorAuthService ,],
+  providers: [TwoFactorAuthService,],
   controllers: [TwoFactorAuthController],
   imports: [AuthModule]
 })
-export class TwoFactorAuth {}
+export class TwoFactorAuthModule {}
