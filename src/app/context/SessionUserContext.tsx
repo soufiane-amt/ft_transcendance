@@ -1,12 +1,17 @@
-import { createContext, useContext, useState, ReactNode, useEffect } from 'react';
-import { fetchDataFromApi } from '../components/shared/api/exmple';
+import {
+  createContext,
+  useContext,
+  useState,
+  ReactNode,
+  useEffect,
+} from "react";
+import { fetchDataFromApi } from "../components/shared/customFetch/exmple";
 //  the shape of the user data
 interface UserContactDto {
   id: string;
   username: string;
   avatar: string;
-  status?: 'ONLINE' | 'OFFLINE',
-
+  status?: "ONLINE" | "OFFLINE";
 }
 
 // Create the context
@@ -15,28 +20,31 @@ interface SessionUserContextType {
   setUser: (user: UserContactDto) => void;
 }
 
-const SessionUserContext = createContext<SessionUserContextType | undefined>(undefined);
+const SessionUserContext = createContext<SessionUserContextType | undefined>(
+  undefined
+);
 
 // provider component
 interface SessionUserProviderProps {
   children: ReactNode;
 }
 
-const defaultSessionUser : UserContactDto = {id :"", username:"" , avatar :""}
+const defaultSessionUser: UserContactDto = { id: "", username: "", avatar: "" };
 
 export function SessionUserProvider({ children }: SessionUserProviderProps) {
   const [userData, setUserData] = useState<UserContactDto>(defaultSessionUser);
 
-  const setUser = (user: UserContactDto)=>{
-    setUserData(user)
-  }
+  const setUser = (user: UserContactDto) => {
+    setUserData(user);
+  };
 
-  useEffect (()=>{
+  useEffect(() => {
     async function fetchDataAsync() {
+      const userSessiondata = await fetchDataFromApi(
+        "http://localhost:3001/chat/userData"
+      );
 
-      const userSessiondata = await fetchDataFromApi("http://localhost:3001/chat/userData")
-
-      setUserData(userSessiondata)
+      setUserData(userSessiondata);
     }
     fetchDataAsync();
   }, []);
@@ -52,7 +60,7 @@ export function SessionUserProvider({ children }: SessionUserProviderProps) {
 export function useSessionUser() {
   const context = useContext(SessionUserContext);
   if (!context) {
-    throw new Error('useSessionUser must be used within a SessionUserProvider');
+    throw new Error("useSessionUser must be used within a SessionUserProvider");
   }
   return context.userData;
 }

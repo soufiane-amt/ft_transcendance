@@ -5,13 +5,17 @@ import DiscussionPanel from "../shared/DiscussionPanel/DiscussionPanel";
 import style from "./DirectMsgMain.module.css";
 import Message from "../shared/Message/Message";
 import UserActionModalMain from "./UserActionModal/UserActionModal";
-import { DiscussionDto, MinMessageDto, discussionPanelSelectType, selectDiscStateType } from "../../interfaces/DiscussionPanel";
+import {
+  DiscussionDto,
+  MinMessageDto,
+  discussionPanelSelectType,
+  selectDiscStateType,
+} from "../../interfaces/DiscussionPanel";
 import { UserContactsProvider } from "../../context/UsersContactBookContext";
-import { fetchDataFromApi } from "../shared/api/exmple";
-import socket from "../../socket/socket" // Import the socket object
+import { fetchDataFromApi } from "../shared/customFetch/exmple";
+import socket from "../../socket/socket"; // Import the socket object
 
 /*stopPropagation is used here to prevent the click event to take way up to the parent it got limited right here */
-
 
 interface DiscussionsBarProps {
   selectedDiscussionState: [
@@ -20,70 +24,75 @@ interface DiscussionsBarProps {
   ];
 }
 
-
-function DiscussionsBar({
-  selectedDiscussionState,
-}: DiscussionsBarProps) {
+function DiscussionsBar({ selectedDiscussionState }: DiscussionsBarProps) {
   const [discussionPanels, setDiscussionRooms] = useState<DiscussionDto[]>([]);
   const [modalIsVisible, setModalAsVisible] = useState<boolean>(false);
   const [selectedDiscussion, setSelectedDiscussion] = selectedDiscussionState;
 
   useEffect(() => {
-    async function fetchDataAsync() {//use enums instead of passing dircet links 
-      const roomPanels_data_tmp = await fetchDataFromApi("http://localhost:3001/chat/direct_messaging/discussionsBar")
+    async function fetchDataAsync() {
+      //use enums instead of passing dircet links
+      const roomPanels_data_tmp = await fetchDataFromApi(
+        "http://localhost:3001/chat/direct_messaging/discussionsBar"
+      );
       setDiscussionRooms(roomPanels_data_tmp);
     }
     fetchDataAsync();
   }, []);
 
   useEffect(() => {
-    const handleNewMessage = (newMessage :messageDto) => {
-        const updatedRooms = [...discussionPanels]
-        const messageRoomId = newMessage.dm_id ? newMessage.dm_id : newMessage.channel_id;
-        const indexToModify = updatedRooms.findIndex((item) => item.id === messageRoomId);
-        if (indexToModify !== -1) {
-          const messageContent: MinMessageDto = {id : newMessage.id,
-                                                content:newMessage.content,
-                                                createdAt:newMessage.createdAt}
-          updatedRooms[indexToModify].last_message = messageContent;
-          //incrementing unread messages
-          updatedRooms[indexToModify].unread_messages += 1;
+    const handleNewMessage = (newMessage: messageDto) => {
+      const updatedRooms = [...discussionPanels];
+      const messageRoomId = newMessage.dm_id
+        ? newMessage.dm_id
+        : newMessage.channel_id;
+      const indexToModify = updatedRooms.findIndex(
+        (item) => item.id === messageRoomId
+      );
+      if (indexToModify !== -1) {
+        const messageContent: MinMessageDto = {
+          id: newMessage.id,
+          content: newMessage.content,
+          createdAt: newMessage.createdAt,
+        };
+        updatedRooms[indexToModify].last_message = messageContent;
+        //incrementing unread messages
+        updatedRooms[indexToModify].unread_messages += 1;
 
+        const movedElement = updatedRooms.splice(indexToModify, 1)[0];
 
-          const movedElement = updatedRooms.splice(indexToModify, 1)[0];
+        // Insert it at the beginning of the array
+        updatedRooms.unshift(movedElement);
 
-          // Insert it at the beginning of the array
-          updatedRooms.unshift(movedElement);
-      
-          setDiscussionRooms (updatedRooms)
-        }
-       };  
-                    
+        setDiscussionRooms(updatedRooms);
+      }
+    };
+
     socket.on("newMessage", handleNewMessage);
     return () => {
       socket.off("newMessage", handleNewMessage);
-    };  
-  }, [discussionPanels]);  
-
+    };
+  }, [discussionPanels]);
 
   const displayActionModal = () => {
     setModalAsVisible(true);
   };
   const handlePanelClick = (panelData: DiscussionDto) => {
     setSelectedDiscussion(panelData);
-    const updatedRooms = [...discussionPanels]
+    const updatedRooms = [...discussionPanels];
 
-    const indexToModify = updatedRooms.findIndex((item) => item.id === panelData.id);
+    const indexToModify = updatedRooms.findIndex(
+      (item) => item.id === panelData.id
+    );
     if (indexToModify !== -1) {
       updatedRooms[indexToModify].unread_messages = 0;
-      setDiscussionRooms (updatedRooms)
-      };
+      setDiscussionRooms(updatedRooms);
     }
+  };
 
   return (
     <ul className={style.discussion_panel_bar}>
-      {
-      discussionPanels.map((panelElement) => {
+      {discussionPanels.map((panelElement) => {
         const isSelected = panelElement?.id === selectedDiscussion.id;
         return (
           <DiscussionPanel
@@ -94,8 +103,7 @@ function DiscussionsBar({
             showUserActionModal={displayActionModal}
           />
         );
-      })
-      }
+      })}
       <UserActionModalMain
         userToActId={selectedDiscussion.partner_id}
         modalState={[modalIsVisible, setModalAsVisible]}
@@ -103,9 +111,6 @@ function DiscussionsBar({
     </ul>
   );
 }
-
-
-
 
 function MessagesHistory({ messages }: { messages: messageDto[] }) {
   const scrollDown = useRef<HTMLDivElement>(null);
@@ -124,12 +129,7 @@ function MessagesHistory({ messages }: { messages: messageDto[] }) {
     <div className={style.messages_history}>
       {messages.map((messageElement: messageDto) => {
         //Don't forget to add key attribute to messages
-        return (
-          <Message
-            key={messageElement.id}
-            messageData={messageElement}
-          />
-        );
+        return <Message key={messageElement.id} messageData={messageElement} />;
       })}
       {/* this is a dummy div created so that it references the bottom of the chatfield to scroll there whenever a message comes */}
       <div style={{ marginTop: "100px" }} ref={scrollDown}></div>
@@ -137,33 +137,30 @@ function MessagesHistory({ messages }: { messages: messageDto[] }) {
   );
 }
 
-
 const selectedPanelDefault: discussionPanelSelectType = {
   id: "",
   partner_id: "",
-  last_message: { id:"", content: "", createdAt: "" },
+  last_message: { id: "", content: "", createdAt: "" },
 };
 
 interface ChattingFieldPops {
-  selectDiscussionState: selectDiscStateType
-
+  selectDiscussionState: selectDiscStateType;
 }
-function ChattingField({ selectDiscussionState} : ChattingFieldPops)
- {
-  const {selectedDiscussion, setSelectedDiscussion} = selectDiscussionState;
+function ChattingField({ selectDiscussionState }: ChattingFieldPops) {
+  const { selectedDiscussion, setSelectedDiscussion } = selectDiscussionState;
   const [messagesHistory, setMessageHistory] = useState<messageDto[]>([]);
 
   useEffect(() => {
     async function fetchDataAsync() {
-      const messagesHistory_tmp = await fetchDataFromApi(`http://localhost:3001/chat/${selectedDiscussion.id}/messages`)
-      console.log ("disc id:" + selectedDiscussion.id)
-      console.log ("Messages" + messagesHistory_tmp)
+      const messagesHistory_tmp = await fetchDataFromApi(
+        `http://localhost:3001/chat/${selectedDiscussion.id}/messages`
+      );
+      console.log("disc id:" + selectedDiscussion.id);
+      console.log("Messages" + messagesHistory_tmp);
 
       setMessageHistory(messagesHistory_tmp);
-
     }
-    if (selectedDiscussion != selectedPanelDefault)
-      fetchDataAsync();
+    if (selectedDiscussion != selectedPanelDefault) fetchDataAsync();
   }, [selectedDiscussion]);
 
   return (
@@ -179,13 +176,10 @@ function ChattingField({ selectDiscussionState} : ChattingFieldPops)
   );
 }
 
-
-
-
-
 function DirectMesgMain() {
-  const [selectedDiscussion, setSelectedDiscussion] = useState<discussionPanelSelectType>(selectedPanelDefault)
-  
+  const [selectedDiscussion, setSelectedDiscussion] =
+    useState<discussionPanelSelectType>(selectedPanelDefault);
+
   // const setDiscussion = (newSelectedDisc : discussionPanelSelectType)=>{
   //   setSelectedDiscussion(newSelectedDisc)
   // }
@@ -198,9 +192,10 @@ function DirectMesgMain() {
       <div className={style.direct_msg_main}>
         <DiscussionsBar
           selectedDiscussionState={[selectedDiscussion, setSelectedDiscussion]}
-          
         />
-        <ChattingField selectDiscussionState={{selectedDiscussion, setSelectedDiscussion}} />
+        <ChattingField
+          selectDiscussionState={{ selectedDiscussion, setSelectedDiscussion }}
+        />
       </div>
     </UserContactsProvider>
   );

@@ -1,44 +1,48 @@
-import React, { createContext, useContext, useEffect, useState } from 'react';
-import { fetchDataFromApi } from '../components/shared/api/exmple';
+import React, { createContext, useContext, useEffect, useState } from "react";
+import { fetchDataFromApi } from "../components/shared/customFetch/exmple";
 
 /* This interface represents the minimum data needed for a user contact */
 interface UserContactDto {
-  username: string,
-  avatar: string,
-  status?: 'ONLINE' | 'OFFLINE',
+  username: string;
+  avatar: string;
+  status?: "ONLINE" | "OFFLINE";
 }
 
-
 // The key value will represent the user_id
-const UserContactsContext = createContext<{
-  userContacts: Map<string, UserContactDto>;
-  updateUserContact: (key: string, value: UserContactDto) => void;
-} | undefined>(undefined);
+const UserContactsContext = createContext<
+  | {
+      userContacts: Map<string, UserContactDto>;
+      updateUserContact: (key: string, value: UserContactDto) => void;
+    }
+  | undefined
+>(undefined);
 
+export function UserContactsProvider({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  const [userContactsBook, setUserContactsBook] = useState<
+    Map<string, UserContactDto>
+  >(new Map());
 
-
-export function UserContactsProvider({ children }: { children: React.ReactNode }) {
-  const [userContactsBook, setUserContactsBook] = useState<Map<string, UserContactDto>>(new Map())
-
-  useEffect (()=>{
+  useEffect(() => {
     async function fetchDataAsync() {
-
-      const userContactsBook_tmp = await fetchDataFromApi("http://localhost:3001/chat/direct_messaging/userContactsBook")
+      const userContactsBook_tmp = await fetchDataFromApi(
+        "http://localhost:3001/chat/direct_messaging/userContactsBook"
+      );
       const map = new Map();
-      userContactsBook_tmp.forEach((user : any) => {
+      userContactsBook_tmp.forEach((user: any) => {
         map.set(user.id, {
           username: user.username,
           avatar: user.avatar,
         });
       });
 
-      setUserContactsBook(map)
+      setUserContactsBook(map);
     }
     fetchDataAsync();
   }, []);
-
-
-
 
   const updateUserContact = (key: string, value: UserContactDto) => {
     setUserContactsBook((prevState) => {
@@ -47,7 +51,6 @@ export function UserContactsProvider({ children }: { children: React.ReactNode }
       return newState;
     });
   };
-
 
   const contextValue = {
     userContacts: userContactsBook,
@@ -61,22 +64,24 @@ export function UserContactsProvider({ children }: { children: React.ReactNode }
   );
 }
 
-
-
 //A getter to UserContacts state
 
 export function useUserContacts() {
   const context = useContext(UserContactsContext);
   if (!context) {
-    throw new Error('useUserContacts must be used within a UserContactsProvider');
+    throw new Error(
+      "useUserContacts must be used within a UserContactsProvider"
+    );
   }
   return context.userContacts;
 }
 
-export function findUserContacts(user_id :string) {
+export function findUserContacts(user_id: string) {
   const context = useContext(UserContactsContext);
   if (!context) {
-    throw new Error('useUserContacts must be used within a UserContactsProvider');
+    throw new Error(
+      "useUserContacts must be used within a UserContactsProvider"
+    );
   }
   return context.userContacts.get(user_id);
 }
@@ -86,7 +91,9 @@ export function findUserContacts(user_id :string) {
 export function useUpdateUserContact() {
   const context = useContext(UserContactsContext);
   if (!context) {
-    throw new Error('useUpdateUserContact must be used within a UserContactsProvider');
+    throw new Error(
+      "useUpdateUserContact must be used within a UserContactsProvider"
+    );
   }
   return context.updateUserContact;
 }
@@ -96,7 +103,9 @@ export function useUpdateUserContact() {
 export function useUserContactContext() {
   const context = useContext(UserContactsContext);
   if (!context) {
-    throw new Error('useUserContactContext must be used within a UserContactsProvider');
+    throw new Error(
+      "useUserContactContext must be used within a UserContactsProvider"
+    );
   }
   return context;
 }

@@ -4,6 +4,7 @@ import { DiscussionDto } from '../../../interfaces/DiscussionPanel';
 import Avatar from '../Avatar/Avatar';
 import TimeStamp from '../TimeStamp/TimeStamp';
 import { findUserContacts, useUserContacts } from '../../../context/UsersContactBookContext';
+import axios from 'axios';
 
 
 const defaultPanelColors = {backgroundColor: 'var(--discussion_panel_back_color)', color:'var(--discussion_panel_element_color)'}
@@ -16,9 +17,11 @@ interface DiscussionPanelProps {
     showUserActionModal: () => void;
   }
   
-const badgeCount = (n :number)
+const badgeCount = (n :number) =>
 {
-    const unseenMassagesEdge :number = 9;
+    if (!n)
+        return null
+    const unseenMassagesEdge :number = 99;
     return (n > unseenMassagesEdge? unseenMassagesEdge+"+" : n)
 }
 
@@ -55,16 +58,30 @@ function DiscussionPanel ({onSelect, DiscussionPanel, isSelected, showUserAction
     const panelOwner = findUserContacts(DiscussionPanel.partner_id)
     if (!panelOwner)
         return (<div>User panel doesn't exist</div>)
-    const handleDiscussionPanelClick = () =>{
-        console.log("Discussion Panel>>", DiscussionPanel)
-        onSelect(DiscussionPanel)
-    }
 
+        const handleDiscussionPanelClick = () => {
+            onSelect(DiscussionPanel);
+            const requestData = { _id: DiscussionPanel.id };
+          
+            axios.put('http://localhost:3001/chat/messages/markAsRead', requestData, {
+                headers: {
+                  'Content-Type': 'application/json',
+                },
+                withCredentials: true, // This ensures that cookies are sent with the request
+              })
+                .then(response => {
+                  // Handle the response here
+                })
+                .catch(error => {
+                  // Handle errors here
+                });
+                };
+          
     //I take a reference to the state of isSelected
 
     const enableUnseenMessage = ()=> {
         const last_message_timestamp = new Date(DiscussionPanel.last_message.createdAt).getTime();
-        return (!isSelected &&  (last_message_timestamp > lastSeenTime))
+        return (!isSelected &&  (last_message_timestamp > lastSeenTime) && DiscussionPanel.unread_messages != 0)
     }
 
     return (

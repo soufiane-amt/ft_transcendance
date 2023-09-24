@@ -13,4 +13,6 @@ export const fetchDataFromApi = async (url: string) => {
   .catch(() => console.log("err"));
 
 };
+
+
   
