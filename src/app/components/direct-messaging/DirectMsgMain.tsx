@@ -15,6 +15,7 @@ import { UserContactsProvider } from "../../context/UsersContactBookContext";
 import { fetchDataFromApi } from "../shared/customFetch/exmple";
 import socket from "../../socket/socket"; // Import the socket object
 import { useSessionUser } from "../../context/SessionUserContext";
+import { ChatBoxStatus } from "../../enum/displayChatBoxStatus";
 
 /*stopPropagation is used here to prevent the click event to take way up to the parent it got limited right here */
 
@@ -65,10 +66,9 @@ function DiscussionsBar({ selectedDiscussionState }: DiscussionsBarProps) {
         updatedRooms.unshift(movedElement);
 
         setDiscussionRooms(updatedRooms);
-
       }
     };
-    const handleReadStatusTrack = (room: {_id :string}) => {
+    const handleReadStatusTrack = (room: { _id: string }) => {
       const updatedRooms = [...discussionPanels];
       const indexToModify = updatedRooms.findIndex(
         (item) => item.id === room._id
@@ -163,15 +163,13 @@ interface ChattingFieldPops {
 function ChattingField({ selectDiscussionState }: ChattingFieldPops) {
   const { selectedDiscussion, setSelectedDiscussion } = selectDiscussionState;
   const [messagesHistory, setMessageHistory] = useState<messageDto[]>([]);
+  const [bannedDiscussions, setBannedDiscussions] = useState<string[]>([]);
 
   useEffect(() => {
     async function fetchDataAsync() {
       const messagesHistory_tmp = await fetchDataFromApi(
         `http://localhost:3001/chat/${selectedDiscussion.id}/messages`
       );
-      console.log("disc id:" + selectedDiscussion.id);
-      console.log("Messages" + messagesHistory_tmp);
-
       setMessageHistory(messagesHistory_tmp);
     }
     if (selectedDiscussion != selectedPanelDefault) fetchDataAsync();
@@ -184,7 +182,11 @@ function ChattingField({ selectDiscussionState }: ChattingFieldPops) {
       <ChatTextBox
         selectDiscState={selectDiscussionState}
         messagesHistoryState={[messagesHistory, setMessageHistory]}
-        showTextBox={selectedDiscussion !== selectedPanelDefault}
+        displayStatus={
+          selectedDiscussion !== selectedPanelDefault
+            ? ChatBoxStatus.ACTIVE
+            : ChatBoxStatus.INACTIVE
+        }
       />
     </div>
   );

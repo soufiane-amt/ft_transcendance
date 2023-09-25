@@ -4,6 +4,8 @@ import Avatar from "../../shared/Avatar/Avatar"
 import React, { useState } from "react"
 import { DiscussionDto } from "../../../interfaces/DiscussionPanel"
 import { findUserContacts } from "../../../context/UsersContactBookContext"
+import { useSessionUser } from "../../../context/SessionUserContext"
+import socket from "../../../socket/socket"
 
 
 type buttonType =  {title :string, icon :string, backgroundColor:string}
@@ -11,21 +13,38 @@ type buttonType =  {title :string, icon :string, backgroundColor:string}
 const playButton = {title:"Play", icon:"/images/icons/play.png", backgroundColor:"#14C201"}
 
 const banButton = {title:"Ban", icon:"/images/icons/ban.png", backgroundColor:"red"}
+const unBanButton = {title:"UnBan", icon:"/images/icons/unban.png", backgroundColor:"red"}
 
+enum actionTypes{
+    BAN = "BAN",
+    UNBAN = "UNBAN",
 
-type ActionButtonProps =  {buttonData:buttonType}
-function ActionButton({buttonData}:ActionButtonProps) /*button title, icon, backGroundColor */
+}
+
+type ActionButtonProps =  {targetId:string, buttonData:buttonType}
+function ActionButton({targetId, buttonData}:ActionButtonProps) /*button title, icon, backGroundColor */
 {
+    const handleButtonClick =  ()=>{
+        switch (buttonData.title)
+        {
+            case "Ban":
+                socket.emit ("dmModeration", {targetedUserId: targetId, type:actionTypes.BAN});
+            case "UnBan":
+                socket.emit ("dmModeration", {targetedUserId: targetId, type:actionTypes.UNBAN})
+            default :
+                return null
+        }
+    }
     return (
-        <button className={style.action_button} style={{backgroundColor:buttonData.backgroundColor}}>
+        <button className={style.action_button} style={{backgroundColor:buttonData.backgroundColor}} onClick={handleButtonClick}>
             <img src={buttonData.icon} ></img>
             {buttonData.title}
         </button>
     )
 }
-
-function UserActionModal ({targetedUserId}:{targetedUserId : string})
+function UserActionModal ({targetedUserId}:{targetedUserId:string})
 {
+    const currentUser = useSessionUser()
     const userContact = findUserContacts (targetedUserId)
     if (!userContact)
         return <div>User action modal not found!</div>
@@ -36,8 +55,8 @@ function UserActionModal ({targetedUserId}:{targetedUserId : string})
                 <h1>{userContact.username}</h1>
             </div>
             <div className={style.interaction_buttons}> 
-                <ActionButton buttonData={playButton}/>
-                <ActionButton buttonData={banButton}/>
+                <ActionButton targetId={targetedUserId} buttonData={playButton}/>
+                <ActionButton targetId={targetedUserId} buttonData={banButton}/>
             </div>
         </div>
     )
