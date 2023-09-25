@@ -15,5 +15,3 @@ const Structure = ({ children }: { children: React.ReactNode }) => {
 
 export default withAuth(Structure);
 
-
-// note some navbar styles are in Dashboard.css

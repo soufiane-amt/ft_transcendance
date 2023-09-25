@@ -1,4 +1,4 @@
-import "../../styles/DashboardTwoFa.css";
+import "../../styles/TailwindRef.css";
 import Lottie from "react-lottie-player";
 import codeAnimation from "../../../public/QrAnimation.json";
 import { Space_Mono } from "next/font/google";
