@@ -179,10 +179,10 @@ enum NotificationType {
 model Notification {
   id String @id @default(uuid())
 
-  user1     User   @relation("notifyer", fields: [user1_id], references: [id])
-  user1_id  String
+  user1     User   @relation("notifyed", fields: [user1_id], references: [id])
+  user1_id  String 
 
-  user2     User   @relation("notifyed", fields: [user2_id], references: [id])
+  user2     User   @relation("notifyer", fields: [user2_id], references: [id])
   user2_id  String
 
   //I still don't know how the source notification will be like

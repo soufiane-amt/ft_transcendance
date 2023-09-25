@@ -27,7 +27,9 @@ export class ChatController
                     private readonly reflector: Reflector){}
 
 @Get("/dm")
-hello(){}
+hello(){
+
+}
 
 @Get('/createDms')
 async create(@Req() request : Request) {
@@ -91,9 +93,11 @@ async getUserData (@Req() request : Request)
 @Put("/messages/markAsRead")
 async markMessagesAsRead (@Req() request : Request, @Body() room : {_id:string})
 {
-  console.log("----markMessagesAsRead---")
+
   await this.chatCrud.markRoomMessagesAsRead(request.cookies['user.id'], room._id) //mark the messages that unsent by this user as read
 }
+
+
 
 
   /*****Old fetching */

@@ -33,7 +33,6 @@ export class dmGateway implements OnGatewayConnection, OnGatewayDisconnect {
     const userIdCookie = parsedCookies["user.id"];
     if (!userIdCookie)
       return
-    console.log ("Cookie: ", userIdCookie)
     if (await this.userCrud.findUserByID(userIdCookie) == null)
       throw new WsException ("User not existing")
     console.log (`user ${userIdCookie} connected\n`)
@@ -87,11 +86,27 @@ export class dmGateway implements OnGatewayConnection, OnGatewayDisconnect {
   async handleSendMesDm(client: any,  message:MessageDto ) 
   {
     message.channel_id = null;
-    console.log ("----message sent----", message)
     const messageToBrodcast = await this.chatCrud.createMessage(message)
     this.server.to(`dm-${message.dm_id}`).emit('newMessage', messageToBrodcast)
   }  
   
+
+  @SubscribeMessage ("MarkMsgRead")
+  async handleMarkMsgAsRead(client: any,  room : {_id:string} ) 
+  {
+    const headers = client.handshake.headers;
+    // // Parse the cookies from the request headers
+    const parsedCookies = cookie.parse(headers.cookie || '');
+    
+    // // Access specific cookies by name
+    const userIdCookie = parsedCookies["user.id"];
+    console.log ("Mark as read signal came, ",userIdCookie, ",",  room._id)
+
+    await this.chatCrud.markRoomMessagesAsRead(userIdCookie, room._id) //mark the messages that unsent by this user as read
+    this.server.to(`inbox-${userIdCookie}`).emit('setRoomAsRead', room)
+
+  }  
+
   
   // @UseGuards(userRoomSubscriptionGuard)
   // @SubscribeMessage ("dmModeration")

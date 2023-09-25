@@ -291,6 +291,18 @@ export class ChatCrudService
 
       async markRoomMessagesAsRead (user_id : string, room_id : string)
       {
+        console.log (await this.prisma.prismaClient.message.findMany({
+          where: {
+            NOT :{
+              user_id:user_id
+            },
+            OR:[
+            {dm_id : room_id},
+            {channel_id :room_id}
+            ],
+            is_read: false,
+          },
+        }))
         const unreadMessages = await this.prisma.prismaClient.message.updateMany({
           where: {
             NOT :{
