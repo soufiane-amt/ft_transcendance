@@ -4,6 +4,7 @@ import { Send } from "../../svgs";
 import { useSessionUser } from "../../../context/SessionUserContext";
 import { discussionPanelSelectType, selectDiscStateType } from "../../../interfaces/DiscussionPanel";
 import socket from "../../../socket/socket"; // Import the socket object
+import axios from "axios";
 
 
 interface ChatTextBoxProps {
@@ -14,6 +15,8 @@ interface ChatTextBoxProps {
     React.Dispatch<React.SetStateAction<messageDto[]>>
   ];
 }
+
+
 
 function ChatTextBox({ selectDiscState, messagesHistoryState, showTextBox }: ChatTextBoxProps) {
   const {selectedDiscussion, setSelectedDiscussion} = selectDiscState;
@@ -28,9 +31,22 @@ function ChatTextBox({ selectDiscState, messagesHistoryState, showTextBox }: Cha
       //Add message id later
       const messageRoomId = newMessage.dm_id ? newMessage.dm_id: newMessage.channel_id;
       if (selectedDiscussion.id === messageRoomId)
-          setMessageHistory((messagesHistory) => [...messagesHistory, newMessage]);
+      {
+      setMessageHistory((messagesHistory) => [...messagesHistory, newMessage]);
+        
+      socket.emit ("MarkMsgRead", {_id : messageRoomId})
+
+      // const requestData = { _id: selectedDiscussion.id };
+          
+      // axios.put('http://localhost:3001/chat/messages/markAsRead', requestData, {
+      //     headers: {
+      //       'Content-Type': 'application/json',
+      //     },
+      //     withCredentials: true, // This ensures that cookies are sent with the request
+      //   })
+      }
       };
-                    
+       
     socket.on("newMessage", handleNewMessage);
     return () => {
       socket.off("newMessage", handleNewMessage);

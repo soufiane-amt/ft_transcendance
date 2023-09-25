@@ -14,6 +14,7 @@ import {
 import { UserContactsProvider } from "../../context/UsersContactBookContext";
 import { fetchDataFromApi } from "../shared/customFetch/exmple";
 import socket from "../../socket/socket"; // Import the socket object
+import { useSessionUser } from "../../context/SessionUserContext";
 
 /*stopPropagation is used here to prevent the click event to take way up to the parent it got limited right here */
 
@@ -28,7 +29,6 @@ function DiscussionsBar({ selectedDiscussionState }: DiscussionsBarProps) {
   const [discussionPanels, setDiscussionRooms] = useState<DiscussionDto[]>([]);
   const [modalIsVisible, setModalAsVisible] = useState<boolean>(false);
   const [selectedDiscussion, setSelectedDiscussion] = selectedDiscussionState;
-
   useEffect(() => {
     async function fetchDataAsync() {
       //use enums instead of passing dircet links
@@ -65,12 +65,26 @@ function DiscussionsBar({ selectedDiscussionState }: DiscussionsBarProps) {
         updatedRooms.unshift(movedElement);
 
         setDiscussionRooms(updatedRooms);
+
       }
     };
+    const handleReadStatusTrack = (room: {_id :string}) => {
+      const updatedRooms = [...discussionPanels];
+      const indexToModify = updatedRooms.findIndex(
+        (item) => item.id === room._id
+      );
+      if (indexToModify !== -1) {
+        //incrementing unread messages
+        updatedRooms[indexToModify].unread_messages = 0;
 
+        setDiscussionRooms(updatedRooms);
+      }
+    };
     socket.on("newMessage", handleNewMessage);
+    socket.on("setRoomAsRead", handleReadStatusTrack);
     return () => {
       socket.off("newMessage", handleNewMessage);
+      socket.off("setRoomAsRead", handleReadStatusTrack);
     };
   }, [discussionPanels]);
 
