@@ -99,7 +99,7 @@ export class ChatCrudService
 
 
     
-      // Create a new chat channel (public, or password-protected).
+    // Create a new chat channel (public, or password-protected).
 
     async   createChannel (user_id:string , data : channelDto)
     {
@@ -117,6 +117,7 @@ export class ChatCrudService
       }
       return channel_id
     }
+
     
   //user joins channel
 
@@ -170,7 +171,7 @@ export class ChatCrudService
     }
 
 
-    async getDmTable(user1_id: string, user2_id: string) {
+    async findDmByUsers(user1_id: string, user2_id: string) {
       const Dm = await this.prisma.prismaClient.directMessaging.findMany({
         where: {
           OR: [
@@ -189,9 +190,9 @@ export class ChatCrudService
         },
       });
     
-      return Dm ? Dm : null;
+      return Dm.length > 0 ? Dm[0] : null;
     }
-    
+        
     //this method finds all the channels that exist in the server
     
     
@@ -323,7 +324,12 @@ export class ChatCrudService
         return unreadMessages;
         }
 
-
+    async findBannedDmRooms (user_id :string)
+    {
+      return await this.prisma.prismaClient.directMessaging.findMany (
+        
+      )
+    }
 
     // Retrieve direct messages between users.
     async retieveBlockedUsersList (user_id :string)

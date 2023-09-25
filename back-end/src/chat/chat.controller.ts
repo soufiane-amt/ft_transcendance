@@ -76,13 +76,19 @@ async getUserImage(@Param('image_path') image_path: string, @Res() res: Response
   }
 
 
-@Get (":roomid/messages")
-async findRoomMessages (@Param("roomid") roomid:string)
-{
-  return await this.chatCrud.retrieveRoomMessages(roomid);
-}
-  
-
+  @Get (":roomid/messages")
+  async findRoomMessages (@Param("roomid") roomid:string)
+  {
+    return await this.chatCrud.retrieveRoomMessages(roomid);
+  }
+    
+  @Get ("/direct_messaging/bannedRooms")
+  async findBannedRooms (@Param("roomid") roomid:string)
+  {
+    return await this.chatCrud.retrieveRoomMessages(roomid);
+  }
+    
+    
 @Get("/userData")
 async getUserData (@Req() request : Request)
 {

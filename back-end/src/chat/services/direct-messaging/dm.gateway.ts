@@ -81,7 +81,7 @@ export class dmGateway implements OnGatewayConnection, OnGatewayDisconnect {
 
   //In case 
   // @UseGuards (userRoomSubscriptionGuard)
-  // @UseGuards (bannedConversationGuard)
+  @UseGuards (bannedConversationGuard)
   @SubscribeMessage ("sendMsgDm")
   async handleSendMesDm(client: any,  message:MessageDto ) 
   {
@@ -109,14 +109,24 @@ export class dmGateway implements OnGatewayConnection, OnGatewayDisconnect {
 
   
   // @UseGuards(userRoomSubscriptionGuard)
-  // @SubscribeMessage ("dmModeration")
-  // handleDmBan(client: any,  banSignal:banManageSignalDto ) 
-  // {
-  //   if (banSignal.type == "BAN")
-  //     this.chatCrud.blockAUserWithDm(banSignal.dm_id)
-  //   else
-  //     this.chatCrud.unblockAUserWithDm (banSignal.dm_id)
-  // }  
+  @SubscribeMessage ("dmModeration")
+  async handleDmBan(client: any, banSignal : {targetedUserId:string, type:string}  ) 
+  {
+    const headers = client.handshake.headers;
+    const parsedCookies = cookie.parse(headers.cookie || '');
+    
+    const userIdCookie = parsedCookies["user.id"];
+    console.log (">", userIdCookie," --- ", banSignal.targetedUserId, "<<|")
+
+    const dm  = await this.chatCrud.findDmByUsers(userIdCookie, banSignal.targetedUserId)
+    if (banSignal.type == "BAN")
+    {
+      this.server.to(`dm-${dm.id}`).emit('userBanned', dm)
+      await this.chatCrud.blockAUserWithDm(dm.id)
+    } 
+    else
+      await this.chatCrud.unblockAUserWithDm (dm.id)
+  }  
 
 
  
