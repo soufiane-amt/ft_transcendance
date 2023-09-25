@@ -8,7 +8,7 @@ import { UserCrudService } from 'src/prisma/user-crud.service';
 export class WebSocketGatewayClass implements OnGatewayConnection, OnGatewayDisconnect
 {
     @WebSocketServer() server: Server;
-    constructor(private readonly user: UserCrudService){};
+    constructor(){};
     private clients: Map<string, Socket> = new Map();
 
     handleConnection(client: Socket) {
