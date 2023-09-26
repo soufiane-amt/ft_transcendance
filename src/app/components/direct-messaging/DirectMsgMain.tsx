@@ -16,6 +16,7 @@ import { fetchDataFromApi } from "../shared/customFetch/exmple";
 import socket from "../../socket/socket"; // Import the socket object
 import { useSessionUser } from "../../context/SessionUserContext";
 import { ChatBoxStatus } from "../../enum/displayChatBoxStatus";
+import { BanProvider } from "../../context/BanContext";
 
 /*stopPropagation is used here to prevent the click event to take way up to the parent it got limited right here */
 
@@ -120,6 +121,7 @@ function DiscussionsBar({ selectedDiscussionState }: DiscussionsBarProps) {
       })}
       <UserActionModalMain
         userToActId={selectedDiscussion.partner_id}
+        DiscussionToActId={selectedDiscussion.id}
         modalState={[modalIsVisible, setModalAsVisible]}
       />
     </ul>
@@ -205,14 +207,17 @@ function DirectMesgMain() {
   // })
   return (
     <UserContactsProvider>
-      <div className={style.direct_msg_main}>
-        <DiscussionsBar
-          selectedDiscussionState={[selectedDiscussion, setSelectedDiscussion]}
-        />
-        <ChattingField
-          selectDiscussionState={{ selectedDiscussion, setSelectedDiscussion }}
-        />
-      </div>
+      <BanProvider>
+        <div className={style.direct_msg_main}>
+          <DiscussionsBar
+            selectedDiscussionState={[selectedDiscussion, setSelectedDiscussion]}
+          />
+          <ChattingField
+            selectDiscussionState={{ selectedDiscussion, setSelectedDiscussion }}
+          />
+        </div>
+
+      </BanProvider>
     </UserContactsProvider>
   );
 }

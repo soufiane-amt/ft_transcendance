@@ -6,6 +6,7 @@ import { selectDiscStateType } from "../../../interfaces/DiscussionPanel";
 import socket from "../../../socket/socket"; // Import the socket object
 import axios from "axios";
 import { ChatBoxStatus } from "../../../enum/displayChatBoxStatus";
+import { findBannedRoomContext } from "../../../context/BanContext";
 
 interface ChatTextBoxProps {
   selectDiscState: selectDiscStateType;

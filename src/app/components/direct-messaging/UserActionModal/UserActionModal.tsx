@@ -6,6 +6,7 @@ import { DiscussionDto } from "../../../interfaces/DiscussionPanel"
 import { findUserContacts } from "../../../context/UsersContactBookContext"
 import { useSessionUser } from "../../../context/SessionUserContext"
 import socket from "../../../socket/socket"
+import { findBannedRoomContext, useBanContext } from "../../../context/BanContext"
 
 
 type buttonType =  {title :string, icon :string, backgroundColor:string}
@@ -21,14 +22,16 @@ enum actionTypes{
 
 }
 
-type ActionButtonProps =  {targetId:string, buttonData:buttonType}
+type ActionButtonProps =  {targetId:string,  buttonData:buttonType}
 function ActionButton({targetId, buttonData}:ActionButtonProps) /*button title, icon, backGroundColor */
 {
+    
     const handleButtonClick =  ()=>{
         switch (buttonData.title)
         {
             case "Ban":
                 socket.emit ("dmModeration", {targetedUserId: targetId, type:actionTypes.BAN});
+                
             case "UnBan":
                 socket.emit ("dmModeration", {targetedUserId: targetId, type:actionTypes.UNBAN})
             default :
@@ -42,10 +45,12 @@ function ActionButton({targetId, buttonData}:ActionButtonProps) /*button title, 
         </button>
     )
 }
-function UserActionModal ({targetedUserId}:{targetedUserId:string})
+function UserActionModal ({targetedUserId, targetedDiscussion}:{targetedUserId:string, targetedDiscussion:string})
 {
     const currentUser = useSessionUser()
     const userContact = findUserContacts (targetedUserId)
+    const userIsBanned = findBannedRoomContext(targetedDiscussion)
+
     if (!userContact)
         return <div>User action modal not found!</div>
     return (
@@ -56,7 +61,7 @@ function UserActionModal ({targetedUserId}:{targetedUserId:string})
             </div>
             <div className={style.interaction_buttons}> 
                 <ActionButton targetId={targetedUserId} buttonData={playButton}/>
-                <ActionButton targetId={targetedUserId} buttonData={banButton}/>
+                <ActionButton targetId={targetedUserId} buttonData={userIsBanned ? unBanButton :banButton}/>
             </div>
         </div>
     )
@@ -67,10 +72,11 @@ function UserActionModal ({targetedUserId}:{targetedUserId:string})
 type UserActionModalMainProps = 
         {
             userToActId :string, 
+            DiscussionToActId :string, 
             modalState: [boolean, React.Dispatch<React.SetStateAction<boolean>>]
         }
 
-function UserActionModalMain({userToActId, modalState}: UserActionModalMainProps)
+function UserActionModalMain({userToActId,  DiscussionToActId, modalState}: UserActionModalMainProps)
 {  
     const [isVisible, setAsVisible] = modalState;
 
@@ -80,7 +86,7 @@ function UserActionModalMain({userToActId, modalState}: UserActionModalMainProps
 
     return (
       <div className={style.user_action_main_modal} onClick={handleModalVisibility} style={!isVisible? { display:"none"}:undefined }>
-        <UserActionModal targetedUserId={userToActId}/>
+        <UserActionModal targetedUserId={userToActId} targetedDiscussion={DiscussionToActId}/>
       </div>
       )
   }
