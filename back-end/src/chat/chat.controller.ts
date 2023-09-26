@@ -66,7 +66,7 @@ async getUserImage(@Param('image_path') image_path: string, @Res() res: Response
     return discussions;
 
   }
-
+ 
   @Get ("/direct_messaging/userContactsBook")
   async findAllUsersInContact (@Req() request : Request)
   {
@@ -75,25 +75,30 @@ async getUserImage(@Param('image_path') image_path: string, @Res() res: Response
     return (users)
   }
 
-
   @Get (":roomid/messages")
   async findRoomMessages (@Param("roomid") roomid:string)
   {
     return await this.chatCrud.retrieveRoomMessages(roomid);
   }
-    
+
   @Get ("/direct_messaging/bannedRooms")
-  async findBannedRooms (@Param("roomid") roomid:string)
+  async findBannedRooms (@Req() request : Request)
   {
-    return await this.chatCrud.retrieveRoomMessages(roomid);
+    // console.log (request["user.id"], ">>>: ", await this.chatCrud.findBannedDmRooms(request["user.id"]))
+    const bannedRooms = await this.chatCrud.findBannedDmRooms(request.cookies["user.id"])
+    const bannedRoomsData = bannedRooms.map( (item)=>{
+        return ({room_id : item.id, expirationDate: new Date('9999-12-31T23:59:59.999Z')})
+    })
+    console.log (bannedRoomsData)
+    return bannedRoomsData;
   }
-    
-    
-@Get("/userData")
-async getUserData (@Req() request : Request)
-{
-  return (this.userCrud.findUserSessionDataByID(request.cookies["user.id"]))
-}
+
+
+  @Get("/userData")
+  async getUserData (@Req() request : Request)
+  {
+    return (this.userCrud.findUserSessionDataByID(request.cookies["user.id"]))
+  }
 
 
 @Put("/messages/markAsRead")

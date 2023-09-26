@@ -327,10 +327,24 @@ export class ChatCrudService
     async findBannedDmRooms (user_id :string)
     {
       return await this.prisma.prismaClient.directMessaging.findMany (
-        
+        {
+          where :
+          {
+            OR:[
+              {user1_id : user_id},
+              {user2_id :user_id}
+            ],
+            status:'BANNED'
+          },
+          select :
+          {
+            id:true
+          }
+        }
       )
     }
 
+    
     // Retrieve direct messages between users.
     async retieveBlockedUsersList (user_id :string)
     {
