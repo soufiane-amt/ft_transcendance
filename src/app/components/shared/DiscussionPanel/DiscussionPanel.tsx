@@ -91,7 +91,7 @@ function DiscussionPanel ({onSelect, DiscussionPanel, isSelected, showUserAction
         </div>
         <div className={style.panel_last_part}>
             <button style={panelTheme} onClick={showUserActionModal}>•••</button>
-            <TimeStamp time={DiscussionPanel.last_message.createdAt}/>
+            <TimeStamp time={DiscussionPanel.last_message?.createdAt}/>
             {
                 enableUnseenMessage() && (
               <div className={style.panel_message_notifier}>{badgeCount(DiscussionPanel.unread_messages)}</div>

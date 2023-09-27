@@ -27,19 +27,6 @@ function ActionButton({targetId, buttonData}:ActionButtonProps) /*button title, 
 {
     const [isButtonDisabled, setIsButtonDisabled] = useState(false);
 
-    const handleClick = () => {
-      // Disable the button
-      setIsButtonDisabled(true);
-  
-      // Enable the button after a specified time (e.g., 3 seconds)
-      setTimeout(() => {
-        setIsButtonDisabled(false);
-      }, 3000); // 3000 milliseconds (3 seconds)
-  
-      // Perform your action here (e.g., make an API call, perform some task)
-      // ...
-    };
-  
   
     const handleButtonClick =  ()=>{
         switch (buttonData.title)
@@ -64,9 +51,11 @@ function ActionButton({targetId, buttonData}:ActionButtonProps) /*button title, 
 }
 function UserActionModal ({targetedUserId, targetedDiscussion}:{targetedUserId:string, targetedDiscussion:string})
 {
+    const userSession = useSessionUser()
     const userContact = findUserContacts (targetedUserId)
     const userIsBanned = findBannedRoomContext(targetedDiscussion)
 
+    console.log (">>>>>>", userIsBanned?.blocker_id);
     if (!userContact)
         return <div>User action modal not found!</div>
     return (
@@ -77,7 +66,7 @@ function UserActionModal ({targetedUserId, targetedDiscussion}:{targetedUserId:s
             </div>
             <div className={style.interaction_buttons}> 
                 <ActionButton targetId={targetedUserId} buttonData={playButton}/>
-                <ActionButton targetId={targetedUserId} buttonData={userIsBanned != null ? unBanButton :banButton}/>
+                <ActionButton targetId={targetedUserId} buttonData={userIsBanned != null && userIsBanned.blocker_id !== userSession.id ? unBanButton :banButton}/>
             </div>
         </div>
     )

@@ -57,7 +57,7 @@ function ChatTextBox({
   useEffect(() => {
     const handleUserBanned = (dm: { id: string }) => {
       if (dm.id === selectedDiscussion.id) {
-        BanContext.banUser(dm.id, new Date("9999-12-31T23:59:59.999Z"))
+        BanContext.banUser(dm.id, userSession.id,  new Date("9999-12-31T23:59:59.999Z"))
         setIsBanned(true); // Set the isBanned state to true when banned
       }
     };

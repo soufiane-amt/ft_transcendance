@@ -4,6 +4,7 @@ import { fetchDataFromApi } from '../components/shared/customFetch/exmple';
 // Define the Ban type
 interface Ban {
   room_id: string;
+  blocker_id : string;
   expirationDate: Date ;
 }
 
@@ -11,7 +12,7 @@ interface Ban {
 // Define the context interface
 interface IBanContext {
   bannedRooms: Ban[];
-  banUser: (room_id: string, expirationDate: Date) => void;
+  banUser: (room_id: string, blocker_id : string,expirationDate: Date) => void;
   unbanUser: (userId: string) => void;
 }
 
@@ -63,9 +64,10 @@ export function BanProvider({ children }: BanProviderProps) {
   }, [])
 
   // Function to ban a user
-    function banUser(room_id: string, expirationDate: Date ) {
+  function banUser(room_id: string,blocker_id : string, expirationDate: Date ) {
     const newBan: Ban = {
       room_id,
+      blocker_id,
       expirationDate,
     };
     setBannedRooms([...bannedRooms, newBan]);
@@ -87,5 +89,5 @@ export function BanProvider({ children }: BanProviderProps) {
     <BanContext.Provider value={contextValue}>
       {children}
     </BanContext.Provider>
-  );
+  ); 
 }

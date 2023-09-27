@@ -9,7 +9,7 @@ function TimeStamp({ time }:{time: string }) {
       <div
         className={`${style.time_stamp} ${style.time_stamp__font_size} ${style.time_stamp__color_gray}`}
       >
-        {formatDateAndTime(time)}
+        {time && formatDateAndTime(time)}
       </div>
     );
   }
