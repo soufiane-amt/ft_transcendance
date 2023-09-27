@@ -338,7 +338,8 @@ export class ChatCrudService
           },
           select :
           {
-            id:true
+            id:true,
+            blocker_id:true
           }
         }
       )
@@ -454,31 +455,45 @@ export class ChatCrudService
       )
     }
 
-    async blockAUserWithDm(dm_id: string)
+    async blockAUserWithDm(agentId: string, dm_id: string)
     {
-      return this.prisma.prismaClient.directMessaging.update(
+      return await this.prisma.prismaClient.directMessaging.update(
         {
           where :{
             id : dm_id
           },
           data:
           {
-            status : 'BANNED'
+            status : 'BANNED',
+            blocker_id : agentId,
           }
         }
       )
     }
 
-    async unblockAUserWithDm(channel_id: string)
+    async unblockAUserWithDm(agentId: string,room_id: string)
     {
-      return this.prisma.prismaClient.directMessaging.update(
+      const user = await this.prisma.prismaClient.directMessaging.findUnique(
         {
           where :{
-            id : channel_id
+            id : room_id
+          },
+          select:
+          {
+            blocker_id : true,
+          }
+        });
+      if (agentId !== user.blocker_id)
+        return null
+      return await this.prisma.prismaClient.directMessaging.update(
+        {
+          where :{
+            id : room_id
           },
           data:
           {
-            status : 'ALLOWED'
+            status : 'ALLOWED',
+            blocker_id : null
           }
         }
       )

@@ -36,6 +36,7 @@ model User {
 
   initiator DirectMessaging[] @relation("initiator")
   receiver DirectMessaging[] @relation("receiver")
+  blocker DirectMessaging[] @relation("blocker")
 
   channels ChannelMembership[]
   messages Message[]
@@ -112,6 +113,7 @@ model ChannelMembership {
   @@unique([channel_id, user_id])
 }
 
+
 model Message {
   id String @id @default(uuid())
 
@@ -165,8 +167,12 @@ model DirectMessaging {
 
   messages  Message[]
 
-  status    DmStatus @default(ALLOWED)
-  createdAt DateTime @default(now())
+  status     DmStatus @default(ALLOWED)
+
+  blocker     User?   @relation("blocker", fields: [blocker_id], references: [id])
+  blocker_id  String? 
+
+  createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
 }
 

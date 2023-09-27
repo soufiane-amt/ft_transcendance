@@ -87,7 +87,7 @@ async getUserImage(@Param('image_path') image_path: string, @Res() res: Response
     // console.log (request["user.id"], ">>>: ", await this.chatCrud.findBannedDmRooms(request["user.id"]))
     const bannedRooms = await this.chatCrud.findBannedDmRooms(request.cookies["user.id"])
     const bannedRoomsData = bannedRooms.map( (item)=>{
-        return ({room_id : item.id, expirationDate: new Date('9999-12-31T23:59:59.999Z')})
+        return ({room_id : item.id, blocker_id: item.blocker_id, expirationDate: new Date('9999-12-31T23:59:59.999Z')})
     })
     console.log (bannedRoomsData)
     return bannedRoomsData;
@@ -100,7 +100,7 @@ async getUserImage(@Param('image_path') image_path: string, @Res() res: Response
     return (this.userCrud.findUserSessionDataByID(request.cookies["user.id"]))
   }
 
-
+ 
 @Put("/messages/markAsRead")
 async markMessagesAsRead (@Req() request : Request, @Body() room : {_id:string})
 {

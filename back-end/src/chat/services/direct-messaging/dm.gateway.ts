@@ -116,20 +116,23 @@ export class dmGateway implements OnGatewayConnection, OnGatewayDisconnect {
     const parsedCookies = cookie.parse(headers.cookie || '');
     
     const userIdCookie = parsedCookies["user.id"];
-    console.log (">", userIdCookie," --- ", banSignal.targetedUserId, "<<|")
 
     const dm  = await this.chatCrud.findDmByUsers(userIdCookie, banSignal.targetedUserId)
+    console.log ("}}}}", banSignal.targetedUserId);
     if (banSignal.type == "BAN")
     {
       this.server.to(`dm-${dm.id}`).emit('userBanned', dm)
-      await this.chatCrud.blockAUserWithDm(dm.id)
+      await this.chatCrud.blockAUserWithDm(banSignal.targetedUserId, dm.id)
     } 
     else
-      await this.chatCrud.unblockAUserWithDm (dm.id)
+    {
+      this.server.to(`dm-${dm.id}`).emit('userUnBanned', dm)
+      await this.chatCrud.unblockAUserWithDm (banSignal.targetedUserId, dm.id)
+    }
   }  
-
-
  
+
+   
 
 
 }
