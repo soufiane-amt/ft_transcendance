@@ -25,21 +25,38 @@ enum actionTypes{
 type ActionButtonProps =  {targetId:string,  buttonData:buttonType}
 function ActionButton({targetId, buttonData}:ActionButtonProps) /*button title, icon, backGroundColor */
 {
-    
+    const [isButtonDisabled, setIsButtonDisabled] = useState(false);
+
+    const handleClick = () => {
+      // Disable the button
+      setIsButtonDisabled(true);
+  
+      // Enable the button after a specified time (e.g., 3 seconds)
+      setTimeout(() => {
+        setIsButtonDisabled(false);
+      }, 3000); // 3000 milliseconds (3 seconds)
+  
+      // Perform your action here (e.g., make an API call, perform some task)
+      // ...
+    };
+  
+  
     const handleButtonClick =  ()=>{
         switch (buttonData.title)
         {
             case "Ban":
                 socket.emit ("dmModeration", {targetedUserId: targetId, type:actionTypes.BAN});
-                
+                break;
             case "UnBan":
                 socket.emit ("dmModeration", {targetedUserId: targetId, type:actionTypes.UNBAN})
+                break;
             default :
                 return null
-        }
+            }
+      
     }
     return (
-        <button className={style.action_button} style={{backgroundColor:buttonData.backgroundColor}} onClick={handleButtonClick}>
+        <button className={style.action_button} style={{backgroundColor:buttonData.backgroundColor}} onClick={handleButtonClick} disabled={isButtonDisabled}>
             <img src={buttonData.icon} ></img>
             {buttonData.title}
         </button>
@@ -47,7 +64,6 @@ function ActionButton({targetId, buttonData}:ActionButtonProps) /*button title, 
 }
 function UserActionModal ({targetedUserId, targetedDiscussion}:{targetedUserId:string, targetedDiscussion:string})
 {
-    const currentUser = useSessionUser()
     const userContact = findUserContacts (targetedUserId)
     const userIsBanned = findBannedRoomContext(targetedDiscussion)
 
@@ -61,7 +77,7 @@ function UserActionModal ({targetedUserId, targetedDiscussion}:{targetedUserId:s
             </div>
             <div className={style.interaction_buttons}> 
                 <ActionButton targetId={targetedUserId} buttonData={playButton}/>
-                <ActionButton targetId={targetedUserId} buttonData={userIsBanned ? unBanButton :banButton}/>
+                <ActionButton targetId={targetedUserId} buttonData={userIsBanned != null ? unBanButton :banButton}/>
             </div>
         </div>
     )

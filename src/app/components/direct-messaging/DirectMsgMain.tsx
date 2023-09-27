@@ -11,6 +11,7 @@ import {
   discussionPanelSelectType,
   selectDiscStateType,
 } from "../../interfaces/DiscussionPanel";
+
 import { UserContactsProvider } from "../../context/UsersContactBookContext";
 import { fetchDataFromApi } from "../shared/customFetch/exmple";
 import socket from "../../socket/socket"; // Import the socket object
@@ -152,6 +153,7 @@ function MessagesHistory({ messages }: { messages: messageDto[] }) {
     </div>
   );
 }
+
 
 const selectedPanelDefault: discussionPanelSelectType = {
   id: "",

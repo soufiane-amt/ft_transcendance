@@ -33,11 +33,11 @@ export function useBanContext(): IBanContext {
 }
 
 
-export function findBannedRoomContext(room_id:string) {
-  const room = useContext(BanContext)?.bannedRooms.find((ban) => ban.room_id === room_id);
+export function findBannedRoomContext(room_id: string) {
+  const bannedRooms = useBanContext().bannedRooms || []; // Provide a default empty array if bannedRooms is undefined.
+  const room = bannedRooms.find((ban) => ban.room_id === room_id);
   return room;
 }
-
 
 
 // Provide the BanContext at the top level of your application

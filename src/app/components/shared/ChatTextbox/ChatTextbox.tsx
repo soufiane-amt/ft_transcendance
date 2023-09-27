@@ -4,9 +4,8 @@ import { Send } from "../../svgs";
 import { useSessionUser } from "../../../context/SessionUserContext";
 import { selectDiscStateType } from "../../../interfaces/DiscussionPanel";
 import socket from "../../../socket/socket"; // Import the socket object
-import axios from "axios";
 import { ChatBoxStatus } from "../../../enum/displayChatBoxStatus";
-import { findBannedRoomContext } from "../../../context/BanContext";
+import { findBannedRoomContext, useBanContext } from "../../../context/BanContext";
 
 interface ChatTextBoxProps {
   selectDiscState: selectDiscStateType;
@@ -26,9 +25,11 @@ function ChatTextBox({
 
   const userSession = useSessionUser();
 
+  
   const [messagesHistory, setMessageHistory] = messagesHistoryState;
   const [newMessageContent, setNewMessageContent] = useState<string>("");
-  const [isBanned, setIsBanned] = useState<boolean>(false); // State to track ban status
+  const [isBanned, setIsBanned] = useState<boolean>(); // State to track ban status
+  const BanContext = useBanContext()
 
   useEffect(() => {
     const handleNewMessage = (newMessage: messageDto) => {
@@ -52,9 +53,11 @@ function ChatTextBox({
     };
   }, [selectedDiscussion]);
 
+
   useEffect(() => {
     const handleUserBanned = (dm: { id: string }) => {
       if (dm.id === selectedDiscussion.id) {
+        BanContext.banUser(dm.id, new Date("9999-12-31T23:59:59.999Z"))
         setIsBanned(true); // Set the isBanned state to true when banned
       }
     };
@@ -66,12 +69,26 @@ function ChatTextBox({
     };
   }, [selectedDiscussion]);
 
-  const handleSendMessage = () => {
-    if (isBanned) {
-      // Handle sending messages when the user is banned (optional)
-      return;
-    }
+  useEffect(() => {
+    const handleUserUnBanned = (dm: { id: string }) => {
+      if (dm.id === selectedDiscussion.id) {
+        BanContext.unbanUser(dm.id)
+        setIsBanned(false); // Set the isBanned state to true when banned
+      }
+    };
 
+    socket.on("userUnBanned", handleUserUnBanned);
+
+    return () => {
+      socket.off("userUnBanned", handleUserUnBanned);
+    };
+  }, [selectedDiscussion]);
+
+  useEffect(() => {
+        setIsBanned(BanContext.bannedRooms.some((ban) => ban.room_id === selectedDiscussion.id)); // Set the isBanned state to true when banned
+  }, [selectedDiscussion]);
+
+  const handleSendMessage = () => {
     const newMessage = {
       user_id: userSession.id,
       content: newMessageContent,
