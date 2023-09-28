@@ -6,6 +6,7 @@ import { discussionPanelSelectType, selectDiscStateType } from "../../../interfa
 import socket from "../../../socket/socket"; // Import the socket object
 import { ChatBoxStatus } from "../../../enum/displayChatBoxStatus";
 import { useBanContext } from "../../../context/BanContext";
+import { useHandleNewMsg } from "../../../../../hooks/useHandleNewMsg";
 
 interface ChatTextBoxProps {
   selectedDiscussion: discussionPanelSelectType;
@@ -25,32 +26,33 @@ function ChatTextBox({
   const userSession = useSessionUser();
 
   
-  const [messagesHistory, setMessageHistory] = messagesHistoryState;
+  // const [messagesHistory, setMessageHistory] = messagesHistoryState;
   const [newMessageContent, setNewMessageContent] = useState<string>("");
   const [isBanned, setIsBanned] = useState<boolean>(); // State to track ban status
   const BanContext = useBanContext()
 
-  useEffect(() => {
-    const handleNewMessage = (newMessage: messageDto) => {
-      // Add message id later
-      const messageRoomId = newMessage.dm_id
-        ? newMessage.dm_id
-        : newMessage.channel_id;
-      if (selectedDiscussion.id === messageRoomId) {
-        setMessageHistory((messagesHistory) => [
-          ...messagesHistory,
-          newMessage,
-        ]);
+  useHandleNewMsg(messagesHistoryState, selectedDiscussion)
+  // useEffect(() => {
+  //   const handleNewMessage = (newMessage: messageDto) => {
+  //     // Add message id later
+  //     const messageRoomId = newMessage.dm_id
+  //       ? newMessage.dm_id
+  //       : newMessage.channel_id;
+  //     if (selectedDiscussion.id === messageRoomId) {
+  //       setMessageHistory((messagesHistory) => [
+  //         ...messagesHistory,
+  //         newMessage,
+  //       ]);
 
-        socket.emit("MarkMsgRead", { _id: messageRoomId });
-      }
-    };
+  //       socket.emit("MarkMsgRead", { _id: messageRoomId });
+  //     }
+  //   };
 
-    socket.on("newMessage", handleNewMessage);
-    return () => {
-      socket.off("newMessage", handleNewMessage);
-    };
-  }, [selectedDiscussion]);
+  //   socket.on("newMessage", handleNewMessage);
+  //   return () => {
+  //     socket.off("newMessage", handleNewMessage);
+  //   };
+  // }, [selectedDiscussion]);
 
 
   useEffect(() => {

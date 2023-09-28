@@ -1,12 +1,13 @@
 'use client'
 import style from "./UserActionModal.module.css"
 import Avatar from "../../shared/Avatar/Avatar"
-import React, { useContext, useState } from "react"
+import React, { useContext, useEffect, useRef, useState } from "react"
 import { DiscussionDto } from "../../../interfaces/DiscussionPanel"
 import { findUserContacts } from "../../../context/UsersContactBookContext"
 import { useSessionUser } from "../../../context/SessionUserContext"
 import socket from "../../../socket/socket"
 import { findBannedRoomContext, useBanContext } from "../../../context/BanContext"
+import { useOutsideClick } from "../../../../../hooks/useOutsideClick"
 
 
 type buttonType =  {title :string, icon :string, backgroundColor:string}
@@ -47,16 +48,18 @@ function ActionButton({targetId, buttonData}:ActionButtonProps) /*button title, 
         </button>
     )
 }
-function UserActionModal ({targetedUserId, targetedDiscussion}:{targetedUserId:string, targetedDiscussion:string})
+function UserActionModal ({close, targetedUserId, targetedDiscussion}:{close:(parm : boolean)=>void,targetedUserId:string, targetedDiscussion:string})
 {
     const userSession = useSessionUser()
     const userContact = findUserContacts (targetedUserId)
     const userIsBanned = findBannedRoomContext(targetedDiscussion)
+    const ref  = useOutsideClick(close)
 
     if (!userContact)
         return <div>User action modal not found!</div>
-    return (
-        <div className={style.user_action_modal} onClick={(e)=>{ e.stopPropagation()}}>
+    
+        return (
+        <div ref={ref} className={style.user_action_modal} onClick={(e)=>{ e.stopPropagation()}}>
             <div className={style.action_targeted_user}>
                 <Avatar avatarSrc={userContact.avatar} avatarToRight={false}/>
                 <h1>{userContact.username}</h1>
@@ -84,13 +87,19 @@ function UserActionModalMain({userToActId,  DiscussionToActId, modalState}: User
 
     console.log ("||||", userToActId)
     const handleModalVisibility = () => {
-        setAsVisible(false)
+        // setAsVisible(false)
   }
 
+
+
+
+
     return (
-      <div className={style.user_action_main_modal} onClick={handleModalVisibility} style={!isVisible? { display:"none"}:undefined }>
-        <UserActionModal targetedUserId={userToActId} targetedDiscussion={DiscussionToActId}/>
-      </div>
+        <>
+      {isVisible && <div className={style.user_action_main_modal} onClick={handleModalVisibility} >
+        <UserActionModal close ={setAsVisible} targetedUserId={userToActId} targetedDiscussion={DiscussionToActId}/>
+      </div>}
+        </>
       )
   }
 
