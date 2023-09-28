@@ -1,7 +1,7 @@
 'use client'
 import style from "./UserActionModal.module.css"
 import Avatar from "../../shared/Avatar/Avatar"
-import React, { useState } from "react"
+import React, { useContext, useState } from "react"
 import { DiscussionDto } from "../../../interfaces/DiscussionPanel"
 import { findUserContacts } from "../../../context/UsersContactBookContext"
 import { useSessionUser } from "../../../context/SessionUserContext"
@@ -25,9 +25,7 @@ enum actionTypes{
 type ActionButtonProps =  {targetId:string,  buttonData:buttonType}
 function ActionButton({targetId, buttonData}:ActionButtonProps) /*button title, icon, backGroundColor */
 {
-    const [isButtonDisabled, setIsButtonDisabled] = useState(false);
 
-  
     const handleButtonClick =  ()=>{
         switch (buttonData.title)
         {
@@ -43,7 +41,7 @@ function ActionButton({targetId, buttonData}:ActionButtonProps) /*button title, 
       
     }
     return (
-        <button className={style.action_button} style={{backgroundColor:buttonData.backgroundColor}} onClick={handleButtonClick} disabled={isButtonDisabled}>
+        <button className={style.action_button} style={{backgroundColor:buttonData.backgroundColor}} onClick={handleButtonClick} >
             <img src={buttonData.icon} ></img>
             {buttonData.title}
         </button>
@@ -55,7 +53,6 @@ function UserActionModal ({targetedUserId, targetedDiscussion}:{targetedUserId:s
     const userContact = findUserContacts (targetedUserId)
     const userIsBanned = findBannedRoomContext(targetedDiscussion)
 
-    console.log (">>>>>>", userIsBanned?.blocker_id);
     if (!userContact)
         return <div>User action modal not found!</div>
     return (
@@ -66,7 +63,7 @@ function UserActionModal ({targetedUserId, targetedDiscussion}:{targetedUserId:s
             </div>
             <div className={style.interaction_buttons}> 
                 <ActionButton targetId={targetedUserId} buttonData={playButton}/>
-                <ActionButton targetId={targetedUserId} buttonData={userIsBanned != null && userIsBanned.blocker_id !== userSession.id ? unBanButton :banButton}/>
+                <ActionButton targetId={targetedUserId} buttonData={userIsBanned != null && userIsBanned.blocker_id === userSession.id ? unBanButton :banButton}/>
             </div>
         </div>
     )
@@ -85,6 +82,7 @@ function UserActionModalMain({userToActId,  DiscussionToActId, modalState}: User
 {  
     const [isVisible, setAsVisible] = modalState;
 
+    console.log ("||||", userToActId)
     const handleModalVisibility = () => {
         setAsVisible(false)
   }

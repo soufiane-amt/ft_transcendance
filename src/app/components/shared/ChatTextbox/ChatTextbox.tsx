@@ -55,11 +55,11 @@ function ChatTextBox({
 
 
   useEffect(() => {
-    const handleUserBanned = (dm: { id: string }) => {
-      if (dm.id === selectedDiscussion.id) {
-        BanContext.banUser(dm.id, userSession.id,  new Date("9999-12-31T23:59:59.999Z"))
+    const handleUserBanned = (banSignal: { room_id: string, agent_id:string }) => {
+      if (banSignal.room_id === selectedDiscussion.id) {
         setIsBanned(true); // Set the isBanned state to true when banned
       }
+      BanContext.banUser(banSignal.room_id, banSignal.agent_id,  new Date("9999-12-31T23:59:59.999Z"))
     };
 
     socket.on("userBanned", handleUserBanned);
@@ -70,11 +70,11 @@ function ChatTextBox({
   }, [selectedDiscussion]);
 
   useEffect(() => {
-    const handleUserUnBanned = (dm: { id: string }) => {
-      if (dm.id === selectedDiscussion.id) {
-        BanContext.unbanUser(dm.id)
+    const handleUserUnBanned = (banSignal: { room_id: string, agent_id:string }) => {
+      if (banSignal.room_id === selectedDiscussion.id) {
         setIsBanned(false); // Set the isBanned state to true when banned
       }
+      BanContext.unbanUser(banSignal.room_id, banSignal.agent_id )
     };
 
     socket.on("userUnBanned", handleUserUnBanned);

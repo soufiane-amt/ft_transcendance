@@ -77,6 +77,7 @@ function DiscussionPanel ({onSelect, DiscussionPanel, isSelected, showUserAction
 
     const enableUnseenMessage = ()=> {
         // const last_message_timestamp = new Date(DiscussionPanel.last_message.createdAt).getTime();
+        console.log (DiscussionPanel, "+++>", (!isSelected  && DiscussionPanel.unread_messages != 0))
         return (!isSelected  && DiscussionPanel.unread_messages != 0)
     }
 
