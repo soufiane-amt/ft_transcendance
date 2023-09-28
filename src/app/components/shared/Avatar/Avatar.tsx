@@ -10,6 +10,7 @@ function Avatar({ avatarSrc, avatarToRight }:AvatarProps) {
     const avatarStylingClasses: string = `${style.avatar__style} ${
       avatarToRight ? style.image__switch_order : ""
     } `;
+    
     return (
       <div className={avatarStylingClasses}>
         <Image

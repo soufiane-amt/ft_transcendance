@@ -4,8 +4,6 @@
     display:flex;
     flex-direction: row;
     align-items: center;
-    background-color: var(--discussion_panel_back_color);
-    color: var(--discussion_panel_element_color);
     gap:10px;
     width: 96%;
     height: 80px;
@@ -17,6 +15,16 @@
     cursor: pointer;
 }
 
+
+.discussion_panel_default_colors {
+    background-color: var(--discussion_panel_back_color);
+    color: var(--discussion_panel_element_color);
+}
+
+.discussion_panel_selection_colors {
+    background-color: var(--discussion_panel_selection_color);
+    color: var(--discussion_panel_element_selection_color);
+}
 
 /**The button that displays play/bock styling*/
 .discussion_panel button {

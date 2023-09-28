@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import { DiscussionDto, MinMessageDto, discussionPanelSelectType } from "../../../interfaces/DiscussionPanel";
 import style from "./DiscussionsBar.module.css";
 import { fetchDataFromApi } from "../../shared/customFetch/exmple";
-import socket from "../../../socket/socket";
 import UserActionModalMain from "../UserActionModal/UserActionModal";
 import DiscussionPanel from "../../shared/DiscussionPanel/DiscussionPanel";
 import { useHandlePanel } from "../../../../../hooks/useHandlePanel";
@@ -13,15 +12,15 @@ interface DiscussionsBarProps {
       selectDiscussion : (e: discussionPanelSelectType) => void
   }}
   
+
 export function DiscussionsBar({ selectedDiscussionState }: DiscussionsBarProps) {
     const [discussionPanels, setDiscussionRooms] = useState<DiscussionDto[]>([]);
     const [modalIsVisible, setModalAsVisible] = useState<boolean>(false);
     const {selectedDiscussion, selectDiscussion} = selectedDiscussionState;
 
-    
+
     useEffect(() => {
       async function fetchDataAsync() {
-        //use enums instead of passing dircet links
         const roomPanels_data_tmp = await fetchDataFromApi(
           "http://localhost:3001/chat/direct_messaging/discussionsBar"
         );
@@ -29,8 +28,8 @@ export function DiscussionsBar({ selectedDiscussionState }: DiscussionsBarProps)
       }
       fetchDataAsync();
     }, []);
+    
     useHandlePanel(discussionPanels,selectedDiscussion, setDiscussionRooms)
-
 
 
     const handlePanelClick = (panelData: DiscussionDto) => {
@@ -46,9 +45,7 @@ export function DiscussionsBar({ selectedDiscussionState }: DiscussionsBarProps)
         }
       };
       
-      const displayActionModal = () => {
-        setModalAsVisible(true);
-      };
+    const displayActionModal = () => setModalAsVisible(true);
   
     return (
       <ul className={style.discussion_panel_bar}>

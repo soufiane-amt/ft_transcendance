@@ -1,5 +1,4 @@
 import { useEffect } from "react";
-import DiscussionPanel from "../src/app/components/shared/DiscussionPanel/DiscussionPanel";
 import { DiscussionDto, MinMessageDto, discussionPanelSelectType } from "../src/app/interfaces/DiscussionPanel";
 import socket from "../src/app/socket/socket";
 

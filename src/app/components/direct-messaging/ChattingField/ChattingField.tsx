@@ -7,6 +7,7 @@ import style from "./ChattingField.module.css";
 import Message from "../../shared/Message/Message";
 import { selectedPanelDefault } from "../DirectMsgMain";
 
+
 function MessagesHistory({ messages }: { messages: messageDto[] }) {
     const scrollDown = useRef<HTMLDivElement>(null);
   
@@ -23,7 +24,6 @@ function MessagesHistory({ messages }: { messages: messageDto[] }) {
     return (
       <div className={style.messages_history}>
         {messages.map((messageElement: messageDto) => {
-          //Don't forget to add key attribute to messages
           return <Message key={messageElement.id} messageData={messageElement} />;
         })}
         {/* this is a dummy div created so that it references the bottom of the chatfield to scroll there whenever a message comes */}
@@ -34,6 +34,7 @@ function MessagesHistory({ messages }: { messages: messageDto[] }) {
   
   
   
+
   interface ChattingFieldPops {
     selectDiscussionState: {
       selectedDiscussion : discussionPanelSelectType,
