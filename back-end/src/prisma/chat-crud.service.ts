@@ -1,4 +1,4 @@
-import { Inject, Injectable } from '@nestjs/common';
+import { Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from './prisma.service';
 import { MessageDto, channelDto, channelMembershipDto, dmDto } from 'src/chat/dto/chat.dto';
 
@@ -8,8 +8,98 @@ export class ChatCrudService
 {
   constructor (@Inject (PrismaService) private readonly prisma:PrismaService ){}
 
-    // Create a new chat channel (public, or password-protected).
 
+    async retrieveUserContactBook (user_id :string) 
+    { 
+      const partnersIds = await this.prisma.prismaClient.directMessaging.findMany({
+        where: {
+            OR: [
+                { user1_id: user_id },
+                { user2_id: user_id },
+            ],
+        },
+        orderBy: {
+            updatedAt: 'asc',
+        },
+        select: {
+            user1_id: true,
+            user2_id: true,
+        },
+    });
+    //Promise.all waits for all map operations to end 
+      const partnerContactData =   Promise.all( partnersIds.map( async (dm_item) => {
+        //This next check which id belong to the parntner of the actual user
+        const partner_id = user_id == dm_item.user1_id ? dm_item.user2_id : dm_item.user1_id;
+        const partnerData =  await this.prisma.prismaClient.user.findUnique ({
+                where : {
+                  id : partner_id
+                },
+                select : {
+                  username :true,
+                  avatar :true
+                }})
+        return { id: partner_id, username: partnerData.username, avatar : partnerData.avatar};
+      })); 
+      return (partnerContactData);
+    }
+
+
+    async retrieveUserDmChannels(user_id :string) {
+      return await this.prisma.prismaClient.directMessaging.findMany({
+          where: {
+              OR: [
+                  { user1_id: user_id },
+                  { user2_id: user_id },
+              ]
+          },
+          orderBy: {
+              updatedAt: 'asc'
+          },
+          select: {
+              id: true,
+              user1_id: true,
+              user2_id: true,
+          }
+      });
+  }
+  async retreiveDmInitPanelData(user_id) {
+      const dmUsersIds = await this.prisma.prismaClient.directMessaging.findMany({
+          where: {
+              OR: [
+                  { user1_id: user_id },
+                  { user2_id: user_id },
+              ],
+          },
+          orderBy: {
+              updatedAt: 'desc',
+          },
+          select: {
+              id: true,
+              user1_id: true,
+              user2_id: true,
+              messages: {
+                  select: {
+                      id: true,
+                      content: true,
+                      createdAt: true,
+                      is_read: true,
+                  },
+                  orderBy: {
+                      createdAt: 'desc',
+                  },
+                  take: 1,
+              },
+          },
+      });
+      return dmUsersIds.map((dm_item) => {
+          const partner = user_id == dm_item.user1_id ? dm_item.user2_id : dm_item.user1_id;
+          return { id: dm_item.id, partner_id: partner, last_message: dm_item.messages[0] };
+      });
+  }
+
+
+    
+      // Create a new chat channel (public, or password-protected).
 
     async   createChannel (user_id:string , data : channelDto)
     {
@@ -80,39 +170,28 @@ export class ChatCrudService
     }
 
 
-    async getDmTable ( user1_id: string, user2_id: string)
-    {
-        const Dm = await this.prisma.prismaClient.directMessaging.findUnique({
-        where :
-        {
-          user1_id :user1_id,
-          user2_id : user2_id
+    async getDmTable(user1_id: string, user2_id: string) {
+      const Dm = await this.prisma.prismaClient.directMessaging.findMany({
+        where: {
+          OR: [
+            {
+              user1_id: user1_id,
+              user2_id: user2_id,
+            },
+            {
+              user1_id: user2_id,
+              user2_id: user1_id,
+            },
+          ],
         },
-        select : {
-          id : true
-        }
-
-      })
-      return Dm ? (await Dm).id : null
-    }
-
-
-    async retrieveUserDmChannels (user_id: string)
-    {
-      return this.prisma.prismaClient.directMessaging.findMany(
-        {
-          where :{
-            OR :[
-              {user1_id : user_id}, 
-              {user2_id : user_id}, 
-            ]
-          },
-          orderBy :{
-            updatedAt : 'asc'
-          }
+        select: {
+          id: true,
         },
-      );
+      });
+    
+      return Dm ? Dm : null;
     }
+    
     //this method finds all the channels that exist in the server
     
     
@@ -176,6 +255,12 @@ export class ChatCrudService
               {dm_id : room_id}
             ]
           },
+          select : {
+            user_id:true,
+            content :true,
+            createdAt :true,
+            is_read :true
+          },
           orderBy :{
             createdAt : 'asc'
           }
@@ -183,9 +268,49 @@ export class ChatCrudService
       )
       }
       catch{
-        return {}
+        throw new NotFoundException(`Channel with ID ${room_id} not found.`);
       }
     }
+
+    async getUnreadMessagesNumber (user_id : string, room_id : string)
+    {
+      const unreadMessageCount = await this.prisma.prismaClient.message.count({
+        where: {
+          NOT :{
+            user_id:user_id
+          },
+          OR:[
+            {dm_id : room_id},
+            {channel_id :room_id}
+          ],
+        is_read: false,
+        },
+      });
+      return unreadMessageCount;
+      }
+
+      async markRoomMessagesAsRead (user_id : string, room_id : string)
+      {
+        const unreadMessages = await this.prisma.prismaClient.message.updateMany({
+          where: {
+            NOT :{
+              user_id:user_id
+            },
+              OR:[
+            {dm_id : room_id},
+            {channel_id :room_id}
+            ],
+            is_read: false,
+          },
+          data :{
+            is_read: true,
+
+          }
+
+        });
+        return unreadMessages;
+        }
+
 
 
     // Retrieve direct messages between users.
@@ -374,7 +499,6 @@ export class ChatCrudService
 
     async createMessage (data : MessageDto)
     {
-      console.log (data)
       return ( await this.prisma.prismaClient.message.create ({data}))
     }
   

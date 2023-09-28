@@ -1,6 +1,7 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { PrismaService } from './prisma.service';
 import { userDto } from 'src/chat/dto/user.dto';
+import { NotificationType } from '@prisma/client';
 
 
 @Injectable()
@@ -8,6 +9,81 @@ export class UserCrudService
 {
     constructor (@Inject (PrismaService) private readonly prisma:PrismaService ){}
 
+    async findAllUsersdata(userID: string)
+{
+  const usersID: any[] = await this.findAllUsers(userID);
+  
+      const users: any[] = [];
+    
+      await Promise.all(
+        usersID.map(async (user) => {
+          const userData = await this.findUserByID(user.id);
+          users.push(userData);
+        })
+      );
+      return users;
+}
+
+async changeUserBackgroundImg (user_id: string, newBackImg :string)
+  {
+      return this.prisma.prismaClient.user.update(
+      {
+        where: { id : user_id}, 
+        data : {
+          background: newBackImg,
+        }
+      }
+      )
+}
+
+async findAllUsers(excludedUserid: string)
+{
+  const users = await this.prisma.prismaClient.user.findMany (
+    {
+    where: {
+        NOT: {
+            id: excludedUserid,
+        }
+    },
+  });
+  return users;
+}
+
+async createNotification(user1_id :string, user2_id :string, notificationType:NotificationType) {
+  await this.prisma.prismaClient.notification.create({
+    data: {
+      user1_id: user1_id ,
+      user2_id: user2_id ,
+      type: notificationType,
+    },
+  });
+}
+
+async  getUserNotificationsWithUser2Data(userId: string) {
+  const notifications = await this.prisma.prismaClient.notification.findMany({
+    where: {
+        user1_id: userId ,
+    },
+    include: {
+      user2: true, // Include user2 data
+    },
+  });
+
+  const notificationsWithUser2Data = notifications.map((notification) => {
+    const user2Data = notification.user2;
+
+    return {
+      id_notif: notification.id,
+      id: notification.user2.id,
+      user2Username: user2Data.username,
+      user2Avatar: user2Data.avatar,
+      type: notification.type,
+      createdAt: notification.createdAt,
+    };
+  });
+
+  return notificationsWithUser2Data;
+}
 //   Read:
 //ifindUser method finds user by id 
 async findUserByID(userId: string)

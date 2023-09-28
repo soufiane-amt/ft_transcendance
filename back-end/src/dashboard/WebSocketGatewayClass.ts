@@ -1,42 +1,31 @@
 import {Server, Socket} from 'socket.io';
-import { WebSocketGateway, WebSocketServer, OnGatewayConnection, OnGatewayDisconnect, SubscribeMessage } from '@nestjs/websockets';
-import { Injectable } from '@nestjs/common';
+import { WebSocketGateway, WebSocketServer, OnGatewayConnection, OnGatewayDisconnect, SubscribeMessage, ConnectedSocket, MessageBody } from '@nestjs/websockets';
+import { Injectable, UseGuards } from '@nestjs/common';
+import { JwtAuthGuard } from 'src/auth/guards/jwt-aut.guard';
 import { UserCrudService } from 'src/prisma/user-crud.service';
+import { AuthService } from 'src/auth/auth.service';
 
 @WebSocketGateway({cors: true, origins: 'http://localhost:3000'})
 @Injectable()
+// @UseGuards(JwtAuthGuard)
 export class WebSocketGatewayClass implements OnGatewayConnection, OnGatewayDisconnect
 {
     @WebSocketServer() server: Server;
-    constructor(){};
+    constructor(private readonly user : UserCrudService, private readonly authservice: AuthService){};
     private clients: Map<string, Socket> = new Map();
 
-    handleConnection(client: Socket) {
+    async handleConnection(client: Socket) {
+        const token : any = client.handshake.query.token;
         console.log(`Client connected: ${client.id}`);
-        let alldata;
-        const clientRoom = `room_${client.id}`;
+        const tokenParts = token.split(' ');
+        const JwtToken: string = tokenParts[1];
+
+        const payload: any = this.authservice.extractPayload(JwtToken);
+        const clientRoom = `room_${payload.userId}`;
         client.join(clientRoom);
-        const notification = [
-            { user_id : 'user1', type: 'follow'},
-            { user_id : 'user2', type: 'game'},
-            { user_id : 'user3', type: 'follow'},
-            { user_id : 'user44', type: 'follow'}
-        ];
-        client.emit('sendlist', notification);
-        client.on('sendNotification', (notificationData: any) => {
-            // const user = this.user.findUserByID('asf124naofssdafi4123');
-            // add it in bdd
-            this.server.emit('notification', notificationData);
-            // this.server.to(clientRoom).emit('notification', notificationData);
-        });
-        client.on('reponserequest', (response: string) => {
-            if (response === 'accept')
-            {
-                // this.user.createFriendShip()
-                // add friend
-                console.log('accept');
-            }
-        })
+        const notificationtable = await this.user.getUserNotificationsWithUser2Data(payload.userId);
+        if (notificationtable.length)
+            client.emit('sendlist', notificationtable);
         this.clients.set(client.id, client);
     }
     
@@ -46,47 +35,50 @@ export class WebSocketGatewayClass implements OnGatewayConnection, OnGatewayDisc
         this.clients.delete(client.id);
     }
 
-    @SubscribeMessage('connection')
-    async handleMessage(client: Socket, requestData: {targetUserId: string, senderId: string})
-    {
-        try
-        {
-            
-            // console.log(this.clients.size);
-            // const {targetUserId, senderId} = requestData;
-            // console.log(targetUserId + '_' + senderId);
-            // if (this.clients.size > 0) {
-            //   const firstClient = this.clients.values().next().value;
-            //   firstClient.emit('followeNotification', {message: 'You have a new follower!', id: senderId});
-            // firstClient.emit('followeNotification', {message: 'You have a new follower!', id: senderId});
-              // Now 'firstClient' contains the first Socket in the map.
-            
-            
-        }
-            // else
-            // {
-            //     client.emit('message', 'User is not online');
-            // }
-            // console.log(data);
-            // const userExists = await this.user.findUserByID(data);
-            // if (userExists)
-            // {
-            //     const userSocket = this.clients.get(userExists.id);
-            //     if (userSocket)
-            //         userSocket.emit('sendnotification', 'follownotification');
-            //     else{
-                    // client.emit('sendnotification', 'follownotification');
-                // }
-        //    }
-        //     else
-        //     {
-        //         client.emit('message', 'User not found');
-        //     }
-        catch(error)
-        {
-            console.error('Error handling message:', error.message);
-        }
-    }
     
+    @SubscribeMessage('sendNotification')
+    // @UseGuards(JwtAuthGuard)
+    async handleSendNotification(@MessageBody() notificationData: any){
+        const targetClientRoom = `room_${notificationData.user_id}`;
+        const token: any = notificationData.token;
+        const tokenParts = token.split(' ');
+        const JwtToken: string = tokenParts[1];
+    
+        const payload: any = this.authservice.extractPayload(JwtToken);
+        try {
+            await this.user.createNotification(notificationData.user_id, payload.userId, notificationData.type);
+            const getnotificationtable = await this.user.findUserByID(payload.userId);
+            this.server.to(targetClientRoom).emit('notification', getnotificationtable);
+        } catch (error) {
+          console.error('Error creating notification:', error);
+        }
+      };
 
+      @SubscribeMessage('responserequest')
+      async handleresponserequest(@MessageBody() notificationData: any)
+      {
+        const token: any = notificationData.token;
+        const tokenParts = token.split(' ');
+        const JwtToken: string = tokenParts[1];
+    
+        const payload: any = this.authservice.extractPayload(JwtToken);
+        if (notificationData.response === 'accept')
+        {
+          // console.log('user_id', payload.userId);
+          try
+          {
+            // console.log('notification : ', notificationData.user_id);
+            const user = await this.user.findUserByID(notificationData.user_id);
+            let check = this.user.findFriendship(payload.user_id, notificationData.user_id);
+            if (user && !check)
+              // console.log('user : ', user.username);
+              this.user.createFriendShip(payload.userId, notificationData.user_id);
+          }
+          catch (error)
+          {
+              console.log('Error :', error);
+          }
+        }
+      }
+    
 }
