@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
 import socket from "../src/app/socket/socket";
+import { discussionPanelSelectType } from "../src/app/interfaces/DiscussionPanel";
 
-export function useHandleNewMsg(messagesHistoryState: any, selectedDiscussion:any) {
+export function useHandleNewMsg(messagesHistoryState: any, selectedDiscussion:discussionPanelSelectType) {
 
     const [messagesHistory, setMessageHistory] = messagesHistoryState;
     useEffect(() => {
