@@ -22,3 +22,24 @@ export function useHandleBan (BanContext:IBanContext, selectedDiscussion : discu
         };
       }, [selectedDiscussion]);
     }
+
+    
+export function useHandleUnBan (BanContext:IBanContext, selectedDiscussion : discussionPanelSelectType, 
+    setIsBanned : React.Dispatch<React.SetStateAction<boolean | undefined>>)
+    {
+        useEffect(() => {
+            const handleUserUnBanned = (banSignal: { room_id: string, agent_id:string }) => {
+              if (banSignal.room_id === selectedDiscussion.id) {
+                setIsBanned(false); // Set the isBanned state to true when banned
+              }
+              BanContext.unbanUser(banSignal.room_id, banSignal.agent_id )
+            };
+        
+            socket.on("userUnBanned", handleUserUnBanned);
+        
+            return () => {
+              socket.off("userUnBanned", handleUserUnBanned);
+            };
+          }, [selectedDiscussion]);
+        
+    }
