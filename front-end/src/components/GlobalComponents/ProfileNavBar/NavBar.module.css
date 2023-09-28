@@ -346,6 +346,7 @@
     padding-left: 5px;
     border-bottom: 1px solid rgba(255, 255, 255, 0.5);
     cursor: pointer;
+    align-items: center;
 }
 
 .choice_first img,
@@ -363,7 +364,7 @@
 }
 
 .choice_first span,
-.choice_second span
+.choice_second form button
 {
     font-weight: 600;
     opacity: 0.9;
@@ -450,6 +451,7 @@
 {
     width: 16px;
     height: 16px;
+    margin-top: 2px;
 }
 
 /**********  Phone Screen   ****************/
@@ -466,20 +468,13 @@
 }
 
 @media screen and (max-width: 862px) and (min-width: 400px) {
-    .nav
-    {
-        height: 67px;
-    }
     .nav_search img
     {
         margin-left: 12%;
     }
     .nav_search img
     {
-        margin-left: 14%;
-        margin-top: 7px;
-        width: 64%;
-        height: 95%;
+        margin-left: 5%;
     }
     .nav_left
     {
@@ -541,7 +536,7 @@
     }
     .nav_icon
     {
-        width: 85px;
+        width: 97px;
     }
     .nav_icon img
     {
@@ -572,6 +567,7 @@
         margin-top: 0px;
     }
 }
+
 @media screen and (min-width: 400px) and (max-width: 551px)
 {
     .nav_name
@@ -601,10 +597,6 @@
         height: 10px;
         right: 143px;
         top: 27px;
-    }
-    .nav
-    {
-        height: 74px;
     }
     .click_icons_game_request img,
     .click_icons_friend_request_msg img
@@ -645,6 +637,7 @@
     .logo img
     {
         margin-left: 6%;
+        margin-top: 6px;
         width: 90%;
         height: 95%;
     }
@@ -652,17 +645,12 @@
 
 @media screen and  (max-width: 400px) and (max-width: 400px)
 {
-    .nav
-    {
-        height: 67px;
-    }
+  
     .nav_search img
     {
-        width: 96%;
-        height: 85%;
-        padding: 0;
-        margin: 0;
-        margin-top: 12px;
+        margin-left: 1px;
+        width: 67px;
+        height: 74px;
     }
     .nav_icon
     {
@@ -674,7 +662,6 @@
 
     .logo
     {
-        height: 80px;
         display: flex;
         align-items: center;
         justify-content: center;
@@ -711,19 +698,19 @@
 
     .nav_name
     {
-        width: 95px;
+        width: 100px;
         word-spacing: 0;
         margin-right: 6px;
     }
     #nameuser,
     #online
     {
-        font-size: 9px;
+        font-size: 10px;
     }
     .nav_icon img
     {
-        width: 15px;
-        height: 15px;
+        width: 17px;
+        height: 17px;
         margin-left: 9px;
     }
     .btn_search

@@ -16,7 +16,6 @@ export class WebSocketGatewayClass implements OnGatewayConnection, OnGatewayDisc
 
     async handleConnection(client: Socket) {
         const token : any = client.handshake.query.token;
-        console.log(`Client connected: ${client.id}`);
         const tokenParts = token.split(' ');
         const JwtToken: string = tokenParts[1];
 
@@ -31,7 +30,6 @@ export class WebSocketGatewayClass implements OnGatewayConnection, OnGatewayDisc
     
 
     handleDisconnect(client: Socket) {
-        console.log(`Client disconnected: ${client.id}`);
         this.clients.delete(client.id);
     }
 
@@ -69,10 +67,13 @@ export class WebSocketGatewayClass implements OnGatewayConnection, OnGatewayDisc
           {
             // console.log('notification : ', notificationData.user_id);
             const user = await this.user.findUserByID(notificationData.user_id);
-            let check = this.user.findFriendship(payload.user_id, notificationData.user_id);
-            if (user && !check)
-              // console.log('user : ', user.username);
+            let check = await this.user.findFriendship(payload.user_id, notificationData.user_id);
+            let check_another = await this.user.findFriendship(notificationData.user_id, payload.user_id);
+            if (user && check === null && check_another === null)
+            {
               this.user.createFriendShip(payload.userId, notificationData.user_id);
+            }
+              // console.log('user : ', user.username);
           }
           catch (error)
           {

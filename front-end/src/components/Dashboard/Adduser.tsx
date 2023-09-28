@@ -2,55 +2,73 @@ import React, {useEffect, useState} from "react";
 import {FaSearch} from 'react-icons/fa';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUserPlus } from '@fortawesome/free-solid-svg-icons';
-import { io } from "socket.io-client";
-import { Socket } from "socket.io-client";
+import { Socket, io } from "socket.io-client";
+import Cookies from "js-cookie";
 
 function AddUser()
 {
     const [searchQuery, setsearchQuery] = useState('');
-    const [userFriend, setuserFriend] = useState<{ id: number; userFriend: string; status: string }[]>([]);
-    const [updateFriend, setupdateFriend] = useState<{id: number; userFriend: string; status: string}[]>([]);
+    const [userFriend, setuserFriend] = useState<{ id: string; username: string; avatar: string; status: string }[]>([]);
+    const [updateFriend, setupdateFriend] = useState<{id: string; username: string; avatar: string; status: string }[]>([]);
     const [socket, setsocket] = useState<Socket| null>(null);
-    useEffect(() => {
-        if (!socket)
-        {
-            const socket = io('http://localhost:3001');
+    const JwtToken = Cookies.get("access_token");
 
-            socket.on('connect', () => {
-                console.log('Connected to WebSocket server');
-                setsocket(socket);
+    useEffect(() => {
+        if (!socket) {
+            const newSocket = io('http://localhost:3001', {
+              transports: ['websocket'],
+              query: {
+                  token: `Bearer ${JwtToken}`,
+              }
             });
-            socket.on('disconnect', () => {
-                console.log('Disconnected to WebSocket server');
+      
+            newSocket.on('connect', () => {
+              setsocket(newSocket);
             });
-            return () =>{
-                socket.disconnect();
-            };
+      
+            newSocket.on('disconnect', () => {
+            });
+    
+          return () => {
+            newSocket.disconnect();
+          };
         }
-    }, []);
+      }, [JwtToken]);
     
 
-    function handleclickButtom(user_id: number)
+    function handleclickButtom(user_id: string)
     {
         if (user_id && socket)
         {
             const notificationData = {
                 user_id: user_id,
-                type: 'follow',
-                recipient: socket.id,
-            };
-            socket.emit('sendNotification',notificationData);
+                type: 'ACCEPTED_INVITATION',
+                token: `Bearer ${JwtToken}`,
+            }
+            if (notificationData)
+            {
+                socket.emit('sendNotification',notificationData);
+            }
         }
     }
     useEffect(() => {
-        fetch('http://localhost:3001/api/Dashboard/allfriends')
+        fetch('http://localhost:3001/api/Dashboard/allUsers', {
+            method: 'Get',
+            headers: {
+              'Authorization' : `Bearer ${JwtToken}`,
+              'Content-Type': 'application/json',
+            }
+          })
             .then((response) => {
                 if (!response.ok)
                     throw new Error('Network response was not ok');
                 return response.json();
             })
             .then((data) => setuserFriend(data))
-    }, []);
+            .catch((error) => {
+                console.error('Error:', error);
+            });
+    }, [JwtToken]);
 
     useEffect(() => 
     {
@@ -59,7 +77,7 @@ function AddUser()
         else
         {
             const filterFriends = userFriend.filter((friend) => 
-                friend.userFriend.toLowerCase().includes(searchQuery.toLowerCase())
+                friend.username.toLowerCase().includes(searchQuery.toLowerCase())
             );
             setupdateFriend(filterFriends);
         }
@@ -81,14 +99,14 @@ function AddUser()
                     {updateFriend.map((friend) => 
                     (
                         <section className="add-user-list-card" key={friend.id}>
-                            {friend.status === 'IN_GAME' && (
+                            {friend.status === "IN_GAME" && (
                                 <div className="add-user-card ingame" key={friend.id}>
                                 <div className="add-user-card-inde">
-                                <img src="../user.jpg" alt="Photo" />
-                                <p>{friend.userFriend}</p>
+                                <img src={friend.avatar} alt="Photo" />
+                                <p>{friend.username}</p>
                                 </div>
                                 <div>
-                                <img src="ping-pong.png" />
+                                <img src="ping-pong.png" alt="Photo" />
                                 <h2>{friend.status}</h2>
                                 </div>
                                 <div>
@@ -99,11 +117,11 @@ function AddUser()
                                 </div>
                                </div>
                             )}
-                            {friend.status === 'ONLINE' && (
+                            {friend.status === "ONLINE" && (
                                 <div className="add-user-card online" key={friend.id}>
                                 <div className="add-user-card-inde">
-                                <img src="../user.jpg" alt="Photo" />
-                                <p>{friend.userFriend}</p>
+                                <img src={friend.avatar} alt="Photo" />
+                                <p>{friend.username}</p>
                                 </div>
                                 <div>
                                 <img src="../new-moon.png" alt="Photo"/>
@@ -117,11 +135,11 @@ function AddUser()
                                 </div>
                             </div>
                             )}
-                            {friend.status === 'OFFLINE' && (
+                            {friend.status === "OFFLINE" && (
                                 <div className="add-user-card offline" key={friend.id}>
                                 <div className="add-user-card-inde">
-                                <img src="../user.jpg" alt="Photo"/>
-                                <p>{friend.userFriend}</p>
+                                <img src={friend.avatar} alt="Photo"/>
+                                <p>{friend.username}</p>
                                 </div>
                                 <div>
                                 <img src="../yellowcircle.png" alt="Photo" width="10" height="10" />

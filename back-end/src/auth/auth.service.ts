@@ -30,6 +30,9 @@ export class AuthService {
         data: { ...user, firstauth: true, background: '' , twoFactorAuthenticationSecret: ''},
       });
 
+      await this.service.prismaClient.stats.create({
+        data: {user_id: newUser.id, wins: 0, losses: 0, ladder_level: 0}
+      })
       return this.signToken(newUser.id, newUser.email);
     } catch (error) {
       console.log('\nerror\n', error);

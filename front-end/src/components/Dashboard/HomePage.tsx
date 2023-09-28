@@ -1,12 +1,14 @@
 import React, { useEffect, useState } from "react";
 import {FaSearch} from 'react-icons/fa';
+import Cookies from "js-cookie";
 
 function HomePage()
 {
-    const [userFriend, setuserFriend] = useState<{id: number; username: string; status: string}[]>([]);
-    const [updateFriend, setupdateFriend] = useState<{id: number; username: string; status: string}[]>([]);
+    const [userFriend, setuserFriend] = useState<{ id: number; username: string; avatar: string; status: string }[]>([]);
+    const [updateFriend, setupdateFriend] = useState<{ id: number; username: string; avatar: string; status: string }[]>([]);
     const [selectValue, setselectValue] = useState('all-user');
     const [searchQuery, setsearchQuery] = useState('');
+    const JwtToken = Cookies.get("access_token");
 
     const handleInputChange = (event : any) => 
     {
@@ -36,14 +38,23 @@ function HomePage()
     }, [searchQuery, selectValue, userFriend]);
     
     useEffect(() => {
-        fetch('http://localhost:3001/api/Dashboard/friends')
+        fetch('http://localhost:3001/api/Dashboard/friends', {
+            method: 'Get',
+            headers: {
+              'Authorization' : `Bearer ${JwtToken}`,
+              'Content-Type': 'application/json',
+            }
+          })
             .then((response) => {
                 if (!response.ok)
                     throw new Error('Network response was not ok');
                 return response.json();
             })
             .then((data) => setuserFriend(data))
-    }, []);
+            .catch((error) => {
+                console.error('Error:', error);
+            });
+    }, [JwtToken]);
     return (
         <>
         <div className="home-page-counting">
@@ -65,18 +76,18 @@ function HomePage()
                 {updateFriend.map(friend => (
                         <div className="container-user" key={friend.id}>
                         <div className="nameuser">
-                            <img src="images.png" width={42} height={42}></img>
+                            <img src={friend.avatar} width={42} height={42} alt="photo"></img>
                             <h2>{friend.username}</h2>
                         </div>
                         {friend.status === 'IN_GAME' && 
                         <div className="isconnected ingame">
-                            <img src="ping-pong.png" width={14} height={14}></img>
+                            <img src="ping-pong.png" width={14} height={14} alt="photo"></img>
                             <h2>In Game</h2>
                         </div>
                         }
                         {friend.status === 'ONLINE' && 
                         <div className="isconnected online" >
-                             <img src="../new-moon.png" alt="Photo" width="10" height="10" />
+                             <img src="../new-moon.png" alt="Photo" width="10" height="10"  />
                             <h2>Online</h2>
                         </div>
                         }

@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
+import Cookies from "js-cookie";
 
 interface Data
 {
@@ -12,6 +13,7 @@ function Statictic()
 {
     const [statistic, setstatistic] = useState<{result: string; date: string } []>([]);
     let data: Data[] = [];
+    const JwtToken = Cookies.get("access_token");
 
     function CheckDuplicateDates(array: Data[]) {
         const dateMap = new Map<string, { win: number; lose: number }>();
@@ -35,17 +37,23 @@ function Statictic()
       }
 
     useEffect(() => {
-        fetch('http://localhost:3001/api/Dashboard/statistic')
-            .then((response) => {
-                if (!response.ok)
-                    throw new Error('Network response was not ok');
-                return response.json();
-            })
-            .then((data) => setstatistic(data))
-            .catch((error) => {
-              console.error('Error fetching data:', error);
-            })
-    }, []);
+        fetch('http://localhost:3001/api/Dashboard/statistic', {
+          method: 'GET',
+          headers: {
+            'Authorization': `Bearer ${JwtToken}`,
+            'Content-Type': 'application/json',
+          },
+        })
+        .then((response) => {
+            if (!response.ok)
+                throw new Error('Network response was not ok');
+            return response.json();
+        })
+        .then((data) => setstatistic(data))
+        .catch((error) => {
+          console.error('Error fetching data:', error);
+        })
+    }, [JwtToken]);
     data = statistic.map((statistic) => {
         const result = statistic.result.split('-');
         const date = statistic.date.split('-');

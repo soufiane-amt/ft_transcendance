@@ -24,6 +24,8 @@
     z-index: 9998;
     margin-bottom: 25px;
     margin-left: 118px;
+    z-index: 3;
+
 }
 
 .close_setting
@@ -96,7 +98,7 @@
     height: 14px;
 }
 
-#choose
+.choose
 {
     display: none;
 }

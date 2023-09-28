@@ -1,17 +1,19 @@
 import React, { useEffect, useState } from "react";
 import ReactCountryFlag from "react-country-flag";
 import GetCountryCode from "./GetCountryCode";
+import Cookies from "js-cookie";
 
 function Section()
 {
     let total = 0;
-    const [gameInformation, setgameInformation] = useState<{ win: number; losses: number; ladder_level: number }>();
-    const [user, setUsers] = useState<{ id: number; username: string; status: string }>();
+    const [gameInformation, setgameInformation] = useState<{  id: string; user_id: string; wins: number; losses: number; ladder_level: number; }>();
+    const [user, setUsers] = useState<any>(null);
     const [latitude, setlatitude] = useState<number | null>(null);
     const [longitude, setlongitude] = useState<number | null>(null);
     const [countryInfo, setcontryInfo] = useState('');
     const [countryCode, setcountryCode] = useState('');
     const [image, setImage] = useState('backgroundrandom.jpg');
+    const JwtToken = Cookies.get("access_token");
 
     const flagStyle = {
         width: '100%',
@@ -23,27 +25,19 @@ function Section()
         if (background)
         {   
             const formData = new FormData();
-            const Header = new Headers();
             formData.append('file', background);
-
-            Header.append('Authorization', 'background');
-    
-          try {
-            const response = await fetch('http://localhost:3001/upload/file', {
+              
+            fetch('http://localhost:3001/upload/file', {
               method: 'POST',
-              body: formData,
-              headers: Header
+              body : formData,
+              headers: {
+                'authorization' : `Bearer ${JwtToken}`,
+                'check' : 'background'
+              }
+            }).then((response) => {
+                if (response.ok)
+                  console.log('I get it');
             });
-    
-            if (response.ok) {
-              const data = await response.json();
-              console.log('File uploaded successfully:', data);
-            } else {
-              console.error('File upload failed.');
-            }
-          } catch (error) {
-            console.error('An error occurred during file upload:', error);
-          }
         }
     }
 
@@ -65,51 +59,95 @@ function Section()
         }
     }
 
-
     useEffect(() => {
-        fetch('http://localhost:3001/api/Dashboard')
+        if (JwtToken)
+        {
+            fetch('http://localhost:3001/api/Dashboard', {
+              method: 'Get',
+              headers: {
+                'Authorization' : `Bearer ${JwtToken}`,
+                'Content-Type': 'application/json',
+              }
+            })
             .then((response) => {
                 if (!response.ok)
                     throw new Error('Network response was not ok');
                 return response.json();
             })
-            .then((data) => setUsers(data))
-    }, []);
-
-    useEffect(() => {
-        fetch('http://localhost:3001/api/Dashboard/game')
-        .then((reponse) => {
-            if (!reponse.ok)
-                throw Error('Error in request');
-            return reponse.json();
-        })
-        .then((data) => {setgameInformation(data)});
-    }, []);
-    useEffect(() => {
-        if ("geolocation" in navigator)
-        {
-            navigator.geolocation.getCurrentPosition(
-                async (position) => {
-                    const {latitude, longitude} = position.coords;
-                    setlatitude(latitude);
-                    setlongitude(longitude);
-
-                    const response = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}`);
-                    const data = await response.json();
-                    const country = data.address.country;
-                    setcontryInfo(country);
-                    const code = GetCountryCode(country);
-                    if (code)
-                        setcountryCode(code);
-                },
-                (error) => {
-                    console.log(error.message);
-                }
-            )
+            .then((data) => {
+              if (data) {
+                setUsers(data);
+              } else {
+                throw new Error('Received empty or invalid JSON data');
+              }
+            })
+            .catch((error) => {
+                console.error('add user:', error);
+            });
         }
-    }, []);
-    if (gameInformation?.win || gameInformation?.losses)
-        total = gameInformation?.win + gameInformation?.losses;
+      }, [user, JwtToken]);
+
+      useEffect(() => {
+        fetch('http://localhost:3001/api/Dashboard/game', {
+          method: 'GET',
+          headers: {
+            'Authorization': `Bearer ${JwtToken}`,
+            'Content-Type': 'application/json',
+          },
+        })
+          .then((response) => {
+            if (!response.ok) {
+              throw new Error('Network response was not ok');
+            }
+            return response.json();
+          })
+          .then((data) => {
+            if (data) {
+              setgameInformation(data);
+            } else {
+              throw new Error('Received empty or invalid JSON data');
+            }
+          })
+          .catch((error) => {
+            console.error('Error:', error);
+          });
+      }, [gameInformation, JwtToken]);
+
+      useEffect(() => {
+        if ("geolocation" in navigator) {
+          navigator.geolocation.getCurrentPosition(
+            async (position) => {
+              try {
+                const { latitude, longitude } = position.coords;
+                setlatitude(latitude);
+                setlongitude(longitude);
+      
+                const response = await fetch(
+                  `https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}`
+                );
+      
+                if (!response.ok) {
+                  throw new Error('Network response was not ok');
+                }
+      
+                const data = await response.json();
+                const country = data.address.country;
+                setcontryInfo(country);
+                const code = GetCountryCode(country);
+                if (code) setcountryCode(code);
+              } catch (error) {
+                console.error("An error occurred:", error);
+              }
+            },
+            (error) => {
+              console.log(error.message);
+            }
+          );
+        }
+      }, []);
+    if (gameInformation?.wins || gameInformation?.losses)
+        total = gameInformation?.wins + gameInformation?.losses;
+    
     return (
         <div className="section-container">
             
@@ -120,7 +158,7 @@ function Section()
                     <input type="file" onChange={handleImage} accept="image/*" id="choose" />
                 </div>
                 </div>
-            <img src={image as string} alt="Photo" />
+            <img src={user?.background || image as string} alt="Photo" />
             </div>
             <div className="identification">
                 <div className="identification-header one">
@@ -131,7 +169,7 @@ function Section()
                 <hr id="section-line"></hr>
                 <div className="identification-information">
                     <h3>Wins</h3>
-                    <p>{gameInformation?.win}</p>
+                    <p>{gameInformation?.wins}</p>
                 </div>
                 <hr id="section-line"></hr>
                 <div className="identification-information">
@@ -141,7 +179,7 @@ function Section()
                 </div>
                 <div className="parent-identification-user">
                     <div className="identification-user">
-                        <img src="../user.jpg" alt="Photo" width={130} height={130} />
+                        <img src={user?.avatar} alt="Photo" width={130} height={130} />
                         <div className="level"><p>{gameInformation?.ladder_level}</p></div>
                         <p id="nameuser">{user?.username}</p>
                     </div>

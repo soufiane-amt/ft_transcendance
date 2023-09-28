@@ -108,7 +108,7 @@ function DashboardTwoFa(props: any) {
     }
   }
   return (
-    <div className="fixed inset-0 flex items-center justify-center z-50">
+    <div className="fixed inset-0 flex items-center justify-center z-50" style={{ zIndex: '50'}}>
       {/* this is the backdrop (the background opacity) */}
       <div className="absolute bg-black opacity-50"></div>
       {/* this is the main component */}
