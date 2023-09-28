@@ -23,7 +23,7 @@
     font-size: 20px;
     font-weight: bolder;
     border: 0;
-    background-color: var(--discussion_panel_back_color);
+    background-color: transparent;
     color:#a2a1ac;
     cursor: pointer;
 

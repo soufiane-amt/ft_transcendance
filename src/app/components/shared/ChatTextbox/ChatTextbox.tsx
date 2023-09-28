@@ -2,13 +2,13 @@ import React, { useEffect, useState } from "react";
 import style from "./ChatTextbox.module.css";
 import { Send } from "../../svgs";
 import { useSessionUser } from "../../../context/SessionUserContext";
-import { selectDiscStateType } from "../../../interfaces/DiscussionPanel";
+import { discussionPanelSelectType, selectDiscStateType } from "../../../interfaces/DiscussionPanel";
 import socket from "../../../socket/socket"; // Import the socket object
 import { ChatBoxStatus } from "../../../enum/displayChatBoxStatus";
-import { findBannedRoomContext, useBanContext } from "../../../context/BanContext";
+import { useBanContext } from "../../../context/BanContext";
 
 interface ChatTextBoxProps {
-  selectDiscState: selectDiscStateType;
+  selectedDiscussion: discussionPanelSelectType;
   displayStatus: ChatBoxStatus;
   messagesHistoryState: [
     messageDto[],
@@ -17,11 +17,10 @@ interface ChatTextBoxProps {
 }
 
 function ChatTextBox({
-  selectDiscState,
+  selectedDiscussion,
   messagesHistoryState,
   displayStatus,
 }: ChatTextBoxProps) {
-  const { selectedDiscussion, setSelectedDiscussion } = selectDiscState;
 
   const userSession = useSessionUser();
 

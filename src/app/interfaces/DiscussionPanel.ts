@@ -21,5 +21,5 @@ export interface discussionPanelSelectType {
 }
 export interface selectDiscStateType {
   selectedDiscussion : discussionPanelSelectType,
-  setSelectedDiscussion : React.Dispatch<React.SetStateAction<discussionPanelSelectType>>  
+  setSelectedDiscussion : (e: discussionPanelSelectType) => void
 }
