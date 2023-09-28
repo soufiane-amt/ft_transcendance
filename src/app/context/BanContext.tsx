@@ -10,7 +10,7 @@ interface Ban {
 
 
 // Define the context interface
-interface IBanContext {
+export interface IBanContext {
   bannedRooms: Ban[];
   banUser: (room_id: string, blocker_id : string,expirationDate: Date) => void;
   unbanUser: (roomId: string, userId: string) => void;
