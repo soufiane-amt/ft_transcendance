@@ -24,7 +24,7 @@ enum actionTypes{
 }
 
 type ActionButtonProps =  {targetId:string,  buttonData:buttonType}
-function ActionButton({targetId, buttonData}:ActionButtonProps) /*button title, icon, backGroundColor */
+function ActionButton({targetId, buttonData}:ActionButtonProps)
 {
 
     const handleButtonClick =  ()=>{
@@ -48,12 +48,14 @@ function ActionButton({targetId, buttonData}:ActionButtonProps) /*button title, 
         </button>
     )
 }
-function UserActionModal ({close, targetedUserId, targetedDiscussion}:{close:(parm : boolean)=>void,targetedUserId:string, targetedDiscussion:string})
+
+
+function UserActionModal ({handleVisibility, targetedUserId, targetedDiscussion}:{handleVisibility:(parm : boolean)=>void,targetedUserId:string, targetedDiscussion:string})
 {
     const userSession = useSessionUser()
     const userContact = findUserContacts (targetedUserId)
     const userIsBanned = findBannedRoomContext(targetedDiscussion)
-    const ref  = useOutsideClick(close)
+    const ref  = useOutsideClick(handleVisibility)
 
     if (!userContact)
         return <div>User action modal not found!</div>
@@ -85,19 +87,10 @@ function UserActionModalMain({userToActId,  DiscussionToActId, modalState}: User
 {  
     const [isVisible, setAsVisible] = modalState;
 
-    console.log ("||||", userToActId)
-    const handleModalVisibility = () => {
-        // setAsVisible(false)
-  }
-
-
-
-
-
     return (
         <>
-      {isVisible && <div className={style.user_action_main_modal} onClick={handleModalVisibility} >
-        <UserActionModal close ={setAsVisible} targetedUserId={userToActId} targetedDiscussion={DiscussionToActId}/>
+      {isVisible && <div className={style.user_action_main_modal}>
+        <UserActionModal handleVisibility ={setAsVisible} targetedUserId={userToActId} targetedDiscussion={DiscussionToActId}/>
       </div>}
         </>
       )

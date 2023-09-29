@@ -33,8 +33,8 @@ function MessagesHistory({ messages }: { messages: messageDto[] }) {
   }
   
   
-  
 
+  
   interface ChattingFieldPops {
     selectDiscussionState: {
       selectedDiscussion : discussionPanelSelectType,

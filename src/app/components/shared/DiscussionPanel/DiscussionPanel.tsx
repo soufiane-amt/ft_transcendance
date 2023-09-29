@@ -38,8 +38,6 @@ interface DiscussionPanelProps {
 
 function DiscussionPanel ({onSelect, DiscussionPanel, isSelected, showUserActionModal} :DiscussionPanelProps)
 {    
-
-    // const panelTheme = isSelected ? selectionPanelColors : defaultPanelColors;
     const panelThemeClass = clsx({
         [style.discussion_panel_default_colors]:isSelected ===false,
         [style.discussion_panel_selection_colors]:isSelected ===true,

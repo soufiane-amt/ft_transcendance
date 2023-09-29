@@ -8,7 +8,7 @@
   }
   
   .chat_field::-webkit-scrollbar {
-    width: 0em; /* Adjust the width as needed */
+    width: 0em; 
   }
   
   .messages_history {

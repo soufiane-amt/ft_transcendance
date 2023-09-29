@@ -7,6 +7,8 @@ import {
 } from "../../../context/UsersContactBookContext";
 import { useSessionUser } from "../../../context/SessionUserContext";
 
+
+
 interface MessageBubbleProps {
   messageContent: string;
   isMessageSent: boolean;
@@ -25,9 +27,9 @@ function MessageBubble({ messageContent, isMessageSent }: MessageBubbleProps) {
 
 
 
+
 interface MessageProps {
   messageData: messageDto;
-
 }
 
 function Message({ messageData }: MessageProps) {
@@ -37,8 +39,6 @@ function Message({ messageData }: MessageProps) {
   const userSession = useSessionUser()
   
   const sentMessage:boolean = (messageSender === undefined);
-  
-  
   
   var currentUser = sentMessage ? userSession : messageSender;
   if (!currentUser)

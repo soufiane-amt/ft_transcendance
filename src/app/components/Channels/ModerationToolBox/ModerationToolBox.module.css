@@ -1,0 +1,52 @@
+.moderation_tool_box {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    background-color: white;
+    width: 600px;
+    height: 800px;
+}
+
+.moderation_tool_box h2 {
+    width: 9em ;
+    margin-left: 25px;
+    border-bottom: 1px solid rgb(188, 185, 185);
+}
+
+
+.users_cards{
+    overflow: scroll;
+
+}
+.users_cards::-webkit-scrollbar {
+    width: 0em; 
+  }
+
+.user_addition{
+    display: flex;
+    justify-content:space-around;
+    margin-bottom: 50px;
+}
+
+.user_addition input
+{   
+    width: 70%;
+    height: 40px;
+    border: 0;
+    background-color: #D0D0DB;
+    border-radius: 20px;
+    padding-inline: 10px;
+    font-size:large;
+}
+
+.user_addition button
+{   
+    border-radius: 20px;
+    border: 0;
+    width: 20%;
+    color: white;
+    font-size: large;
+    font-weight: bold;
+    background-color: #B3A4FA;
+    cursor: pointer;
+}
