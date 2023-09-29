@@ -19,7 +19,7 @@ function TypeSetter ()
     return (
         <div className={`${style.type_setter} `}>
             <label>New Channel type : </label>
-            <select value={selectedOption} onChange={handleSelection} className={style.user_input_fields}> 
+            <select value={selectedOption} onChange={handleSelection} className={`${style.user_input_fields} ${style.type_setter_select}`}> 
                 {/* disable the current type of the channel */}
                 <option value="private">Private</option>
                 <option value="public">Public</option>

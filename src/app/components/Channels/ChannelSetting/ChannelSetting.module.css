@@ -1,5 +1,5 @@
 .channel_setting{
-    align-items: center;
+    align-items:center;
     justify-content: space-around;
     background-color: white;
 
@@ -12,6 +12,15 @@
     flex-direction: column;
     width: 100%;
 }
+.type_setter select {
+    appearance: none;
+    background-image: url('/images/icons/Ch/select_arrow.png');
+    background-repeat: no-repeat;
+    background-position: right center;
+    background-size: 16px 16px; /* Adjust the size as needed */
+
+    cursor: pointer;
+}
 
 .display_as_block {
     display: flex;
@@ -20,6 +29,9 @@
 
 .user_input_fields{
     width: 80%;
-    background-color: #FFF0F0;
+    background-color: #84A9F3;
     border: 0;
+    height: 40px;
+    border-radius: 20px;
+    
 }
