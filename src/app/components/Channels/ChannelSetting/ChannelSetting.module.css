@@ -1,0 +1,25 @@
+.channel_setting{
+    align-items: center;
+    justify-content: space-around;
+    background-color: white;
+
+    height: 700px;
+    width: 450px;
+}
+
+.type_setter {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
+
+.display_as_block {
+    display: flex;
+    flex-direction: column;
+}
+
+.user_input_fields{
+    width: 80%;
+    background-color: #FFF0F0;
+    border: 0;
+}
