@@ -19,7 +19,7 @@ export function ModerationToolBox ()
                 <UserModerationCard/>
             </div>
             <div className={style.user_addition}>
-                <input></input>
+                <input placeholder="Enter a username"></input>
                 <button>Add User</button>
             </div>
         </div>

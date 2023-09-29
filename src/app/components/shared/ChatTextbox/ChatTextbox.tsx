@@ -10,6 +10,7 @@ import { useHandleNewMsg } from "../../../../../hooks/useHandleNewMsg";
 import { useHandleBan, useHandleUnBan } from "../../../../../hooks/useHandleBan";
 
 
+const isMessageValid = (message:string) => { return message.trim() !== '';}
 
 
 
@@ -47,6 +48,8 @@ function ChatTextBox({
   }, [selectedDiscussion]);
 
   const handleSendMessage = () => {
+    if (isMessageValid(newMessageContent) === false)
+      return;
     const newMessage = {
       user_id: userSession.id,
       content: newMessageContent,
