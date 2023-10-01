@@ -8,13 +8,13 @@ import { SessionUserProvider } from "./context/SessionUserContext";
 
 export default function Home() {
   
-  // <SessionUserProvider>
-  //     <DirectMesgMain/>
-
-  // </SessionUserProvider>
   return (
     <>
-      <ChannelSetting/>
+     <SessionUserProvider>
+         <DirectMesgMain/>
+  
+     </SessionUserProvider>
+      {/* <ChannelSetting/> */}
     </>
     )
 }

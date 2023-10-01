@@ -2,12 +2,8 @@ import clsx from "clsx";
 import style from "./Message.module.css";
 import Avatar from "../Avatar/Avatar";
 import TimeStamp from "../TimeStamp/TimeStamp";
-import {
-  useUserContacts,
-} from "../../../context/UsersContactBookContext";
+import { useUserContacts } from "../../../context/UsersContactBookContext";
 import { useSessionUser } from "../../../context/SessionUserContext";
-
-
 
 interface MessageBubbleProps {
   messageContent: string;
@@ -25,40 +21,37 @@ function MessageBubble({ messageContent, isMessageSent }: MessageBubbleProps) {
   return <div className={bubbleStylingClass}>{messageContent}</div>;
 }
 
-
-
-
 interface MessageProps {
   messageData: messageDto;
 }
 
 function Message({ messageData }: MessageProps) {
-  
   const userContacts = useUserContacts();
   const messageSender = userContacts.get(messageData.user_id);
-  const userSession = useSessionUser()
-  
-  const sentMessage:boolean = (messageSender === undefined);
-  
+  const userSession = useSessionUser();
+
+  const sentMessage: boolean = messageSender === undefined;
+
   var currentUser = sentMessage ? userSession : messageSender;
-  if (!currentUser)
-    return <div>Message User owner not found</div>;
-  
   const messagePositionStyle = sentMessage ? `${style.message__to_right}` : "";
   return (
+    <>
+    {currentUser &&
     <div className={`${style.message} ${messagePositionStyle}`}>
-      <Avatar avatarSrc={currentUser.avatar} avatarToRight={sentMessage} />
-      <div className={style.message_body}>
-        <span className={style.message_username__style}>
-          {currentUser.username}
-        </span>
-        <MessageBubble
-          messageContent={messageData.content}
-          isMessageSent={sentMessage}
-        />
-        <TimeStamp time={messageData.createdAt} />
+      <Avatar src={currentUser.avatar} avatarToRight={sentMessage} />
+        <div className={style.message_body}>
+          <span className={style.message_username__style}>
+            {currentUser.username}
+          </span>
+          <MessageBubble
+            messageContent={messageData.content}
+            isMessageSent={sentMessage}
+          />
+          <TimeStamp time={messageData.createdAt} />
+        </div>
       </div>
-    </div>
+    }
+    </>
   );
 }
 

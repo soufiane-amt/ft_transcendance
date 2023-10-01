@@ -3,16 +3,19 @@
   position: relative;
 }
 
-.avatar__style::before {
-  content: var(
-    --black_circle_char
-  ); /* Unicode character for a solid circle or any icon you prefer */
+.statusIndicator {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  border: 1px solid white;
+  background-color: #00ff08; /* Green for online status */
   color: var(--online_user_icon); /* Color for the online indicator */
   font-size: calc(var(--avatar_size) / 5); /* Adjust the size as needed */
   position: absolute;
   left: 80%;
   top: calc(var(--avatar_size) / 1.4);
 }
+
 
 .avatar__dimentions {
   height: var(--avatar_size);

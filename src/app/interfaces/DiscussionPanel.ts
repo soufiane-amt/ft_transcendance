@@ -8,7 +8,7 @@ export interface MinMessageDto {
 
 export interface DiscussionDto {
   id: string;
-  partner_id: string;
+  partner_id: string  | undefined;
   last_message: MinMessageDto;
   unread_messages:number;
 }
@@ -16,7 +16,7 @@ export interface DiscussionDto {
 
 export interface discussionPanelSelectType {
   id: string;
-  partner_id: string;
+  partner_id: string | undefined;
   last_message: { id:string, content: string, createdAt: string }
 }
 export interface selectDiscStateType {

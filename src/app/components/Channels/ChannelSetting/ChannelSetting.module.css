@@ -1,37 +1,73 @@
 .channel_setting{
-    align-items:center;
-    justify-content: space-around;
-    background-color: white;
+    display: flex;
+    flex-direction:column;
+    align-items: center;
+
+    background-color: #DCDCF8;
+    border-radius: 40px;
 
     height: 700px;
     width: 450px;
+
+    position: relative;
 }
 
-.type_setter {
-    display: flex;
-    flex-direction: column;
-    width: 100%;
+.channel_setting__img {
+    border-radius: 50%;
+    height: 150px;
+    margin-top: 20px;
+    margin-bottom: 50px;
 }
+
+.channel_setting button{
+    position: absolute;
+    bottom: 10px ;
+
+    width: 200px;
+    height: 80px;
+    background-color: #5C5B8B;
+    border: 0;
+    border-radius: 50px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.channel_setting button:hover{
+    background-color: #3e44a0;
+}
+
+.type_setter div {
+    margin-bottom: 50px;
+
+}
+
 .type_setter select {
     appearance: none;
     background-image: url('/images/icons/Ch/select_arrow.png');
     background-repeat: no-repeat;
-    background-position: right center;
-    background-size: 16px 16px; /* Adjust the size as needed */
-
+    background-position: right 10px center;
+    background-size: 16px 16px; 
+    
+    outline: none;
+    text-align: center;
     cursor: pointer;
+    height: 45px;
 }
 
-.display_as_block {
-    display: flex;
-    flex-direction: column;
+.type_setter input {
+    color: rgb(241, 226, 226);
+    text-indent: 20px;
 }
 
 .user_input_fields{
-    width: 80%;
-    background-color: #84A9F3;
+    margin: 0 auto;
+    display: block; /* Ensures the margin:auto works correctly */
+
+    width: 400px;
+    background-color: #8280BD;
     border: 0;
     height: 40px;
     border-radius: 20px;
-    
+    color: white;
+    font-size: large;
 }
