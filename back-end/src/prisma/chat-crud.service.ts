@@ -98,7 +98,20 @@ export class ChatCrudService
   }
 
 
-    
+  async p(user_id :string) {
+    const dmUsersIds = await this.prisma.prismaClient.channelMembership.findMany({
+        where: {
+                user_id: user_id ,
+        },
+        include :{
+          
+        }
+    });
+    return dmUsersIds.map((dm_item) => {
+        const partner = user_id == dm_item.user1_id ? dm_item.user2_id : dm_item.user1_id;
+        return { id: dm_item.id, partner_id: partner, last_message: dm_item.messages[0] };
+    });
+
     // Create a new chat channel (public, or password-protected).
 
     async   createChannel (user_id:string , data : channelDto)

@@ -26,20 +26,6 @@ export class ChatController
                     @Inject(dmGateway) private readonly dmGate : dmGateway, 
                     private readonly reflector: Reflector){}
 
-@Get("/dm")
-hello(){
-
-}
-
-@Get('/createDms')
-async create(@Req() request : Request) {
-
-  const newMessage:MessageDto = {user_id:"kkhfjkh78t78t34rjflsr9uw4jof", dm_id:"a5f51033-06ae-4f89-be3d-3d92450ab7ba", content :"hi , soufiane please call me"}
-  for (let index = 0; index < 20; index++) {
-    this.chatCrud.createMessage(newMessage)
-    
-  }
-}
 
 @Get('/image/:image_path')
 async getUserImage(@Param('image_path') image_path: string, @Res() res: Response) {
@@ -51,22 +37,36 @@ async getUserImage(@Param('image_path') image_path: string, @Res() res: Response
 }
   
 
-  @Get ("/direct_messaging/discussionsBar")
-  async findAllDiscussionPartners (@Req() request : Request)
-  {
-    const dms = await this.chatCrud.retreiveDmInitPanelData(request.cookies['user.id']);
-    const unreadMessagesPromises = dms.map(async (dmElement) => {
-      const unreadMessages = await this.chatCrud.getUnreadMessagesNumber(request.cookies['user.id'], dmElement.id);//get the number of messages unread and unsent by this user
-      return { ...dmElement, unread_messages: unreadMessages };
-    });
+@Get ("/direct_messaging/discussionsBar")
+async findAllDiscussionPartners (@Req() request : Request)
+{
+  const dms = await this.chatCrud.retreiveDmInitPanelData(request.cookies['user.id']);
+  const unreadMessagesPromises = dms.map(async (dmElement) => {
+    const unreadMessages = await this.chatCrud.getUnreadMessagesNumber(request.cookies['user.id'], dmElement.id);//get the number of messages unread and unsent by this user
+    return { ...dmElement, unread_messages: unreadMessages };
+  });
 
-    // I wait for all promises to resolve
-    const discussions = await Promise.all(unreadMessagesPromises);
+  // I wait for all promises to resolve
+  const discussions = await Promise.all(unreadMessagesPromises);
 
-    return discussions;
+  return discussions;
+}
 
-  }
- 
+@Get ("/channels/discussionsBar")
+async findAllDiscussionChannels (@Req() request : Request)
+{
+  const dms = await this.chatCrud.retreiveDmInitPanelData(request.cookies['user.id']);
+  const unreadMessagesPromises = dms.map(async (dmElement) => {
+    const unreadMessages = await this.chatCrud.getUnreadMessagesNumber(request.cookies['user.id'], dmElement.id);//get the number of messages unread and unsent by this user
+    return { ...dmElement, unread_messages: unreadMessages };
+  });
+
+  // I wait for all promises to resolve
+  const discussions = await Promise.all(unreadMessagesPromises);
+
+  return discussions;
+}
+
   @Get ("/direct_messaging/userContactsBook")
   async findAllUsersInContact (@Req() request : Request)
   {

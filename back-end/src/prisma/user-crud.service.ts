@@ -150,7 +150,19 @@ async changeUserAvatar (user_id: string, newAvatarURI :string)
     }
     )
   } 
-//other setting may be added later ... //***// */
+
+  async changeUserBackgroundImg (user_id: string, newBackImg :string)
+  {
+      return this.prisma.prismaClient.user.update(
+      {
+        where: { id : user_id}, 
+        data : {
+          background: newBackImg,
+        }
+      }
+      )
+    } 
+  //other setting may be added later ... //***// */
 async addWin (id : string)
 {
     // Use the 'increment' method to increment the numeric field

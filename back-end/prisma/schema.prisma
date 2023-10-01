@@ -56,6 +56,7 @@ model match {
   player_2    User   @relation("Player2", fields: [player_2_id], references: [id])
   player_2_id String
   result      String
+  createdAt  DateTime @default(now())
 }
 
 
@@ -71,7 +72,6 @@ model Stats {
 
 
 enum RelationStatus {
-  PENDING
   FRIENDS
   BLOCK
 }
@@ -81,11 +81,11 @@ model Friendships {
   user1    User   @relation("invited", fields: [user1_id], references: [id])
   user1_id String @unique
 
-    user2    User   @relation("invitor", fields: [user2_id], references: [id])
-    user2_id String @unique
+  user2    User   @relation("invitor", fields: [user2_id], references: [id])
+  user2_id String @unique
 
-    createdAt  DateTime @default(now())
-    relationStatus RelationStatus  @default(PENDING)
+  createdAt  DateTime @default(now())
+  relationStatus RelationStatus  @default(FRIENDS)
 }
 
 
@@ -107,7 +107,9 @@ model ChannelMembership {
   role      Role
   joined_at DateTime @default(now())
 
-  is_banned Boolean @default(false)
+  last_visite DateTime
+  
+  is_banned Boolean? @default(false)
   banned_at DateTime?
 
   @@unique([channel_id, user_id])
