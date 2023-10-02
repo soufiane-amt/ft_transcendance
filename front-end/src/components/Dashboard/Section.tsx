@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import ReactCountryFlag from "react-country-flag";
 import GetCountryCode from "./GetCountryCode";
 import Cookies from "js-cookie";
+import { showToast } from "./ShowToast";
 
 function Section()
 {
@@ -20,8 +21,10 @@ function Section()
         height: '100%',
     };
 
-    const sendData = async (background: File) => 
+    const sendData = async (background: File, myfile : string) => 
     {
+      try
+      {
         if (background)
         {   
             const formData = new FormData();
@@ -35,10 +38,21 @@ function Section()
                 'check' : 'background'
               }
             }).then((response) => {
-                if (response.ok)
-                  console.log('I get it');
+              if(response.status === 400){
+                showToast('Failed Upload File', "error");
+                console.clear();
+              }
+              else
+              {
+                setImage(myfile);
+              }
             });
         }
+      }
+      catch (erro: any)
+      {
+        console.clear();
+      }
     }
 
     function handleImage(e: React.ChangeEvent<HTMLInputElement>)
@@ -51,8 +65,7 @@ function Section()
             {
                 if (typeof reader.result === 'string')
                 {
-                    setImage(reader.result);
-                    sendData(file);
+                    sendData(file, reader.result);
                 }
             };
             reader.readAsDataURL(file);

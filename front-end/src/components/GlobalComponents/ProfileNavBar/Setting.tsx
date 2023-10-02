@@ -75,7 +75,6 @@ const Setting: React.FC<Settingprops> = ({ handleSettingData }) => {
         if(response.status === 400){
           showToast('Failed Upload File', "error");
           console.clear();
-          
         }
       });
     } catch (error : any) {

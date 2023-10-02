@@ -31,7 +31,6 @@ export class UploadController
             storage: diskStorage({
                 destination: './uploads',
                 filename: (rep, file, cb) => {
-                    console.log('IM here');
                     const parts = file.originalname.split('.');
                     const fileExtension = parts.pop();
                     const name = parts.join('.');
@@ -72,13 +71,13 @@ export class UploadController
             }
             else if (authorizationHeader && check)
             {
-              console.log('background');
               const tokenParts = authorizationHeader.split(' ');
                 const JwtToken: string = tokenParts[1];
             
                 try {
                   const payload: any = this.authservice.extractPayload(JwtToken);
                   this.user.changeUserBackgroundImg(payload.userId, `http://localhost:3001/auth/uploads/${file.filename}`);
+                  response.ok;
                 } catch (error) {
                   // console.error('Error:', error);
                 }

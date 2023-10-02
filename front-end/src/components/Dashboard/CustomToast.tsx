@@ -39,12 +39,12 @@ const CustomToast: React.FC<CustomToastProps> = ({ id, obj, onClose }) => {
             </p>
             {obj.type === "ACCEPTED_INVITATION" && (
                 <p className="mt-1 text-sm text-gray-500">
-                send Friend Notification
+                send You Friend Notification
                 </p>
             )}
             {obj.type === "IN_GAME" && (
                 <p className="mt-1 text-sm text-gray-500">
-                send Friend Notification
+                Do you want to play
                 </p>
             )}
           </div>

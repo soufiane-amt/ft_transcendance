@@ -131,7 +131,7 @@ function NavBar()
         }
         catch (error)
         {
-            console.log('Error : ', error);
+            console.clear();
         }
         Cookies.remove('access_token', { path: '/' });
     }

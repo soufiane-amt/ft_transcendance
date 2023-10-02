@@ -12,8 +12,28 @@ function AddUser()
     const [updateFriend, setupdateFriend] = useState<{id: string; username: string; avatar: string; status: string }[]>([]);
     const [socket, setsocket] = useState<Socket| null>(null);
     const JwtToken = Cookies.get("access_token");
-
-
+    
+    useEffect(() => {
+        if (!socket) {
+            const newSocket = io('http://localhost:3001', {
+              transports: ['websocket'],
+              query: {
+                  token: `Bearer ${JwtToken}`,
+              }
+            });
+      
+            newSocket.on('connect', () => {
+              setsocket(newSocket);
+            });
+      
+            newSocket.on('disconnect', () => {
+            });
+    
+          return () => {
+            newSocket.disconnect();
+          };
+        }
+      }, [JwtToken]);
     
 
     function handleclickButtom(user_id: string, username: string)

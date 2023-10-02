@@ -123,13 +123,12 @@ svg.svg-inline--fa.fa-shield-halved
     width: 10%;
 }
 
-
-
 aside
 {
     background-color: #24234F;
     height: 100%;
     position: fixed;
+    top: 91px;
     width: 19%;
     border-top: 1px solid rgba(255, 255, 255, 0.3);
 }
@@ -471,7 +470,6 @@ aside
 {
     margin-left: 5px;
     font-size: 15px;
-    margin-bottom: 3px;
 }
 
 .home-page{
@@ -575,11 +573,16 @@ aside
     background-color: #2A2D69;
 }
 
+.home-page-choose
+{
+    height: 34px;
+}
+
 .home-page-choose select
 {
     background-color: #2A2D69;
     color: #FFFFFF;
-    height: 38px;
+    height: 26px;
     width: 200px;
     border: none;
     font-family: 'Open Sans', sans-serif;
@@ -862,7 +865,6 @@ aside
     /* height: 100vh; */
     height: 80%;
     top: 14%;
-    z-index: -1;
 }
 
 .userheader
@@ -1216,7 +1218,7 @@ svg.svg-inline--fa.fa-user-plus
 
     .parent-section-background
     {
-        left: 43%;
+        left: 39%;
     }
 
     .usercomponent
@@ -1956,10 +1958,6 @@ svg.svg-inline--fa.fa-user-plus
     {
         height: 33px;
     }
-    .home-page-choose select
-    {
-        height: 33px;
-    }
     .section-background label
     {
         font-size: 13px;
@@ -2264,7 +2262,7 @@ svg.svg-inline--fa.fa-user-plus
     }
     #pet-select
     {
-        height: 32px;
+        height: 23px;
     }
     .section-background
     {

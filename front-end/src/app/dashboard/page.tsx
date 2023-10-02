@@ -4,9 +4,11 @@ import Structure from '@/app/Structure';
 import DisplayComponent from '@/components/Dashboard/DisplayComponent';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { useEffect } from 'react';
 
 
 function Dashboard() {
+  
   return (
     <Structure>
       <ToastContainer  position="top-center"></ToastContainer>

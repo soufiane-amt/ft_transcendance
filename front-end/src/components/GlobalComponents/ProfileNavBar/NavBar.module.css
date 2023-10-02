@@ -34,6 +34,7 @@
 .logo img 
 {
     cursor: pointer;
+    margin-right: 16px;
 }
 
 /* .nav_search img
@@ -489,6 +490,8 @@
     .nav_search img
     {
         margin-left: 5%;
+        width: 80px;
+        height: 70px;
     }
     .nav_left
     {
@@ -660,11 +663,11 @@
 @media screen and  (max-width: 400px) and (max-width: 400px)
 {
   
-    .nav_search img
+    .logo img
     {
-        margin-left: 1px;
-        width: 67px;
-        height: 74px;
+        margin-left: 17%;
+        width: 60px;
+        height: 50px;
     }
     .nav_icon
     {
@@ -746,7 +749,7 @@
     {
         width: 73px;
         position: relative;
-        left: 16px;
+        left: 30px;
     }
 
     .btn_search input::placeholder
@@ -849,13 +852,17 @@
     {
         width: 100%;
     }
-    .nav_search img
+    .logo
+    {
+        background: none;
+    }
+    /* .nav_search img
     {
         width: 100%;
         height: 90%;
         margin: 0;
         margin-top: 13px;
-    }
+    } */
     .nav_icon img,
     .nav_icon div span
     {
