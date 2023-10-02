@@ -39,6 +39,8 @@ function PaneLastMessage({
   return <p className={style.panel_last_message}>{last_message_content}</p>;
 }
 
+
+
 interface DiscussionPanelProps {
   onSelect: (panel: DiscussionDto) => void;
   DiscussionPanel: DiscussionDto;

@@ -5,6 +5,7 @@
     width: 60%; 
     height: 100vh; /*to enable chat field scrolling */
     overflow: auto;
+    background-color: #efecff;
   }
   
   .chat_field::-webkit-scrollbar {
