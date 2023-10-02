@@ -42,7 +42,7 @@ async findAllDiscussionPartners (@Req() request : Request)
 {
   const dms = await this.chatCrud.retreiveDmInitPanelData(request.cookies['user.id']);
   const unreadMessagesPromises = dms.map(async (dmElement) => {
-    const unreadMessages = await this.chatCrud.getUnreadMessagesNumber(request.cookies['user.id'], dmElement.id);//get the number of messages unread and unsent by this user
+    const unreadMessages = await this.chatCrud.getUnreadDmMessagesNumber(request.cookies['user.id'], dmElement.id);//get the number of messages unread and unsent by this user
     return { ...dmElement, unread_messages: unreadMessages };
   });
 
@@ -55,10 +55,19 @@ async findAllDiscussionPartners (@Req() request : Request)
 @Get ("/channels/discussionsBar")
 async findAllDiscussionChannels (@Req() request : Request)
 {
-  const dms = await this.chatCrud.retreiveDmInitPanelData(request.cookies['user.id']);
-  const unreadMessagesPromises = dms.map(async (dmElement) => {
-    const unreadMessages = await this.chatCrud.getUnreadMessagesNumber(request.cookies['user.id'], dmElement.id);//get the number of messages unread and unsent by this user
-    return { ...dmElement, unread_messages: unreadMessages };
+  const dms = await this.chatCrud.retreiveChannelPanelData(request.cookies['user.id']);
+  const unreadMessagesPromises = dms.map(async (chElement) => {
+    const unreadMessages = await this.chatCrud.getUnreadChannelMessagesNumber(request.cookies['user.id'], chElement.id);//get the number of messages unread and unsent by this user
+    const channelOwner = await this.chatCrud.findChannelOwner(chElement.id)
+    const channelAdmins = await this.chatCrud.findChannelAdmins(chElement.id)
+    const channelBans = await this.chatCrud.retieveBlockedChannelUsers(chElement.id)
+
+    return { ...chElement, 
+             unread_messages: unreadMessages, 
+             channelOwner: channelOwner, 
+             channelAdmins:channelAdmins,
+             channelBans: channelBans,
+            };
   });
 
   // I wait for all promises to resolve

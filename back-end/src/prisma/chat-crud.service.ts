@@ -1,669 +1,613 @@
-import { Inject, Injectable, NotFoundException } from '@nestjs/common';
-import { PrismaService } from './prisma.service';
-import { MessageDto, channelDto, channelMembershipDto, dmDto } from 'src/chat/dto/chat.dto';
-
+import { Inject, Injectable, NotFoundException } from "@nestjs/common";
+import { PrismaService } from "./prisma.service";
+import {
+  MessageDto,
+  channelDto,
+  channelMembershipDto,
+  dmDto,
+} from "src/chat/dto/chat.dto";
 
 @Injectable()
-export class ChatCrudService 
-{
-  constructor (@Inject (PrismaService) private readonly prisma:PrismaService ){}
+export class ChatCrudService {
+  constructor(@Inject(PrismaService) private readonly prisma: PrismaService) {}
 
-
-    async retrieveUserContactBook (user_id :string) 
-    { 
-      const partnersIds = await this.prisma.prismaClient.directMessaging.findMany({
+  async retrieveUserContactBook(user_id: string) {
+    const partnersIds = await this.prisma.prismaClient.directMessaging.findMany(
+      {
         where: {
-            OR: [
-                { user1_id: user_id },
-                { user2_id: user_id },
-            ],
+          OR: [{ user1_id: user_id }, { user2_id: user_id }],
         },
         orderBy: {
-            updatedAt: 'asc',
+          updatedAt: "asc",
         },
         select: {
-            user1_id: true,
-            user2_id: true,
+          user1_id: true,
+          user2_id: true,
         },
-    });
-    //Promise.all waits for all map operations to end 
-      const partnerContactData =   Promise.all( partnersIds.map( async (dm_item) => {
+      }
+    );
+    //Promise.all waits for all map operations to end
+    const partnerContactData = Promise.all(
+      partnersIds.map(async (dm_item) => {
         //This next check which id belong to the parntner of the actual user
-        const partner_id = user_id == dm_item.user1_id ? dm_item.user2_id : dm_item.user1_id;
-        const partnerData =  await this.prisma.prismaClient.user.findUnique ({
-                where : {
-                  id : partner_id
-                },
-                select : {
-                  username :true,
-                  avatar :true
-                }})
-        return { id: partner_id, username: partnerData.username, avatar : partnerData.avatar};
-      })); 
-      return (partnerContactData);
-    }
-
-
-    async retrieveUserDmChannels(user_id :string) {
-      return await this.prisma.prismaClient.directMessaging.findMany({
+        const partner_id =
+          user_id == dm_item.user1_id ? dm_item.user2_id : dm_item.user1_id;
+        const partnerData = await this.prisma.prismaClient.user.findUnique({
           where: {
-              OR: [
-                  { user1_id: user_id },
-                  { user2_id: user_id },
-              ]
-          },
-          orderBy: {
-              updatedAt: 'asc'
+            id: partner_id,
           },
           select: {
-              id: true,
-              user1_id: true,
-              user2_id: true,
-          }
-      });
+            username: true,
+            avatar: true,
+          },
+        });
+        return {
+          id: partner_id,
+          username: partnerData.username,
+          avatar: partnerData.avatar,
+        };
+      })
+    );
+    return partnerContactData;
   }
+
+  async retrieveUserDmChannels(user_id: string) {
+    return await this.prisma.prismaClient.directMessaging.findMany({
+      where: {
+        OR: [{ user1_id: user_id }, { user2_id: user_id }],
+      },
+      orderBy: {
+        updatedAt: "asc",
+      },
+      select: {
+        id: true,
+        user1_id: true,
+        user2_id: true,
+      },
+    });
+  }
+
   async retreiveDmInitPanelData(user_id) {
-      const dmUsersIds = await this.prisma.prismaClient.directMessaging.findMany({
-          where: {
-              OR: [
-                  { user1_id: user_id },
-                  { user2_id: user_id },
-              ],
+    const dmUsersIds = await this.prisma.prismaClient.directMessaging.findMany({
+      where: {
+        OR: [{ user1_id: user_id }, { user2_id: user_id }],
+      },
+      orderBy: {
+        updatedAt: "desc",
+      },
+      select: {
+        id: true,
+        user1_id: true,
+        user2_id: true,
+        messages: {
+          select: {
+            id: true,
+            content: true,
+            createdAt: true,
+            is_read: true,
           },
           orderBy: {
-              updatedAt: 'desc',
+            createdAt: "desc",
           },
-          select: {
-              id: true,
-              user1_id: true,
-              user2_id: true,
-              messages: {
-                  select: {
-                      id: true,
-                      content: true,
-                      createdAt: true,
-                      is_read: true,
-                  },
-                  orderBy: {
-                      createdAt: 'desc',
-                  },
-                  take: 1,
-              },
-          },
-      });
-      return dmUsersIds.map((dm_item) => {
-          const partner = user_id == dm_item.user1_id ? dm_item.user2_id : dm_item.user1_id;
-          return { id: dm_item.id, partner_id: partner, last_message: dm_item.messages[0] };
-      });
-  }
-
-
-  async p(user_id :string) {
-    const dmUsersIds = await this.prisma.prismaClient.channelMembership.findMany({
-        where: {
-                user_id: user_id ,
+          take: 1,
         },
-        include :{
-          
-        }
+      },
     });
     return dmUsersIds.map((dm_item) => {
-        const partner = user_id == dm_item.user1_id ? dm_item.user2_id : dm_item.user1_id;
-        return { id: dm_item.id, partner_id: partner, last_message: dm_item.messages[0] };
+      const partner =
+        user_id == dm_item.user1_id ? dm_item.user2_id : dm_item.user1_id;
+      return {
+        id: dm_item.id,
+        partner_id: partner,
+        last_message: dm_item.messages[0],
+      };
     });
+  }
 
-    // Create a new chat channel (public, or password-protected).
+  async retreiveChannelPanelData(user_id: string) {
+    const channelMemberships =
+      await this.prisma.prismaClient.channelMembership.findMany({
+        where: {
+          user_id: user_id,
+        },
+        select: {
+          channel: {
+            select: {
+              id: true,
+              type: true,
+              messages: {
+                select: {
+                  id: true,
+                  content: true,
+                  createdAt: true,
+                },
+                orderBy: {
+                  createdAt: "desc",
+                },
+                take: 1,
+              },
+            },
+          },
+        },
+      });
 
-    async   createChannel (user_id:string , data : channelDto)
-    {
-      const channel_id :string =   (await this.prisma.prismaClient.channel.create ({data})).id
-      const memberShipData : channelMembershipDto = {
-        channel_id : channel_id,
-        user_id : user_id, 
-        role : 'OWNER'
-      }
-      try{
+    // Structure the data with the desired fields
+    const formattedData = channelMemberships.map((membership) => ({
+      id: membership.channel.id,
+      partner_id: undefined,
+      last_message: membership.channel.messages[0],
+      type: membership.channel.type,
+    }));
 
-        await this.joinChannel (memberShipData)
-      }
-      catch (error){
-      }
-      return channel_id
-    }
+    return formattedData;
+  }
 
-    
+  // Create a new chat channel (public, or password-protected).
+
+  async createChannel(user_id: string, data: channelDto) {
+    const channel_id: string = (
+      await this.prisma.prismaClient.channel.create({ data })
+    ).id;
+    const memberShipData: channelMembershipDto = {
+      channel_id: channel_id,
+      user_id: user_id,
+      role: "OWNER",
+    };
+    try {
+      await this.joinChannel(memberShipData);
+    } catch (error) {}
+    return channel_id;
+  }
+
   //user joins channel
 
-    async   joinChannel (data : channelMembershipDto)
-    {
-        return await this.prisma.prismaClient.channelMembership.create ({data})
-    }
+  async joinChannel(data: channelMembershipDto) {
+    return await this.prisma.prismaClient.channelMembership.create({ data });
+  }
 
-    async findChannelById (channel_id :string)
-    {
-      return await this.prisma.prismaClient.channel.findUnique (
-        {
-          where :{
-            id : channel_id
-          }
-        }
-      )
-    }
+  async findChannelById(channel_id: string) {
+    return await this.prisma.prismaClient.channel.findUnique({
+      where: {
+        id: channel_id,
+      },
+    });
+  }
 
-    async findDmById (dm_id :string)
-    {
-      try
-      {
-        return await this.prisma.prismaClient.directMessaging.findUnique (
-          {
-            where :{
-              id : dm_id
-            }
-          }
-        )
-      }
-      catch
-      {
-        return null
-      }
-    }
-
-    async findChannelsByType (channel_type :'PUBLIC' | 'PRIVATE' | 'PROTECTED')
-    {
-      return this.prisma.prismaClient.channel.findMany (
-        {
-          where :{
-            type : channel_type
-          }
-        }
-      )
-    }
-    async createDm ( data : dmDto)
-    {
-      return (await this.prisma.prismaClient.directMessaging.create ({data})).id
-    }
-
-
-    async findDmByUsers(user1_id: string, user2_id: string) {
-      const Dm = await this.prisma.prismaClient.directMessaging.findMany({
+  async findDmById(dm_id: string) {
+    try {
+      return await this.prisma.prismaClient.directMessaging.findUnique({
         where: {
-          OR: [
-            {
-              user1_id: user1_id,
-              user2_id: user2_id,
-            },
-            {
-              user1_id: user2_id,
-              user2_id: user1_id,
-            },
-          ],
+          id: dm_id,
+        },
+      });
+    } catch {
+      return null;
+    }
+  }
+
+  async findChannelsByType(channel_type: "PUBLIC" | "PRIVATE" | "PROTECTED") {
+    return this.prisma.prismaClient.channel.findMany({
+      where: {
+        type: channel_type,
+      },
+    });
+  }
+  async createDm(data: dmDto) {
+    return (await this.prisma.prismaClient.directMessaging.create({ data })).id;
+  }
+
+  async findDmByUsers(user1_id: string, user2_id: string) {
+    const Dm = await this.prisma.prismaClient.directMessaging.findMany({
+      where: {
+        OR: [
+          {
+            user1_id: user1_id,
+            user2_id: user2_id,
+          },
+          {
+            user1_id: user2_id,
+            user2_id: user1_id,
+          },
+        ],
+      },
+      select: {
+        id: true,
+      },
+    });
+
+    return Dm.length > 0 ? Dm[0] : null;
+  }
+
+  //this method finds all the channels that exist in the server
+
+  async findAllChannelsAvailbleToJoin(user_id: string) {
+    const notJoinedChannels =
+      await this.prisma.prismaClient.channelMembership.findMany({
+        where: {
+          user_id: {
+            not: user_id,
+          },
         },
         select: {
           id: true,
         },
       });
-    
-      return Dm.length > 0 ? Dm[0] : null;
-    }
-        
-    //this method finds all the channels that exist in the server
-    
-    
-    async findAllChannelsAvailbleToJoin(user_id :string)
-    {
-      const notJoinedChannels = await this.prisma.prismaClient.channelMembership.findMany(
-        {
-          where :
-          {
-            user_id :
-            {
-              not :user_id
-            },
-          },
-          select :{
-            id :true
-          }
-      });
-      //the type of the retrieved id's look like this { id: string }[], the nest function tries to add them to an array of string
-      const channelIds: string[] = notJoinedChannels.map(item => item.id);
+    //the type of the retrieved id's look like this { id: string }[], the nest function tries to add them to an array of string
+    const channelIds: string[] = notJoinedChannels.map((item) => item.id);
 
-      return  this.prisma.prismaClient.channel.findMany (
-        {
-          where :{
-            id:
-              {
-                in: channelIds
-              },
-            OR:[
-              {type: 'PUBLIC'},
-              {type :  'PROTECTED'}
-            ]
-          }
-        }
-      )
-    }
+    return this.prisma.prismaClient.channel.findMany({
+      where: {
+        id: {
+          in: channelIds,
+        },
+        OR: [{ type: "PUBLIC" }, { type: "PROTECTED" }],
+      },
+    });
+  }
 
+  async findAllJoinedChannels(user_id: string) {
+    return this.prisma.prismaClient.channelMembership.findMany({
+      where: {
+        user_id: user_id,
+      },
+    });
+  }
 
-    async findAllJoinedChannels (user_id :string )
-    {
-      return this.prisma.prismaClient.channelMembership.findMany(
-        {
-          where :
-          {
-            user_id : user_id
-          },
-        }
-      );
-    }
-
-
-    async retrieveRoomMessages (room_id : string)//This method is used both for dm and groups
-    {
-      try{
-        return await this.prisma.prismaClient.message.findMany(
-        {
-          where :
-          {
-            OR:[
-              {channel_id : room_id},
-              {dm_id : room_id}
-            ]
-          },
-          select : {
-            user_id:true,
-            content :true,
-            createdAt :true,
-            is_read :true
-          },
-          orderBy :{
-            createdAt : 'asc'
-          }
-        }
-      )
-      }
-      catch{
-        throw new NotFoundException(`Channel with ID ${room_id} not found.`);
-      }
-    }
-
-    async getUnreadMessagesNumber (user_id : string, room_id : string)
-    {
-      const unreadMessageCount = await this.prisma.prismaClient.message.count({
+  async retrieveRoomMessages(
+    room_id: string //This method is used both for dm and groups
+  ) {
+    try {
+      return await this.prisma.prismaClient.message.findMany({
         where: {
-          NOT :{
-            user_id:user_id
-          },
-          OR:[
-            {dm_id : room_id},
-            {channel_id :room_id}
-          ],
-        is_read: false,
+          OR: [{ channel_id: room_id }, { dm_id: room_id }],
+        },
+        select: {
+          user_id: true,
+          content: true,
+          createdAt: true,
+          is_read: true,
+        },
+        orderBy: {
+          createdAt: "asc",
         },
       });
-      return unreadMessageCount;
-      }
+    } catch {
+      throw new NotFoundException(`Channel with ID ${room_id} not found.`);
+    }
+  }
 
-      async markRoomMessagesAsRead (user_id : string, room_id : string)
-      {
-        console.log (await this.prisma.prismaClient.message.findMany({
-          where: {
-            NOT :{
-              user_id:user_id
-            },
-            OR:[
-            {dm_id : room_id},
-            {channel_id :room_id}
-            ],
-            is_read: false,
+  async getUnreadDmMessagesNumber(user_id: string, room_id: string) {
+    const unreadMessageCount = await this.prisma.prismaClient.message.count({
+      where: {
+        dm_id: room_id,
+        NOT: {
+          user_id: user_id,
+        },
+        is_read: false,
+      },
+    });
+    return unreadMessageCount;
+  }
+
+  async getUnreadChannelMessagesNumber(userId: string, channelId: string) {
+    // Retrieve the user's last visit timestamp for the channel
+    const channelMembership =
+      await this.prisma.prismaClient.channelMembership.findFirst({
+        where: { channel_id: channelId, user_id: userId },
+        select: { last_visit: true },
+      });
+
+    if (!channelMembership) {
+      throw new Error("User is not a member of the channel");
+    }
+
+    const lastVisitTimestamp = channelMembership.last_visit;
+
+    // Count messages in the channel created after the last visit
+    const messageCount = await this.prisma.prismaClient.message.count({
+      where: {
+        channel_id: channelId,
+        createdAt: { gte: lastVisitTimestamp },
+      },
+    });
+
+    return messageCount;
+  }
+
+  async markRoomMessagesAsRead(user_id: string, room_id: string) {
+    console.log(
+      await this.prisma.prismaClient.message.findMany({
+        where: {
+          NOT: {
+            user_id: user_id,
           },
-        }))
-        const unreadMessages = await this.prisma.prismaClient.message.updateMany({
-          where: {
-            NOT :{
-              user_id:user_id
-            },
-              OR:[
-            {dm_id : room_id},
-            {channel_id :room_id}
-            ],
-            is_read: false,
-          },
-          data :{
-            is_read: true,
+          OR: [{ dm_id: room_id }, { channel_id: room_id }],
+          is_read: false,
+        },
+      })
+    );
+    const unreadMessages = await this.prisma.prismaClient.message.updateMany({
+      where: {
+        NOT: {
+          user_id: user_id,
+        },
+        OR: [{ dm_id: room_id }, { channel_id: room_id }],
+        is_read: false,
+      },
+      data: {
+        is_read: true,
+      },
+    });
+    return unreadMessages;
+  }
 
-          }
+  async findBannedDmRooms(user_id: string) {
+    return await this.prisma.prismaClient.directMessaging.findMany({
+      where: {
+        OR: [{ user1_id: user_id }, { user2_id: user_id }],
+        status: "BANNED",
+      },
+      select: {
+        id: true,
+        blocker_id: true,
+      },
+    });
+  }
 
-        });
-        return unreadMessages;
-        }
+  // Retrieve direct messages between users.
+  async retieveBlockedUsersList(user_id: string) {
+    return this.prisma.prismaClient.friendships.findMany({
+      where: {
+        OR: [{ user1_id: user_id }, { user2_id: user_id }],
+        relationStatus: "BLOCK",
+      },
+    });
+  }
 
-    async findBannedDmRooms (user_id :string)
-    {
-      return await this.prisma.prismaClient.directMessaging.findMany (
-        {
-          where :
-          {
-            OR:[
-              {user1_id : user_id},
-              {user2_id :user_id}
-            ],
-            status:'BANNED'
-          },
-          select :
-          {
-            id:true,
-            blocker_id:true
-          }
-        }
-      )
+  async retieveBlockedChannelUsers(
+    channel_id: string //for groups only
+  ) {
+    return this.prisma.prismaClient.channelMembership.findMany({
+      where: {
+        channel_id: channel_id,
+        is_banned: true,
+      },
+    });
+  }
+
+  //update
+
+  async changeChannelPhoto(channel_id: string, newAvatarURI: string) {
+    return await this.prisma.prismaClient.channel.update({
+      where: { id: channel_id },
+      data: {
+        image: newAvatarURI,
+      },
+    });
+  }
+
+  async changeChannelType(
+    channel_id: string,
+    new_type: "PUBLIC" | "PROTECTED" | "PRIVATE",
+    new_pass: string
+  ) {
+    return await this.prisma.prismaClient.channel.update({
+      where: { id: channel_id },
+      data: {
+        type: new_type,
+        password: new_pass,
+      },
+    });
+  }
+  async changeChannelName(channel_id: string, new_name: string) {
+    return await this.prisma.prismaClient.channel.update({
+      where: { id: channel_id },
+      data: {
+        name: new_name,
+      },
+    });
+  }
+
+  async blockAUserWithinGroup(user_id: string, channel_id: string) {
+    return this.prisma.prismaClient.channelMembership.update({
+      where: {
+        channel_id_user_id: {
+          channel_id: channel_id,
+          user_id: user_id,
+        },
+      },
+      data: {
+        is_banned: true,
+        banned_at: new Date(),
+      },
+    });
+  }
+
+  async unblockAUserWithinGroup(user_id: string, channel_id: string) {
+    return this.prisma.prismaClient.channelMembership.update({
+      where: {
+        channel_id_user_id: {
+          channel_id: channel_id,
+          user_id: user_id,
+        },
+      },
+      data: {
+        is_banned: false,
+      },
+    });
+  }
+
+  async blockAUserWithDm(agentId: string, dm_id: string) {
+    return await this.prisma.prismaClient.directMessaging.update({
+      where: {
+        id: dm_id,
+      },
+      data: {
+        status: "BANNED",
+        blocker_id: agentId,
+      },
+    });
+  }
+
+  async unblockAUserWithDm(agentId: string, room_id: string) {
+    const user = await this.prisma.prismaClient.directMessaging.findUnique({
+      where: {
+        id: room_id,
+      },
+      select: {
+        blocker_id: true,
+      },
+    });
+    if (agentId !== user.blocker_id) return null;
+    return await this.prisma.prismaClient.directMessaging.update({
+      where: {
+        id: room_id,
+      },
+      data: {
+        status: "ALLOWED",
+        blocker_id: null,
+      },
+    });
+  }
+
+  async leaveChannel(user_id: string, channel_id: string) {
+    return this.prisma.prismaClient.channelMembership.delete({
+      where: {
+        channel_id_user_id: {
+          channel_id: channel_id,
+          user_id: user_id,
+        },
+      },
+    });
+  }
+
+  //this method espacially was created in case all the members of a channel left
+  async deleteChannel(channel_id: string) {
+    try {
+      await this.prisma.prismaClient.directMessaging.delete({
+        where: {
+          id: channel_id,
+        },
+      });
+    } catch (error) {
+      await this.prisma.prismaClient.channel.delete({
+        where: {
+          id: channel_id,
+        },
+      });
     }
+  }
 
-    
-    // Retrieve direct messages between users.
-    async retieveBlockedUsersList (user_id :string)
-    {
-      return this.prisma.prismaClient.friendships.findMany (
-        {
-          where:
-          {
-            
-            OR:[
-              {user1_id : user_id},
-              {user2_id :user_id}
-            ],
-            relationStatus : 'BLOCK'
-          }
-        }
-      )
-    }
-    async retieveBlockedChannelUsers (channel_id :string)//for groups only
-    {
-      return this.prisma.prismaClient.channelMembership.findMany (
-        {
-          where:
-          {
-            channel_id :channel_id,
-            is_banned :true
-          }
-        }
-      )
-    }
+  async createMessage(data: MessageDto) {
+    return await this.prisma.prismaClient.message.create({ data });
+  }
+
+  async deleteMessage(message_id: string) {
+    this.prisma.prismaClient.message.delete({
+      where: {
+        id: message_id,
+      },
+    });
+  }
+
+  async editMessage(message_id: string, content: string) {
+    this.prisma.prismaClient.message.update({
+      where: {
+        id: message_id,
+      },
+      data: {
+        content: content,
+      },
+    });
+  }
 
 
-
-    //update
-
-    async changeChannelPhoto (channel_id: string, newAvatarURI :string)
-    {
-        return await  this.prisma.prismaClient.channel.update(
-        {
-          where: { id : channel_id}, 
-          data : {
-            image: newAvatarURI,
-          }
-        }
-        )
-      } 
-
-      async changeChannelType (channel_id: string, new_type : 'PUBLIC' | 'PROTECTED' | 'PRIVATE', new_pass :string)
-      {
-          return await  this.prisma.prismaClient.channel.update(
-          {
-            where: { id : channel_id}, 
-            data : {
-              type : new_type,
-              password: new_pass,
-            }
-          }
-          )
-        } 
-        async changeChannelName (channel_id: string, new_name :string)
-        {
-            return await  this.prisma.prismaClient.channel.update(
-            {
-              where: { id : channel_id}, 
-              data : {
-                name : new_name,
-              }
-            }
-            )
-          } 
-        
-    async blockAUserWithinGroup(user_id :string, channel_id: string)
-    {
-      return this.prisma.prismaClient.channelMembership.update(
-        {
-          where :
-          {
-            channel_id_user_id : {
-            channel_id : channel_id,
-            user_id : user_id
-            },
-          },
-          data:
-          {
-            is_banned :true,
-            banned_at: new Date()
-          }
-        }
-      )
-    }
-
-    async unblockAUserWithinGroup(user_id :string, channel_id: string)
-    {
-      return this.prisma.prismaClient.channelMembership.update(
-        {
-          where :
-          {
-            channel_id_user_id : {
-            channel_id : channel_id,
-            user_id : user_id
-            },
-          },
-          data:
-          {
-            is_banned :false,
-          }
-        }
-      )
-    }
-
-    async blockAUserWithDm(agentId: string, dm_id: string)
-    {
-      return await this.prisma.prismaClient.directMessaging.update(
-        {
-          where :{
-            id : dm_id
-          },
-          data:
-          {
-            status : 'BANNED',
-            blocker_id : agentId,
-          }
-        }
-      )
-    }
-
-    async unblockAUserWithDm(agentId: string,room_id: string)
-    {
-      const user = await this.prisma.prismaClient.directMessaging.findUnique(
-        {
-          where :{
-            id : room_id
-          },
-          select:
-          {
-            blocker_id : true,
-          }
-        });
-      if (agentId !== user.blocker_id)
-        return null
-      return await this.prisma.prismaClient.directMessaging.update(
-        {
-          where :{
-            id : room_id
-          },
-          data:
-          {
-            status : 'ALLOWED',
-            blocker_id : null
-          }
-        }
-      )
-    }
-
-
-    async leaveChannel (user_id: string, channel_id :string)
-    {
-      return this.prisma.prismaClient.channelMembership.delete (
-        {
-          where :
-          {
-            channel_id_user_id : {
-            channel_id : channel_id,
-            user_id : user_id
-            },
-          }
-        }
-      )
-    }
-
-    //this method espacially was created in case all the members of a channel left
-    async deleteChannel ( channel_id :string)
-    {
-      try
-      {
-        await this.prisma.prismaClient.directMessaging.delete (
-          {
-            where :
-            {
-              id: channel_id
-            }
-
-          }
-        )
-      }
-      catch (error)
-      {
-        await this.prisma.prismaClient.channel.delete (
-          {
-            where :
-            {
-              id: channel_id
-            }
-
-          }
-        )
-      }
-    }
-
-    async createMessage (data : MessageDto)
-    {
-      return ( await this.prisma.prismaClient.message.create ({data}))
-    }
   
-    async deleteMessage (message_id: string)
-    {
-      this.prisma.prismaClient.message.delete (
-        {
-          where:
-          {
-            id : message_id
-          }
-        }
-      )
-    }
-
-    async editMessage (message_id: string, content :string)
-    {
-      this.prisma.prismaClient.message.update ({
-        where :
-        {
-          id : message_id
+  async findChannelAdmins(channel_id: string) {
+    return await this.prisma.prismaClient.channelMembership.findMany(
+      {
+        where: {
+          channel_id: channel_id,
         },
-        data: {
-          content : content
+        select : {
+          id:true, 
         }
-      })
-    
-    }
+      }
+    );
+  }
 
-
-    async upgradeToAdmin (user_id :string, channel_id: string)
-    {
-        this.prisma.prismaClient.channelMembership.update ({
-          where :
-          {
-            channel_id_user_id : {
-            channel_id : channel_id,
-            user_id : user_id
-            },
+  async findChannelOwner(channel_id: string) {
+    return await this.prisma.prismaClient.channelMembership.findFirst(
+      {
+        where: {
+          channel_id: channel_id,
         },
-        data: {
-          role : 'ADMIN'
+        select : {
+          id:true, 
         }
-      })
-    }
-
-    async setGradeToUser (user_id :string, channel_id: string)
-    {
-      this.prisma.prismaClient.channelMembership.update ({
-        where :
-        {
-          channel_id_user_id : {
-          channel_id : channel_id,
-          user_id : user_id
-          },
+      }
+    );
+  }
+  async upgradeToAdmin(user_id: string, channel_id: string) {
+    this.prisma.prismaClient.channelMembership.update({
+      where: {
+        channel_id_user_id: {
+          channel_id: channel_id,
+          user_id: user_id,
         },
-        data: {
-          role : 'USER'
-        }
-      })
-    }
+      },
+      data: {
+        role: "ADMIN",
+      },
+    });
+  }
 
-    async getMemeberShip (user_id :string, channel_id :string)
-    {
-      return await this.prisma.prismaClient.channelMembership.findUnique ({
-        where :
-        {
-          channel_id_user_id : {
-          channel_id : channel_id,
-          user_id : user_id
-          },
+  async setGradeToUser(user_id: string, channel_id: string) {
+    this.prisma.prismaClient.channelMembership.update({
+      where: {
+        channel_id_user_id: {
+          channel_id: channel_id,
+          user_id: user_id,
         },
-      })
-    }
+      },
+      data: {
+        role: "USER",
+      },
+    });
+  }
 
-    async makeOwner (user_id :string, channel_id: string)
-    {
-      this.prisma.prismaClient.channelMembership.update ({
-        where :
-        {
-          channel_id_user_id : {
-          channel_id : channel_id,
-          user_id : user_id
-          },
+  async getMemeberShip(user_id: string, channel_id: string) {
+    return await this.prisma.prismaClient.channelMembership.findUnique({
+      where: {
+        channel_id_user_id: {
+          channel_id: channel_id,
+          user_id: user_id,
         },
-        data: {
-          role : 'OWNER'
-        }
-      })
-    }
-      ///
+      },
+    });
+  }
 
-    async checkUserInDm (user_id : string, room_id :string)
-    {
-      return await this.prisma.prismaClient.directMessaging.findUnique(
-        {
-          where : 
-          {
-            OR:[
-              {user1_id : user_id},
-              {user2_id : user_id},
-            ],
-            id : room_id
-          }
-        }
-      )
-    }
+  async makeOwner(user_id: string, channel_id: string) {
+    this.prisma.prismaClient.channelMembership.update({
+      where: {
+        channel_id_user_id: {
+          channel_id: channel_id,
+          user_id: user_id,
+        },
+      },
+      data: {
+        role: "OWNER",
+      },
+    });
+  }
+  ///
+
+  async checkUserInDm(user_id: string, room_id: string) {
+    return await this.prisma.prismaClient.directMessaging.findUnique({
+      where: {
+        OR: [{ user1_id: user_id }, { user2_id: user_id }],
+        id: room_id,
+      },
+    });
+  }
 }

@@ -107,7 +107,7 @@ model ChannelMembership {
   role      Role
   joined_at DateTime @default(now())
 
-  last_visite DateTime
+  last_visit DateTime?
   
   is_banned Boolean? @default(false)
   banned_at DateTime?
@@ -144,7 +144,7 @@ model Channel {
 
   type         Channel_type
   name         String
-  image        String //(2)this attribiute is for storing image location in filesystem also check (1)
+  image        String 
   memeberShips ChannelMembership[]
   messages     Message[]
   password     String?
@@ -193,7 +193,6 @@ model Notification {
   user2     User   @relation("notifyer", fields: [user2_id], references: [id])
   user2_id  String
 
-  //I still don't know how the source notification will be like
   type       NotificationType
   createdAt DateTime         @default(now())
 }
