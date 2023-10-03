@@ -81,7 +81,7 @@ async findUserByUsername(username: string)
 // Retrieve user's friends list and their statuses.
 async findFriendsList(id: string)
 {
-  return this.prisma.prismaClient.friendships.findMany (
+  return await this.prisma.prismaClient.friendships.findMany (
     {
       where : {
         OR : [
@@ -92,6 +92,60 @@ async findFriendsList(id: string)
     }
   )
 }
+
+
+async  findNonFriendsUsers(userId: string) {
+  const friendships = await this.prisma.prismaClient.friendships.findMany({
+    where: {
+      OR: [
+        {
+          user1_id: userId,
+        },
+        {
+          user2_id: userId,
+        },
+      ],
+    },
+  });
+
+  // Extract friend IDs from the friendships
+  const friendIdsArray = friendships.map((friendship) =>
+    userId === friendship.user1_id ? friendship.user2_id : friendship.user1_id
+  );
+
+
+  const nonFriendsUsers = await this.prisma.prismaClient.user.findMany({
+    where: {
+      NOT: {
+        id: {
+          in: friendIdsArray,
+        },
+      },
+    },
+    select:{
+      id:true, 
+      username:true, 
+      avatar:true,
+
+    }
+  });
+  const filteredNonFriendsUsers = nonFriendsUsers.filter((user) => user.id !== userId);
+
+  return filteredNonFriendsUsers;
+} 
+
+async FriendShipRequestAlreadySent (current_user_id:string, targeted_user_id:string)
+{
+  return await this.prisma.prismaClient.notification.count ({
+    where:{
+      user1_id : targeted_user_id,
+      user2_id : current_user_id,
+      type:'FRIENDSHIP_REQUEST'
+    },
+  }) != 0;
+}
+
+
 
 async findFriendship(user1_id: string, user2_id: string)
 {

@@ -51,6 +51,7 @@ export class ChatCrudService {
     return partnerContactData;
   }
 
+
   async retrieveUserDmChannels(user_id: string) {
     return await this.prisma.prismaClient.directMessaging.findMany({
       where: {

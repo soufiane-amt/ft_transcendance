@@ -180,8 +180,8 @@ model DirectMessaging {
 
 
 enum NotificationType {
-  ACCEPTED_INVITATION
-  GAME_INVITATION
+  FRIENDSHIP_REQUEST
+  ACCEPTED_INVITATION_REQUEST
 }
 
 model Notification {
