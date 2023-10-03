@@ -21,9 +21,10 @@ function MessagesHistory({ messages }: { messages: messageDto[] }) {
     useEffect(() => {
       scrollToBottom();
     }, [messages]);
+    console.log ()
     return (
       <div className={style.messages_history}>
-        {messages.map((messageElement: messageDto) => {
+        {messages && messages.map((messageElement: messageDto) => {
           return <Message key={messageElement.id} messageData={messageElement} />;
         })}
         {/* this is a dummy div created so that it references the bottom of the chatfield to scroll there whenever a message comes */}

@@ -4,6 +4,7 @@ import socket from "../src/app/socket/socket";
 
 export function useHandlePanel(discussionPanels: DiscussionDto[],selectedDiscussion : discussionPanelSelectType ,setDiscussionRooms:React.Dispatch<React.SetStateAction<DiscussionDto[]>>) 
 {
+
     useEffect(() => {
         const handleNewMessage = (newMessage: messageDto) => {
           const updatedRooms = [...discussionPanels];
@@ -44,6 +45,7 @@ export function useHandlePanel(discussionPanels: DiscussionDto[],selectedDiscuss
         };
         socket.on("newMessage", handleNewMessage);
         socket.on("setRoomAsRead", handleReadStatusTrack);
+
         return () => {
           socket.off("newMessage", handleNewMessage);
           socket.off("setRoomAsRead", handleReadStatusTrack);

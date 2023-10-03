@@ -2,9 +2,9 @@ import { useEffect, useState } from "react";
 import { DiscussionDto, MinMessageDto, discussionPanelSelectType } from "../../../interfaces/DiscussionPanel";
 import style from "./DiscussionsBar.module.css";
 import { fetchDataFromApi } from "../../shared/customFetch/exmple";
-import UserActionModalMain from "../UserActionModal/UserActionModal";
 import DiscussionPanel from "../../shared/DiscussionPanel/DiscussionPanel";
 import { useHandlePanel } from "../../../../../hooks/useHandlePanel";
+import UserActionModalMain from "../UserActionModal/UserActionModal";
 
 interface DiscussionsBarProps {
     selectedDiscussionState:{

@@ -6,19 +6,19 @@ export interface MinMessageDto {
   is_read?: boolean;
 }
 
-export interface DiscussionDto {
-  id: string;
-  partner_id: string  | undefined;
-  last_message: MinMessageDto;
-  unread_messages:number;
-}
 
 
 export interface discussionPanelSelectType {
   id: string;
   partner_id: string | undefined;
-  last_message: { id:string, content: string, createdAt: string }
 }
+
+
+export interface DiscussionDto extends discussionPanelSelectType {
+  last_message: { id:string, content: string, createdAt: string }
+  unread_messages:number;
+}
+
 export interface selectDiscStateType {
   selectedDiscussion : discussionPanelSelectType,
   setSelectedDiscussion : (e: discussionPanelSelectType) => void

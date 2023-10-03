@@ -1,12 +1,11 @@
 "use client";
 import React, { useEffect, useRef, useState } from "react";
-import style from "./DirectMsgMain.module.css";
+import style from "./ChannelsMain.module.css";
 import { discussionPanelSelectType } from "../../interfaces/DiscussionPanel";
 
-import { UserContactsProvider } from "../../context/UsersContactBookContext";
+  import { DiscussionsBar } from "../direct-messaging/DiscussionsBar/DiscussionsBar";
+import { ChattingField } from "../direct-messaging/ChattingField/ChattingField";
 import { BanProvider } from "../../context/BanContext";
-import { DiscussionsBar } from "./DiscussionsBar/DiscussionsBar";
-import { ChattingField } from "./ChattingField/ChattingField";
 
 /*stopPropagation is used here to prevent the click event to take way up to the parent it got limited right here */
 export const selectedPanelDefault: discussionPanelSelectType = {
@@ -15,7 +14,7 @@ export const selectedPanelDefault: discussionPanelSelectType = {
 };
 
 
-function DirectMesgMain() {
+function ChannelsMain() {
   const [selectedDiscussion, setSelectedDiscussion] =
     useState<discussionPanelSelectType>(selectedPanelDefault);
     
@@ -27,20 +26,18 @@ function DirectMesgMain() {
       selectDiscussion,
     };
     return (
-    <UserContactsProvider>
-      <BanProvider>
         <div className={style.direct_msg_main}>
-          <DiscussionsBar
-            selectedDiscussionState={selectState}
-          />
-          <ChattingField
-            selectDiscussionState={selectState}
-          />
+            <BanProvider>
+                  <DiscussionsBar
+                    selectedDiscussionState={selectState}
+                    />
+                  <ChattingField
+                    selectDiscussionState={selectState}
+                    />
+            </BanProvider>
         </div>
 
-      </BanProvider>
-    </UserContactsProvider>
   );
 }
 
-export default DirectMesgMain;
+export default ChannelsMain;
