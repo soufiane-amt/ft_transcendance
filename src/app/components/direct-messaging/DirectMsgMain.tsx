@@ -32,6 +32,7 @@ function DirectMesgMain() {
         <div className={style.direct_msg_main}>
           <DiscussionsBar
             selectedDiscussionState={selectState}
+            currentRoute={"Direct_messaging"}
           />
           <ChattingField
             selectDiscussionState={selectState}

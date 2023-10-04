@@ -4,26 +4,28 @@ import style from "./DiscussionsBar.module.css";
 import { fetchDataFromApi } from "../../shared/customFetch/exmple";
 import DiscussionPanel from "../../shared/DiscussionPanel/DiscussionPanel";
 import { useHandlePanel } from "../../../../../hooks/useHandlePanel";
+import { useRouter } from "next/router";
 import UserActionModalMain from "../UserActionModal/UserActionModal";
 
 interface DiscussionsBarProps {
     selectedDiscussionState:{
       selectedDiscussion : discussionPanelSelectType,
       selectDiscussion : (e: discussionPanelSelectType) => void
-  }}
+  },
+  currentRoute :"Direct_messaging" | "Channels"
+}
   
 
-export function DiscussionsBar({ selectedDiscussionState }: DiscussionsBarProps) {
+export function DiscussionsBar({ selectedDiscussionState, currentRoute }: DiscussionsBarProps) {
     const [discussionPanels, setDiscussionRooms] = useState<DiscussionDto[]>([]);
     const [modalIsVisible, setModalAsVisible] = useState<boolean>(false);
     const {selectedDiscussion, selectDiscussion} = selectedDiscussionState;
 
-
     useEffect(() => {
       async function fetchDataAsync() {
         const roomPanels_data_tmp = await fetchDataFromApi(
-          "http://localhost:3001/chat/direct_messaging/discussionsBar"
-        );
+          `http://localhost:3001/chat/${currentRoute}/discussionsBar`
+          );
         setDiscussionRooms(roomPanels_data_tmp);
       }
       fetchDataAsync();
@@ -61,12 +63,14 @@ export function DiscussionsBar({ selectedDiscussionState }: DiscussionsBarProps)
             />
           );
         })}
-        <UserActionModalMain
-          userToActId={selectedDiscussion.partner_id}
-          DiscussionToActId={selectedDiscussion.id}
-          modalState={[modalIsVisible, setModalAsVisible]}
-        />
+        {
+            <UserActionModalMain
+              userToActId={selectedDiscussion.partner_id}
+              DiscussionToActId={selectedDiscussion.id}
+              modalState={[modalIsVisible, setModalAsVisible]}
+              ActionContext={currentRoute}
+            />
+        }
       </ul>
     );
   }
-  

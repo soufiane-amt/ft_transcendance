@@ -12,6 +12,10 @@ import {
 } from "../../../context/BanContext";
 import { useOutsideClick } from "../../../../../hooks/useOutsideClick";
 
+
+
+
+
 type buttonType = { title: string; icon: string; backgroundColor: string };
 
 const playButton = {
@@ -111,37 +115,52 @@ function UserActionModal({
   );
 }
 
+
+
+
 /*This container does the same as UserActionModal execpt that it adds visibility managment*/
 
-type UserActionModalMainProps = {
+type DmUserActionModalMainProps = {
   userToActId: string | undefined;
   DiscussionToActId: string;
   modalState: [boolean, React.Dispatch<React.SetStateAction<boolean>>];
+  ActionContext: string
 };
 
-function UserActionModalMain({
-  userToActId,
-  DiscussionToActId,
-  modalState,
-}: UserActionModalMainProps) {
-  const [isVisible, setAsVisible] = modalState;
+type ChUserActionModalMainProps = {
+  DiscussionToActId: string;
+  channelOwner: string ;
+  channelAdmins : string[];
+  channelBans: string[];
+  modalState: [boolean, React.Dispatch<React.SetStateAction<boolean>>];
+  ActionContext: string
+};
+type MyComponentProps = DmUserActionModalMainProps | ChUserActionModalMainProps;
 
+
+function UserActionModalMain( props: MyComponentProps) {
+  const [isVisible, setAsVisible] = props.modalState;
+  var actionModal;
+  if (props.ActionContext === "Direct_messaging" && 'userToActId' in props)
+  {
+    actionModal = (props.userToActId && <div className={style.user_action_main_modal}>
+      <UserActionModal
+        handleVisibility={setAsVisible}
+        targetedUserId={props.userToActId}
+        targetedDiscussion={props.DiscussionToActId}
+      />
+    </div>)
+  }
+  else if (props.ActionContext === "Channels") {
+    actionModal = (( 
+      <div className={style.user_action_main_modal}>
+        channel options
+      </div>
+    ))
+  }
   return (
     <>
-      {isVisible &&  userToActId && ( //If the userToActId is  defined means that this action is in dm
-        <div className={style.user_action_main_modal}>
-          <UserActionModal
-            handleVisibility={setAsVisible}
-            targetedUserId={userToActId}
-            targetedDiscussion={DiscussionToActId}
-          />
-        </div>
-      )}
-      {isVisible &&  !userToActId && ( 
-        <div className={style.user_action_main_modal}>
-          channel options
-        </div>
-      )}
+      {isVisible && actionModal}
     </>
   );
 }
