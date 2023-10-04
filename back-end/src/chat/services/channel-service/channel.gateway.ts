@@ -8,10 +8,11 @@ import { Role } from "src/chat/enum/role.enum";
 import {  allowJoinGuard, bannedConversationGuard, channelPermission, userRoomSubscriptionGuard } from "src/chat/guards/chat.guards";
 import { ChatCrudService } from "src/prisma/chat-crud.service";
 import { UserCrudService } from "src/prisma/user-crud.service";
+import * as cookie from 'cookie';
 
  
 
- @WebSocketGateway({namespace:"chat/channels"})
+@WebSocketGateway({namespace:"chat", cors: "*" })
 
  export class channelGateway implements OnGatewayConnection
  {
@@ -22,15 +23,21 @@ import { UserCrudService } from "src/prisma/user-crud.service";
          private readonly userCrud :UserCrudService){}
 
     async handleConnection(client: any, ...args: any[]) {
-        // const user_id = client.handshake.query.id
-
-        // if (await this.userCrud.findUserByID(user_id) == null)
-        //   throw new WsException ("User not existing")
-        // console.log (`user ${user_id} connected\n`);
-        // (await this.chatCrud.findAllJoinedChannels(user_id)).forEach(room => {
-        //   console.log ("user : " + user_id + " joined " + room.channel_id)
-        //   client.join(room.channel_id)
-        // });
+      const headers = client.handshake.headers;
+      // // Parse the cookies from the request headers
+      const parsedCookies = cookie.parse(headers.cookie || '');
+       
+      // // Access specific cookies by name
+      const userIdCookie = parsedCookies["user.id"];
+      if (!userIdCookie)
+        return
+      if (await this.userCrud.findUserByID(userIdCookie) == null)
+        throw new WsException ("User not existing")
+          console.log (`user ${userIdCookie} connected\n`);
+        (await this.chatCrud.findAllJoinedChannels(userIdCookie)).forEach(room => {
+          console.log ("user : " + userIdCookie + " joined " + room.channel_id)
+          client.join(`channel-${room.channel_id}`)
+        });
       }
 
     //check if the user exists
@@ -113,12 +120,15 @@ import { UserCrudService } from "src/prisma/user-crud.service";
     // //user must have membership
     // @UseGuards (userRoomSubscriptionGuard)
     // @UseGuards(bannedConversationGuard)
-    // @SubscribeMessage ("sendMsgCh")
-    // handleSendMesDm(client: any,  message:MessageDto ) 
-    // {
-    //   console.log ("---Dkhl---: ", message)
-    //   this.server.to(message.channel_id).emit('message', message)
-    // }
+    @SubscribeMessage ("sendMsgDm")
+    async handleSendMesDm(client: any,  message:MessageDto ) 
+    {
+      console.log ("---Dkhl---: ", message)
+      message.dm_id = null;
+
+      const messageToBrodcast = await this.chatCrud.createMessage(message)
+      this.server.to(`channel-${message.channel_id}`).emit('newMessage', message)
+    }
 
 
 }

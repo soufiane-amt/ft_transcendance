@@ -78,19 +78,27 @@ async findUserByUsername(username: string)
   return user ? user.id : null
 }
 
-// Retrieve user's friends list and their statuses.
 async findFriendsList(id: string)
 {
-  return await this.prisma.prismaClient.friendships.findMany (
+  const friendShips =  await this.prisma.prismaClient.friendships.findMany (
     {
       where : {
         OR : [
           {user1_id: id},
           {user2_id : id},
         ]
+      },
+      select :{
+        user1_id: true, 
+        user2_id : true, 
       }
+
     }
   )
+  const friends_ids = friendShips.filter ((frienship) =>{
+    return id === frienship.user1_id ? frienship.user2_id : frienship.user1_id;
+  })
+  return friends_ids
 }
 
 
@@ -147,14 +155,16 @@ async FriendShipRequestAlreadySent (current_user_id:string, targeted_user_id:str
 
 
 
-async findFriendship(user1_id: string, user2_id: string)
+async findFriendship(current_user_id: string, targeted_user_id: string)
 {
-  const friendship = await this.prisma.prismaClient.friendships.findUnique (
+  const friendship = await this.prisma.prismaClient.friendships.findFirst (
     {
       where : {
-          user1_id: user1_id,
-          user2_id : user2_id
-      },
+        OR: [
+          { user1_id: current_user_id, user2_id: targeted_user_id },
+          { user1_id: targeted_user_id, user2_id: current_user_id },
+        ],
+        },
       select :
       {
         id :true
@@ -306,7 +316,7 @@ async  getUserNotificationsWithUser2Data(userId: string) {
           user1_id: userId ,
       },
       include: {
-        user2: true, // Include user2 data
+        user2: true,
       },
     });
 

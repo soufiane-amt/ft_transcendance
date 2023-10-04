@@ -11,6 +11,30 @@ import {
 export class ChatCrudService {
   constructor(@Inject(PrismaService) private readonly prisma: PrismaService) {}
 
+
+  async roomIsDm(room_id :string)
+  {
+    try
+    {
+        return await  this.prisma.prismaClient.directMessaging.count({
+          where :
+          {
+            id:room_id
+          }
+        }) != 0;
+
+    }
+    catch (err)
+    {
+      return await  this.prisma.prismaClient.channel.count({
+        where :
+        {
+          id:room_id
+        }
+      }) ? false : null;
+    }
+  }
+
   async retrieveUserContactBook(user_id: string) {
     const partnersIds = await this.prisma.prismaClient.directMessaging.findMany(
       {
@@ -51,8 +75,75 @@ export class ChatCrudService {
     return partnerContactData;
   }
 
+  async retrieveUserChannelsBook (user_id: string)
+  {
+    const channels = await this.prisma.prismaClient.channelMembership.findMany (
+      {
+        where : {
+          user_id : user_id,
+        },
+        include :{
+          channel : true
+        },
+      }
+    )
+      return channels.map ((item) =>{
+        return {id:item.channel.id, name:item.channel.name, image:item.channel.image}
+      })
+  }
 
-  async retrieveUserDmChannels(user_id: string) {
+  async findUsersInCommonChannels(user_id: string) {
+    const joinedChannels = await this.prisma.prismaClient.channelMembership.findMany({
+      where: {
+        user_id: user_id,
+      },
+      select: {
+        channel_id: true,
+      },
+    });
+  
+    const commonUsersData = await Promise.all(
+      joinedChannels.map(async (channel) => {
+        const usersInChannel = await this.prisma.prismaClient.channelMembership.findMany({
+          where: {
+            channel_id: channel.channel_id,
+          },
+          include: {
+            user: {
+              select: {
+                id: true,
+                username: true,
+                avatar: true,
+              },
+            },
+          },
+        });
+  
+        // Use filter to exclude the user with user_id
+        const selectedUserData = usersInChannel
+          .filter((user) => user.user.id !== user_id)
+          .map((user) => ({
+            id: user.user.id,
+            username: user.user.username,
+            avatar: user.user.avatar,
+          }));
+  
+        return selectedUserData;
+      })
+    );
+  
+    const flattenedData = commonUsersData.flat(); // Flatten the nested arrays
+  
+    if (flattenedData.length === 0) {
+      return undefined;
+    }
+  
+    return flattenedData;
+  }
+  
+
+
+    async retrieveUserDmChannels(user_id: string) {
     return await this.prisma.prismaClient.directMessaging.findMany({
       where: {
         OR: [{ user1_id: user_id }, { user2_id: user_id }],
@@ -303,7 +394,7 @@ export class ChatCrudService {
     }
 
     const lastVisitTimestamp = channelMembership.last_visit;
-
+    console.log ("==>>", lastVisitTimestamp)
     // Count messages in the channel created after the last visit
     const messageCount = await this.prisma.prismaClient.message.count({
       where: {
@@ -373,6 +464,9 @@ export class ChatCrudService {
         channel_id: channel_id,
         is_banned: true,
       },
+      select: {
+        id:true,
+      }
     });
   }
 

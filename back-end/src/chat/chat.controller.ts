@@ -37,7 +37,7 @@ async getUserImage(@Param('image_path') image_path: string, @Res() res: Response
 }
   
 
-@Get ("/direct_messaging/discussionsBar")
+@Get ("/Direct_messaging/discussionsBar")
 async findAllDiscussionPartners (@Req() request : Request)
 {
   const dms = await this.chatCrud.retreiveDmInitPanelData(request.cookies['user.id']);
@@ -51,8 +51,8 @@ async findAllDiscussionPartners (@Req() request : Request)
 
   return discussions;
 }
-
-@Get ("/channels/discussionsBar")
+ 
+@Get ("/Channels/discussionsBar")
 async findAllDiscussionChannels (@Req() request : Request)
 {
   const dms = await this.chatCrud.retreiveChannelPanelData(request.cookies['user.id']);
@@ -76,15 +76,31 @@ async findAllDiscussionChannels (@Req() request : Request)
   return discussions;
 }
 
-  @Get ("/direct_messaging/userContactsBook")
-  async findAllUsersInContact (@Req() request : Request)
-  {
-    const users = await this.chatCrud.retrieveUserContactBook (request.cookies["user.id"])
 
-    return (users)
-  }
+@Get ("/direct_messaging/userContactsBook")
+async findAllUsersInContact (@Req() request : Request)
+{
+  const users = await this.chatCrud.retrieveUserContactBook (request.cookies["user.id"])
 
-  @Get (":roomid/messages")
+  return (users)
+}
+@Get ("/channels/userContactsBook")
+async findAllUsersWithCommonChannels (@Req() request : Request)
+{
+  const users = await this.chatCrud.findUsersInCommonChannels (request.cookies["user.id"])
+
+  return (users)
+}
+
+@Get ("/Channels/channelsInfoBook")
+async findAllChannelsInContact (@Req() request : Request)
+{
+  const users = await this.chatCrud.retrieveUserChannelsBook (request.cookies["user.id"])
+
+  return (users)
+}
+
+@Get (":roomid/messages")
   async findRoomMessages (@Param("roomid") roomid:string)
   {
     return await this.chatCrud.retrieveRoomMessages(roomid);

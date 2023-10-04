@@ -107,7 +107,7 @@ model ChannelMembership {
   role      Role
   joined_at DateTime @default(now())
 
-  last_visit DateTime?
+  last_visit DateTime @default(now())
   
   is_banned Boolean? @default(false)
   banned_at DateTime?
