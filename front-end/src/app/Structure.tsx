@@ -3,15 +3,16 @@
 import withAuth from "@/components/GlobalComponents/HigherOrderComponent";
 import NavBar from "@/components/GlobalComponents/ProfileNavBar/NavBar";
 import React from "react";
+import '../styles/TailwindRef.css'
+
 
 
 const Structure = ({ children }: { children: React.ReactNode }) => {
 
-  // create socket
   return (
-    <main>
-      <NavBar />
-      {/* <div style={{ height: '91px'}}>this is nav</div> */}
+    <main className="w-[100vw] h-[100vh] overflow-auto">
+      {/* <NavBar /> */}
+      <div className="h-[91px] bg-white w-full">this is nav</div>
       {children}
     </main>
   );

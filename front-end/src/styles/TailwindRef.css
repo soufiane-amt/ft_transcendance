@@ -10,10 +10,9 @@
   margin: 0;
   padding: 0;
   box-sizing: content-box;
-  font-family: "Open Sans", sans-serif;
 }
 
-*::-webkit-scrollbar {
+/* *::-webkit-scrollbar {
   width: 0.4em;
   background-color: transparent;
 }
@@ -30,8 +29,8 @@
 
 *::-webkit-scrollbar-thumb:active {
   background-color: white;
-}
+} */
 
 .content {
-  height: calc(100vh - 91px);
+  min-height: calc(100vh - 91px);
 }
