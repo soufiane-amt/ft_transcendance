@@ -30,9 +30,10 @@ function Message({ messageData }: MessageProps) {
   const messageSender = userContacts.get(messageData.user_id);
   const userSession = useSessionUser();
 
-  const sentMessage: boolean = messageSender === undefined;
+  const sentMessage: boolean = userSession.id === messageData.user_id;
 
   var currentUser = sentMessage ? userSession : messageSender;
+  console.log ("Messages component>:", userContacts)
   const messagePositionStyle = sentMessage ? `${style.message__to_right}` : "";
   return (
     <>

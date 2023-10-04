@@ -9,7 +9,7 @@ interface AvatarProps {
   channelType?: 'public' | 'private' | 'announcement'; // Type prop to specify channel type
 }
 
-const Avatar: React.FC<AvatarProps> = ({ src, avatarToRight,status, channelType }) => {
+const Avatar: React.FC<AvatarProps> = ({ src, avatarToRight, channelType }) => {
   const avatarStylingClasses: string = `${style.avatar__style} ${
     avatarToRight ? style.image__switch_order : ""
   } `;
@@ -23,15 +23,8 @@ const Avatar: React.FC<AvatarProps> = ({ src, avatarToRight,status, channelType 
           width={100}
           height={1000}
         />
-      {status === 'online' && (
-        <div className={`${style.statusIndicator}`} />
-      )}
-      {status === 'offline' && (
-        <div className={`${style.statusIndicator} ${style.offline}`} />
-      )}
       {channelType && (
         <div className={style.channelTypeIndicator}>
-          {/* Render channel type icon or indicator */}
           {channelType === 'public' ? '🌐' : channelType === 'private' ? '🔒' : '🔑'}
         </div>
       )}

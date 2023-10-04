@@ -7,6 +7,7 @@ import { discussionPanelSelectType } from "../../interfaces/DiscussionPanel";
 import { BanProvider } from "../../context/BanContext";
 import { UserContactsProvider } from "../../context/UsersContactBookContext";
 import { ChattingField } from "../direct-messaging/ChattingField/ChattingField";
+import { ChannelBooksProvider } from "../../context/ChannelInfoBook";
 
 /*stopPropagation is used here to prevent the click event to take way up to the parent it got limited right here */
 export const selectedPanelDefault: discussionPanelSelectType = {
@@ -27,18 +28,20 @@ function ChannelsMain() {
       selectDiscussion,
     };
     return (
-      <UserContactsProvider>
-        <BanProvider>
-            <div className={style.direct_msg_main}>
-                      <DiscussionsBar
-                        selectedDiscussionState={selectState}
-                        currentRoute={"Channels"}
-                        />
-                      <ChattingField
-                        selectDiscussionState={selectState}
-                        />
-            </div>
-          </BanProvider>
+      <UserContactsProvider currentRoute="channels">
+        <ChannelBooksProvider>
+          <BanProvider>
+              <div className={style.direct_msg_main}>
+                  <DiscussionsBar
+                    selectedDiscussionState={selectState}
+                    currentRoute={"Channels"}
+                    />
+                  <ChattingField
+                    selectDiscussionState={selectState}
+                  />
+              </div>
+            </BanProvider>
+        </ChannelBooksProvider>
       </UserContactsProvider>
   
 

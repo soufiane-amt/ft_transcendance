@@ -18,10 +18,11 @@ const UserContactsContext = createContext<
 >(undefined);
 
 export function UserContactsProvider({
+  currentRoute, 
   children,
-}: {
-  children: React.ReactNode;
-}) {
+}:
+  {currentRoute: string , children: React.ReactNode}
+) {
   const [userContactsBook, setUserContactsBook] = useState<
     Map<string, UserContactDto>
   >(new Map());
@@ -29,7 +30,7 @@ export function UserContactsProvider({
   useEffect(() => {
     async function fetchDataAsync() {
       const userContactsBook_tmp = await fetchDataFromApi(
-        "http://localhost:3001/chat/direct_messaging/userContactsBook"
+        `http://localhost:3001/chat/${currentRoute}/userContactsBook`
       );
       const map = new Map();
       userContactsBook_tmp.forEach((user: any) => {
@@ -38,7 +39,7 @@ export function UserContactsProvider({
           avatar: user.avatar,
         });
       });
-
+      console.log ("IIII>", map)
       setUserContactsBook(map);
     }
     fetchDataAsync();

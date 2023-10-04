@@ -6,6 +6,7 @@ import DiscussionPanel from "../../shared/DiscussionPanel/DiscussionPanel";
 import { useHandlePanel } from "../../../../../hooks/useHandlePanel";
 import { useRouter } from "next/router";
 import UserActionModalMain from "../UserActionModal/UserActionModal";
+import socket from "../../../socket/socket";
 
 interface DiscussionsBarProps {
     selectedDiscussionState:{
@@ -20,13 +21,34 @@ export function DiscussionsBar({ selectedDiscussionState, currentRoute }: Discus
     const [discussionPanels, setDiscussionRooms] = useState<DiscussionDto[]>([]);
     const [modalIsVisible, setModalAsVisible] = useState<boolean>(false);
     const {selectedDiscussion, selectDiscussion} = selectedDiscussionState;
+    const [channelData, setChannelData] = useState<ChannelData |  undefined>(undefined)
 
     useEffect(() => {
       async function fetchDataAsync() {
-        const roomPanels_data_tmp = await fetchDataFromApi(
+        const fetchedData = await fetchDataFromApi(
           `http://localhost:3001/chat/${currentRoute}/discussionsBar`
           );
-        setDiscussionRooms(roomPanels_data_tmp);
+        if (currentRoute === "Direct_messaging")
+          setDiscussionRooms(fetchedData);
+        else 
+          {
+            console.log ("=+++++++++")
+            const room_data:DiscussionDto[] =  fetchedData.map( (item : DiscussionDto)=>{
+              return {id:item.id,
+                      partner_id: item.partner_id,
+                      last_message: item.last_message,
+                      unread_messages:item.unread_messages}
+            })
+            setDiscussionRooms(room_data);
+            console.log ("Room Data: ", room_data)
+            const channelFetchedData = 
+            {
+              channelOwner: fetchedData.channelOwner, 
+              channelAdmins:fetchedData.channelAdmins,
+              channelBans: fetchedData.channelBans,
+            }
+            setChannelData (channelFetchedData)
+          }
       }
       fetchDataAsync();
     }, []);
@@ -45,6 +67,8 @@ export function DiscussionsBar({ selectedDiscussionState, currentRoute }: Discus
           updatedRooms[indexToModify].unread_messages = 0;
           setDiscussionRooms(updatedRooms);
         }
+        if (currentRoute === "Channels")
+          socket.emit ("storeVisit", )
       };
       
     const displayActionModal = () => setModalAsVisible(true);
@@ -63,14 +87,15 @@ export function DiscussionsBar({ selectedDiscussionState, currentRoute }: Discus
             />
           );
         })}
-        {
+        {/* {
             <UserActionModalMain
               userToActId={selectedDiscussion.partner_id}
               DiscussionToActId={selectedDiscussion.id}
               modalState={[modalIsVisible, setModalAsVisible]}
               ActionContext={currentRoute}
             />
-        }
+        } */}
       </ul>
     );
   }
+ 

@@ -1,4 +1,5 @@
 'use client'
+import { useRouter } from "next/router";
 import DirectMesgMain from "../../components/direct-messaging/DirectMsgMain";
 import { SessionUserProvider } from "../../context/SessionUserContext";
 import { SocketProvider } from "../../context/tmSocket";
@@ -10,7 +11,7 @@ export default function Dm() {
   return (
     <>
     {/* <SocketProvider> */}
-      <SessionUserProvider>
+      <SessionUserProvider >
           <DirectMesgMain/>
       </SessionUserProvider>
 

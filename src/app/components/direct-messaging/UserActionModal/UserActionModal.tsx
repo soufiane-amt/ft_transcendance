@@ -129,9 +129,11 @@ type DmUserActionModalMainProps = {
 
 type ChUserActionModalMainProps = {
   DiscussionToActId: string;
-  channelOwner: string ;
-  channelAdmins : string[];
-  channelBans: string[];
+  channel_data :{
+    channelOwner: string ;
+    channelAdmins : string[];
+    channelBans: string[];
+  }
   modalState: [boolean, React.Dispatch<React.SetStateAction<boolean>>];
   ActionContext: string
 };
