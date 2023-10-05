@@ -1,7 +1,7 @@
 "use client";
 import { Space_Mono } from "next/font/google";
 import axios from "axios";
-import { useState, useEffect, useRef, use } from "react";
+import { useState, useEffect, useRef } from "react";
 import Cookies from "js-cookie";
 import { motion } from "framer-motion";
 import { useRouter } from "next/navigation";
