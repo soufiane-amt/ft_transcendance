@@ -11,6 +11,7 @@ const config: Config = {
     './src/app/updatecredentials/**/*.{js,ts,jsx,tsx,mdx}',
     './src/app/Structure.tsx',
     './src/app/game/page.tsx',
+    './src/components/game/GameLandingPage.tsx',
   ],
   theme: {
     extend: {
