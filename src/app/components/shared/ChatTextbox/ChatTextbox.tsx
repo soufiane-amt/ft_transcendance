@@ -57,7 +57,7 @@ function ChatTextBox({
       dm_id: selectedDiscussion.id,
       createdAt: new Date().toISOString(),
     };
-    socket.emit("sendMsgDm", newMessage);
+    socket.emit("sendMsg", newMessage);
     setNewMessageContent("");
   };
 

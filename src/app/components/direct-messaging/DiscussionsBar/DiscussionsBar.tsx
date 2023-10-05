@@ -68,16 +68,16 @@ export function DiscussionsBar({ selectedDiscussionState, currentRoute }: Discus
           setDiscussionRooms(updatedRooms);
         }
         if (currentRoute === "Channels")
-          socket.emit ("storeVisit", )
+          socket.emit ("recordVisit", )
       };
-      
+       
     const displayActionModal = () => setModalAsVisible(true);
   
     return (
       <ul className={style.discussion_panel_bar}>
         {discussionPanels.map((panelElement) => {
           const isSelected = panelElement?.id === selectedDiscussion.id;
-          return (
+          return (  
             <DiscussionPanel
               key={panelElement.id}
               onSelect={handlePanelClick}
