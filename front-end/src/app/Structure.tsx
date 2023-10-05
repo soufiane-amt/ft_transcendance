@@ -3,7 +3,7 @@
 import withAuth from "@/components/GlobalComponents/HigherOrderComponent";
 import NavBar from "@/components/GlobalComponents/ProfileNavBar/NavBar";
 import React from "react";
-// import '../styles/TailwindRef.css'
+import '../styles/TailwindRef.css'
 
 
 

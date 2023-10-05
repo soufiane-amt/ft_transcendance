@@ -4,7 +4,6 @@ import "../../styles/TailwindRef.css";
 import { useState } from "react";
 import { Press_Start_2P } from "next/font/google";
 import { Space_Mono } from "next/font/google";
-import BackgroundCircle from "@/components/HomePage/BackgroundCircle";
 import BackgroundCircleMedium from "@/components/HomePage/BackroundCirclesMedium";
 
 const pixelfont = Press_Start_2P({
@@ -46,7 +45,7 @@ export default function Game() {
             <img
               src="GameBoys1.svg"
               alt="game"
-              className="min-h-[50vh] w-[90vw] md:h-[60vh] z-[1]"
+              className="z-[1] xl:h-[550px] xl:w-[550px] md:h-[400px] md:w-[400px] w-[300px] h-[300px]"
             />
           </div>
           <div className="flex flex-col text-white w-full h-fit justify-center items-center gap-6 md:flex-row md:gap-16 xl:gap-24 mb-[25px]">

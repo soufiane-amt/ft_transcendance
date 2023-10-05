@@ -12,24 +12,21 @@
   box-sizing: content-box;
 }
 
-/* *::-webkit-scrollbar {
+*::-webkit-scrollbar {
   width: 0.4em;
   background-color: transparent;
 }
 
 *::-webkit-scrollbar-thumb {
-  background-color: rgba(56, 45, 45, 0.644);
+  background-color: rgba(65, 57, 57, 0.4);
   border-radius: 6px;
   border: 2px solid transparent;
 }
 
 *::-webkit-scrollbar-thumb:hover {
-  background-color: rgba(255, 255, 255, 0.4);
+  background-color: rgba(99, 81, 81, 0.4);
 }
 
-*::-webkit-scrollbar-thumb:active {
-  background-color: white;
-} */
 
 .content {
   min-height: calc(100vh - 91px);
