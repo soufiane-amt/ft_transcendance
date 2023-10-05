@@ -61,7 +61,7 @@ function ChatTextBox({
     setNewMessageContent("");
   };
 
-  if (displayStatus === ChatBoxStatus.INACTIVE) return null;
+  if (!selectedDiscussion.id ) return null;
 
   return (
     <div className={`${style.message_bar} ${style.middlePos}`}>

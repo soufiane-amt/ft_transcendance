@@ -3,7 +3,7 @@ import React, { useEffect, useRef, useState } from "react";
 import style from "./ChannelsMain.module.css";
 import { discussionPanelSelectType } from "../../interfaces/DiscussionPanel";
 
-  import { DiscussionsBar } from "../direct-messaging/DiscussionsBar/DiscussionsBar";
+import { DiscussionsBar } from "../direct-messaging/DiscussionsBar/DiscussionsBar";
 import { BanProvider } from "../../context/BanContext";
 import { UserContactsProvider } from "../../context/UsersContactBookContext";
 import { ChattingField } from "../direct-messaging/ChattingField/ChattingField";

@@ -32,7 +32,6 @@ export function DiscussionsBar({ selectedDiscussionState, currentRoute }: Discus
           setDiscussionRooms(fetchedData);
         else 
           {
-            console.log ("=+++++++++")
             const room_data:DiscussionDto[] =  fetchedData.map( (item : DiscussionDto)=>{
               return {id:item.id,
                       partner_id: item.partner_id,
@@ -87,14 +86,20 @@ export function DiscussionsBar({ selectedDiscussionState, currentRoute }: Discus
             />
           );
         })}
-        {/* {
+          {currentRoute === "Direct_messaging" && (
             <UserActionModalMain
               userToActId={selectedDiscussion.partner_id}
               DiscussionToActId={selectedDiscussion.id}
               modalState={[modalIsVisible, setModalAsVisible]}
               ActionContext={currentRoute}
-            />
-        } */}
+            />)}
+          {currentRoute === "Channels" && (
+            <UserActionModalMain
+              DiscussionToActId={selectedDiscussion.id} 
+              channel_data={channelData}
+              modalState={[modalIsVisible, setModalAsVisible]}
+              ActionContext={currentRoute}
+            />)}
       </ul>
     );
   }

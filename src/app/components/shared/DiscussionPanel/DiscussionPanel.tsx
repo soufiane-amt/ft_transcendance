@@ -67,7 +67,6 @@ function DiscussionPanel({
   };
 
   const panel = findDiscussions(DiscussionPanel.partner_id, DiscussionPanel.id);
-  console.log ("========>", panel)
   return (
     <>
       {panel && (

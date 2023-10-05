@@ -133,7 +133,7 @@ type ChUserActionModalMainProps = {
     channelOwner: string ;
     channelAdmins : string[];
     channelBans: string[];
-  }
+  } | undefined
   modalState: [boolean, React.Dispatch<React.SetStateAction<boolean>>];
   ActionContext: string
 };
@@ -143,8 +143,10 @@ type MyComponentProps = DmUserActionModalMainProps | ChUserActionModalMainProps;
 function UserActionModalMain( props: MyComponentProps) {
   const [isVisible, setAsVisible] = props.modalState;
   var actionModal;
+  
   if (props.ActionContext === "Direct_messaging" && 'userToActId' in props)
   {
+
     actionModal = (props.userToActId && <div className={style.user_action_main_modal}>
       <UserActionModal
         handleVisibility={setAsVisible}
@@ -156,10 +158,9 @@ function UserActionModalMain( props: MyComponentProps) {
   else if (props.ActionContext === "Channels") {
     actionModal = (( 
       <div className={style.user_action_main_modal}>
-        channel options
       </div>
     ))
-  }
+  }  
   return (
     <>
       {isVisible && actionModal}

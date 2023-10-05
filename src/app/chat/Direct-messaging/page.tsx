@@ -10,13 +10,9 @@ export default function Dm() {
   
   return (
     <>
-    {/* <SocketProvider> */}
       <SessionUserProvider >
           <DirectMesgMain/>
       </SessionUserProvider>
-
-    {/* </SocketProvider> */}
-      {/* <ChannelSetting/> */}
     </>
     )
 }

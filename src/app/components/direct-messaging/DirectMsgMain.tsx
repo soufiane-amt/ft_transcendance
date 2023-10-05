@@ -34,9 +34,9 @@ function DirectMesgMain() {
             selectedDiscussionState={selectState}
             currentRoute={"Direct_messaging"}
           />
-          {/* <ChattingField
+          <ChattingField
             selectDiscussionState={selectState}
-          /> */}
+          />
         </div>
 
       </BanProvider>
