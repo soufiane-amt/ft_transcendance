@@ -72,7 +72,7 @@ function GameLandingPage() {
         <div
           className={`w-[180px] h-[30px]  text-center flex items-center justify-center text-[#22EAAC]  border-[2px] border-[#22EAAC] border-solid  ${mono.className} hover:opacity-[65%] hover:cursor-pointer z-[1] rounded-md animate-bounce `}
         >
-          Multiplayer Mode
+          Invite Mode
         </div>
         <div
           className={`w-[180px] h-[30px]  text-center flex items-center justify-center text-[#fa4747]  border-[2px] border-[#DA343E] border-solid   ${mono.className} hover:opacity-[65%] hover:cursor-pointer z-[1] rounded-md animate-bounce `}
@@ -91,7 +91,7 @@ function GameLandingPage() {
             }}
           ></div>
           {/* this is the main component */}
-          <div className="bg-[#E4E7FF] rounded shadow-lg w-[80vw] h-[80vh] flex flex-col   p-[20px] box-border overflow-scroll items-center z-[3] min-h-[400px] min-w-[300px] max-h-[1500px] max-w-[720px]">
+          <div className="bg-[#E4E7FF] rounded shadow-lg w-[80vw] h-[80vh] flex flex-col   p-[30px] box-border overflow-scroll items-center z-[3] min-h-[400px] min-w-[300px] max-h-[1500px] max-w-[720px]">
             <div className="flex items-center w-full flex-row-reverse h-[3%]">
               <img
                 src="/close.png"
@@ -103,6 +103,52 @@ function GameLandingPage() {
                 }}
               />
             </div>
+            <div className="flex items-center flex-col h-[90%]">
+              <div>
+                <h3 className={` ${mono.className}`}>Info:</h3>
+                <p className={` ${mono.className}`}>
+                  Welcome to our thrilling ping pong game! Whether you're a
+                  casual player or a seasoned pro, this is the perfect platform
+                  to showcase your skills and have a blast. We offer three
+                  exciting game modes to choose from: "Practice Mode" for solo
+                  practice against responsive AI opponents, "Invite Friends
+                  Mode" to challenge your friends, and "Matchmaking Mode" for
+                  engaging matches within our vibrant community. Grab your
+                  paddle and get ready to experience the excitement of virtual
+                  ping pong!
+                </p>
+              </div>
+              <div>
+                <h3 className={` ${mono.className}`}>Controls:</h3>
+                <p className={` ${mono.className}`}>
+                  Use the Up Arrow to move your paddle up. Use the Down Arrow to
+                  move your paddle down.
+                </p>
+                <p  className={` ${mono.className}`}>Move your mouse to control the position of your paddle.</p>
+                <h3 className={`${mono.className}`}>Game Rules:</h3>
+                <p  className={` ${mono.className}`}>
+                  The game is played on a rectangular court with two paddles and
+                  a ball. You control one paddle (either with arrow keys or the
+                  mouse), while the computer controls the other. The game starts
+                  with the ball in the center of the court. Your goal is to
+                  prevent the ball from getting past your paddle while trying to
+                  score by getting the ball past your opponent's paddle. When
+                  the ball passes your opponent's paddle and goes off the screen
+                  on their side, you earn a point. The first player to reach 5
+                  points wins the game.
+                </p>
+                <h3 className={`${mono.className}`}>Tips:</h3>
+                <p  className={` ${mono.className}`}>
+                  Try to predict the ball's trajectory and position your paddle
+                  accordingly to hit it. Don't let the ball get past your
+                  paddle, as that will result in your opponent scoring a point.
+                  Focus on both defense and offense, as you need to both prevent
+                  your opponent from scoring and try to score points yourself.
+                  Pong can be a fast-paced game, so be quick with your
+                  reactions. Enjoy playing Pong, and may the best player win!
+                </p>
+              </div>
+            </div>
           </div>
         </div>
       )}
@@ -111,3 +157,35 @@ function GameLandingPage() {
 }
 
 export default GameLandingPage;
+
+// Controls:
+
+// Arrow Keys Method:
+
+// Use the Up Arrow to move your paddle up.
+// Use the Down Arrow to move your paddle down.
+// Mouse Method:
+
+// Move your mouse to control the position of your paddle.
+// Game Rules:
+
+// The game is played on a rectangular court with two paddles and a ball.
+// You control one paddle (either with arrow keys or the mouse), while the computer controls the other.
+// The game starts with the ball in the center of the court.
+// Your goal is to prevent the ball from getting past your paddle while trying to score by getting the ball past your opponent's paddle.
+// When the ball passes your opponent's paddle and goes off the screen on their side, you earn a point.
+// The first player to reach 5 points wins the game.
+// Gameplay:
+
+// Start the game by pressing the "Start" or "Play" button.
+// Use your chosen control method (arrow keys or mouse) to move your paddle up and down.
+// The computer opponent will also control its paddle to defend its side.
+// The game continues until one player reaches 5 points.
+// When a player scores a point, the game will reset, and the ball will be placed back in the center to start the next round.
+// Tips:
+
+// Try to predict the ball's trajectory and position your paddle accordingly to hit it.
+// Don't let the ball get past your paddle, as that will result in your opponent scoring a point.
+// Focus on both defense and offense, as you need to both prevent your opponent from scoring and try to score points yourself.
+// Pong can be a fast-paced game, so be quick with your reactions.
+// Enjoy playing Pong, and may the best player win!

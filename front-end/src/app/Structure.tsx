@@ -11,8 +11,8 @@ const Structure = ({ children }: { children: React.ReactNode }) => {
 
   return (
     <main>
-      {/* <NavBar />   */}
-      <div className="h-[91px] bg-white w-full">this is nav</div>
+      <NavBar />  
+      {/* <div className="h-[91px] bg-white w-full">this is nav</div> */}
       {children}
     </main>
   );
