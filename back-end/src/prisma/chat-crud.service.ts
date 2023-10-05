@@ -394,7 +394,6 @@ export class ChatCrudService {
     }
 
     const lastVisitTimestamp = channelMembership.last_visit;
-    console.log ("==>>", lastVisitTimestamp)
     // Count messages in the channel created after the last visit
     const messageCount = await this.prisma.prismaClient.message.count({
       where: {
@@ -402,37 +401,58 @@ export class ChatCrudService {
         createdAt: { gte: lastVisitTimestamp },
       },
     });
-
+    
+    console.log ("last-visit", lastVisitTimestamp,"messages Count ===>>", messageCount)
     return messageCount;
   }
 
   async markRoomMessagesAsRead(user_id: string, room_id: string) {
-    console.log(
-      await this.prisma.prismaClient.message.findMany({
+    // Check if room_id corresponds to a DM
+    const isDm = await this.prisma.prismaClient.directMessaging.findFirst({
+      where: {
+        id: room_id,
+      },
+    });
+  
+    if (isDm) {
+      // Update is_read for DM messages
+      const unreadMessages = await this.prisma.prismaClient.message.updateMany({
         where: {
           NOT: {
             user_id: user_id,
           },
-          OR: [{ dm_id: room_id }, { channel_id: room_id }],
+          dm_id: room_id,
           is_read: false,
         },
-      })
-    );
-    const unreadMessages = await this.prisma.prismaClient.message.updateMany({
-      where: {
-        NOT: {
-          user_id: user_id,
+        data: {
+          is_read: true,
         },
-        OR: [{ dm_id: room_id }, { channel_id: room_id }],
-        is_read: false,
-      },
-      data: {
-        is_read: true,
-      },
-    });
-    return unreadMessages;
+      });
+      
+      return unreadMessages;
+    } else {
+      // Update last_visit for channel messages
+      const channelMembership = await this.prisma.prismaClient.channelMembership.findFirst({
+        where: { channel_id: room_id, user_id: user_id },
+      });
+  
+      if (!channelMembership) {
+        throw new Error("User is not a member of the channel");
+      }
+  
+      const now = new Date();
+  
+      await this.prisma.prismaClient.channelMembership.update({
+        where: { id: channelMembership.id },
+        data: {
+          last_visit: now,
+        },
+      });
+  
+      return null;
+    }
   }
-
+  
   async findBannedDmRooms(user_id: string) {
     return await this.prisma.prismaClient.directMessaging.findMany({
       where: {

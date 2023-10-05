@@ -29,6 +29,7 @@ import * as cookie from 'cookie';
        
       // // Access specific cookies by name
       const userIdCookie = parsedCookies["user.id"];
+      console.log ("Cookies: ", userIdCookie)
       if (!userIdCookie)
         return
       if (await this.userCrud.findUserByID(userIdCookie) == null)
@@ -120,15 +121,19 @@ import * as cookie from 'cookie';
     // //user must have membership
     // @UseGuards (userRoomSubscriptionGuard)
     // @UseGuards(bannedConversationGuard)
-    @SubscribeMessage ("sendMsgDm")
+    @SubscribeMessage ("sendMsg")
     async handleSendMesDm(client: any,  message:MessageDto ) 
     {
       console.log ("---Dkhl---: ", message)
       message.dm_id = null;
 
       const messageToBrodcast = await this.chatCrud.createMessage(message)
-      this.server.to(`channel-${message.channel_id}`).emit('newMessage', message)
+      this.server.to(`channel-${message.channel_id}`).emit('newMessage', messageToBrodcast)
     }
 
-
+    @SubscribeMessage("recordVisit")
+    async handleVisitRecord(client: any , visitSignal: {user_id:string, channel_id: string} ) 
+    {
+      this.chatCrud.markRoomMessagesAsRead(visitSignal.user_id, visitSignal.channel_id)
+    }
 }
