@@ -15,4 +15,10 @@ export default function Game() {
  
 
 // TODO: INFO COMPONENT
-// LOOK FOR OTHER COMPONMENTS
+// game settings
+// game invitation 
+// game await for invitaion to be accepted
+// game await for matchmaking
+// game canva
+// online , offline , in game , multiple sessions : ps online state
+
