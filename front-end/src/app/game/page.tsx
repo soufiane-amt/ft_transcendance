@@ -45,7 +45,7 @@ export default function Game() {
             <img
               src="GameBoys1.svg"
               alt="game"
-              className="z-[1] xl:h-[550px] xl:w-[550px] md:h-[400px] md:w-[400px] w-[300px] h-[300px]"
+              className="z-[1] xl:h-[550px] xl:w-[550px] md:h-[500px] md:w-[500px] w-[300px] h-[300px]"
             />
           </div>
           <div className="flex flex-col text-white w-full h-fit justify-center items-center gap-6 md:flex-row md:gap-16 xl:gap-24 mb-[25px]">
