@@ -9,7 +9,7 @@ services:
     env_file:
       - .env
     volumes:
-      - /Users/samajat/ft_tran/data-base/pg-data:/var/lib/postgresql/data
+      - /Users/samajat/Desktop/ft_transcendence/back-chat/data-base/pg-data:/var/lib/postgresql/data
     restart: on-failure
 
 networks:
