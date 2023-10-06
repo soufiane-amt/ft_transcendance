@@ -1,0 +1,15 @@
+#img
+{
+    width: 40px;
+    height: 40px;
+    margin-right: 10px;
+}
+
+#button
+{
+    outline: none;
+    border: none;
+    background: white;
+    margin-right: 3px;
+    color: #0D0149;
+}
