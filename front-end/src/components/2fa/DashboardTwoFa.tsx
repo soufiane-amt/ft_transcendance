@@ -108,11 +108,20 @@ function DashboardTwoFa(props: any) {
     }
   }
   return (
-    <div className="fixed inset-0 flex items-center justify-center z-50" style={{ zIndex: '50'}}>
+    <div
+      className="fixed inset-0 flex items-center justify-center z-50"
+      style={{ zIndex: "50" }}
+    >
       {/* this is the backdrop (the background opacity) */}
-      <div className="absolute bg-black opacity-50"></div>
+      <div
+        className="absolute bg-black opacity-50 w-[100vw] h-[100vh] z-[50]"
+        onClick={(ev) => {
+          ev.preventDefault();
+          props.setTwoFa(false);
+        }}
+      ></div>
       {/* this is the main component */}
-      <div className="bg-[#E4E7FF] rounded shadow-lg w-[95vw] h-[90vh] flex flex-col   p-[20px] box-border overflow-scroll items-center">
+      <div className="bg-[#E4E7FF] rounded shadow-lg w-[95vw] h-[90vh] flex flex-col   p-[20px] box-border overflow-scroll items-center z-[51]">
         <div className="flex items-center w-full flex-row-reverse h-[3%]">
           <img
             src="/close.png"
@@ -124,7 +133,6 @@ function DashboardTwoFa(props: any) {
             }}
           />
         </div>
-
 
         <div className="w-full md:max-w-[800px] h-[97%] flex flex-col">
           <div className="m-[8px] mb-[20px] ">

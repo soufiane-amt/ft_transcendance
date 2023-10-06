@@ -5,10 +5,24 @@ import { useState } from "react";
 import GameLandingPage from "@/components/game/GameLandingPage";
 
 export default function Game() {
-  const [GameLandingPageBool, SetGameLandingPage] = useState(null);
+  const [GameLandingPageBool, SetGameLandingPage] = useState(true);
 
+
+
+  // state {
+  //   game oponent : bot , matchmaking, userid
+  //   game speed :,
+  //   game map: ,
+  // }
+
+
+  
   return (
-    <Structure>{GameLandingPageBool === null && <GameLandingPage />}</Structure>
+    <Structure>
+    {GameLandingPageBool === true && <GameLandingPage />}
+    {/* game settings */}
+    {/* game canva */}
+    </Structure>
   );
 }
 
