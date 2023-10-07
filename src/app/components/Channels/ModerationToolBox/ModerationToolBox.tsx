@@ -13,7 +13,7 @@ export function ModerationToolBox ({channelData}:ModerationToolBoxProps)
     const currentUser = useSessionUser()
     const getUserRole = (user_id:string) =>
     {
-        if ( channelData && user_id in channelData?.channelAdmins)
+        if ( channelData &&  channelData?.channelAdmins.includes(user_id))
             return "Admin"
         else if ( user_id === channelData?.channelOwner)
             return "Owner"
@@ -27,22 +27,23 @@ export function ModerationToolBox ({channelData}:ModerationToolBoxProps)
         <div className={style.moderation_tool_box}>
                 <h2>Channel Members</h2>
                 <div className={style.users_cards}>
-                    <UserModerationCard data={{src:currentUser.avatar, username:currentUser.username, role:"Owner"}}/>
                 {
-                        // channelData?.channelUsers.map((user)=>{
-                        //     let userData;
-                        //     if (user !==  currentUser.id)
-                        //         userData = findUserContacts(user)
-                        //     else
-                        //         userData = {avatar:currentUser.avatar, username:currentUser.username}
-                        //     const userRole = getUserRole (user)
-                        //      return (userData &&
-                        //         <UserModerationCard data={{
-                        //          src:userData?.avatar,
-                        //          username:userData?.username,
-                        //          role:userRole
-                        //      }}/> )
-                        // })
+                        channelData?.channelUsers.map((user)=>{
+                            let userData;
+                            if (user !==  currentUser.id)
+                                userData = findUserContacts(user)
+                            else
+                                userData = {avatar:currentUser.avatar, username:currentUser.username}
+                            const userRole = getUserRole (user)
+                            console.log ("ChannelAdmins", channelData?.channelAdmins)
+                            console.log ("User:", user, "Role:", userRole)
+                             return (userData &&
+                                <UserModerationCard data={{
+                                 src:userData?.avatar,
+                                 username:userData?.username,
+                                 role:userRole
+                             }}/> )
+                        })
 
                     }
             </div>

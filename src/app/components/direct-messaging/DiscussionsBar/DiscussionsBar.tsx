@@ -63,6 +63,7 @@ export function DiscussionsBar({ selectedDiscussionState, currentRoute }: Discus
 
     const handlePanelClick = (panelData: DiscussionDto) => {
       selectDiscussion(panelData);
+      console.log ("==>", selectedDiscussion)
       const updatedRooms = [...discussionPanels];
       
       const indexToModify = updatedRooms.findIndex(

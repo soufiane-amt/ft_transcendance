@@ -6,6 +6,7 @@ import { channel } from "diagnostics_channel";
 interface ChannelBookDto {
   name: string;
   avatar: string;
+  type: string;
 }
 
 // The key value will represent the channel_id
@@ -31,13 +32,16 @@ export function ChannelBooksProvider({
       const ChannelBooksBook_tmp = await fetchDataFromApi(
         "http://localhost:3001/chat/Channels/channelsInfoBook"
       );
+      console.log ("Fetched channel Data, : ", ChannelBooksBook_tmp)
       const map = new Map();
       ChannelBooksBook_tmp.forEach((item: any) => {
         map.set(item.id, {
           name: item.name,
           avatar: item.image,
+          type: item.type,
         });
       });
+      console.log ("Fetched channel Data, : ", map)
 
       setChannelBooksBook(map);
     }

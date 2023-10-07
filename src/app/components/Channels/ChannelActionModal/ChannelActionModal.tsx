@@ -53,12 +53,12 @@ const Tab = ({index, activeTab, setActiveTab,  data_label}:{index:any, activeTab
 
 
 interface ChannelActionModalProps {
+  selectedDiscussionId:string, 
   channelData: ChannelData |undefined,
   handleVisibility: (parm: boolean) => void, 
 }
-const ChannelActionModal = ({channelData, handleVisibility}:ChannelActionModalProps)=>{
+const ChannelActionModal = ({selectedDiscussionId, channelData, handleVisibility}:ChannelActionModalProps)=>{
   const ref = useOutsideClick(handleVisibility);
-
   return (
     <div ref={ref} className={style.modal}>
       <Tabs>
@@ -66,7 +66,7 @@ const ChannelActionModal = ({channelData, handleVisibility}:ChannelActionModalPr
             <ModerationToolBox channelData={channelData} />
           </TabInfo>
           <TabInfo att={"Channel settings"}>
-            <ChannelSetting/>
+            <ChannelSetting channel_id={selectedDiscussionId}/>
           </TabInfo>
       </Tabs>
 

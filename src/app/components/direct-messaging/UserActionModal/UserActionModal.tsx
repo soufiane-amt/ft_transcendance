@@ -159,6 +159,7 @@ function UserActionModalMain( props: MyComponentProps) {
     actionModal = (( 
       <div className={style.user_action_main_modal}>
         <ChannelActionModal 
+          selectedDiscussionId={props.DiscussionToActId}
           channelData={props.channel_data}
           handleVisibility={setAsVisible}
         />
