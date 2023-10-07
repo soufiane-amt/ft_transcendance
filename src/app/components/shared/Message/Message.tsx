@@ -33,7 +33,6 @@ function Message({ messageData }: MessageProps) {
   const sentMessage: boolean = userSession.id === messageData.user_id;
 
   var currentUser = sentMessage ? userSession : messageSender;
-  console.log ("Messages component>:", userContacts)
   const messagePositionStyle = sentMessage ? `${style.message__to_right}` : "";
   return (
     <>

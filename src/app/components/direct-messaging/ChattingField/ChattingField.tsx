@@ -21,7 +21,6 @@ function MessagesHistory({ messages }: { messages: messageDto[] }) {
     useEffect(() => {
       scrollToBottom();
     }, [messages]);
-    console.log ()
     return (
       <div className={style.messages_history}>
         {messages && messages.map((messageElement: messageDto) => {

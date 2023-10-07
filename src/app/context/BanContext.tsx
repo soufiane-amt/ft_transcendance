@@ -82,10 +82,6 @@ export function BanProvider({ children }: BanProviderProps) {
   // Function to unban a user
   function unbanUser(roomId: string, userId: string) {
     
-    // console.log ("}}}]]", bannedRooms)
-    console.log (" =>",roomId, "  ", userId)
-    // if (room?.blocker_id === userId)
-    // {
       setBannedRooms((prevBannedRooms) => {
         const room =  prevBannedRooms.find((room) => room.room_id === roomId)
         if (room?.blocker_id !== userId)
@@ -93,11 +89,9 @@ export function BanProvider({ children }: BanProviderProps) {
         const updatedBannedRooms = prevBannedRooms.filter((item) => item.room_id !== roomId);
         return updatedBannedRooms;
       });
-      // }
   }
   useEffect(() => {
     // This effect will run after the state has been updated
-    console.log("Updated bannedRooms:", bannedRooms);
   }, [bannedRooms]); // Add bannedRooms as a dependency
   
   const contextValue: IBanContext = {

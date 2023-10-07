@@ -1,9 +1,8 @@
 .moderation_card
 {
     display: flex;
-    justify-content: space-evenly;
     align-items:center;
-    gap: 30%;
+    flex: 0 0 50%; /* 50% width for each element */
 }
 
 .moderation_action {
@@ -31,4 +30,14 @@
 .action_buttons button img { 
     width: 28px;
     margin-inline: 7px;
+}
+
+
+.user_info {
+    flex-grow: 1;
+
+}
+.action_buttons{
+    flex: 0 0 auto; 
+
 }

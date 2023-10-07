@@ -40,7 +40,6 @@ const Tabs = ({children}:{children:ReactNode[]})=>{
 
 const Tab = ({index, activeTab, setActiveTab,  data_label}:{index:any, activeTab:any, setActiveTab:any,  data_label:any})=>{
 
-  console.log(index)
   const handleClick = ()=>{
     setActiveTab(index)
   }
@@ -54,7 +53,7 @@ const Tab = ({index, activeTab, setActiveTab,  data_label}:{index:any, activeTab
 
 
 interface ChannelActionModalProps {
-  channelData: ChannelData,
+  channelData: ChannelData |undefined,
   handleVisibility: (parm: boolean) => void, 
 }
 const ChannelActionModal = ({channelData, handleVisibility}:ChannelActionModalProps)=>{
@@ -64,7 +63,7 @@ const ChannelActionModal = ({channelData, handleVisibility}:ChannelActionModalPr
     <div ref={ref} className={style.modal}>
       <Tabs>
           <TabInfo att={"Show users"}>
-            <ModerationToolBox/>
+            <ModerationToolBox channelData={channelData} />
           </TabInfo>
           <TabInfo att={"Channel settings"}>
             <ChannelSetting/>

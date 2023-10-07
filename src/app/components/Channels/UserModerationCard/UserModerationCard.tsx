@@ -64,7 +64,11 @@ function ModerationAction({ actionType }: ModerationActionProps) {
   );
 }
 
-export function UserModerationCard({data}:MemberType) {
+interface UserModerationCardProps {
+  data:MemberType
+}
+export function UserModerationCard({data}:UserModerationCardProps) {
+  console.log (">>>>>", data.username, " ", data)
   return (
     <div className={style.moderation_card}>
       <div className={style.user_info}>

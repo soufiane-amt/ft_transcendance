@@ -26,7 +26,6 @@ export function SocketProvider({ children }: SocketProviderProps) {
   // Add any socket.io event listeners or custom logic here
   useEffect(() => {
     socket.on('someEvent', (data) => {
-      console.log('Socket event received:', data);
     });
 
     return () => {

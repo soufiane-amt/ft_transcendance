@@ -41,23 +41,23 @@ export function DiscussionsBar({ selectedDiscussionState, currentRoute }: Discus
                       unread_messages:item.unread_messages}
             })
             setDiscussionRooms(room_data);
-            console.log ("Room Data: ", room_data)
             const tmpMap  = new Map();
             const channelFetchedData = fetchedData.map((channel:any)=>{
               tmpMap.set(channel.id, {
+                channelUsers : channel.channelUsers,
                 channelOwner: channel.channelOwner, 
                 channelAdmins:channel.channelAdmins,
                 channelBans: channel.channelBans,
               });
-      
             }
             )
-            setChannelData (channelFetchedData)
+            setChannelData (tmpMap)
           }
       }
       fetchDataAsync();
     }, []);
     
+
     useHandlePanel(discussionPanels,selectedDiscussion, setDiscussionRooms)
 
 

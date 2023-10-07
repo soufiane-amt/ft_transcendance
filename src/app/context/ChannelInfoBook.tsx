@@ -31,7 +31,6 @@ export function ChannelBooksProvider({
       const ChannelBooksBook_tmp = await fetchDataFromApi(
         "http://localhost:3001/chat/Channels/channelsInfoBook"
       );
-      console.log("///}}}}}}+>", ChannelBooksBook_tmp)
       const map = new Map();
       ChannelBooksBook_tmp.forEach((item: any) => {
         map.set(item.id, {

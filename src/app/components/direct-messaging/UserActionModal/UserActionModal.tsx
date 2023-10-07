@@ -133,7 +133,7 @@ type DmUserActionModalMainProps = {
 
 export type ChUserActionModalMainProps = {
   DiscussionToActId: string;
-  channel_data :channelData;
+  channel_data :ChannelData | undefined;
   modalState: [boolean, React.Dispatch<React.SetStateAction<boolean>>];
   ActionContext: string
 };
@@ -146,19 +146,20 @@ function UserActionModalMain( props: MyComponentProps) {
   
   if (props.ActionContext === "Direct_messaging" && 'userToActId' in props)
   {
-
+    
     actionModal = (props.userToActId && <div className={style.user_action_main_modal}>
       <UserActionModal
         handleVisibility={setAsVisible}
         targetedUserId={props.userToActId}
         targetedDiscussion={props.DiscussionToActId}
-      />
+        />
     </div>)
   }
-  else if (props.ActionContext === "Channels") {
+  else if (props.ActionContext === "Channels" && 'channel_data' in props) {
     actionModal = (( 
       <div className={style.user_action_main_modal}>
         <ChannelActionModal 
+          channelData={props.channel_data}
           handleVisibility={setAsVisible}
         />
       </div>

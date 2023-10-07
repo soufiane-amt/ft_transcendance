@@ -1,9 +1,11 @@
 .moderation_tool_box {
     display: flex;
-    flex-direction: column;
+    flex-direction: column; 
     justify-content: space-between;
     height: 800px;
     width: 500px;
+
+
   }
 
 .moderation_tool_box h2 {
@@ -15,7 +17,6 @@
 
 .users_cards{
     overflow: scroll;
-
 }
 .users_cards::-webkit-scrollbar {
     width: 0em; 
