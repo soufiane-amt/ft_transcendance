@@ -11,23 +11,6 @@ const TabInfo = ({att, children}:{att:string, children:ReactNode}) =>{
     <div>{children}</div>
   )
 }
-const ChannelActionModal = ({handleVisibility}:{handleVisibility: (parm: boolean) => void})=>{
-  const ref = useOutsideClick(handleVisibility);
-
-  return (
-    <div ref={ref} className={style.modal}>
-      <Tabs>
-          <TabInfo att={"Show users"}>
-            <ModerationToolBox/>
-          </TabInfo>
-          <TabInfo att={"Channel settings"}>
-            <ChannelSetting/>
-          </TabInfo>
-      </Tabs>
-
-    </div>
-  )
-}
 
 const Tabs = ({children}:{children:ReactNode[]})=>{
   const [activeTab, setActiveTab] = useState(0);
@@ -69,5 +52,27 @@ const Tab = ({index, activeTab, setActiveTab,  data_label}:{index:any, activeTab
   )
 }
 
+
+interface ChannelActionModalProps {
+  channelData: ChannelData,
+  handleVisibility: (parm: boolean) => void, 
+}
+const ChannelActionModal = ({channelData, handleVisibility}:ChannelActionModalProps)=>{
+  const ref = useOutsideClick(handleVisibility);
+
+  return (
+    <div ref={ref} className={style.modal}>
+      <Tabs>
+          <TabInfo att={"Show users"}>
+            <ModerationToolBox/>
+          </TabInfo>
+          <TabInfo att={"Channel settings"}>
+            <ChannelSetting/>
+          </TabInfo>
+      </Tabs>
+
+    </div>
+  )
+}
 
 export default ChannelActionModal;

@@ -21,7 +21,7 @@ export function DiscussionsBar({ selectedDiscussionState, currentRoute }: Discus
     const [discussionPanels, setDiscussionRooms] = useState<DiscussionDto[]>([]);
     const [modalIsVisible, setModalAsVisible] = useState<boolean>(false);
     const {selectedDiscussion, selectDiscussion} = selectedDiscussionState;
-    const [channelData, setChannelData] = useState<ChannelData |  undefined>(undefined)
+    const [channelData, setChannelData] = useState< Map<string, ChannelData>>(new Map());
 
     console.log ("Current route ", currentRoute)
 
@@ -42,12 +42,16 @@ export function DiscussionsBar({ selectedDiscussionState, currentRoute }: Discus
             })
             setDiscussionRooms(room_data);
             console.log ("Room Data: ", room_data)
-            const channelFetchedData = 
-            {
-              channelOwner: fetchedData.channelOwner, 
-              channelAdmins:fetchedData.channelAdmins,
-              channelBans: fetchedData.channelBans,
+            const tmpMap  = new Map();
+            const channelFetchedData = fetchedData.map((channel:any)=>{
+              tmpMap.set(channel.id, {
+                channelOwner: channel.channelOwner, 
+                channelAdmins:channel.channelAdmins,
+                channelBans: channel.channelBans,
+              });
+      
             }
+            )
             setChannelData (channelFetchedData)
           }
       }
@@ -97,7 +101,7 @@ export function DiscussionsBar({ selectedDiscussionState, currentRoute }: Discus
           {currentRoute === "Channels" && (
             <UserActionModalMain
               DiscussionToActId={selectedDiscussion.id} 
-              channel_data={channelData}
+              channel_data={channelData.get(selectedDiscussion.id)}
               modalState={[modalIsVisible, setModalAsVisible]}
               ActionContext={currentRoute}
             />)}

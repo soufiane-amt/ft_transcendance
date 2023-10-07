@@ -39,7 +39,6 @@ export function UserContactsProvider({
           avatar: user.avatar,
         });
       });
-      console.log ("IIII>", map)
       setUserContactsBook(map);
     }
     fetchDataAsync();

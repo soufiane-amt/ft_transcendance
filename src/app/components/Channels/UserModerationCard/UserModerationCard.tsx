@@ -8,6 +8,12 @@ const data = {
   role: "Member",
 };
 
+interface MemberType {
+  src:string,
+  username:string,
+  role:string,
+
+}
 const button = {
   play: "/images/icons/Ch/play.png",
   ban: "/images/icons/Ch/ban.png",
@@ -58,7 +64,7 @@ function ModerationAction({ actionType }: ModerationActionProps) {
   );
 }
 
-export function UserModerationCard() {
+export function UserModerationCard({data}:MemberType) {
   return (
     <div className={style.moderation_card}>
       <div className={style.user_info}>

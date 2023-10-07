@@ -129,13 +129,11 @@ type DmUserActionModalMainProps = {
   ActionContext: string
 };
 
-type ChUserActionModalMainProps = {
+
+
+export type ChUserActionModalMainProps = {
   DiscussionToActId: string;
-  channel_data :{
-    channelOwner: string ;
-    channelAdmins : string[];
-    channelBans: string[];
-  } | undefined
+  channel_data :channelData;
   modalState: [boolean, React.Dispatch<React.SetStateAction<boolean>>];
   ActionContext: string
 };
