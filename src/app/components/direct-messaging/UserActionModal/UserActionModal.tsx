@@ -11,6 +11,8 @@ import {
   useBanContext,
 } from "../../../context/BanContext";
 import { useOutsideClick } from "../../../../../hooks/useOutsideClick";
+import ChannelActionModal from "../../Channels/ChannelActionModal/ChannelActionModal";
+import { ChannelSetting } from "../../Channels/ChannelSetting/ChannelSetting";
 
 
 
@@ -158,6 +160,9 @@ function UserActionModalMain( props: MyComponentProps) {
   else if (props.ActionContext === "Channels") {
     actionModal = (( 
       <div className={style.user_action_main_modal}>
+        <ChannelActionModal 
+          handleVisibility={setAsVisible}
+        />
       </div>
     ))
   }  

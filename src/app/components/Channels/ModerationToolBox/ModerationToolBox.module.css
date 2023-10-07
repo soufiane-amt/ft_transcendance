@@ -2,10 +2,9 @@
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    background-color: white;
-    width: 600px;
     height: 800px;
-}
+    width: 500px;
+  }
 
 .moderation_tool_box h2 {
     width: 9em ;

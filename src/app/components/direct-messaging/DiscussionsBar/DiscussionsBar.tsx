@@ -23,6 +23,8 @@ export function DiscussionsBar({ selectedDiscussionState, currentRoute }: Discus
     const {selectedDiscussion, selectDiscussion} = selectedDiscussionState;
     const [channelData, setChannelData] = useState<ChannelData |  undefined>(undefined)
 
+    console.log ("Current route ", currentRoute)
+
     useEffect(() => {
       async function fetchDataAsync() {
         const fetchedData = await fetchDataFromApi(
@@ -71,7 +73,6 @@ export function DiscussionsBar({ selectedDiscussionState, currentRoute }: Discus
       };
        
     const displayActionModal = () => setModalAsVisible(true);
-  
     return (
       <ul className={style.discussion_panel_bar}>
         {discussionPanels.map((panelElement) => {
