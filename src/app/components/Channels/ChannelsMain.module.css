@@ -2,3 +2,36 @@
     display: flex;
   }
   
+
+.modal{
+  background-color: white;
+  height: 800px;
+  width: 500px;
+}
+.tabs{
+  display: flex;
+  position: relative;
+  top: 10px;
+}
+
+.tab {
+  flex-grow: 1;
+  cursor: pointer;
+  padding: 14px;
+  border-bottom: 0.5px solid black;
+}
+
+.tab_active{
+  border-bottom: none;
+  border-left: 0.5px solid black;
+  border-right: 0.5px solid black;
+  border-top: 0.5px solid black;
+  border-top-right-radius: 5px;
+  border-top-left-radius: 5px;
+}
+
+.lol {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
