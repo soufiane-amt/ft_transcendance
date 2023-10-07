@@ -5,22 +5,22 @@ import style from "./ModerationToolBox.module.css"
 
 
 
+export const getUserRole = (user_id:string, channelData:ChannelData | undefined) =>
+{
+    if ( channelData &&  channelData?.channelAdmins.includes(user_id))
+        return "Admin"
+    else if ( user_id === channelData?.channelOwner)
+        return "Owner"
+    else
+        return "Member"
+}
+
 interface ModerationToolBoxProps{
     channelData: ChannelData|undefined, 
-}
+}    
 export function ModerationToolBox ({channelData}:ModerationToolBoxProps)
 {
     const currentUser = useSessionUser()
-    const getUserRole = (user_id:string) =>
-    {
-        if ( channelData &&  channelData?.channelAdmins.includes(user_id))
-            return "Admin"
-        else if ( user_id === channelData?.channelOwner)
-            return "Owner"
-        else
-            return "Member"
-    }
-
     return (
         <>
         {channelData && 
@@ -34,7 +34,7 @@ export function ModerationToolBox ({channelData}:ModerationToolBoxProps)
                                 userData = findUserContacts(user)
                             else
                                 userData = {avatar:currentUser.avatar, username:currentUser.username}
-                            const userRole = getUserRole (user)
+                            const userRole = getUserRole (user, channelData)
                             console.log ("ChannelAdmins", channelData?.channelAdmins)
                             console.log ("User:", user, "Role:", userRole)
                              return (userData &&

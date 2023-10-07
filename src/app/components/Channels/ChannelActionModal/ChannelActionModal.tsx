@@ -1,8 +1,9 @@
 import React, {  ReactNode, useState } from "react";
 import { ChannelSetting } from "../ChannelSetting/ChannelSetting";
-import { ModerationToolBox } from "../ModerationToolBox/ModerationToolBox";
+import { ModerationToolBox, getUserRole } from "../ModerationToolBox/ModerationToolBox";
 import style from "./ChannelActionModal.module.css";
 import { useOutsideClick } from "../../../../../hooks/useOutsideClick";
+import { useSessionUser } from "../../../context/SessionUserContext";
 
 
 
@@ -18,15 +19,15 @@ const Tabs = ({children}:{children:ReactNode[]})=>{
     <div className={style.lol}>
       <div className={style.tabs}>
       {
-        children.map((child :any, index: any) => (
-          <Tab
+        children.map((child :any, index: any) => {
+          return child && <Tab
             key={index}
             index={index}
             activeTab= {activeTab}
             setActiveTab={setActiveTab}
             data_label={child.props.att}
           />
-        ))
+      })
       }
         </div>
       <div>
@@ -59,15 +60,21 @@ interface ChannelActionModalProps {
 }
 const ChannelActionModal = ({selectedDiscussionId, channelData, handleVisibility}:ChannelActionModalProps)=>{
   const ref = useOutsideClick(handleVisibility);
+  const IsModerator = getUserRole(useSessionUser().id, channelData) !== "Member"
+  console.log ("IsModerator : ", IsModerator)
   return (
     <div ref={ref} className={style.modal}>
       <Tabs>
           <TabInfo att={"Show users"}>
+
             <ModerationToolBox channelData={channelData} />
           </TabInfo>
-          <TabInfo att={"Channel settings"}>
-            <ChannelSetting channel_id={selectedDiscussionId}/>
-          </TabInfo>
+          {
+            IsModerator && 
+            <TabInfo att={"Channel settings"}>
+              <ChannelSetting channel_id={selectedDiscussionId}/>
+            </TabInfo>
+          }
       </Tabs>
 
     </div>
