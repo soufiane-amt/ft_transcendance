@@ -1,6 +1,7 @@
-import React from "react";
+import React, { ReactNode } from "react";
 import Avatar from "../../shared/Avatar/Avatar";
 import style from "./UserModerationCard.module.css";
+import { useSessionUser } from "../../../context/SessionUserContext";
 
 const data = {
   src: "/images/avatar.png",
@@ -64,11 +65,36 @@ function ModerationAction({ actionType }: ModerationActionProps) {
   );
 }
 
+
+
+
 interface UserModerationCardProps {
   data:MemberType
 }
-export function UserModerationCard({data}:UserModerationCardProps) {
-  console.log (">>>>>", data.username, " ", data)
+
+// Helper function to determine if user is not the owner
+function isNotOwner(data : MemberType) {
+  return data.role !== 'Owner' ;
+}
+
+// Helper function to render moderation actions
+function renderModerationActions(data : MemberType, currentUser:any) {
+  const actions:ReactNode[] = [];
+  if (currentUser.username === data.username)
+    return actions
+  if (isNotOwner(data)) {
+    actions.push(<ModerationAction key="ban" actionType={ActionType.BAN} />);
+    actions.push(<ModerationAction key="kick" actionType={ActionType.KICK} />);
+  }
+
+  actions.push(<ModerationAction key="play" actionType={ActionType.PLAY} />);
+
+  return actions;
+}
+
+export function UserModerationCard({ data }: UserModerationCardProps) {
+  const currentUser = useSessionUser();
+
   return (
     <div className={style.moderation_card}>
       <div className={style.user_info}>
@@ -79,9 +105,7 @@ export function UserModerationCard({data}:UserModerationCardProps) {
         </div>
       </div>
       <div className={style.action_buttons}>
-        <ModerationAction actionType={ActionType.PLAY} />
-        <ModerationAction actionType={ActionType.BAN} />
-        <ModerationAction actionType={ActionType.KICK} />
+        {renderModerationActions(data, currentUser)}
       </div>
     </div>
   );

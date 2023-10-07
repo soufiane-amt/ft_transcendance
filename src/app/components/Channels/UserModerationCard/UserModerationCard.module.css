@@ -30,6 +30,7 @@
 .action_buttons button img { 
     width: 28px;
     margin-inline: 7px;
+    padding-block: 10px;
 }
 
 
