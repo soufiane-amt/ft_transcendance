@@ -130,12 +130,6 @@ function NavBar()
             }).then((response) => {
                 console.log(response);
             });
-            const statusData = {
-                token: `Bearer ${JwtToken}`,
-                status: 'offline'
-            }
-            if (newSocket)
-                newSocket.emit('status', statusData);
         }
         catch (error)
         {
