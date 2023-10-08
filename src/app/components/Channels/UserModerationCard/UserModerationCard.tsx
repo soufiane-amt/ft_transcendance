@@ -48,6 +48,7 @@ interface ModerationActionProps {
 
 function getOppositeButton (currentButton : ActionType) : ActionType
 {
+  if (currentButton === ActionType.PLAY) return (ActionType.PLAY);
   if (currentButton === ActionType.BAN) return (ActionType.UNBAN);
   else if (currentButton === ActionType.UNBAN)  return (ActionType.BAN);
   else if (currentButton === ActionType.MUTE) return (ActionType.UNMUTE);
@@ -67,6 +68,7 @@ function ModerationAction({ actionType }: ModerationActionProps) {
         // Handle ban action
         break;
       case ActionType.UNBAN:
+        setShowShowConfirmation (true)
         
         // Handle unban action
         break;
@@ -102,10 +104,10 @@ function ModerationAction({ actionType }: ModerationActionProps) {
   return (
     <button onClick={handleClick} className={style.moderation_action}>
       <img src={buttonSrc} alt={`Action: ${ActionType[currentActionType]}`} />
-        {/* {showRadioOptions && (
+        {showRadioOptions && (
           <RadioOptions handleButtonToggle={handleButtonToggle} setShowRadioOptions={setShowRadioOptions} selectType={`${ActionType[currentActionType]}`} />
-        )} */}
-        { showConfirmation && (
+        )}
+        { !showRadioOptions &&  showConfirmation && (
           <ConfirmationDialog handleButtonToggle={handleButtonToggle} setShowConfirmationDialog={setShowShowConfirmation}  selectType={`${ActionType[currentActionType]}`}></ConfirmationDialog>
         )}
     </button>
@@ -120,16 +122,16 @@ interface UserModerationCardProps {
 }
 
 // Helper function to determine if user is not the owner
-function isNotOwner(data : MemberType) {
-  return data.role !== 'Owner' ;
+function isOwner(data : MemberType) {
+  return data.role === 'Owner' ;
 }
 
 // Helper function to render moderation actions
-function renderModerationActions(data : MemberType, currentUser:any) {
+function renderModerationActions(data : MemberType, currentUser:any, sessionUserIsModerator:boolean) {
   const actions:ReactNode[] = [];
   if (currentUser.username === data.username)
     return actions
-  if (isNotOwner(data)) {
+  if (!isOwner(data) && sessionUserIsModerator) {
     actions.push(<ModerationAction key="ban" actionType={ActionType.BAN} />);
     actions.push(<ModerationAction key="mute" actionType={ActionType.MUTE} />);
     actions.push(<ModerationAction key="kick" actionType={ActionType.KICK} />);
@@ -139,8 +141,11 @@ function renderModerationActions(data : MemberType, currentUser:any) {
 
   return actions;
 }
-
-export function UserModerationCard({ data }: UserModerationCardProps) {
+interface UserModerationCardProps {
+  currentUserIsModerator : boolean,
+  data : MemberType
+}
+export function UserModerationCard({ currentUserIsModerator, data }: UserModerationCardProps) {
   const currentUser = useSessionUser();
 
   return (
@@ -153,7 +158,7 @@ export function UserModerationCard({ data }: UserModerationCardProps) {
         </div>
       </div>
       <div className={style.action_buttons}>
-        {renderModerationActions(data, currentUser)}
+        {renderModerationActions(data, currentUser, currentUserIsModerator)}
       </div>
 
     </div>

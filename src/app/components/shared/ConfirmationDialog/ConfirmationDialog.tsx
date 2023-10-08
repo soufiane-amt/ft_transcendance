@@ -4,18 +4,21 @@ import { useOutsideClick } from "../../../../../hooks/useOutsideClick";
 
 
 
-const getAppropriateMessage = ((selectedType:string) =>{
+const getAppropriateMessage = (selectedType: string) => {
     switch (selectedType) {
-        case 'UNBAN':
-          return "Are you sure you want to unban this user before his/her banning time ends?";
-        case 'KICK':
-            return "Are you sure you want to kick out this user from the channel?";
-        case 'PLAY':
-            return "Are you sure you want to send game playing invitation to this user?";
-        default:
-          return "Unknown";
-      }
-})
+      case 'UNBAN':
+        return "Are you sure you want to unban this user before their ban time ends?";
+      case 'UNMUTE':
+        return "Are you sure you want to unmute this user before their mute time ends?";
+      case 'KICK':
+        return "Are you sure you want to kick this user out of the channel?";
+      case 'PLAY':
+        return "Are you sure you want to send a game invitation to this user?";
+      default:
+        return "Unknown action";
+    }
+  };
+  
 
 
 interface ConfirmationDialogProps {

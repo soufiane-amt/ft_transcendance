@@ -21,6 +21,7 @@ interface ModerationToolBoxProps{
 export function ModerationToolBox ({channelData}:ModerationToolBoxProps)
 {
     const currentUser = useSessionUser()
+    const currentUserIsModerator = getUserRole (currentUser.id, channelData)  !== 'Member'
     return (
         <>
         {channelData && 
@@ -35,10 +36,10 @@ export function ModerationToolBox ({channelData}:ModerationToolBoxProps)
                             else
                                 userData = {avatar:currentUser.avatar, username:currentUser.username}
                             const userRole = getUserRole (user, channelData)
-                            console.log ("ChannelAdmins", channelData?.channelAdmins)
-                            console.log ("User:", user, "Role:", userRole)
                              return (userData &&
-                                <UserModerationCard data={{
+                                <UserModerationCard 
+                                 currentUserIsModerator={currentUserIsModerator}
+                                 data={{
                                  src:userData?.avatar,
                                  username:userData?.username,
                                  role:userRole
