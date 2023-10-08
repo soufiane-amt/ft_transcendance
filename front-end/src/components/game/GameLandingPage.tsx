@@ -7,7 +7,7 @@ import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
 // import newSocket from "../GlobalComponents/Socket/socket";
 // import Cookies from "js-cookie";
-import Info from "./Info";
+import Info from "./InfoModel";
 
 const pixelfont = Press_Start_2P({
   subsets: ["latin"],
