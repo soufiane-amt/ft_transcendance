@@ -1,0 +1,54 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.card-shadow {
+  box-shadow: 1px 1px 15px #000000;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: content-box;
+}
+
+/* For Chrome and Brave */
+*::-webkit-scrollbar {
+  width: 0.4em;
+  background-color: transparent;
+}
+
+*::-webkit-scrollbar-thumb {
+  background-color: rgba(65, 57, 57, 0.4);
+  border-radius: 6px;
+  border: 2px solid transparent;
+}
+
+*::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(99, 81, 81, 0.4);
+}
+
+/* For Firefox */
+* {
+  scrollbar-width: thin; /* or auto for default browser style */
+  scrollbar-color: rgba(65, 57, 57, 0.4) transparent;
+}
+
+*::-webkit-scrollbar-track {
+  background: transparent; /* for Firefox, this keeps the track transparent */
+}
+
+*::-webkit-scrollbar-thumb {
+  background-color: rgba(65, 57, 57, 0.4);
+  border-radius: 6px;
+  border: 2px solid transparent;
+}
+
+*::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(99, 81, 81, 0.4);
+}
+
+
+.content {
+  min-height: calc(100vh - 91px);
+}
