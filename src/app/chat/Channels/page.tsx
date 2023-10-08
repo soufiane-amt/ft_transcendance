@@ -14,6 +14,6 @@ export default function Channels() {
     <SessionUserProvider>
         <ChannelsMain/>
     </SessionUserProvider>
-    // <RadioOptions selectType={"Ban"}/>
+    // <ConfirmationDialog selectType={"Ban"}/>
     )
 }

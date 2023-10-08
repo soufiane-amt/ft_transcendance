@@ -3,6 +3,7 @@ import Avatar from "../../shared/Avatar/Avatar";
 import style from "./UserModerationCard.module.css";
 import { useSessionUser } from "../../../context/SessionUserContext";
 import { RadioOptions } from "../../shared/RadioOptions/RadioOptions";
+import { ConfirmationDialog } from "../../shared/ConfirmationDialog/ConfirmationDialog";
 
 const data = {
   src: "/images/avatar.png",
@@ -45,18 +46,24 @@ interface ModerationActionProps {
   actionType: ActionType;
 }
 
+function getOppositeButton (currentButton : ActionType) : ActionType
+{
+  if (currentButton === ActionType.BAN) return (ActionType.UNBAN);
+  else if (currentButton === ActionType.UNBAN)  return (ActionType.BAN);
+  else if (currentButton === ActionType.MUTE) return (ActionType.UNMUTE);
+  else return (ActionType.MUTE);
+
+}
 function ModerationAction({ actionType }: ModerationActionProps) {
   const [showRadioOptions, setShowRadioOptions] = useState(false); // State to control the display of radio options
-  const toggleRadioOptions = () => {
-    setShowRadioOptions(!showRadioOptions); // Toggle the state when the button is clicked
-  };
+  const [showConfirmation, setShowShowConfirmation] = useState(false); // State to control the display of radio options
+  const [currentActionType, setCurrentActionType] = useState(actionType);
 
-
-  const buttonSrc = getActionIcon(actionType);
+  const buttonSrc = getActionIcon(currentActionType);
   const handleClick = () => {
-    switch (actionType) {
+    switch (currentActionType) {
       case ActionType.BAN:
-        toggleRadioOptions();
+        setShowRadioOptions(true);
         // Handle ban action
         break;
       case ActionType.UNBAN:
@@ -64,27 +71,42 @@ function ModerationAction({ actionType }: ModerationActionProps) {
         // Handle unban action
         break;
       case ActionType.MUTE:
-        toggleRadioOptions();
+        setShowRadioOptions(true);
         // Handle MUTE action
         break;
       case ActionType.UNMUTE:
-        // Handle unMUTE action
+        setShowShowConfirmation (true)
         break;
       case ActionType.KICK:
+        setShowShowConfirmation (true)
+
         // Handle kick action
         break;
       case ActionType.PLAY:
+        setShowShowConfirmation (true)
+
         // Handle play action
         break;
       default:
         break;
     }
   };
+
+  const handleButtonToggle = () => {
+    // Toggle between buttons when Confirm is clicked
+    const OppositeButton = getOppositeButton(currentActionType)
+    setCurrentActionType (OppositeButton)
+    setShowRadioOptions(false);
+  };
+
   return (
     <button onClick={handleClick} className={style.moderation_action}>
-      <img src={buttonSrc} alt={`Action: ${ActionType[actionType]}`} />
-        {showRadioOptions && (
-          <RadioOptions showOptionsState={{showRadioOptions, setShowRadioOptions}}selectType={`Moderate ${data.username}`} />
+      <img src={buttonSrc} alt={`Action: ${ActionType[currentActionType]}`} />
+        {/* {showRadioOptions && (
+          <RadioOptions handleButtonToggle={handleButtonToggle} setShowRadioOptions={setShowRadioOptions} selectType={`${ActionType[currentActionType]}`} />
+        )} */}
+        { showConfirmation && (
+          <ConfirmationDialog handleButtonToggle={handleButtonToggle} setShowConfirmationDialog={setShowShowConfirmation}  selectType={`${ActionType[currentActionType]}`}></ConfirmationDialog>
         )}
     </button>
   );
