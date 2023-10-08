@@ -139,6 +139,12 @@ function NavBar()
     }
 
     useEffect(() => {
+        newSocket.on('changestatus', (user: any) => {
+            setUsers(user);
+        })
+    })
+
+    useEffect(() => {
         fetch('http://localhost:3001/api/Dashboard/allUsers', {
             method: 'Get',
             headers: {

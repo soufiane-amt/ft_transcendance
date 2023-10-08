@@ -4,7 +4,10 @@ import { Press_Start_2P } from "next/font/google";
 import { Space_Mono } from "next/font/google";
 import BackgroundCircleMedium from "@/components/HomePage/BackroundCirclesMedium";
 import { motion } from "framer-motion";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import newSocket from "../GlobalComponents/Socket/socket";
+import Cookies from "js-cookie";
+
 
 const pixelfont = Press_Start_2P({
   subsets: ["latin"],
@@ -17,7 +20,29 @@ const mono = Space_Mono({
   weight: ["400", "700"],
 });
 
+
 function GameLandingPage() {
+
+
+  const JwtToken = Cookies.get("access_token");
+  // useEffect(() => {
+  //       const statusData = {
+  //           token: `Bearer ${JwtToken}`,
+  //       }
+  //       newSocket.emit('status', statusData);
+  // }, [JwtToken]);
+
+
+  useEffect(() => {
+    const data = {
+      status: 'INGAME',
+      token: `Bearer ${JwtToken}`,
+
+    }
+    newSocket.emit('status', data);
+  }, [JwtToken])
+
+
   const [info, setInfo] = useState(false);
 
   return (
@@ -66,6 +91,13 @@ function GameLandingPage() {
       <div className="flex flex-col text-white w-full h-fit justify-center items-center gap-6 md:flex-row md:gap-16 xl:gap-24 mb-[25px]">
         <div
           className={`w-[180px] h-[30px]  text-center flex items-center justify-center text-[#E8DE28]  border-[2px] border-[#E8DE28] border-solid ${mono.className} hover:opacity-[65%] hover:cursor-pointer z-[1] rounded-md animate-bounce `}
+          onClick={()=> {
+            const data = {
+              token: `Bearer ${JwtToken}`,
+        
+            }
+            newSocket.emit('status', data);
+          }}
         >
           Practice Mode
         </div>

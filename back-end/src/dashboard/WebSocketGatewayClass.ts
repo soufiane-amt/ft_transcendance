@@ -172,22 +172,51 @@ export class WebSocketGatewayClass
       // console.log('users : ', users);
       if (usersId) {
         usersId.map(async (userId) => {
-          const targetClientRoom = `room_${userId}`;
-          //     // console.log('target : ', targetClientRoom);
-          await this.user.changeVisibily(payload.userId, 'ONLINE');
-          //       // const user = await this.user.findUserByID(userId);
-          //       // console.log('users : ', user);
-          const usersId: any[] = await this.user.findFriendsList(userId);
-          // console.log("users ID : ", usersId);
-          const users: any[] = [];
+          if (notificationData.status === 'INGAME') {
+            const targetClientRoom = `room_${userId}`;
+            //     // console.log('target : ', targetClientRoom);
+            await this.user.changeVisibily(payload.userId, 'IN_GAME');
+            //       // const user = await this.user.findUserByID(userId);
+            //       // console.log('users : ', user);
+            const usersId: any[] = await this.user.findFriendsList(userId);
+            // console.log("users ID : ", usersId);
+            const users: any[] = [];
 
-          await Promise.all(
-            usersId.map(async (user) => {
-              const userData = await this.user.findUserByID(user);
-              users.push(userData);
-            }),
-          );
-          this.server.to(targetClientRoom).emit('online', users);
+            await Promise.all(
+              usersId.map(async (user) => {
+                const userData = await this.user.findUserByID(user);
+                users.push(userData);
+              }),
+            );
+            this.server.to(targetClientRoom).emit('online', users);
+            const myuser = this.user.findUserByID(payload.userId);
+            this.server.emit('changestatus', myuser);
+          }
+          const user = await this.service.prismaClient.user.findUnique({
+            where: {
+              id: payload.userId,
+            },
+          });
+          if (
+            notificationData.status != 'INGAME'
+          ) {
+            const targetClientRoom = `room_${userId}`;
+            //     // console.log('target : ', targetClientRoom);
+            await this.user.changeVisibily(payload.userId, 'ONLINE');
+            //       // const user = await this.user.findUserByID(userId);
+            //       // console.log('users : ', user);
+            const usersId: any[] = await this.user.findFriendsList(userId);
+            // console.log("users ID : ", usersId);
+            const users: any[] = [];
+
+            await Promise.all(
+              usersId.map(async (user) => {
+                const userData = await this.user.findUserByID(user);
+                users.push(userData);
+              }),
+            );
+            this.server.to(targetClientRoom).emit('online', users);
+          }
         });
       }
     }

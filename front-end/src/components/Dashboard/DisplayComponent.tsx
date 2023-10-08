@@ -19,7 +19,7 @@ function DisplayComponent()
     const JwtToken = Cookies.get("access_token");
   useEffect(() => {
         const statusData = {
-            token: `Bearer ${JwtToken}`
+            token: `Bearer ${JwtToken}`,
         }
         newSocket.emit('status', statusData);
   }, [JwtToken]);
