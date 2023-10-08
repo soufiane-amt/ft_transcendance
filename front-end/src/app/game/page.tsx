@@ -6,33 +6,15 @@ import GameLandingPage from "@/components/game/GameLandingPage";
 
 export default function Game() {
   const [GameLandingPageBool, SetGameLandingPage] = useState(true);
-
-
-
-  // state {
-  //   game oponent : bot , matchmaking, userid
-  //   game speed :,
-  //   game map: ,
-  // }
-
-
-  
+  const [GameDashboard, SetGameDashboard] = useState(false);
   return (
-    <Structure>
-    {GameLandingPageBool === true && <GameLandingPage />}
-    {/* game settings */}
-    {/* game canva */}
-    </Structure>
+    <Structure>{GameLandingPageBool === true && <GameLandingPage />}</Structure>
   );
 }
 
- 
-
-// TODO: INFO COMPONENT
+// TODO:
+// game invitation
 // game settings
-// game invitation 
 // game await for invitaion to be accepted
 // game await for matchmaking
 // game canva
-// online , offline , in game , multiple sessions : ps online state
-
