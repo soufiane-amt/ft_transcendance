@@ -4,6 +4,7 @@ import { ModerationToolBox, getUserRole } from "../ModerationToolBox/ModerationT
 import style from "./ChannelActionModal.module.css";
 import { useOutsideClick } from "../../../../../hooks/useOutsideClick";
 import { useSessionUser } from "../../../context/SessionUserContext";
+import { LeaveChannel } from "../../shared/LeaveChannel/LeaveChannel";
 
 
 
@@ -75,6 +76,11 @@ const ChannelActionModal = ({selectedDiscussionId, channelData, handleVisibility
               <ChannelSetting channel_id={selectedDiscussionId}/>
             </TabInfo>
           }
+         <TabInfo att={"Channel MemberShip"}>
+
+            <LeaveChannel/>
+        </TabInfo>
+
       </Tabs>
 
     </div>
