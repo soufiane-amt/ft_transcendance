@@ -48,11 +48,16 @@ export function ModerationToolBox ({channelData}:ModerationToolBoxProps)
 
                     }
             </div>
-
-            <div className={style.user_addition}>
-                <input placeholder="Enter a username"></input>
-                <button>Add User</button>
-            </div>
+            {
+                <div className={style.user_addition}>
+                    {currentUserIsModerator &&( 
+                        <>
+                            <input placeholder="Enter a username"></input>
+                            <button>Add User</button>
+                        </>
+                    )}
+                </div>
+            }
         </div>
         }
         </>
