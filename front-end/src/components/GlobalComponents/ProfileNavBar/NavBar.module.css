@@ -23,7 +23,7 @@
     box-sizing: border-box;
     background-color: #24234F;
     width: 19%;
-    position: fixed;
+    position: absolute;
     height: 91px;
     /* padding: 4%; */
     display: flex;

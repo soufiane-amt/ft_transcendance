@@ -49,17 +49,23 @@ export class DashboardController {
 
     try {
       const payload: any = this.authservice.extractPayload(JwtToken);
-      const users: any[] = await this.user.findAllUsersdata(payload.userId);
-      return response.status(200).send(users);
+      const users: any[] = await this.user.findNonFriendsUsers(payload.userId);
+      const newusers = await Promise.all(
+        users.map(async (user) => {
+          const isFriendRequestSent = await this.user.FriendShipRequestAlreadySent(payload.userId, user.id);
+          if (isFriendRequestSent)
+            user.pending = true;
+          return user;
+        })
+      );
+      return response.status(200).send(newusers);
     } catch (error) {
       // Handle any errors that occur during the process
       console.error('Error:', error);
       return response.status(500).send({ error: 'Internal Server Error' });
     }
-
   }
   
-
   @Get('Dashboard/friends')
   @UseGuards(JwtAuthGuard)
   async sendUser(@Req() request, @Res() response: any)
@@ -78,20 +84,14 @@ export class DashboardController {
     try {
       const payload: any = this.authservice.extractPayload(JwtToken);
       const usersId: any[] = await this.user.findFriendsList(payload.userId);
+      // console.log("users ID : ", usersId);
       const users: any[] = [];
     
       await Promise.all(
         usersId.map(async (user) => {
-          if (user.user1_id === payload.userId)
-          {
-            const userData = await this.user.findUserByID(user.user2_id);
+            const userData = await this.user.findUserByID(user);
             users.push(userData);
-          }
-          else if (user.user2_id === payload.userId)
-          {
-              const userData = await this.user.findUserByID(user.user1_id);
-              users.push(userData);
-          }
+          
         })
       );
       return response.status(200).send(users);
@@ -147,13 +147,6 @@ export class DashboardController {
     return response.status(200).send(user);
   }
 
-  // @Post('Dashboard/addfriend')
-  // addfriends(@Body() data: any)
-  // {
-  //     console.log('Receive data', data);
-  //     return data;
-  // }
-
   @Get('Dashboard/statistic')
   @UseGuards(JwtAuthGuard)
   async sendStatistic(@Req() request, @Res() response: any)
@@ -199,10 +192,32 @@ export class DashboardController {
     // 
       const payload: any = this.authservice.extractPayload(JwtToken);
 
-
-
-
       await this.user.changeVisibily(payload.userId, "OFFLINE");
+    }
+  }
+  @Get('Dashboard/notification')
+  @UseGuards(JwtAuthGuard)
+  async sendnotification(@Req() request, @Res() response: any)
+  {
+    const authorizationHeader = request.headers.authorization;
+    if (!authorizationHeader) {
+      return response.status(401).send({ error: 'Authorization header is missing' });
+    }
+    const tokenParts = authorizationHeader.split(' ');
+    if (tokenParts.length !== 2 || tokenParts[0] !== 'Bearer') {
+      return response.status(401).send({ error: 'Invalid authorization header format' });
+    }
+
+    const JwtToken: string = tokenParts[1];
+
+    try {
+      const payload: any = this.authservice.extractPayload(JwtToken);
+      const notificationtable = await this.user.getUserNotificationsWithUser2Data(payload.userId);
+      return response.status(200).send(notificationtable);
+    } catch (error) {
+      // Handle any errors that occur during the process
+      console.error('Error:', error);
+      return response.status(500).send({ error: 'Internal Server Error' });
     }
   }
 }

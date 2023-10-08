@@ -4,6 +4,9 @@ import { Injectable, UseGuards } from '@nestjs/common';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-aut.guard';
 import { UserCrudService } from 'src/prisma/user-crud.service';
 import { AuthService } from 'src/auth/auth.service';
+import { PrismaService } from 'src/prisma/prisma.service';
+import { stringify } from 'querystring';
+import { checkPrime } from 'crypto';
 
 @WebSocketGateway({cors: true, origins: 'http://localhost:3000'})
 @Injectable()
@@ -11,21 +14,24 @@ import { AuthService } from 'src/auth/auth.service';
 export class WebSocketGatewayClass implements OnGatewayConnection, OnGatewayDisconnect
 {
     @WebSocketServer() server: Server;
-    constructor(private readonly user : UserCrudService, private readonly authservice: AuthService){};
+    constructor(private readonly user : UserCrudService, private readonly authservice: AuthService, private readonly service: PrismaService){};
     private clients: Map<string, Socket> = new Map();
 
     async handleConnection(client: Socket) {
         const token : any = client.handshake.query.token;
-        const tokenParts = token.split(' ');
-        const JwtToken: string = tokenParts[1];
-
-        const payload: any = this.authservice.extractPayload(JwtToken);
-        const clientRoom = `room_${payload.userId}`;
-        client.join(clientRoom);
-        const notificationtable = await this.user.getUserNotificationsWithUser2Data(payload.userId);
-        if (notificationtable.length)
-            client.emit('sendlist', notificationtable);
+        if (token)
+        {
+          const tokenParts = token.split(' ');
+          const JwtToken: string = tokenParts[1];
+          const payload: any = this.authservice.extractPayload(JwtToken);
+        if (payload)
+        {
+          const clientRoom = `room_${payload.userId}`;
+          console.log('clientRoom : ', clientRoom);
+          client.join(clientRoom);
+        }
         this.clients.set(client.id, client);
+        }
     }
     
 
@@ -65,15 +71,45 @@ export class WebSocketGatewayClass implements OnGatewayConnection, OnGatewayDisc
           // console.log('user_id', payload.userId);
           try
           {
-            // console.log('notification : ', notificationData.user_id);
-            const user = await this.user.findUserByID(notificationData.user_id);
-            let check = await this.user.findFriendship(payload.user_id, notificationData.user_id);
-            let check_another = await this.user.findFriendship(notificationData.user_id, payload.user_id);
-            if (user && check === null && check_another === null)
+            // console.log('My Id : ' + payload.userId + ' notificationData : ' + notificationData.user_id);
+            const check = await this.service.prismaClient.friendships.findMany({
+              where: {
+                  OR: [
+                      {user1_id: payload.userId, user2_id: notificationData.user_id},
+                      {user1_id: notificationData.user_id, user2_id: payload.userId},
+                  ],
+              },
+              select : {
+                id: true,
+              }
+            });
+            if (check.length === 0)
             {
-              this.user.createFriendShip(payload.userId, notificationData.user_id);
+              await this.user.createFriendShip(payload.userId, notificationData.user_id);
+              const usersId: any[] = await this.user.findFriendsList(payload.userId);
+              const users: any[] = [];
+              await Promise.all(
+              usersId.map(async (user) => {
+                const userData = await this.user.findUserByID(user);
+                users.push(userData);
+              })
+              );
+              const MyClientRoom = `room_${payload.userId}`;
+              this.server.to(MyClientRoom).emit('friend', users);
+
+              // send to other user
+              const usersId_other: any[] = await this.user.findFriendsList(notificationData.user_id);
+              const users_other: any[] = [];
+    
+              await Promise.all(
+                usersId_other.map(async (user) => {
+                const userData = await this.user.findUserByID(user);
+                users_other.push(userData);
+              })
+              );
+              const targetClientRoom = `room_${notificationData.user_id}`;
+              this.server.to(targetClientRoom).emit('friend', users_other);
             }
-              // console.log('user : ', user.username);
           }
           catch (error)
           {
@@ -81,5 +117,59 @@ export class WebSocketGatewayClass implements OnGatewayConnection, OnGatewayDisc
           }
         }
       }
-    
+      @SubscribeMessage('status')
+      async handleonline(@MessageBody() notificationData: any)
+      {
+        const token: any = notificationData.token;
+        if (token)
+        {
+          const tokenParts = token.split(' ');
+          const JwtToken: string = tokenParts[1];
+          const payload: any = this.authservice.extractPayload(JwtToken);
+          const usersId: any [] = await this.user.findFriendsList(payload.userId);
+          // console.log('users : ', users);
+          if (usersId)
+          {
+            usersId.map(async (userId) => {
+              const targetClientRoom = `room_${userId}`;
+          //     // console.log('target : ', targetClientRoom);
+              if (notificationData.status === 'online')
+              {
+                await this.user.changeVisibily(payload.userId, "ONLINE");
+          //       // const user = await this.user.findUserByID(userId);
+          //       // console.log('users : ', user);
+                const usersId: any[] = await this.user.findFriendsList(userId);
+                // console.log("users ID : ", usersId);
+                const users: any[] = [];
+
+                await Promise.all(
+                  usersId.map(async (user) => {
+                      const userData = await this.user.findUserByID(user);
+                      users.push(userData);
+
+                  })
+                );
+                this.server.to(targetClientRoom).emit('online', users);
+              }
+              else if (notificationData.status === 'offline')
+              {
+                await this.user.changeVisibily(payload.userId, "OFFLINE");
+          //       this.server.to(targetClientRoom).emit('offline', payload.userId);
+          const usersId: any[] = await this.user.findFriendsList(userId);
+                // console.log("users ID : ", usersId);
+                const users: any[] = [];
+
+                await Promise.all(
+                  usersId.map(async (user) => {
+                      const userData = await this.user.findUserByID(user);
+                      users.push(userData);
+
+                  })
+                );
+                this.server.to(targetClientRoom).emit('offline', users);
+              }
+            })
+          }
+        }
+      }
 }

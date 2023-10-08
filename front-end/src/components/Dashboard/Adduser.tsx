@@ -1,54 +1,34 @@
 import React, {useEffect, useState} from "react";
 import {FaSearch} from 'react-icons/fa';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faUserPlus } from '@fortawesome/free-solid-svg-icons';
+import { faUserPlus, faClock } from '@fortawesome/free-solid-svg-icons';
 import { Socket, io } from "socket.io-client";
 import Cookies from "js-cookie";
 import { showToast } from "./ShowToast";
+import newSocket from "../GlobalComponents/Socket/socket";
 function AddUser()
 {
     const [searchQuery, setsearchQuery] = useState('');
-    const [userFriend, setuserFriend] = useState<{ id: string; username: string; avatar: string; status: string }[]>([]);
-    const [updateFriend, setupdateFriend] = useState<{id: string; username: string; avatar: string; status: string }[]>([]);
-    const [socket, setsocket] = useState<Socket| null>(null);
+    const [userFriend, setuserFriend] = useState<{ id: string; username: string; avatar: string; status: string, pending?: boolean }[]>([]);
+    const [updateFriend, setupdateFriend] = useState<{id: string; username: string; avatar: string; status: string, pending?: boolean }[]>([]);
+    const [clickedUsers, setClickedUsers] = useState<string[]>([]);
     const JwtToken = Cookies.get("access_token");
-    
-    useEffect(() => {
-        if (!socket) {
-            const newSocket = io('http://localhost:3001', {
-              transports: ['websocket'],
-              query: {
-                  token: `Bearer ${JwtToken}`,
-              }
-            });
-      
-            newSocket.on('connect', () => {
-              setsocket(newSocket);
-            });
-      
-            newSocket.on('disconnect', () => {
-            });
-    
-          return () => {
-            newSocket.disconnect();
-          };
-        }
-      }, [JwtToken]);
-    
 
     function handleclickButtom(user_id: string, username: string)
     {
-        if (user_id && socket)
+        console.log('Im here : ' + user_id + ' socket : ' + newSocket);
+        if (user_id && newSocket)
         {
             const notificationData = {
                 user_id: user_id,
-                type: 'ACCEPTED_INVITATION',
+                type: 'FRIENDSHIP_REQUEST',
                 token: `Bearer ${JwtToken}`,
             }
             if (notificationData)
             {
-                socket.emit('sendNotification',notificationData);
+                newSocket.emit('sendNotification',notificationData);
                 showToast(`Friend Request To ${username}`, "success");
+                setClickedUsers(prevClickedUsers => [...prevClickedUsers, user_id]);
             }
         }
     }
@@ -70,6 +50,25 @@ function AddUser()
                 console.error('Error:', error);
             });
     }, [JwtToken]);
+
+    // useEffect(() => {
+    //     fetch('http://localhost:3001/api/Dashboard/allUsers/filter', {
+    //         method: 'Get',
+    //         headers: {
+    //           'Authorization' : `Bearer ${JwtToken}`,
+    //           'Content-Type': 'application/json',
+    //         }
+    //       })
+    //         .then((response) => {
+    //             if (!response.ok)
+    //                 throw new Error('Network response was not ok');
+    //             return response.json();
+    //         })
+    //         .then((data) => setnewuserFriend(data))
+    //         .catch((error) => {
+    //             console.error('Error:', error);
+    //         });
+    // }, [JwtToken]);
 
     useEffect(() => 
     {
@@ -100,60 +99,27 @@ function AddUser()
                     {updateFriend.map((friend) => 
                     (
                         <section className="add-user-list-card" key={friend.id}>
-                            {friend.status === "IN_GAME" && (
                                 <div className="add-user-card ingame" key={friend.id}>
                                 <div className="add-user-card-inde">
                                 <img src={friend.avatar} alt="Photo" />
                                 <p>{friend.username}</p>
                                 </div>
                                 <div>
-                                <img src="ping-pong.png" alt="Photo" />
-                                <h2>{friend.status}</h2>
                                 </div>
                                 <div>
+                                {clickedUsers.includes(friend.id) || friend.pending === true ? (
+                                    <div id="btn-pedding" style={{ cursor: 'auto', backgroundColor: '#BFBEBD' }}>
+                                    <FontAwesomeIcon icon={faClock} style={{ cursor: 'auto', backgroundColor: '#BFBEBD' }} />
+                                    <button style={{ cursor: 'auto', backgroundColor: '#BFBEBD' }}>Pending</button>
+                                    </div>
+                                    ) : (
                                     <div>
                                     <FontAwesomeIcon icon={faUserPlus} />
-                                    <button onClick={() => handleclickButtom(friend.id, friend.username)}>Add USER</button>
+                                    <button onClick={() => handleclickButtom(friend.id, friend.username)}>Add User</button>
                                     </div>
+                                )}
                                 </div>
                                </div>
-                            )}
-                            {friend.status === "ONLINE" && (
-                                <div className="add-user-card online" key={friend.id}>
-                                <div className="add-user-card-inde">
-                                <img src={friend.avatar} alt="Photo" />
-                                <p>{friend.username}</p>
-                                </div>
-                                <div>
-                                <img src="../new-moon.png" alt="Photo"/>
-                                <h2>{friend.status}</h2>
-                                </div>
-                                <div>
-                                    <div>
-                                    <FontAwesomeIcon icon={faUserPlus} />
-                                    <button onClick={() => handleclickButtom(friend.id, friend.username)}>ADD USER</button>
-                                    </div>
-                                </div>
-                            </div>
-                            )}
-                            {friend.status === "OFFLINE" && (
-                                <div className="add-user-card offline" key={friend.id}>
-                                <div className="add-user-card-inde">
-                                <img src={friend.avatar} alt="Photo"/>
-                                <p>{friend.username}</p>
-                                </div>
-                                <div>
-                                <img src="../yellowcircle.png" alt="Photo" width="10" height="10" />
-                                <h2>{friend.status}</h2>
-                                </div>
-                                <div>
-                                    <div onClick={() => handleclickButtom(friend.id, friend.username)}>
-                                    <FontAwesomeIcon icon={faUserPlus} />
-                                    <button>ADD USER</button>
-                                    </div>
-                                </div>
-                            </div>
-                            )}
                         </section>
                     ))}
                 </div>

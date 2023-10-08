@@ -1,14 +1,14 @@
-import { faUserPlus } from "@fortawesome/free-solid-svg-icons";
+import { faClock, faUserPlus } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, {useState, useEffect} from "react";
 import Setting from "./Setting";
 import NavBarCSS from './NavBar.module.css';
-import { Socket, io } from "socket.io-client";
 import Cookies from "js-cookie";
 import { showToast } from "@/components/Dashboard/ShowToast";
 import { toast } from "react-toastify";
 import CustomToast from "@/components/Dashboard/CustomToast";
 import { useRouter } from "next/navigation";
+import newSocket from "../Socket/socket";
 
 
 function NavBar()
@@ -18,29 +18,31 @@ function NavBar()
     const [settingindex, setsettingindex] = useState(false);
     const [closeindex, setcloseindex] = useState(false);
     const [user, setUsers] = useState<any>(null);
-    const [userFriend, setuserFriend] = useState<{id: number; username: string; avatar: string; status: string }[]>([]);
-    const [updateFriend, setupdateFriend] = useState<{id: number; username: string; avatar: string; status: string }[]>([]);
+    const [userFriend, setuserFriend] = useState<{id: string; username: string; avatar: string; status: string, pending?: boolean }[]>([]);
+    const [updateFriend, setupdateFriend] = useState<{id: string; username: string; avatar: string; status: string, pending?: boolean }[]>([]);
     const [searchUser, setsearchUser] = useState(false);
     const [searchQuery, setsearchQuery] = useState('');
     const [notificationrequest, setnotificationrequest] = useState(false);
+    const [clickedUsers, setClickedUsers] = useState<string[]>([]);
     const [tablenotification, settablenotification] = useState<{id_notif: string, id: string; user2Username: string; user2Avatar: string; type: string}[]>([]);
-    const [socket, setsocket] = useState<Socket| null>(null);
     const JwtToken = Cookies.get("access_token");
     let count = 0;
     const router = useRouter();
 
-    function handleclickButtom(user_id: number)
+    function handleclickButtom(user_id: string, username: string)
     {
-        if (user_id && socket)
+        if (user_id && newSocket)
         {
             const notificationData = {
                 user_id: user_id,
-                type: 'ACCEPTED_INVITATION',
+                type: 'FRIENDSHIP_REQUEST',
                 token: `Bearer ${JwtToken}`,
             }
             if (notificationData)
             {
-                socket.emit('sendNotification',notificationData);
+                newSocket.emit('sendNotification',notificationData);
+                showToast(`Friend Request To ${username}`, "success");
+                setClickedUsers(prevClickedUsers => [...prevClickedUsers, user_id]);
             }
         }
     }
@@ -103,9 +105,9 @@ function NavBar()
             response: 'accept',
             token: `Bearer ${JwtToken}`,
         }
-        if (socket)
+        if (newSocket)
         {
-            socket.emit('responserequest', notificationData);
+            newSocket.emit('responserequest', notificationData);
             showToast(`add ${username}`, 'add');
         }
     }
@@ -128,6 +130,12 @@ function NavBar()
             }).then((response) => {
                 console.log(response);
             });
+            const statusData = {
+                token: `Bearer ${JwtToken}`,
+                status: 'offline'
+            }
+            if (newSocket)
+                newSocket.emit('status', statusData);
         }
         catch (error)
         {
@@ -156,29 +164,25 @@ function NavBar()
     }, [JwtToken, userFriend]);
 
     useEffect(() => {
-        if (!socket) {
-          const newSocket = io('http://localhost:3001', {
-            transports: ['websocket'],
-            query: {
-                token: `Bearer ${JwtToken}`,
-            }
-          });
-    
-          newSocket.on('connect', () => {
-            setsocket(newSocket);
-            
-          });
-    
-          newSocket.on('disconnect', () => {
-          });
-    
-          newSocket.on("sendlist", (notificationlist) => {
-            if (notificationlist)
-            {
-                settablenotification(notificationlist);
-            }
-          });
+        fetch('http://localhost:3001/api/Dashboard/notification', {
+          method: 'GET',
+          headers: {
+            'Authorization': `Bearer ${JwtToken}`,
+            'Content-Type': 'application/json',
+          },
+        })
+        .then((response) => {
+            if (!response.ok)
+                throw new Error('Network response was not ok');
+            return response.json();
+        })
+        .then((data) => settablenotification(data))
+        .catch((error) => {
+          console.error('Error fetching data:', error);
+        })
+    }, [JwtToken]);
 
+    useEffect(() => {
           newSocket.on("notification", (notificationData) => {
             if (notificationData)
             {
@@ -200,7 +204,7 @@ function NavBar()
                     id: notificationData.id,
                     user2Username: notificationData.username,
                     user2Avatar: notificationData.avatar,
-                    type: 'ACCEPTED_INVITATION',
+                    type: 'FRIENDSHIP_REQUEST',
                 };
                 if (transformedData)
                 {
@@ -219,11 +223,6 @@ function NavBar()
                 }
             }
           });
-    
-          return () => {
-            newSocket.disconnect();
-          };
-        }
       }, []); // check
 
     useEffect(() => 
@@ -257,7 +256,11 @@ function NavBar()
                             <img src={user.avatar} alt="Photo"/>
                             <p>{user.username}</p>
                             </div>
-                            <FontAwesomeIcon icon={faUserPlus} onClick={() => handleclickButtom(user.id)} />
+                            {clickedUsers.includes(user.id) || user.pending === true ? (
+                                <FontAwesomeIcon icon={faClock} style={{ cursor: 'auto', margin: '5px' }} />
+                            ) : (
+                                <FontAwesomeIcon icon={faUserPlus} onClick={() => handleclickButtom(user.id, user.username)} />
+                            )}
                             </div>
                         </div>
                 ))}
@@ -289,13 +292,16 @@ function NavBar()
                                     </div>)
                                 }
                                 }
-                                {if (request.type === 'game') {
-                                    return (
-                                        <div className={NavBarCSS.click_icons_game_request} key={request.id_notif}>
+                                {if (request.type === 'FRIENDSHIP_REQUEST') {
+                                    return (<div className={NavBarCSS.click_icons_friend_request} key={request.id_notif}>
+                                        <div className={NavBarCSS.click_icons_friend_request_msg}>
                                         <img src={request.user2Avatar} alt="Photo"/>
-                                        <div><p id="notification-nameuser">{request.user2Username}</p><p> send you invitation to play with him</p></div>
+                                        <div><p id="notification-nameuser">{request.user2Username}</p><p> send you a friend follow request.</p></div>
                                         </div>
-                                    )
+                                        <div className={NavBarCSS.click_icons_friend_request_button}>
+                                            <button onClick={() => accept_request(request.id, request.user2Username)}><img src="checkmark.png" alt="Photo"></img></button>
+                                        </div>
+                                    </div>)
                                 }
                                 }
                             })}

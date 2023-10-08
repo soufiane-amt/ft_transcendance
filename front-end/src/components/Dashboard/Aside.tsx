@@ -61,7 +61,7 @@ const Aside: React.FC<AsideProps> = ({onSelectSection}) =>
         setisactivechat(!isactiveachat);
     }
     return (
-        <div className="left-aside">
+        <>
         <aside>
             <div className="myaside">
                 <div className="myaside1">
@@ -140,7 +140,7 @@ const Aside: React.FC<AsideProps> = ({onSelectSection}) =>
                 )}
             </div>
         </aside>
-        </div>
+        </>
     );
 };
 

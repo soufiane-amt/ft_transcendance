@@ -29,9 +29,7 @@ export const showToast = (message : string, options : string) => {
       toast.promise(
         promise, 
         {
-          pending: 'wait',
-          success: message,
-          error: 'error'
+          success: message
         }
       )
     }

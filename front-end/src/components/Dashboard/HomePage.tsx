@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import {FaSearch} from 'react-icons/fa';
 import Cookies from "js-cookie";
+import newSocket  from '../GlobalComponents/Socket/socket';
 
 function HomePage()
 {
@@ -54,7 +55,34 @@ function HomePage()
             .catch((error) => {
                 console.error('Error:', error);
             });
-    }, [JwtToken]);
+    }, [JwtToken, userFriend]);
+
+      useEffect(() => {
+        
+        newSocket.on('online', (userObj) => {
+            if (userObj) {
+                setupdateFriend(userObj);
+            }
+        });
+        
+        newSocket.on('offline', (userObj) => {
+            if (userObj) {
+                setupdateFriend(userObj);
+            }
+        });
+        
+        newSocket.on('friend', (friends) => {
+            try {
+                console.log('Received friend event with data:', friends);
+                if (friends) {
+                    setuserFriend(friends);
+                }
+            } catch (error) {
+                console.error('Error handling friend event:', error);
+            }
+        })
+  }, [JwtToken, updateFriend]);
+    
     return (
         <>
         <div className="home-page-counting">
