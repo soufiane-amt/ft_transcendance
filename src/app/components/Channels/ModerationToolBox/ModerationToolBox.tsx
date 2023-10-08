@@ -21,7 +21,7 @@ interface ModerationToolBoxProps{
 export function ModerationToolBox ({channelData}:ModerationToolBoxProps)
 {
     const currentUser = useSessionUser()
-    const currentUserIsModerator = getUserRole (currentUser.id, channelData)  !== 'Member'
+    const currentUserIsModerator:string = getUserRole (currentUser.id, channelData) 
     return (
         <>
         {channelData && 
@@ -50,7 +50,7 @@ export function ModerationToolBox ({channelData}:ModerationToolBoxProps)
             </div>
             {
                 <div className={style.user_addition}>
-                    {currentUserIsModerator &&( 
+                    {currentUserIsModerator !== 'Member' &&( 
                         <>
                             <input placeholder="Enter a username"></input>
                             <button>Add User</button>

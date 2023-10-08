@@ -13,8 +13,12 @@ const getAppropriateMessage = (selectedType: string) => {
       case 'KICK':
         return "Are you sure you want to kick this user out of the channel?";
       case 'PLAY':
-        return "Are you sure you want to send a game invitation to this user?";
-      default:
+          return "Are you sure you want to send a game invitation to this user?";
+      case 'SETADMIN':
+        return "Are you sure you want to set this user an administrator?";
+      case 'SETUSER':
+            return "Are you sure you want to lower this user grade to Member?";
+          default:
         return "Unknown action";
     }
   };

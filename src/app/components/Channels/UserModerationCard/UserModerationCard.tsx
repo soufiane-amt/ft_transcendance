@@ -12,10 +12,9 @@ const data = {
 };
 
 interface MemberType {
-  src:string,
-  username:string,
-  role:string,
-
+  src: string;
+  username: string;
+  role: string;
 }
 const button = {
   play: "/images/icons/Ch/play.png",
@@ -24,6 +23,8 @@ const button = {
   mute: "/images/icons/Ch/mute.png",
   unmute: "/images/icons/Ch/unmute.png",
   kick: "/images/icons/Ch/kick.png",
+  setAdmin: "/images/icons/Ch/make-admin.png",
+  setUser: "/images/icons/Ch/down-admin.png",
 };
 enum ActionType {
   BAN,
@@ -32,6 +33,8 @@ enum ActionType {
   UNMUTE,
   KICK,
   PLAY,
+  SETADMIN,
+  SETUSER,
 }
 
 function getActionIcon(actionType: ActionType): string {
@@ -40,20 +43,22 @@ function getActionIcon(actionType: ActionType): string {
   else if (actionType === ActionType.UNBAN) return button.unban;
   else if (actionType === ActionType.MUTE) return button.mute;
   else if (actionType === ActionType.UNMUTE) return button.unmute;
+  else if (actionType === ActionType.SETADMIN) return button.setAdmin;
+  else if (actionType === ActionType.SETUSER) return button.setUser;
   return button.kick;
 }
 interface ModerationActionProps {
   actionType: ActionType;
 }
 
-function getOppositeButton (currentButton : ActionType) : ActionType
-{
-  if (currentButton === ActionType.PLAY) return (ActionType.PLAY);
-  if (currentButton === ActionType.BAN) return (ActionType.UNBAN);
-  else if (currentButton === ActionType.UNBAN)  return (ActionType.BAN);
-  else if (currentButton === ActionType.MUTE) return (ActionType.UNMUTE);
-  else return (ActionType.MUTE);
-
+function getOppositeButton(currentButton: ActionType): ActionType {
+  if (currentButton === ActionType.PLAY) return ActionType.PLAY;
+  else if (currentButton === ActionType.BAN) return ActionType.UNBAN;
+  else if (currentButton === ActionType.UNBAN) return ActionType.BAN;
+  else if (currentButton === ActionType.MUTE) return ActionType.UNMUTE;
+  else if (currentButton === ActionType.SETADMIN) return ActionType.SETUSER;
+  else if (currentButton === ActionType.SETUSER) return ActionType.SETADMIN;
+  else return ActionType.MUTE;
 }
 function ModerationAction({ actionType }: ModerationActionProps) {
   const [showRadioOptions, setShowRadioOptions] = useState(false); // State to control the display of radio options
@@ -65,29 +70,34 @@ function ModerationAction({ actionType }: ModerationActionProps) {
     switch (currentActionType) {
       case ActionType.BAN:
         setShowRadioOptions(true);
-        // Handle ban action
         break;
+
       case ActionType.UNBAN:
-        setShowShowConfirmation (true)
-        
-        // Handle unban action
+        setShowShowConfirmation(true);
         break;
+
       case ActionType.MUTE:
         setShowRadioOptions(true);
-        // Handle MUTE action
         break;
+
       case ActionType.UNMUTE:
-        setShowShowConfirmation (true)
+        setShowShowConfirmation(true);
         break;
+
       case ActionType.KICK:
-        setShowShowConfirmation (true)
-
-        // Handle kick action
+        setShowShowConfirmation(true);
         break;
-      case ActionType.PLAY:
-        setShowShowConfirmation (true)
 
-        // Handle play action
+      case ActionType.PLAY:
+        setShowShowConfirmation(true);
+        break;
+
+      case ActionType.SETADMIN:
+        setShowShowConfirmation(true);
+        break;
+
+      case ActionType.SETUSER:
+        setShowShowConfirmation(true);
         break;
       default:
         break;
@@ -96,45 +106,64 @@ function ModerationAction({ actionType }: ModerationActionProps) {
 
   const handleButtonToggle = () => {
     // Toggle between buttons when Confirm is clicked
-    const OppositeButton = getOppositeButton(currentActionType)
-    setCurrentActionType (OppositeButton)
+    const OppositeButton = getOppositeButton(currentActionType);
+    setCurrentActionType(OppositeButton);
     setShowRadioOptions(false);
   };
 
   return (
     <button onClick={handleClick} className={style.moderation_action}>
       <img src={buttonSrc} alt={`Action: ${ActionType[currentActionType]}`} />
-        {showRadioOptions && (
-          <RadioOptions handleButtonToggle={handleButtonToggle} setShowRadioOptions={setShowRadioOptions} selectType={`${ActionType[currentActionType]}`} />
-        )}
-        { !showRadioOptions &&  showConfirmation && (
-          <ConfirmationDialog handleButtonToggle={handleButtonToggle} setShowConfirmationDialog={setShowShowConfirmation}  selectType={`${ActionType[currentActionType]}`}></ConfirmationDialog>
-        )}
+      {showRadioOptions && (
+        <RadioOptions
+          handleButtonToggle={handleButtonToggle}
+          setShowRadioOptions={setShowRadioOptions}
+          selectType={`${ActionType[currentActionType]}`}
+        />
+      )}
+      {!showRadioOptions && showConfirmation && (
+        <ConfirmationDialog
+          handleButtonToggle={handleButtonToggle}
+          setShowConfirmationDialog={setShowShowConfirmation}
+          selectType={`${ActionType[currentActionType]}`}
+        ></ConfirmationDialog>
+      )}
     </button>
   );
 }
 
-
-
-
 interface UserModerationCardProps {
-  data:MemberType
+  data: MemberType;
 }
 
 // Helper function to determine if user is not the owner
-function isOwner(data : MemberType) {
-  return data.role === 'Owner' ;
+function isOwner(data: MemberType) {
+  return data.role === "Owner";
 }
 
 // Helper function to render moderation actions
-function renderModerationActions(data : MemberType, currentUser:any, sessionUserIsModerator:boolean) {
-  const actions:ReactNode[] = [];
-  if (currentUser.username === data.username)
-    return actions
-  if (!isOwner(data) && sessionUserIsModerator) {
-    actions.push(<ModerationAction key="ban" actionType={ActionType.BAN} />);
-    actions.push(<ModerationAction key="mute" actionType={ActionType.MUTE} />);
-    actions.push(<ModerationAction key="kick" actionType={ActionType.KICK} />);
+function renderModerationActions(
+  data: MemberType,
+  currentUser: any,
+  sessionUserModeratType: string
+) {
+  const actions: ReactNode[] = [];
+  if (currentUser.username === data.username) return actions;
+  if (sessionUserModeratType !== 'Member') {
+    if (sessionUserModeratType === 'Owner')
+      actions.push(
+        <ModerationAction key="setAdmin" actionType={ActionType.SETADMIN} />
+      );
+
+    if (!isOwner(data)) {
+      actions.push(<ModerationAction key="ban" actionType={ActionType.BAN} />);
+      actions.push(
+        <ModerationAction key="mute" actionType={ActionType.MUTE} />
+      );
+      actions.push(
+        <ModerationAction key="kick" actionType={ActionType.KICK} />
+      );
+    }
   }
 
   actions.push(<ModerationAction key="play" actionType={ActionType.PLAY} />);
@@ -142,10 +171,13 @@ function renderModerationActions(data : MemberType, currentUser:any, sessionUser
   return actions;
 }
 interface UserModerationCardProps {
-  currentUserIsModerator : boolean,
-  data : MemberType
+  currentUserIsModerator: string;
+  data: MemberType;
 }
-export function UserModerationCard({ currentUserIsModerator, data }: UserModerationCardProps) {
+export function UserModerationCard({
+  currentUserIsModerator,
+  data,
+}: UserModerationCardProps) {
   const currentUser = useSessionUser();
 
   return (
@@ -160,7 +192,6 @@ export function UserModerationCard({ currentUserIsModerator, data }: UserModerat
       <div className={style.action_buttons}>
         {renderModerationActions(data, currentUser, currentUserIsModerator)}
       </div>
-
     </div>
   );
 }
