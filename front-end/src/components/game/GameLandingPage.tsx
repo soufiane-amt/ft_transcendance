@@ -8,7 +8,6 @@ import { useEffect, useState } from "react";
 import newSocket from "../GlobalComponents/Socket/socket";
 import Cookies from "js-cookie";
 
-
 const pixelfont = Press_Start_2P({
   subsets: ["latin"],
   weight: ["400"],
@@ -20,28 +19,16 @@ const mono = Space_Mono({
   weight: ["400", "700"],
 });
 
-
 function GameLandingPage() {
-
-
   const JwtToken = Cookies.get("access_token");
+
   // useEffect(() => {
-  //       const statusData = {
-  //           token: `Bearer ${JwtToken}`,
-  //       }
-  //       newSocket.emit('status', statusData);
+  //   const data = {
+  //     status: "INGAME",
+  //     token: `Bearer ${JwtToken}`,
+  //   };
+  //   newSocket.emit("status", data);
   // }, [JwtToken]);
-
-
-  useEffect(() => {
-    const data = {
-      status: 'INGAME',
-      token: `Bearer ${JwtToken}`,
-
-    }
-    newSocket.emit('status', data);
-  }, [JwtToken])
-
 
   const [info, setInfo] = useState(false);
 
@@ -91,13 +78,12 @@ function GameLandingPage() {
       <div className="flex flex-col text-white w-full h-fit justify-center items-center gap-6 md:flex-row md:gap-16 xl:gap-24 mb-[25px]">
         <div
           className={`w-[180px] h-[30px]  text-center flex items-center justify-center text-[#E8DE28]  border-[2px] border-[#E8DE28] border-solid ${mono.className} hover:opacity-[65%] hover:cursor-pointer z-[1] rounded-md animate-bounce `}
-          onClick={()=> {
-            const data = {
-              token: `Bearer ${JwtToken}`,
-        
-            }
-            newSocket.emit('status', data);
-          }}
+          // onClick={() => {
+          //   const data = {
+          //     token: `Bearer ${JwtToken}`,
+          //   };
+          //   newSocket.emit("status", data);
+          // }}
         >
           Practice Mode
         </div>
@@ -156,9 +142,11 @@ function GameLandingPage() {
                   Use the Up Arrow to move your paddle up. Use the Down Arrow to
                   move your paddle down.
                 </p>
-                <p  className={` ${mono.className}`}>Move your mouse to control the position of your paddle.</p>
+                <p className={` ${mono.className}`}>
+                  Move your mouse to control the position of your paddle.
+                </p>
                 <h3 className={`${mono.className}`}>Game Rules:</h3>
-                <p  className={` ${mono.className}`}>
+                <p className={` ${mono.className}`}>
                   The game is played on a rectangular court with two paddles and
                   a ball. You control one paddle (either with arrow keys or the
                   mouse), while the computer controls the other. The game starts
@@ -170,7 +158,7 @@ function GameLandingPage() {
                   points wins the game.
                 </p>
                 <h3 className={`${mono.className}`}>Tips:</h3>
-                <p  className={` ${mono.className}`}>
+                <p className={` ${mono.className}`}>
                   Try to predict the ball's trajectory and position your paddle
                   accordingly to hit it. Don't let the ball get past your
                   paddle, as that will result in your opponent scoring a point.
@@ -221,3 +209,11 @@ export default GameLandingPage;
 // Focus on both defense and offense, as you need to both prevent your opponent from scoring and try to score points yourself.
 // Pong can be a fast-paced game, so be quick with your reactions.
 // Enjoy playing Pong, and may the best player win!
+// ==========================================
+// onClick={()=> {
+//   const data = {
+//     token: `Bearer ${JwtToken}`,
+
+//   }
+//   newSocket.emit('status', data);
+// }}
