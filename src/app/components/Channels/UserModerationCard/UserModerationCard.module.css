@@ -9,7 +9,6 @@
     border: none;
     background-color: transparent;
     outline: none;
-    margin: 5px;
 }
 
 .user_info {
@@ -28,7 +27,7 @@
     /* border-radius: 20px; */
 }
 .action_buttons button img { 
-    width: 28px;
+    width: 25px;
     margin-inline: 7px;
     padding-block: 10px;
 }

@@ -1,0 +1,39 @@
+.radio_modal{
+    display: flex;
+    flex-direction: column;
+    width: 300px;
+    background-color: rgb(223, 210, 210);
+    border-radius: 5px;
+    padding: 10px;
+    position: absolute;
+}
+.radio_modal h3{
+    border-bottom: 1px solid red;
+}
+.radio_option {
+    margin-block: 5px;
+    font-size: large;
+}
+.radio_buttons {
+    display: grid;
+    grid-template-columns: 1fr 1fr; /* Split the available space into two equal columns */
+    gap: 20px; /* Add some gap between the elements */
+    margin: 15px;
+}
+
+.radio_buttons button {
+    font-weight: bold;
+    font-size: medium;
+    border: none;
+    border-radius: 6px;
+    padding: 8px;
+    cursor: pointer;
+}
+.radio_buttons button:first-child {
+    color: aliceblue;
+    background-color: red;
+}
+.radio_option h3{
+    border-top: 2px  solid red;
+    margin-block: 5px;
+}
