@@ -121,7 +121,7 @@ function DashboardTwoFa(props: any) {
         }}
       ></div>
       {/* this is the main component */}
-      <div className="bg-[#E4E7FF] rounded shadow-lg w-[95vw] h-[90vh] flex flex-col   p-[20px] box-border overflow-scroll items-center z-[51]">
+      <div className="bg-[#E4E7FF] rounded shadow-lg w-[95vw] h-[90vh] flex flex-col   p-[20px] box-border overflow-auto items-center z-[51] scrolling">
         <div className="flex items-center w-full flex-row-reverse h-[3%]">
           <img
             src="/close.png"
