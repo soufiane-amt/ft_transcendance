@@ -12,6 +12,7 @@ const config: Config = {
     './src/app/Structure.tsx',
     './src/app/game/page.tsx',
     './src/components/game/GameLandingPage.tsx',
+    './src/components/game/InfoModel.tsx',
   ],
   theme: {
     extend: {
