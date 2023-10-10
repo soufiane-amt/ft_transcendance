@@ -1,7 +1,7 @@
 
 
 //TODO: erros  
--> check user status with oussam in disconnect
+-> check user status with oussama in disconnect
 -> what do need to do global socket , one getway , namespaces etc...
 -> start on game models : 
   add friends
@@ -9,3 +9,14 @@
   game waiting for accepting req
   game request model
   waiting for matchmaking
+
+
+
+
+// TODO:
+// game invitation
+// game settings
+// accept and decline game invitation
+// game await for invitaion to be accepted
+// game await for matchmaking
+// game canva

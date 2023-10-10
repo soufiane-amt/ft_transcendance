@@ -11,11 +11,3 @@ export default function Game() {
     <Structure>{GameLandingPageBool === true && <GameLandingPage />}</Structure>
   );
 }
-
-// TODO:
-// game invitation
-// game settings
-// accept and decline game invitation
-// game await for invitaion to be accepted
-// game await for matchmaking
-// game canva
