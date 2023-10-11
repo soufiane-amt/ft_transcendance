@@ -1,0 +1,215 @@
+.setting
+{
+    position: fixed;
+    width: 100%;
+    height: 100vh;
+    background: rgba(36, 36, 79, 0.8);
+    top: 0;
+    left: 0;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    cursor: auto;
+    z-index: 3;
+}
+
+.div_setting
+{
+    background-color: #E4E7FF;
+    border-radius: 10px;
+    width: 262px;
+    height: 351px;
+    z-index: 9998;
+    margin-bottom: 25px;
+    margin-left: 118px;
+    z-index: 3;
+
+}
+
+.close_setting
+{
+    display: flex;
+    justify-content: flex-end;
+    padding: 11px;
+    margin-bottom: 12px;
+}
+
+.setting_form
+{
+    display: flex;
+    flex-direction: column;
+    height: inherit;
+    align-items: center;
+}
+
+.setting_form img
+{
+    border-radius: 50%;
+    margin-bottom: 13px;
+    width: 110px;
+    height: 110px;
+}
+
+.choose_img
+{
+    border: none;
+    background: none;
+    outline: none;
+    font-weight: 600;
+    color: #000;
+    margin-bottom: 29px;
+    font-size: 12px;
+}
+
+.choose_img label
+{
+    cursor: pointer;
+}
+
+.two_factor
+{
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    padding: 0;
+    margin-bottom: 26px;
+    width: 100%;
+    margin-left: 69px;
+}
+
+.two_factor button
+{
+    background: none;
+    outline: none;
+    border: none;
+    margin-left: 5px;
+    color: #4CB728;
+    cursor: pointer;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+#two_factor_icon
+{
+    color: #4CB728;
+    width: 14px;
+    height: 14px;
+}
+
+.choose
+{
+    display: none;
+}
+
+.setting_form form
+{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 224px;
+}
+
+.setting_form form input
+{
+    
+    outline: none;
+    border: none;
+    height: 18px;
+    background: none;
+    width: 91%;
+}
+
+.setting_form form input::placeholder
+{
+    opacity: 0.7;
+}
+
+#conform
+{
+    background-color: #5C5B8B;
+    height: 40px;
+    width: 141px;
+    /* margin-left: 40px; */
+    border-radius: 20px;
+    outline: none;
+    border: none;
+    cursor: pointer;
+}
+
+#conform:hover
+{
+    border: 2px solid white;
+    color: white;
+}
+
+@media screen and  (max-width: 400px) and (max-width: 400px) {
+
+    .div_setting
+    {
+        width: 257px;
+        height: 300px;
+        margin-left: 27px;
+        margin-bottom: 36px;
+    }
+    .div_setting div:nth-child(1)
+    {
+        height: 8px;
+        margin-bottom: 13px;
+    }
+    .div_setting div:nth-child(1) img
+    {
+        width: 10px;
+        height: 10px;
+    }
+    .setting_form img
+    {
+        width: 71px;
+        height: 71px;
+    }
+    .choose_img
+    {
+        margin-bottom: 18px;
+    }
+    .setting_form label
+    {
+        font-size: 10px;
+    }
+    .setting_form form input
+    {
+        height: 30px;
+    }
+    .setting_form form input::placeholder
+    {
+        font-size: 10px;
+    }
+    .setting_form form button
+    {
+        height: 30px;
+    }
+    .div_setting
+    {
+        width: 210px;
+        height: 303px;
+    }
+    .change_name
+    {
+        width: 80%;
+        height: 33px;
+    }
+    #conform
+    {
+        height: 31px;
+        width: 124px;
+    }
+    .two_factor
+    {
+        margin-left: 89px;
+    }
+    .two_factor button
+    {
+        font-size: 10px;
+    }
+}
