@@ -90,7 +90,7 @@ function Invite({ ...props }) {
       ></div>
       {/* this is the main component */}
       <div className="bg-[#E4E7FF] rounded shadow-lg w-[80vw] h-[80vh] flex flex-col   p-[30px] box-border overflow-scroll items-center z-[3] min-h-[400px] min-w-[300px] max-h-[1500px] max-w-[720px]">
-        <div className="flex items-center w-full flex-row-reverse h-[3%]">
+        <div className="flex items-center w-full flex-row-reverse h-[3%] mb-[15px]">
           <img
             src="/close.png"
             alt="photo"
@@ -101,18 +101,20 @@ function Invite({ ...props }) {
             }}
           />
         </div>
-        <input
-          className={`w-[80%] h-[50px] bg-[#0D0149] rounded-3xl hover:cursor-text border-none pl-8 text-white text-[15px] placeholder:text-white ${mono.className} outline-none`}
-          placeholder="Find Friend"
-          value={searchQuery}
-          onChange={(e) => setsearchQuery(e.target.value)}
-        ></input>
+        <div className="text-white  w-full flex  items-center flex-col">
+          <input
+            className={`w-[calc(100%-30px)] h-[50px] bg-[#0D0149] rounded-3xl hover:cursor-text border-none  text-white text-[15px] placeholder:text-white ${mono.className} outline-none  min-w-[220px] pl-[30px]`}
+            placeholder="Find Friend"
+            value={searchQuery}
+            onChange={(e) => setsearchQuery(e.target.value)}
+          />
+        </div>
         <div className="text-white my-[5px] w-full flex  items-center flex-col">
           {updateFriend
             .filter((friend) => friend.status === "ONLINE")
             .map((friend) => (
               <div
-                className={`w-[85%] h-[50px] bg-[#0D0149] m-[10px] rounded-3xl flex justify-around items-center ${mono.className}`}
+                className={`w-full h-[50px] bg-[#0D0149] m-[10px] rounded-3xl flex justify-around items-center ${mono.className} min-w-[250px]`}
               >
                 <img
                   src={friend.avatar}
