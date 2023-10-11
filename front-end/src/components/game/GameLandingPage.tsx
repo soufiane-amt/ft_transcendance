@@ -8,6 +8,7 @@ import { useEffect, useState } from "react";
 // import newSocket from "../GlobalComponents/Socket/socket";
 // import Cookies from "js-cookie";
 import Info from "./InfoModel";
+import Invite from "./InviteFriendsModel";
 
 const pixelfont = Press_Start_2P({
   subsets: ["latin"],
@@ -19,7 +20,6 @@ const mono = Space_Mono({
   style: ["normal"],
   weight: ["400", "700"],
 });
-
 
 function GameLandingPage() {
   // const JwtToken = Cookies.get("access_token");
@@ -33,6 +33,7 @@ function GameLandingPage() {
   // }, [JwtToken]);
 
   const [info, setInfo] = useState(false);
+  const [invite, setInvite] = useState(false);
 
   return (
     <div className="bg-[#0D0149] max-w-[100vw] min-h-[calc(100vh-91px)] flex  items-center flex-col p-[3%] box-border  justify-between overflow-hidden">
@@ -90,7 +91,8 @@ function GameLandingPage() {
           Practice Mode
         </div>
         <div
-          className={`w-[180px] h-[30px]  text-center flex items-center justify-center text-[#22EAAC]  border-[2px] border-[#22EAAC] border-solid  ${mono.className} hover:opacity-[65%] hover:cursor-pointer z-[1] rounded-md animate-bounce `}
+         onClick={() => setInvite(true)}
+         className={`w-[180px] h-[30px]  text-center flex items-center justify-center text-[#22EAAC]  border-[2px] border-[#22EAAC] border-solid  ${mono.className} hover:opacity-[65%] hover:cursor-pointer z-[1] rounded-md animate-bounce `}
         >
           Invite Mode
         </div>
@@ -100,9 +102,8 @@ function GameLandingPage() {
           Matchmaking Mode
         </div>
       </div>
-      {info === true && (
-        <Info setInfo={setInfo}/>
-      )}
+      {info === true && <Info setInfo={setInfo} />}
+      {invite === true && <Invite setInvite={setInvite} />}
     </div>
   );
 }
