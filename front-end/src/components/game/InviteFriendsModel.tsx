@@ -18,29 +18,20 @@ function Invite({ ...props }) {
   const [updateFriend, setupdateFriend] = useState<
     { id: number; username: string; avatar: string; status: string }[]
   >([]);
-  const [selectValue, setselectValue] = useState("all-user");
   const [searchQuery, setsearchQuery] = useState("");
   const JwtToken = Cookies.get("access_token");
 
-  // const handleInputChange = (event: any) => {
-  // setselectValue(event.target.value);
-  // };
-
+  //--------------------------------------
   useEffect(() => {
     if (searchQuery === "") {
-      if (selectValue != "all-user") {
-        const filterFriends = userFriend.filter((friend) =>
-          friend.status.toLowerCase().includes(selectValue.toLowerCase())
-        );
-        setupdateFriend(filterFriends);
-      } else setupdateFriend(userFriend);
+      setupdateFriend(userFriend);
     } else {
       const filterFriends = userFriend.filter((friend) =>
         friend.username.toLowerCase().includes(searchQuery.toLowerCase())
       );
       setupdateFriend(filterFriends);
     }
-  }, [searchQuery, selectValue, userFriend]);
+  }, [searchQuery, userFriend]);
 
   useEffect(() => {
     fetch("http://localhost:3001/api/Dashboard/friends", {
@@ -111,13 +102,32 @@ function Invite({ ...props }) {
           />
         </div>
         <input
-          className={`w-[80%] h-[50px] bg-[#8c8c8c] rounded-3xl hover:cursor-text border-none pl-8 text-white text-[15px] placeholder:text-white ${mono.className} outline-none`}
+          className={`w-[80%] h-[50px] bg-[#0D0149] rounded-3xl hover:cursor-text border-none pl-8 text-white text-[15px] placeholder:text-white ${mono.className} outline-none`}
           placeholder="Find Friend"
+          value={searchQuery}
+          onChange={(e) => setsearchQuery(e.target.value)}
         ></input>
-        <div className="w-[80%] bg-black text-white m-[5px]">
-          {updateFriend.map((friend) => (
-            <h1>{friend.username}, {friend.status}</h1>
-          ))}
+        <div className="text-white my-[5px] w-full flex  items-center flex-col">
+          {updateFriend
+            .filter((friend) => friend.status === "ONLINE")
+            .map((friend) => (
+              <div
+                className={`w-[85%] h-[50px] bg-[#0D0149] m-[10px] rounded-3xl flex justify-around items-center ${mono.className}`}
+              >
+                <img
+                  src={friend.avatar}
+                  alt="userpic"
+                  className="w-[40px] h-[40px] rounded-full"
+                />
+                {friend.username}
+
+                <div
+                  className={`w-[80px] h-[25px]  text-center flex items-center justify-center text-[#22EAAC]  border-[1px] border-[#22EAAC] border-solid ${mono.className} hover:opacity-[65%] hover:cursor-pointer rounded-md text-[13px]`}
+                >
+                  Invite
+                </div>
+              </div>
+            ))}
         </div>
       </div>
     </div>
