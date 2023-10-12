@@ -9,3 +9,7 @@
   game waiting for accepting req
   game request model
   waiting for matchmaking
+
+
+
+note : enter game make user online, enter chat make user online

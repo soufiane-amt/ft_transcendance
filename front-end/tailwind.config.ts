@@ -14,6 +14,7 @@ const config: Config = {
     './src/components/game/GameLandingPage.tsx',
     './src/components/game/InfoModel.tsx',
     './src/components/game/InviteFriendsModel.tsx',
+    './src/components/game/GameSettingsModel.tsx',
   ],
   theme: {
     extend: {
@@ -31,3 +32,5 @@ const config: Config = {
   }
 }
 export default config
+
+

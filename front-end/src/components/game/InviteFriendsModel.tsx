@@ -3,11 +3,17 @@ import { Space_Mono } from "next/font/google";
 import "../../styles/TailwindRef.css";
 import Cookies from "js-cookie";
 import newSocket from "../GlobalComponents/Socket/socket";
+import { Press_Start_2P } from "next/font/google";
 
 const mono = Space_Mono({
   subsets: ["latin"],
   style: ["normal"],
   weight: ["400", "700"],
+});
+
+const pixelfont = Press_Start_2P({
+  subsets: ["latin"],
+  weight: ["400"],
 });
 
 function Invite({ ...props }) {
@@ -101,10 +107,15 @@ function Invite({ ...props }) {
             }}
           />
         </div>
+        <h2
+          className={`text-[#0D0149] text-center font-bold text-[15px] md:text-[20px] ${pixelfont.className} mb-[18px]`}
+        >
+          Invite your friend !
+        </h2>
         <div className="text-white  w-full flex  items-center flex-col">
           <input
             className={`w-[calc(100%-30px)] h-[50px] bg-[#0D0149] rounded-3xl hover:cursor-text border-none  text-white text-[15px] placeholder:text-white ${mono.className} outline-none  min-w-[220px] pl-[30px]`}
-            placeholder="Find Friend"
+            placeholder="Search"
             value={searchQuery}
             onChange={(e) => setsearchQuery(e.target.value)}
           />
