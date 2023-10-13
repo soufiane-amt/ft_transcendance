@@ -51,7 +51,7 @@ export class dmGateway implements OnGatewayConnection, OnGatewayDisconnect {
       (room) => {
         client.join("dm-" + room.id);
       }
-    );
+    ); 
   }
 
   handleDisconnect(client: any) {

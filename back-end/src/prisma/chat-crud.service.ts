@@ -437,6 +437,8 @@ export class ChatCrudService {
       });
   
       if (!channelMembership) {
+        console.log ("-->", user_id)
+        console.log ("-->", room_id)
         throw new Error("User is not a member of the channel");
       }
   
@@ -639,30 +641,59 @@ export class ChatCrudService {
 
   
   async findChannelAdmins(channel_id: string) {
-    return await this.prisma.prismaClient.channelMembership.findMany(
+    const admins =  await this.prisma.prismaClient.channelMembership.findMany({
+      where: {
+        channel_id: channel_id,
+        role: 'ADMIN',
+      },
+      select: {
+        user:{
+          select:{
+            id:true,
+          }
+        }
+      },
+    });
+    return admins.map ((admin) => admin.user.id)
+
+  }
+  
+  async findChannelUsers(channel_id: string) {
+    const users =  await this.prisma.prismaClient.channelMembership.findMany({
+      where: {
+        channel_id: channel_id,
+      },
+      select: {
+        user:{
+          select:{
+            id:true,
+          }
+        }
+      },
+    });
+    return users.map ((user) => user.user.id)
+  }
+  
+  
+  async findChannelOwner(channel_id: string) {
+    const owner =  await this.prisma.prismaClient.channelMembership.findFirst(
       {
         where: {
           channel_id: channel_id,
+          role:'OWNER'
         },
-        select : {
-          id:true, 
-        }
-      }
-    );
+        select: {
+          user:{
+            select:{
+              id:true,
+            }
+          }
+        },
+      });
+      return owner.user.id  
   }
 
-  async findChannelOwner(channel_id: string) {
-    return await this.prisma.prismaClient.channelMembership.findFirst(
-      {
-        where: {
-          channel_id: channel_id,
-        },
-        select : {
-          id:true, 
-        }
-      }
-    );
-  }
+
   async upgradeToAdmin(user_id: string, channel_id: string) {
     this.prisma.prismaClient.channelMembership.update({
       where: {

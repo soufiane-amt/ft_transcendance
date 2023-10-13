@@ -119,8 +119,8 @@ import * as cookie from 'cookie';
 
     // //check if the user is not banned 
     // //user must have membership
-    // @UseGuards (userRoomSubscriptionGuard)
     // @UseGuards(bannedConversationGuard)
+    @UseGuards (userRoomSubscriptionGuard)  
     @SubscribeMessage ("sendMsg")
     async handleSendMesDm(client: any,  message:MessageDto ) 
     {
@@ -129,9 +129,4 @@ import * as cookie from 'cookie';
       this.server.to(`channel-${message.channel_id}`).emit('newMessage', messageToBrodcast)
     }
 
-    @SubscribeMessage("recordVisit")
-    async handleVisitRecord(client: any , visitSignal: {user_id:string, channel_id: string} ) 
-    {
-      await this.chatCrud.markRoomMessagesAsRead(visitSignal.user_id, visitSignal.channel_id)
-    }
 }

@@ -10,7 +10,7 @@ import * as path from 'path';
 import * as fs from 'fs';
 import { UserCrudService } from 'src/prisma/user-crud.service';
 
-
+  
 
 
 
@@ -55,15 +55,18 @@ async findAllDiscussionPartners (@Req() request : Request)
 @Get ("/Channels/discussionsBar")
 async findAllDiscussionChannels (@Req() request : Request)
 {
-  const dms = await this.chatCrud.retreiveChannelPanelData(request.cookies['user.id']);
-  const unreadMessagesPromises = dms.map(async (chElement) => {
+  const channels = await this.chatCrud.retreiveChannelPanelData(request.cookies['user.id']);
+  const unreadMessagesPromises = channels.map(async (chElement) => {
     const unreadMessages = await this.chatCrud.getUnreadChannelMessagesNumber(request.cookies['user.id'], chElement.id);//get the number of messages unread and unsent by this user
     const channelOwner = await this.chatCrud.findChannelOwner(chElement.id)
+    const channelUsers = await this.chatCrud.findChannelUsers(chElement.id)
     const channelAdmins = await this.chatCrud.findChannelAdmins(chElement.id)
     const channelBans = await this.chatCrud.retieveBlockedChannelUsers(chElement.id)
 
+    console.log ("--->", channelUsers)
     return { ...chElement, 
              unread_messages: unreadMessages, 
+             channelUsers : channelUsers,
              channelOwner: channelOwner, 
              channelAdmins:channelAdmins,
              channelBans: channelBans,
@@ -88,7 +91,7 @@ async findAllUsersInContact (@Req() request : Request)
 async findAllUsersWithCommonChannels (@Req() request : Request)
 {
   const users = await this.chatCrud.findUsersInCommonChannels (request.cookies["user.id"])
-
+  console.log ("Users in common membership=:", users)
   return (users)
 }
 
