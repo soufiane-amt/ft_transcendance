@@ -52,3 +52,11 @@
 .content {
   min-height: calc(100vh - 91px);
 }
+
+input[type=range]::-webkit-slider-thumb{
+  width: 10px;
+  height: 26px;
+  background-color: white;
+  -webkit-appearance: none;
+  border-radius: 8px;
+}
