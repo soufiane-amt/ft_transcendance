@@ -36,6 +36,8 @@ function GameLandingPage() {
   const [info, setInfo] = useState(false);
   const [invite, setInvite] = useState(false);
   const [settings, setSettings] = useState(false);
+  // =================================
+  const [isMatchMaking, setMatchMaking] = useState(false);
 
   return (
     <div className="bg-[#0D0149] max-w-[100vw] min-h-[calc(100vh-91px)] flex  items-center flex-col p-[3%] box-border  justify-between overflow-hidden">
@@ -89,26 +91,26 @@ function GameLandingPage() {
           //   };
           //   newSocket.emit("status", data);
           // }}
-          onClick={() => setSettings(true)}
+          onClick={() => {setSettings(true), setMatchMaking(false)}}
         >
           Practice Mode
         </div>
         <div
-          onClick={() => setInvite(true)}
+          onClick={() => {setInvite(true), setMatchMaking(false)}}
           className={`w-[180px] h-[30px]  text-center flex items-center justify-center text-[#22EAAC]  border-[2px] border-[#22EAAC] border-solid  ${mono.className} hover:opacity-[65%] hover:cursor-pointer z-[1] rounded-md animate-bounce `}
         >
           Invite Mode
         </div>
         <div
           className={`w-[180px] h-[30px]  text-center flex items-center justify-center text-[#fa4747]  border-[2px] border-[#DA343E] border-solid   ${mono.className} hover:opacity-[65%] hover:cursor-pointer z-[1] rounded-md animate-bounce `}
-          onClick={() => setSettings(true)}
+          onClick={() => {setSettings(true), setMatchMaking(true)}}
         >
           Matchmaking Mode
         </div>
       </div>
       {info === true && <Info setInfo={setInfo} />}
       {invite === true && <Invite setInvite={setInvite} />}
-      {settings === true && <GameSettingsModel setSettings={setSettings} />}
+      {settings === true && <GameSettingsModel setSettings={setSettings} isMatchMaking={isMatchMaking}/>}
     </div>
   );
 }

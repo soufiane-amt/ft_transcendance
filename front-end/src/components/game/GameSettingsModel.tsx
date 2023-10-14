@@ -131,19 +131,21 @@ function GameSettingsModel({ ...props }) {
           </div> */}
 
           <div className="flex items-center w-full flex-col md:flex-row min-h-[130px] gap-8 justify-center">
-            <div className="w-[250px] flex justify-evenly items-center flex-col h-[150px] ">
-              <h3 className={`${mono.className}  text-[#0D0149]`}>Roll</h3>
-              <div
-                className={`w-[160px] h-[40px] bg-[#0D0149] rounded-3xl text-white flex justify-around items-center ${mono.className} `}
-              >
-                <div className="w-[50%] h-[100%]  border-l-[0px] border-b-[0px] border-t-[0px] border-r-[2px] border-[#E4E7FF] border-solid flex justify-center items-center hover:cursor-pointer hover:bg-[#E4E7FF] hover:text-[#0D0149]">
-                  Host
-                </div>
-                <div className="w-[50%] h-[100%]  border-l-[2px] border-b-[0px] border-t-[0px] border-r-[0px] border-[#E4E7FF] border-solid flex justify-center items-center hover:cursor-pointer hover:bg-[#E4E7FF] hover:text-[#0D0149]">
-                  Guest
+            {props.isMatchMaking && (
+              <div className="w-[250px] flex justify-evenly items-center flex-col h-[150px] ">
+                <h3 className={`${mono.className}  text-[#0D0149]`}>Roll</h3>
+                <div
+                  className={`w-[160px] h-[40px] bg-[#0D0149] rounded-3xl text-white flex justify-around items-center ${mono.className} `}
+                >
+                  <div className="w-[50%] h-[100%]  border-l-[0px] border-b-[0px] border-t-[0px] border-r-[2px] border-[#E4E7FF] border-solid flex justify-center items-center hover:cursor-pointer hover:bg-[#E4E7FF] hover:text-[#0D0149]">
+                    Host
+                  </div>
+                  <div className="w-[50%] h-[100%]  border-l-[2px] border-b-[0px] border-t-[0px] border-r-[0px] border-[#E4E7FF] border-solid flex justify-center items-center hover:cursor-pointer hover:bg-[#E4E7FF] hover:text-[#0D0149]">
+                    Guest
+                  </div>
                 </div>
               </div>
-            </div>
+            )}
             <div className="w-[280px] flex justify-evenly items-center flex-col  h-[150px]">
               <h3 className={`${mono.className}  text-[#0D0149]`}>Speed</h3>
               <div
