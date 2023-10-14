@@ -17,8 +17,10 @@ const getAppropriateMessage = (selectedType: string) => {
       case 'SETADMIN':
         return "Are you sure you want to set this user an administrator?";
       case 'SETUSER':
-            return "Are you sure you want to lower this user grade to Member?";
-          default:
+          return "Are you sure you want to lower this user grade to Member?";
+      case 'LEAVECHANNEL':
+            return "You can't leave the channel until you select your successor to be channel Owner:";
+        default:
         return "Unknown action";
     }
   };
@@ -26,18 +28,18 @@ const getAppropriateMessage = (selectedType: string) => {
 
 
 interface ConfirmationDialogProps {
-  handleButtonToggle: ()=> void,
+  LaunchAction: ()=> void,
   setShowConfirmationDialog: React.Dispatch<React.SetStateAction<boolean>>;
   selectType : string
 }
 
-export function ConfirmationDialog({handleButtonToggle, setShowConfirmationDialog, selectType }: ConfirmationDialogProps) {
+export function ConfirmationDialog({LaunchAction, setShowConfirmationDialog, selectType }: ConfirmationDialogProps) {
     const ref = useOutsideClick(() => setShowConfirmationDialog(false));
   
     const handleConfirmClick = (event: React.MouseEvent<HTMLButtonElement>) => {
       event.stopPropagation();//the modal reappears because of event propogation to the parent  
       setShowConfirmationDialog(false);
-      handleButtonToggle()
+      LaunchAction()
     };
   
     const handleCancelClick = (event: React.MouseEvent<HTMLButtonElement>) => {

@@ -22,6 +22,7 @@ export function ModerationToolBox ({channelData}:ModerationToolBoxProps)
 {
     const currentUser = useSessionUser()
     const currentUserIsModerator:string = getUserRole (currentUser.id, channelData) 
+    console.log ("admins:", channelData?.channelAdmins)
     return (
         <>
         {channelData && 
@@ -31,6 +32,7 @@ export function ModerationToolBox ({channelData}:ModerationToolBoxProps)
                 {
                         channelData?.channelUsers.map((user)=>{
                             let userData;
+                            console.log ("UserData:", user)
                             if (user !==  currentUser.id)
                                 userData = findUserContacts(user)
                             else

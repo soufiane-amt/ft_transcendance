@@ -123,10 +123,10 @@ function ModerationAction({ actionType }: ModerationActionProps) {
       )}
       {!showRadioOptions && showConfirmation && (
         <ConfirmationDialog
-          handleButtonToggle={handleButtonToggle}
+        LaunchAction={handleButtonToggle}
           setShowConfirmationDialog={setShowShowConfirmation}
           selectType={`${ActionType[currentActionType]}`}
-        ></ConfirmationDialog>
+        />
       )}
     </button>
   );

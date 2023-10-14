@@ -40,9 +40,10 @@ export function DiscussionsBar({ selectedDiscussionState, currentRoute }: Discus
                       last_message: item.last_message,
                       unread_messages:item.unread_messages}
             })
+            console.log ("++>", room_data)
             setDiscussionRooms(room_data);
             const tmpMap  = new Map();
-            const channelFetchedData = fetchedData.map((channel:any)=>{
+            fetchedData.map((channel:any)=>{
               tmpMap.set(channel.id, {
                 channelUsers : channel.channelUsers,
                 channelOwner: channel.channelOwner, 
@@ -61,9 +62,8 @@ export function DiscussionsBar({ selectedDiscussionState, currentRoute }: Discus
     useHandlePanel(discussionPanels,selectedDiscussion, setDiscussionRooms)
 
 
-    const handlePanelClick = (panelData: DiscussionDto) => {
+    const handlePanelClick = async (panelData: DiscussionDto) => {
       selectDiscussion(panelData);
-      console.log ("==>", selectedDiscussion)
       const updatedRooms = [...discussionPanels];
       
       const indexToModify = updatedRooms.findIndex(
@@ -73,8 +73,6 @@ export function DiscussionsBar({ selectedDiscussionState, currentRoute }: Discus
           updatedRooms[indexToModify].unread_messages = 0;
           setDiscussionRooms(updatedRooms);
         }
-        if (currentRoute === "Channels")
-          socket.emit ("recordVisit", )
       };
        
     const displayActionModal = () => setModalAsVisible(true);
