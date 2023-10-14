@@ -34,13 +34,8 @@ export class dmGateway implements OnGatewayConnection, OnGatewayDisconnect {
   //When the user connects to websocket it will be passed the id of the user
   //to use it to create an inbox of notifications and new dm's to be initiated
 
-  async handleConnection(client: any, ...args: any[]) {
-    const headers = client.handshake.headers;
-    // // Parse the cookies from the request headers
-    const parsedCookies = cookie.parse(headers.cookie || "");
-
-    // // Access specific cookies by name
-    const userIdCookie = parsedCookies["user.id"];
+  async handleConnection(client: Socket, ...args: any[]) {
+    const userIdCookie = this.extractUserIdFromCookies(client);
     if (!userIdCookie) return;
     if ((await this.userCrud.findUserByID(userIdCookie)) == null)
       throw new WsException("User not existing");
@@ -54,11 +49,16 @@ export class dmGateway implements OnGatewayConnection, OnGatewayDisconnect {
     ); 
   }
 
-  handleDisconnect(client: any) {
+  handleDisconnect(client: Socket) {
     //   // This method is triggered when a user disconnects from the WebSocket server
     //   console.log(`User disconnected: ID=${client.id}`);
   }
-
+  private extractUserIdFromCookies(client:Socket) {
+    const headers = client.handshake.headers;
+    const parsedCookies = cookie.parse(headers.cookie || "");
+    return parsedCookies["user.id"];
+  }
+  
   // @SubscribeMessage('joinInbox')
   // handleJoinInbox(client: Socket, inbox_id: string): void {
   //   console.log (`${client.id} is connected to ${inbox_id}`)
@@ -80,7 +80,7 @@ export class dmGateway implements OnGatewayConnection, OnGatewayDisconnect {
 
   // //this method will be triggered right after deliver_to_inbox right after the client get the dm room id
   // @SubscribeMessage ("joinDm")
-  // handleJoinDm(client: any,  dm_id:string ) {
+  // handleJoinDm(client: Socket,  dm_id:string ) {
   //   client.join(dm_id)
   // }
 
@@ -88,20 +88,15 @@ export class dmGateway implements OnGatewayConnection, OnGatewayDisconnect {
   // @UseGuards (userRoomSubscriptionGuard)
   @UseGuards(bannedConversationGuard)
   @SubscribeMessage("sendMsg")
-  async handleSendMesDm(client: any, message: MessageDto) {
+  async handleSendMesDm(client: Socket, message: MessageDto) {
     message.channel_id = null;
     const messageToBrodcast = await this.chatCrud.createMessage(message);
     this.server.to(`dm-${message.dm_id}`).emit("newMessage", messageToBrodcast);
   }
 
   @SubscribeMessage("MarkMsgRead")
-  async handleMarkMsgAsRead(client: any, room: { _id: string }) {
-    const headers = client.handshake.headers;
-    // // Parse the cookies from the request headers
-    const parsedCookies = cookie.parse(headers.cookie || "");
-
-    // // Access specific cookies by name
-    const userIdCookie = parsedCookies["user.id"];
+  async handleMarkMsgAsRead(client: Socket, room: { _id: string }) {
+    const userIdCookie = this.extractUserIdFromCookies(client);
     console.log("Mark as read signal came, ", userIdCookie, ",", room._id);
 
     await this.chatCrud.markRoomMessagesAsRead(userIdCookie, room._id); //mark the messages that unsent by this user as read
@@ -111,13 +106,10 @@ export class dmGateway implements OnGatewayConnection, OnGatewayDisconnect {
   // @UseGuards(userRoomSubscriptionGuard)
   @SubscribeMessage("dmModeration")
   async handleDmBan(
-    client: any,
+    client: Socket,
     banSignal: { targetedUserId: string; type: string }
   ) {
-    const headers = client.handshake.headers;
-    const parsedCookies = cookie.parse(headers.cookie || "");
-
-    const userIdCookie = parsedCookies["user.id"];
+    const userIdCookie = this.extractUserIdFromCookies(client);
 
     const dm = await this.chatCrud.findDmByUsers(
       userIdCookie,

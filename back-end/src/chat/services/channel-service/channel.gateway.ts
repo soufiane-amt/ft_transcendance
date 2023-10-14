@@ -115,6 +115,13 @@ import * as cookie from 'cookie';
     //   await this.chatCrud.leaveChannel (kickSignal.user_id, kickSignal.channel_id) //deleting the membership of the client in DB
     //   client.leave (kickSignal.channel_id)                                        //Deleting the user from the websocket room
     // }  
+    
+    @SubscribeMessage ("leaveChannel")
+    async handleChannelKicks(client: any,  channel_id : string  ) 
+    {
+      await this.chatCrud.leaveChannel (kickSignal.user_id, kickSignal.channel_id) //deleting the membership of the client in DB
+      client.leave (kickSignal.channel_id)                                        //Deleting the user from the websocket room
+    }  
 
 
     // //check if the user is not banned 
