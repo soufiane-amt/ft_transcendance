@@ -49,6 +49,9 @@ function GameSettingsModel({ ...props }) {
           {/* //////////////////////////////////////// */}
 
           <div className="w-full min-h-[320px] flex justify-evenly flex-col items-center">
+            <h3 className={`${mono.className}  text-[#0D0149] mb-[5px]`}>
+              Game theme :
+            </h3>
             <div className="w-full h-fit flex justify-center items-center">
               <img
                 src={`${imgtheme}`}
@@ -93,7 +96,7 @@ function GameSettingsModel({ ...props }) {
             </div>
           </div>
           {/* //////////////////////////////////////// */}
-          <div className="flex justify-between items-center w-full flex-col md:flex-row md:justify-evenly min-h-[130px]">
+          <div className="flex justify-between items-center w-full flex-col  min-h-[130px]">
             <h3 className={`${mono.className}  text-[#0D0149]`}>
               Game speed :
             </h3>
@@ -125,6 +128,19 @@ function GameSettingsModel({ ...props }) {
                   className="w-[90%] h-[14px] bg-white rounded-full outline-none border-none appearance-none "
                 />
               </div>
+            </div>
+          </div>
+          {/* //////////////////////////////////////// */}
+          <div className="min-h-[80px] flex  w-full flex-col md:flex-row  items-center justify-evenly">
+            <div
+              className={`${mono.className} font-semibold hover:opacity-50 hover:cursor-pointer`}
+            >
+              Cancel
+            </div>
+            <div
+              className={`text-[18px] text-white font-semibold  bg-[#0D0149] px-[15px] py-[3px] rounded-xl hover:opacity-50  ${mono.className}   border-none  hover:cursor-pointer`}
+            >
+              submit
             </div>
           </div>
         </div>
