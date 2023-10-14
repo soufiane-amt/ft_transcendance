@@ -41,18 +41,17 @@ function GameSettingsModel({ ...props }) {
           />
         </div>
         <h2
-          className={`text-[#0D0149] text-center font-bold text-[15px] md:text-[20px] ${pixelfont.className} mb-[15px]`}
+          className={`text-[#0D0149] text-center font-bold text-[15px] md:text-[20px] ${pixelfont.className}`}
         >
           choose your game settings!
         </h2>
-        <div className="w-full flex flex-col items-center justify-between h-[97%] gap-4">
+        <div className="w-full flex flex-col items-center justify-between h-[97%] gap-8 md:gap-4">
           {/* //////////////////////////////////////// */}
-
-          <div className="w-full min-h-[320px] flex justify-evenly flex-col items-center">
-            <h3 className={`${mono.className}  text-[#0D0149] mb-[5px]`}>
-              Game theme :
-            </h3>
-            <div className="w-full h-fit flex justify-center items-center">
+          <div className="w-full min-h-[380px] flex justify-evenly flex-col items-center">
+            <div className="w-full h-fit flex items-center flex-col md:gap-4">
+              <h3 className={`${mono.className}  text-[#0D0149]`}>
+                Game theme
+              </h3>
               <img
                 src={`${imgtheme}`}
                 alt="gametheme"
@@ -96,7 +95,7 @@ function GameSettingsModel({ ...props }) {
             </div>
           </div>
           {/* //////////////////////////////////////// */}
-          <div className="flex justify-between items-center w-full flex-col  min-h-[130px]">
+          {/* <div className="flex justify-between items-center w-full flex-col  min-h-[130px]">
             <h3 className={`${mono.className}  text-[#0D0149]`}>
               Game speed :
             </h3>
@@ -129,9 +128,41 @@ function GameSettingsModel({ ...props }) {
                 />
               </div>
             </div>
+          </div> */}
+
+          <div className="flex items-center w-full flex-col md:flex-row min-h-[130px] gap-8 justify-center">
+            <div className="w-[250px] flex justify-evenly items-center flex-col h-[150px] ">
+              <h3 className={`${mono.className}  text-[#0D0149]`}>Roll</h3>
+              <div
+                className={`w-[160px] h-[40px] bg-[#0D0149] rounded-3xl text-white flex justify-around items-center ${mono.className} `}
+              >
+                <div className="w-[50%] h-[100%]  border-l-[0px] border-b-[0px] border-t-[0px] border-r-[2px] border-[#E4E7FF] border-solid flex justify-center items-center hover:cursor-pointer hover:bg-[#E4E7FF] hover:text-[#0D0149]">
+                  Host
+                </div>
+                <div className="w-[50%] h-[100%]  border-l-[2px] border-b-[0px] border-t-[0px] border-r-[0px] border-[#E4E7FF] border-solid flex justify-center items-center hover:cursor-pointer hover:bg-[#E4E7FF] hover:text-[#0D0149]">
+                  Guest
+                </div>
+              </div>
+            </div>
+            <div className="w-[280px] flex justify-evenly items-center flex-col  h-[150px]">
+              <h3 className={`${mono.className}  text-[#0D0149]`}>Speed</h3>
+              <div
+                className={`w-[230px] h-[40px] bg-[#0D0149] rounded-3xl text-white flex justify-around items-center ${mono.className} `}
+              >
+                <div className="w-[50%] h-[100%]  border-l-[0px] border-b-[0px] border-t-[0px] border-r-[2px] border-[#E4E7FF] border-solid flex justify-center items-center hover:cursor-pointer hover:bg-[#E4E7FF] hover:text-[#0D0149]">
+                  Slow
+                </div>
+                <div className="w-[50%] h-[100%]  border-l-[2px] border-b-[0px] border-t-[0px] border-r-[2px] border-[#E4E7FF] border-solid flex justify-center items-center hover:cursor-pointer hover:bg-[#E4E7FF] hover:text-[#0D0149]">
+                  Normal
+                </div>
+                <div className="w-[50%] h-[100%]  border-l-[2px] border-b-[0px] border-t-[0px] border-r-[0px] border-[#E4E7FF] border-solid flex justify-center items-center hover:cursor-pointer hover:bg-[#E4E7FF] hover:text-[#0D0149]">
+                  Fast
+                </div>
+              </div>
+            </div>
           </div>
           {/* //////////////////////////////////////// */}
-          <div className="min-h-[80px] flex  w-full flex-col md:flex-row  items-center justify-evenly">
+          <div className="min-h-[90px] flex  w-full flex-col md:flex-row  items-center justify-evenly">
             <div
               className={`${mono.className} font-semibold hover:opacity-50 hover:cursor-pointer`}
             >
