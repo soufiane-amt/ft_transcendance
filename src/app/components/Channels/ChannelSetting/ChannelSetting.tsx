@@ -54,7 +54,6 @@ interface ChannelSettingProps{
 }
 export function ChannelSetting({channel_id}:ChannelSettingProps) {
   const currentChannel = findChannelnBook(channel_id)
-  console.log ("||||>", currentChannel, channel_id)
   return (
       currentChannel && (
         <div className={`${style.channel_setting} ${style.display_as_block}`}>

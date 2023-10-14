@@ -1,14 +1,15 @@
 .checkbox_list {
-    width: 100%;
+    width: 300px;
     height: 300px;
     font-family: Arial, sans-serif;
     margin: 0 auto;
-    position: relative;
+    position: absolute;
     display: flex;
     flex-direction: column;
-    background-color: #e1f977;
-    border: 1px solid black;
-    
+    background-color: #f4f3f2;
+    border: 3px solid black;
+    margin-left: 30px;
+    padding-left: 20px;
   }
   
   .users_list{
@@ -21,12 +22,14 @@
 
   .checkbox_list p:first-child {
     margin-bottom: 10px;
-    border-bottom: 1px solid black;
+    color: red;
+    font-size: larger;
   }
   
   .checkbox_list label {
     display: block;
     margin-bottom: 15px;
+    font-weight: bold;
     cursor: pointer;
   }
   

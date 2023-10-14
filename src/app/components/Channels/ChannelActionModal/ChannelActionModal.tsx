@@ -5,6 +5,7 @@ import style from "./ChannelActionModal.module.css";
 import { useOutsideClick } from "../../../../../hooks/useOutsideClick";
 import { useSessionUser } from "../../../context/SessionUserContext";
 import { LeaveChannel } from "../../shared/LeaveChannel/LeaveChannel";
+import { findUserContacts } from "../../../context/UsersContactBookContext";
 
 
 
@@ -61,8 +62,7 @@ interface ChannelActionModalProps {
 }
 const ChannelActionModal = ({selectedDiscussionId, channelData, handleVisibility}:ChannelActionModalProps)=>{
   const ref = useOutsideClick(handleVisibility);
-  const IsModerator = getUserRole(useSessionUser().id, channelData) !== "Member"
-  console.log ("IsModerator : ", IsModerator)
+  const currentUserGrade = getUserRole(useSessionUser().id, channelData) 
   return (
     <div ref={ref} className={style.modal}>
       <Tabs>
@@ -71,14 +71,14 @@ const ChannelActionModal = ({selectedDiscussionId, channelData, handleVisibility
             <ModerationToolBox channelData={channelData} />
           </TabInfo>
           {
-            IsModerator && 
+            currentUserGrade !== 'Member' && 
             <TabInfo att={"Channel settings"}>
               <ChannelSetting channel_id={selectedDiscussionId}/>
             </TabInfo>
           }
          <TabInfo att={"Channel MemberShip"}>
 
-            <LeaveChannel channelUsers={channelData?.channelUsers}/>
+            <LeaveChannel userGrade={currentUserGrade} channelUsers={channelData?.channelUsers}/>
         </TabInfo>
 
       </Tabs>

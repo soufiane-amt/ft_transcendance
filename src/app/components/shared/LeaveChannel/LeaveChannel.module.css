@@ -1,4 +1,4 @@
-.channel_quiting_section button{
+.channel_quitting_section button{
     position: relative;
     bottom: 10px ;
 
@@ -14,7 +14,7 @@
 }
 
 
-.channel_quiting_section button:hover{
+.channel_quitting_section button:hover{
     background-color: #3e44a0;
     color: white;
 }

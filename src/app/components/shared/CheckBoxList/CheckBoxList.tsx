@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import style from "./CheckBoxList.module.css";
 
 interface CheckboxListProps {
-  options: string[] | undefined;
+  options: (string | undefined)[] | undefined;
 }
 
 function CheckboxList({ options }: CheckboxListProps) {
@@ -14,7 +14,7 @@ function CheckboxList({ options }: CheckboxListProps) {
 
   return (
     <div className={style.checkbox_list}>
-      <p>Select one option:</p>
+      <p>Select your successor:</p>
       <div className={style.users_list}>
       {
         
@@ -32,7 +32,7 @@ function CheckboxList({ options }: CheckboxListProps) {
         ))}
 
       </div>
-      <p>Selected option: {selectedOption}</p>
+      <p>Selected user: {selectedOption}</p>
       {selectedOption && 
         <button>Confirm and Leave</button>
       }
