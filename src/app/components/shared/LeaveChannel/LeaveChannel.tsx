@@ -13,7 +13,7 @@ export function LeaveChannel({ userGrade, channelUsers }: LeaveChannelProps) {
   const [showDropDownList, setShowDropDownList] = useState(false);
 
   const handleClickDropDown = () => {
-    setShowDropDownList(!showDropDownList);
+      setShowDropDownList(!showDropDownList);
   };
 
   return (

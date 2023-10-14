@@ -10,6 +10,8 @@
     border: 3px solid black;
     margin-left: 30px;
     padding-left: 20px;
+    box-shadow: 10px 10px 15px -3px rgba(0, 0, 0, 0.5);
+
   }
   
   .users_list{
@@ -31,6 +33,7 @@
     margin-bottom: 15px;
     font-weight: bold;
     cursor: pointer;
+    
   }
   
   .checkbox_list p {

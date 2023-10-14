@@ -12,6 +12,10 @@ function CheckboxList({ options }: CheckboxListProps) {
     setSelectedOption(event.target.value);
   };
 
+  const ConfirmSelection = ()=>{
+    window.location.reload()
+    
+  }
   return (
     <div className={style.checkbox_list}>
       <p>Select your successor:</p>
@@ -34,7 +38,8 @@ function CheckboxList({ options }: CheckboxListProps) {
       </div>
       <p>Selected user: {selectedOption}</p>
       {selectedOption && 
-        <button>Confirm and Leave</button>
+      
+      <button onClick={ConfirmSelection}>Confirm and Leave</button>
       }
     </div>
   );
