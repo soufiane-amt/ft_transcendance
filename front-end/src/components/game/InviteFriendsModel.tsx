@@ -110,7 +110,7 @@ function Invite({ ...props }) {
         <h2
           className={`text-[#0D0149] text-center font-bold text-[15px] md:text-[20px] ${pixelfont.className} mb-[18px]`}
         >
-          Invite your friend !
+          Invite your friend!
         </h2>
         <div className="text-white  w-full flex  items-center flex-col">
           <input
