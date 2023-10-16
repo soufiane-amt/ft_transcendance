@@ -158,7 +158,7 @@ import * as cookie from 'cookie';
         channelBans: await this.chatCrud.retieveBlockedChannelUsers(channel_id),
       }
       console .log ('channelUpdates : ', channelNewData)
-      this.server.to(`channel-${channel_id}`).emit('updateChannelData', {channel_id, channelNewData})
+      this.server.to(`channel-${channel_id}`).emit('updateChannelData', channel_id, channelNewData)
 
     }
 }
