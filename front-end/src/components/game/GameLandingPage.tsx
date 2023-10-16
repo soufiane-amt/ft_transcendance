@@ -4,12 +4,13 @@ import { Press_Start_2P } from "next/font/google";
 import { Space_Mono } from "next/font/google";
 import BackgroundCircleMedium from "@/components/HomePage/BackroundCirclesMedium";
 import { motion } from "framer-motion";
-import { useEffect, useState } from "react";
+import {useContext, useEffect, useState } from "react";
 // import newSocket from "../GlobalComponents/Socket/socket";
 // import Cookies from "js-cookie";
 import Info from "./InfoModel";
 import Invite from "./InviteFriendsModel";
 import GameSettingsModel from "./GameSettingsModel";
+import GameContext from "./GameContext";
 
 const pixelfont = Press_Start_2P({
   subsets: ["latin"],
@@ -36,8 +37,11 @@ function GameLandingPage() {
   const [info, setInfo] = useState(false);
   const [invite, setInvite] = useState(false);
   const [settings, setSettings] = useState(false);
-  // =================================
+  // =============================
   const [isMatchMaking, setMatchMaking] = useState(false);
+
+  const context : any = useContext(GameContext);
+  console.log(context.GameLandingPageBool);
 
   return (
     <div className="bg-[#0D0149] max-w-[100vw] min-h-[calc(100vh-91px)] flex  items-center flex-col p-[3%] box-border  justify-between overflow-hidden">
