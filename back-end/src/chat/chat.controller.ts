@@ -55,7 +55,7 @@ async findAllDiscussionPartners (@Req() request : Request)
 @Get ("/Channels/discussionsBar")
 async findAllDiscussionChannels (@Req() request : Request)
 {
-  const channels = await this.chatCrud.retreiveChannelPanelData(request.cookies['user.id']);
+  const channels = await this.chatCrud.retreiveChannelPanelsData(request.cookies['user.id']);
   const unreadMessagesPromises = channels.map(async (chElement) => {
     const unreadMessages = await this.chatCrud.getUnreadChannelMessagesNumber(request.cookies['user.id'], chElement.id);//get the number of messages unread and unsent by this user
     const channelOwner = await this.chatCrud.findChannelOwner(chElement.id)
@@ -63,7 +63,6 @@ async findAllDiscussionChannels (@Req() request : Request)
     const channelAdmins = await this.chatCrud.findChannelAdmins(chElement.id)
     const channelBans = await this.chatCrud.retieveBlockedChannelUsers(chElement.id)
 
-    console.log ("--->", channelUsers)
     return { ...chElement, 
              unread_messages: unreadMessages, 
              channelUsers : channelUsers,

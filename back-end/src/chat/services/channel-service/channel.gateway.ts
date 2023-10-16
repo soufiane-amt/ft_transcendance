@@ -23,12 +23,7 @@ import * as cookie from 'cookie';
          private readonly userCrud :UserCrudService){}
 
     async handleConnection(client: any, ...args: any[]) {
-      const headers = client.handshake.headers;
-      // // Parse the cookies from the request headers
-      const parsedCookies = cookie.parse(headers.cookie || '');
-       
-      // // Access specific cookies by name
-      const userIdCookie = parsedCookies["user.id"];
+      const userIdCookie = this.extractUserIdFromCookies(client);
       console.log ("Cookies: ", userIdCookie)
       if (!userIdCookie)
         return
@@ -123,15 +118,17 @@ import * as cookie from 'cookie';
     //   client.leave (kickSignal.channel_id)                                        //Deleting the user from the websocket room
     // }  
     
+
     @SubscribeMessage ("leaveChannel")
     async handleChannelKicks(client: any,  channel_id : string  ) 
     {
       const user_id =  this.extractUserIdFromCookies(client);
       await this.chatCrud.leaveChannel (user_id, channel_id) //deleting the membership of the client in DB
-      client.leave (`channel-${channel_id}`)                                        //Deleting the user from the websocket room
+      this.broadcastChannelChanges(channel_id)
+      client.leave (`channel-${channel_id}`)                              //Deleting the user from the websocket room
     }  
 
-    @SubscribeMessage ("makeOwner")
+    @SubscribeMessage ("setOwner")
     async handleGradeUserTOwner(client: any,  setOwnerSignal : setOwnerSignalDto  ) 
     {
       const user_agent_id =  this.extractUserIdFromCookies(client);
@@ -152,4 +149,16 @@ import * as cookie from 'cookie';
       this.server.to(`channel-${message.channel_id}`).emit('newMessage', messageToBrodcast)
     }
 
+    private async broadcastChannelChanges(channel_id:string)
+    {
+      const channelNewData = {
+        channelUsers: await this.chatCrud.findChannelUsers(channel_id),
+        channelOwner: await this.chatCrud.findChannelOwner(channel_id),
+        channelAdmins: await this.chatCrud.findChannelAdmins(channel_id),
+        channelBans: await this.chatCrud.retieveBlockedChannelUsers(channel_id),
+      }
+      console .log ('channelUpdates : ', channelNewData)
+      this.server.to(`channel-${channel_id}`).emit('updateChannelData', {channel_id, channelNewData})
+
+    }
 }

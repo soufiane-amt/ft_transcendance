@@ -196,7 +196,7 @@ export class ChatCrudService {
     });
   }
 
-  async retreiveChannelPanelData(user_id: string) {
+  async retreiveChannelPanelsData(user_id: string) {
     const channelMemberships =
       await this.prisma.prismaClient.channelMembership.findMany({
         where: {
@@ -234,6 +234,7 @@ export class ChatCrudService {
     return formattedData;
   }
 
+  
   // Create a new chat channel (public, or password-protected).
 
   async createChannel(user_id: string, data: channelDto) {
