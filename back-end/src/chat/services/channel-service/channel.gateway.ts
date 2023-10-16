@@ -2,7 +2,7 @@ import { UseGuards } from "@nestjs/common";
 import { OnGatewayConnection, SubscribeMessage, WebSocketGateway, WebSocketServer, WsException } from "@nestjs/websockets";
 import { Server, Socket } from "socket.io";
 import { Roles } from "src/chat/decorators/chat.decorator";
-import { MessageDto, banManageSignalDto, channelMembershipDto, channelReqDto, kickSignalDto } from "src/chat/dto/chat.dto";
+import { MessageDto, banManageSignalDto, channelMembershipDto, channelReqDto, kickSignalDto, setOwnerSignalDto } from "src/chat/dto/chat.dto";
 import { UpdateChannelDto, UpdateUserMemberShip } from "src/chat/dto/update-chat.dto";
 import { Role } from "src/chat/enum/role.enum";
 import {  allowJoinGuard, bannedConversationGuard, channelPermission, userRoomSubscriptionGuard } from "src/chat/guards/chat.guards";
@@ -40,6 +40,13 @@ import * as cookie from 'cookie';
           client.join(`channel-${room.channel_id}`)
         });
       }
+
+      private extractUserIdFromCookies(client:Socket) {
+        const headers = client.handshake.headers;
+        const parsedCookies = cookie.parse(headers.cookie || "");
+        return parsedCookies["user.id"];
+      }
+    
 
     //check if the user exists
     //check if the user has permissions 
@@ -119,8 +126,17 @@ import * as cookie from 'cookie';
     @SubscribeMessage ("leaveChannel")
     async handleChannelKicks(client: any,  channel_id : string  ) 
     {
-      await this.chatCrud.leaveChannel (kickSignal.user_id, kickSignal.channel_id) //deleting the membership of the client in DB
-      client.leave (kickSignal.channel_id)                                        //Deleting the user from the websocket room
+      const user_id =  this.extractUserIdFromCookies(client);
+      await this.chatCrud.leaveChannel (user_id, channel_id) //deleting the membership of the client in DB
+      client.leave (`channel-${channel_id}`)                                        //Deleting the user from the websocket room
+    }  
+
+    @SubscribeMessage ("makeOwner")
+    async handleGradeUserTOwner(client: any,  setOwnerSignal : setOwnerSignalDto  ) 
+    {
+      const user_agent_id =  this.extractUserIdFromCookies(client);
+      await this.chatCrud.makeOwner (setOwnerSignal.targeted_user_id, setOwnerSignal.channel_id) //deleting the membership of the client in DB
+      client.leave (`channel-${setOwnerSignal.channel_id}`)                                        //Deleting the user from the websocket room
     }  
 
 

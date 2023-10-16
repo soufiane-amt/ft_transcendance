@@ -48,3 +48,8 @@ export interface kickSignalDto {
   user_id: string;
   channel_id: string;
 }
+export interface setOwnerSignalDto {
+  targeted_user_id: string;
+  channel_id: string;
+}
+

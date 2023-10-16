@@ -588,7 +588,7 @@ export class ChatCrudService {
   }
 
   async leaveChannel(user_id: string, channel_id: string) {
-    return this.prisma.prismaClient.channelMembership.delete({
+    await this.prisma.prismaClient.channelMembership.delete({
       where: {
         channel_id_user_id: {
           channel_id: channel_id,
