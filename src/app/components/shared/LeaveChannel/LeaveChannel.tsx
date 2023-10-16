@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import style from "./LeaveChannel.module.css";
 import CheckboxList from "../CheckBoxList/CheckBoxList";
-import { ConfirmationDialog } from "../ConfirmationDialog/ConfirmationDialog";
 import { findUserContacts } from "../../../context/UsersContactBookContext";
 import socket from "../../../socket/socket";
 

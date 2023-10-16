@@ -65,15 +65,14 @@ export function DiscussionsBar({ selectedDiscussionState, currentRoute }: Discus
  */
     useEffect(() => {
       const handleNewChannelUpdate = (channel_id:string, channelNewData:ChannelData) => {
-        console.log ("Old Channel data", channelData.get(channel_id).channelUsers)
-        const tmpMap = channelData;
+        console.log ("Old Channel data", channel_id)
+        const tmpMap = new Map(channelData);
         tmpMap.delete(channel_id);
         tmpMap.set(channel_id, channelNewData);
         setChannelData(tmpMap);
-        console.log ("New Channel data", channelData.get(channel_id).channelUsers)
       }
       socket.on('updateChannelData', handleNewChannelUpdate)
-    }, [modalIsVisible])
+    }, [channelData, modalIsVisible])
     //   socket.on('updateChannelData',
 
     useHandlePanel(discussionPanels,selectedDiscussion, setDiscussionRooms)
