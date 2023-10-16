@@ -78,7 +78,7 @@ const ChannelActionModal = ({selectedDiscussionId, channelData, handleVisibility
           }
          <TabInfo att={"Channel MemberShip"}>
 
-            <LeaveChannel userGrade={currentUserGrade} channelUsers={channelData?.channelUsers}/>
+            <LeaveChannel selectedDiscussion={selectedDiscussionId} userGrade={currentUserGrade} channelUsers={channelData?.channelUsers}/>
         </TabInfo>
 
       </Tabs>

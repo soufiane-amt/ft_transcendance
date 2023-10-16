@@ -56,8 +56,25 @@ export function DiscussionsBar({ selectedDiscussionState, currentRoute }: Discus
           }
       }
       fetchDataAsync();
-    }, []);
-    
+    }, []); 
+    /**        console.log ("Channel data updated ", channelData)
+        const tmpMap = channelData;
+        tmpMap.delete(channel_id);
+        tmpMap.set(channel_id, channelData);
+        setChannelData(tmpMap);
+ */
+    useEffect(() => {
+      const handleNewChannelUpdate = (channel_id:string, channelNewData:ChannelData) => {
+        console.log ("Old Channel data", channelData.get(channel_id).channelUsers)
+        const tmpMap = channelData;
+        tmpMap.delete(channel_id);
+        tmpMap.set(channel_id, channelNewData);
+        setChannelData(tmpMap);
+        console.log ("New Channel data", channelData.get(channel_id).channelUsers)
+      }
+      socket.on('updateChannelData', handleNewChannelUpdate)
+    }, [modalIsVisible])
+    //   socket.on('updateChannelData',
 
     useHandlePanel(discussionPanels,selectedDiscussion, setDiscussionRooms)
 
