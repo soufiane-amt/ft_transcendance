@@ -40,7 +40,6 @@ export function DiscussionsBar({ selectedDiscussionState, currentRoute }: Discus
                       last_message: item.last_message,
                       unread_messages:item.unread_messages}
             })
-            console.log ("++>", room_data)
             setDiscussionRooms(room_data);
             const tmpMap  = new Map();
             fetchedData.map((channel:any)=>{
@@ -57,12 +56,7 @@ export function DiscussionsBar({ selectedDiscussionState, currentRoute }: Discus
       }
       fetchDataAsync();
     }, []); 
-    /**        console.log ("Channel data updated ", channelData)
-        const tmpMap = channelData;
-        tmpMap.delete(channel_id);
-        tmpMap.set(channel_id, channelData);
-        setChannelData(tmpMap);
- */
+
     useEffect(() => {
       const handleNewChannelUpdate = (channel_id:string, channelNewData:ChannelData) => {
         console.log ("Old Channel data", channel_id)
@@ -73,8 +67,8 @@ export function DiscussionsBar({ selectedDiscussionState, currentRoute }: Discus
       }
       socket.on('updateChannelData', handleNewChannelUpdate)
     }, [channelData, modalIsVisible])
-    //   socket.on('updateChannelData',
 
+    
     useHandlePanel(discussionPanels,selectedDiscussion, setDiscussionRooms)
 
 

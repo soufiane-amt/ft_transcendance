@@ -43,12 +43,27 @@ export function useHandlePanel(discussionPanels: DiscussionDto[],selectedDiscuss
             setDiscussionRooms(updatedRooms);
           }
         };
+        //handle in removing a pannel
+        const handleRemovePanel = (room: { _id: string }) => {
+          const updatedRooms = [...discussionPanels];
+          const indexToRemove = updatedRooms.findIndex(
+            (item) => item.id === room._id
+          );
+          if (indexToRemove !== -1) {
+            updatedRooms.splice(indexToRemove, 1);
+            setDiscussionRooms(updatedRooms);
+          }
+        }
+
         socket.on("newMessage", handleNewMessage);
         socket.on("setRoomAsRead", handleReadStatusTrack);
+        socket.on("removePanel", handleRemovePanel);
 
         return () => {
           socket.off("newMessage", handleNewMessage);
           socket.off("setRoomAsRead", handleReadStatusTrack);
+          socket.off("removePanel", handleRemovePanel);
+
         };
       }, [discussionPanels]);
     }

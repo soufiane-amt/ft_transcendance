@@ -1,4 +1,4 @@
-export interface ChannelData
+ interface ChannelData
 {
     channelUsers: string[]
     channelOwner: string ;

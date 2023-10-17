@@ -75,36 +75,45 @@ function ModerationAction({actionData,  actionType }: ModerationActionProps) {
   const handleClick = () => {
     switch (currentActionType) {
       case ActionType.BAN:
-        setShowRadioOptions(true);
+        if (!showRadioOptions)
+          setShowRadioOptions(true);
         break;
 
       case ActionType.UNBAN:
-        setShowShowConfirmation(true);
+        if (!showConfirmation)
+          setShowShowConfirmation(true);
         break;
 
       case ActionType.MUTE:
-        setShowRadioOptions(true);
+        if (!showRadioOptions)
+          setShowRadioOptions(true);
         break;
 
       case ActionType.UNMUTE:
-        setShowShowConfirmation(true);
+        if (!showConfirmation)
+          setShowShowConfirmation(true);
         break;
 
       case ActionType.KICK:
-        setShowShowConfirmation(true);
-        socket.emit('kickOutUser', {user_id: actionData.targeted_user, channel_id: actionData.channel_id})
+        if (!showConfirmation)
+          setShowShowConfirmation(true);
+        else
+          // socket.emit('kickOutUser', {target_username: actionData.targeted_user, channel_id: actionData.channel_id})
         break;
 
       case ActionType.PLAY:
-        setShowShowConfirmation(true);
+        if (!showConfirmation)
+          setShowShowConfirmation(true);
         break;
 
       case ActionType.SETADMIN:
-        setShowShowConfirmation(true);
+        if (!showConfirmation)
+          setShowShowConfirmation(true);
         break;
 
       case ActionType.SETUSER:
-        setShowShowConfirmation(true);
+        if (!showConfirmation)
+          setShowShowConfirmation(true);
         break;
       default:
         break;
@@ -150,30 +159,32 @@ function isOwner(data: MemberType) {
 
 // Helper function to render moderation actions
 function renderModerationActions(
+  selectedChannel: string,
   data: MemberType,
   currentUser: any,
   sessionUserModeratType: string
 ) {
   const actions: ReactNode[] = [];
+  const actionData = {targeted_user: data.username, channel_id: selectedChannel};
   if (currentUser.username === data.username) return actions;
   if (sessionUserModeratType !== 'Member') {
     if (sessionUserModeratType === 'Owner')
       actions.push(
-        <ModerationAction key="setAdmin" actionType={ActionType.SETADMIN} />
+        <ModerationAction key="setAdmin" actionData={actionData}  actionType={ActionType.SETADMIN} />
       );
 
     if (!isOwner(data)) {
-      actions.push(<ModerationAction key="ban" actionType={ActionType.BAN} />);
+      actions.push(<ModerationAction  key="ban" actionData={actionData}   actionType={ActionType.BAN} />);
       actions.push(
-        <ModerationAction key="mute" actionType={ActionType.MUTE} />
+        <ModerationAction  key="mute" actionData={actionData}   actionType={ActionType.MUTE} />
       );
       actions.push(
-        <ModerationAction key="kick" actionType={ActionType.KICK} />
+        <ModerationAction  key="kick" actionData={actionData}   actionType={ActionType.KICK} />
       );
     }
   }
 
-  actions.push(<ModerationAction key="play" actionType={ActionType.PLAY} />);
+  actions.push(<ModerationAction key="play" actionData={actionData}   actionType={ActionType.PLAY} />);
 
   return actions;
 }
@@ -199,7 +210,7 @@ export function UserModerationCard({
         </div>
       </div>
       <div className={style.action_buttons}>
-        {renderModerationActions(data, currentUser, currentUserIsModerator)}
+        {renderModerationActions(selectedChannel, data, currentUser, currentUserIsModerator)}
       </div>
     </div>
   );

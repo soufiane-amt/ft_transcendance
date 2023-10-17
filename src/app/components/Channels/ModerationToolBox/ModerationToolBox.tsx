@@ -23,7 +23,7 @@ export function ModerationToolBox ({selectedChannel, channelData}:ModerationTool
 {
     const currentUser = useSessionUser()
     const currentUserIsModerator:string = getUserRole (currentUser.id, channelData) 
-    console.log ("admins:", channelData?.channelAdmins)
+
     return (
         <>
         {channelData && 
