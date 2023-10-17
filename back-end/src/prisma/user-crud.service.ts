@@ -64,7 +64,7 @@ async findUserSessionDataByID(userId: string)
 //ifindUser method finds user by username 
 async findUserByUsername(username: string) 
 {
-    const user =  await this.prisma.prismaClient.user.findUnique (
+    const user =  await this.prisma.prismaClient.user.findFirst (
     {
       where : {
         username : username

@@ -108,16 +108,16 @@ import * as cookie from 'cookie';
     //     await this.chatCrud.unblockAUserWithinGroup (banSignal.user_id, banSignal.channel_id)
     // }  
 
-
+  
     // @UseGuards(allowJoinGuard) 
     // @Roles (Role.OWNER, Role.ADMIN)
     @SubscribeMessage ("kickOutUser")
     async handleChannelKicks(client: any,  kickSignal:kickSignalDto ) 
-    {
-      await this.chatCrud.leaveChannel (kickSignal.user_id, kickSignal.channel_id) //deleting the membership of the client in DB
-      this.broadcastChannelChanges(kickSignal.channel_id)    
+    { 
+      const targeted_user_id = await this.userCrud.findUserByUsername(kickSignal.target_username)
+      this.server.to(`inbox-${targeted_user_id}`).emit('kickOutNotification', kickSignal.channel_id)
     }
-    
+
 
     @SubscribeMessage ("leaveChannel")
     async handleChannelLeave(client: any,  channel_id : string  ) 
@@ -134,7 +134,7 @@ import * as cookie from 'cookie';
       const targeted_user_id = await this.userCrud.findUserByUsername(setOwnerSignal.targeted_username)
       await this.chatCrud.makeOwner (targeted_user_id, setOwnerSignal.channel_id) 
     }  
-
+ 
 
     // //check if the user is not banned 
     // //user must have membership

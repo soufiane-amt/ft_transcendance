@@ -44,7 +44,7 @@ export interface banManageSignalDto {
 }
 
 export interface kickSignalDto {
-  user_id: string;
+  target_username: string;
   channel_id: string;
 }
 export interface setOwnerSignalDto {

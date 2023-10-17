@@ -43,32 +43,32 @@ export class channelPermission implements CanActivate {
 
       if (context.getHandler().name == 'handleChannelBan')
         return this.verifyBanData(data, subscribedRoles);
-      if (context.getHandler().name == 'handleChannelKicks')
-        return this.verifyKickData(data, subscribedRoles);
+      // if (context.getHandler().name == 'handleChannelKicks')
+      //   return this.verifyKickData(data, subscribedRoles);
     }
     return false;
   }
-
-  async verifyKickData(
-    update: kickSignalDto,
-    subscribedRoles: Role[],
-  ): Promise<boolean> {
-    const targetedMember = await this.chatCrud.getMemeberShip(
-      update.user_id,
-      update.channel_id,
-    );
-    const memberToAct = await this.chatCrud.getMemeberShip(
-      update.kicker_id,
-      update.channel_id,
-    );
-    if (!targetedMember || !memberToAct) return false;
-    if (
-      subscribedRoles.some((role) => memberToAct.role.includes(role)) &&
-      !subscribedRoles.some((role) => targetedMember.role.includes(role))
-    )
-      return true;
-    return false;
-  }
+ 
+  // async verifyKickData(
+  //   update: kickSignalDto,
+  //   subscribedRoles: Role[],
+  // ): Promise<boolean> {
+  //   const targetedMember = await this.chatCrud.getMemeberShip(
+  //     update.user_id,
+  //     update.channel_id,
+  //   );
+  //   const memberToAct = await this.chatCrud.getMemeberShip(
+  //     update.kicker_id,
+  //     update.channel_id,
+  //   );
+  //   if (!targetedMember || !memberToAct) return false;
+  //   if (
+  //     subscribedRoles.some((role) => memberToAct.role.includes(role)) &&
+  //     !subscribedRoles.some((role) => targetedMember.role.includes(role))
+  //   )
+  //     return true;
+  //   return false;
+  // }
 
   async verifyBanData(
     update: banManageSignalDto,
