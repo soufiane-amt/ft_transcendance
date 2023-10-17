@@ -111,16 +111,16 @@ import * as cookie from 'cookie';
 
     // @UseGuards(allowJoinGuard) 
     // @Roles (Role.OWNER, Role.ADMIN)
-    // @SubscribeMessage ("kickOutUser")
-    // async handleChannelKicks(client: any,  kickSignal:kickSignalDto ) 
-    // {
-    //   await this.chatCrud.leaveChannel (kickSignal.user_id, kickSignal.channel_id) //deleting the membership of the client in DB
-    //   client.leave (kickSignal.channel_id)                                        //Deleting the user from the websocket room
-    // }  
+    @SubscribeMessage ("kickOutUser")
+    async handleChannelKicks(client: any,  kickSignal:kickSignalDto ) 
+    {
+      await this.chatCrud.leaveChannel (kickSignal.user_id, kickSignal.channel_id) //deleting the membership of the client in DB
+      this.broadcastChannelChanges(kickSignal.channel_id)    
+    }
     
 
     @SubscribeMessage ("leaveChannel")
-    async handleChannelKicks(client: any,  channel_id : string  ) 
+    async handleChannelLeave(client: any,  channel_id : string  ) 
     {
       const user_id =  this.extractUserIdFromCookies(client);
       await this.chatCrud.leaveChannel (user_id, channel_id) //deleting the membership of the client in DB
@@ -131,10 +131,8 @@ import * as cookie from 'cookie';
     @SubscribeMessage ("setOwner")
     async handleGradeUserTOwner(client: any,  setOwnerSignal : setOwnerSignalDto  ) 
     {
-      console.log ('====================', setOwnerSignal)
       const targeted_user_id = await this.userCrud.findUserByUsername(setOwnerSignal.targeted_username)
       await this.chatCrud.makeOwner (targeted_user_id, setOwnerSignal.channel_id) 
-      this.broadcastChannelChanges(setOwnerSignal.channel_id)
     }  
 
 
