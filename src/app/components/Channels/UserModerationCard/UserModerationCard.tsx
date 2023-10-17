@@ -4,6 +4,7 @@ import style from "./UserModerationCard.module.css";
 import { useSessionUser } from "../../../context/SessionUserContext";
 import { RadioOptions } from "../../shared/RadioOptions/RadioOptions";
 import { ConfirmationDialog } from "../../shared/ConfirmationDialog/ConfirmationDialog";
+import socket from "../../../socket/socket";
 
 const data = {
   src: "/images/avatar.png",
@@ -47,9 +48,8 @@ function getActionIcon(actionType: ActionType): string {
   else if (actionType === ActionType.SETUSER) return button.setUser;
   return button.kick;
 }
-interface ModerationActionProps {
-  actionType: ActionType;
-}
+
+
 
 function getOppositeButton(currentButton: ActionType): ActionType {
   if (currentButton === ActionType.PLAY) return ActionType.PLAY;
@@ -60,7 +60,13 @@ function getOppositeButton(currentButton: ActionType): ActionType {
   else if (currentButton === ActionType.SETUSER) return ActionType.SETADMIN;
   else return ActionType.MUTE;
 }
-function ModerationAction({ actionType }: ModerationActionProps) {
+
+interface ModerationActionProps {
+  actionData: {targeted_user: string, channel_id: string};
+  actionType: ActionType;
+}
+
+function ModerationAction({actionData,  actionType }: ModerationActionProps) {
   const [showRadioOptions, setShowRadioOptions] = useState(false); // State to control the display of radio options
   const [showConfirmation, setShowShowConfirmation] = useState(false); // State to control the display of radio options
   const [currentActionType, setCurrentActionType] = useState(actionType);
@@ -86,6 +92,7 @@ function ModerationAction({ actionType }: ModerationActionProps) {
 
       case ActionType.KICK:
         setShowShowConfirmation(true);
+        socket.emit('kickOutUser', {user_id: actionData.targeted_user, channel_id: actionData.channel_id})
         break;
 
       case ActionType.PLAY:
@@ -123,8 +130,8 @@ function ModerationAction({ actionType }: ModerationActionProps) {
       )}
       {!showRadioOptions && showConfirmation && (
         <ConfirmationDialog
-        LaunchAction={handleButtonToggle}
-          setShowConfirmationDialog={setShowShowConfirmation}
+          onConfirm={handleClick}
+          onCancel={() => setShowShowConfirmation(false)} // Optional cancel handler
           selectType={`${ActionType[currentActionType]}`}
         />
       )}
@@ -171,10 +178,12 @@ function renderModerationActions(
   return actions;
 }
 interface UserModerationCardProps {
+  selectedChannel: string;
   currentUserIsModerator: string;
   data: MemberType;
 }
 export function UserModerationCard({
+  selectedChannel,
   currentUserIsModerator,
   data,
 }: UserModerationCardProps) {

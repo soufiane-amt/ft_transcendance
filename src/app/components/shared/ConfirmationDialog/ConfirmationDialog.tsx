@@ -28,23 +28,23 @@ const getAppropriateMessage = (selectedType: string) => {
 
 
 interface ConfirmationDialogProps {
-  LaunchAction: ()=> void,
-  setShowConfirmationDialog: React.Dispatch<React.SetStateAction<boolean>>;
+  onConfirm: ()=> void,
+  onCancel: ()=> void;
   selectType : string
 }
 
-export function ConfirmationDialog({LaunchAction, setShowConfirmationDialog, selectType }: ConfirmationDialogProps) {
-    const ref = useOutsideClick(() => setShowConfirmationDialog(false));
+export function ConfirmationDialog({onConfirm, onCancel, selectType }: ConfirmationDialogProps) {
+    const ref = useOutsideClick(onCancel);
   
     const handleConfirmClick = (event: React.MouseEvent<HTMLButtonElement>) => {
       event.stopPropagation();//the modal reappears because of event propogation to the parent  
-      setShowConfirmationDialog(false);
-      LaunchAction()
+      onConfirm()
+      onCancel();
     };
   
     const handleCancelClick = (event: React.MouseEvent<HTMLButtonElement>) => {
       event.stopPropagation();//the modal reappears because of event propogation to the parent  
-      setShowConfirmationDialog(false);
+      onCancel();
     };
   
   

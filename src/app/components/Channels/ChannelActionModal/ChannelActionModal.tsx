@@ -68,7 +68,7 @@ const ChannelActionModal = ({selectedDiscussionId, channelData, handleVisibility
       <Tabs>
           <TabInfo att={"Show users"}>
 
-            <ModerationToolBox channelData={channelData} />
+            <ModerationToolBox selectedChannel={selectedDiscussionId} channelData={channelData} />
           </TabInfo>
           {
             currentUserGrade !== 'Member' && 

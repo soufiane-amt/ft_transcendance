@@ -16,9 +16,10 @@ export const getUserRole = (user_id:string, channelData:ChannelData | undefined)
 }
 
 interface ModerationToolBoxProps{
+    selectedChannel : string
     channelData: ChannelData|undefined, 
 }    
-export function ModerationToolBox ({channelData}:ModerationToolBoxProps)
+export function ModerationToolBox ({selectedChannel, channelData}:ModerationToolBoxProps)
 {
     const currentUser = useSessionUser()
     const currentUserIsModerator:string = getUserRole (currentUser.id, channelData) 
@@ -40,6 +41,7 @@ export function ModerationToolBox ({channelData}:ModerationToolBoxProps)
                             const userRole = getUserRole (user, channelData)
                              return (userData &&
                                 <UserModerationCard 
+                                selectedChannel={selectedChannel}
                                  currentUserIsModerator={currentUserIsModerator}
                                  data={{
                                  src:userData?.avatar,

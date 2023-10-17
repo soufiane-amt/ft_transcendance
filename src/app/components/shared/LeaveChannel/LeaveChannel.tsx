@@ -13,15 +13,17 @@ interface LeaveChannelProps {
 export function LeaveChannel({selectedDiscussion, userGrade, channelUsers }: LeaveChannelProps) {
   const [showDropDownList, setShowDropDownList] = useState(false);
 
+  const handleSendingLeavingSignal = () => {
+    socket.emit('leaveChannel', selectedDiscussion)
+    window.location.reload()
+  }
+
   const handleClickLeave = () => {
     if (userGrade === 'Owner')
       setShowDropDownList(!showDropDownList);
     else
-    {
-      socket.emit('leaveChannel', selectedDiscussion)
-      window.location.reload()
-    } 
-  };
+      handleSendingLeavingSignal()  
+} ;
 
   return (
     <div className={style.channel_quitting_section}>
@@ -33,6 +35,8 @@ export function LeaveChannel({selectedDiscussion, userGrade, channelUsers }: Lea
             <div >
              {showDropDownList && 
               <CheckboxList
+                selectedDiscussion={selectedDiscussion}
+                confirmSelection={handleSendingLeavingSignal}
                 options={channelUsers
                   ?.map((user_id) => findUserContacts(user_id)?.username)
                   .filter(Boolean)} // Filter out any undefined usernames

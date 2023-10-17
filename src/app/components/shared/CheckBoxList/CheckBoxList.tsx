@@ -1,21 +1,24 @@
 import React, { useState } from 'react';
 import style from "./CheckBoxList.module.css";
+import socket from '../../../socket/socket';
 
 interface CheckboxListProps {
+  selectedDiscussion: string;
+  confirmSelection: () => void;
   options: (string | undefined)[] | undefined;
 }
 
-function CheckboxList({ options }: CheckboxListProps) {
+function CheckboxList({selectedDiscussion, confirmSelection, options }: CheckboxListProps) {
   const [selectedOption, setSelectedOption] = useState('');
 
+  const handleSelect = () => {
+    socket.emit('setOwner', {targeted_username: selectedOption, channel_id: selectedDiscussion})
+    confirmSelection()
+  }
   const handleOptionChange = (event: any) => {
     setSelectedOption(event.target.value);
   };
 
-  const ConfirmSelection = ()=>{
-    window.location.reload()
-    
-  }
   return (
     <div className={style.checkbox_list}>
       <p>Select your successor:</p>
@@ -39,7 +42,7 @@ function CheckboxList({ options }: CheckboxListProps) {
       <p>Selected user: {selectedOption}</p>
       {selectedOption && 
       
-      <button onClick={ConfirmSelection}>Confirm and Leave</button>
+      <button onClick={handleSelect}>Confirm and Leave</button>
       }
     </div>
   );
