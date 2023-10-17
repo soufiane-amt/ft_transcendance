@@ -735,7 +735,7 @@ export class ChatCrudService {
   }
 
   async makeOwner(user_id: string, channel_id: string) {
-    this.prisma.prismaClient.channelMembership.update({
+    await this.prisma.prismaClient.channelMembership.update({
       where: {
         channel_id_user_id: {
           channel_id: channel_id,

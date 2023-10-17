@@ -131,9 +131,10 @@ import * as cookie from 'cookie';
     @SubscribeMessage ("setOwner")
     async handleGradeUserTOwner(client: any,  setOwnerSignal : setOwnerSignalDto  ) 
     {
-      const user_agent_id =  this.extractUserIdFromCookies(client);
-      await this.chatCrud.makeOwner (setOwnerSignal.targeted_user_id, setOwnerSignal.channel_id) //deleting the membership of the client in DB
-      client.leave (`channel-${setOwnerSignal.channel_id}`)                                        //Deleting the user from the websocket room
+      console.log ('====================', setOwnerSignal)
+      const targeted_user_id = await this.userCrud.findUserByUsername(setOwnerSignal.targeted_username)
+      await this.chatCrud.makeOwner (targeted_user_id, setOwnerSignal.channel_id) 
+      this.broadcastChannelChanges(setOwnerSignal.channel_id)
     }  
 
 
@@ -157,8 +158,6 @@ import * as cookie from 'cookie';
         channelAdmins: await this.chatCrud.findChannelAdmins(channel_id),
         channelBans: await this.chatCrud.retieveBlockedChannelUsers(channel_id),
       }
-      console .log ('channelUpdates : ', channelNewData)
       this.server.to(`channel-${channel_id}`).emit('updateChannelData', channel_id, channelNewData)
-
     }
 }

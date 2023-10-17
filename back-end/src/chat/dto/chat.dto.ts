@@ -49,7 +49,7 @@ export interface kickSignalDto {
   channel_id: string;
 }
 export interface setOwnerSignalDto {
-  targeted_user_id: string;
+  targeted_username: string;
   channel_id: string;
 }
 
