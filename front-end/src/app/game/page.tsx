@@ -2,19 +2,34 @@
 import Structure from "../Structure";
 import "../../styles/TailwindRef.css";
 import GameLandingPage from "@/components/game/GameLandingPage";
-import React, { useState, createContext } from "react";
+import React, { useState, createContext, useEffect } from "react";
 import GameContext from "@/components/game/GameContext";
 
+
+export interface GameSettingsInterface {
+  GameMode: string;
+  GameTheme: string;
+  GameSpeed: string;
+  Oponent?: string | null;
+  Roll?: string | null;
+}
 
 export default function Game() {
   const [GameLandingPageBool, SetGameLandingPage] = useState(true);
   const [GameDashboard, SetGameDashboard] = useState(false);
 
-  const [GameMode, setGameMode] = useState("");
-  const [GameTheme, setGameTheme] = useState("");
-  const [GameSpeed, setGameSpeed] = useState("");
-  const [Oponent_id, setOponent_id] = useState("");
-  const [Roll, setRoll] = useState("");
+  const [GameSettings, setGameSettings] = useState<GameSettingsInterface>({
+    GameMode: "",
+    GameTheme: "",
+    GameSpeed: "",
+    Oponent: null,
+    Roll: null,
+  });
+
+
+  useEffect(() => {
+    console.log(GameSettings);
+  }, [GameSettings]);
 
   return (
     <Structure>
@@ -24,19 +39,11 @@ export default function Game() {
           SetGameLandingPage,
           GameDashboard,
           SetGameDashboard,
-          GameMode,
-          setGameMode,
-          GameTheme,
-          setGameTheme,
-          GameSpeed,
-          setGameSpeed,
-          Oponent_id,
-          setOponent_id,
-          Roll,
-          setRoll,
+          GameSettings,
+          setGameSettings,
         }}
       >
-        {GameLandingPageBool === true && <GameLandingPage />}
+        {GameLandingPageBool === true && GameDashboard === false && <GameLandingPage />}
       </GameContext.Provider>
     </Structure>
   );
