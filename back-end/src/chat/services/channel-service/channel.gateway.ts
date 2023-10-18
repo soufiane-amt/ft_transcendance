@@ -24,12 +24,10 @@ import * as cookie from 'cookie';
 
     async handleConnection(client: any, ...args: any[]) {
       const userIdCookie = this.extractUserIdFromCookies(client);
-      console.log ("Cookies: ", userIdCookie)
       if (!userIdCookie)
         return
       if (await this.userCrud.findUserByID(userIdCookie) == null)
-        throw new WsException ("User not existing")
-          console.log (`user ${userIdCookie} connected\n`);
+        throw new WsException ("User not existing");
         (await this.chatCrud.findAllJoinedChannels(userIdCookie)).forEach(room => {
           console.log ("user : " + userIdCookie + " joined " + room.channel_id)
           client.join(`channel-${room.channel_id}`)
@@ -115,13 +113,15 @@ import * as cookie from 'cookie';
     async handleChannelKicks(client: any,  kickSignal:kickSignalDto ) 
     { 
       const targeted_user_id = await this.userCrud.findUserByUsername(kickSignal.target_username)
+      console.log ('====>| ',kickSignal.channel_id) 
       this.server.to(`inbox-${targeted_user_id}`).emit('kickOutNotification', kickSignal.channel_id)
     }
 
 
     @SubscribeMessage ("leaveChannel")
     async handleChannelLeave(client: any,  channel_id : string  ) 
-    {
+    { 
+      console.log ('Leave channel: ', channel_id)
       const user_id =  this.extractUserIdFromCookies(client);
       await this.chatCrud.leaveChannel (user_id, channel_id) //deleting the membership of the client in DB
       this.broadcastChannelChanges(channel_id)
