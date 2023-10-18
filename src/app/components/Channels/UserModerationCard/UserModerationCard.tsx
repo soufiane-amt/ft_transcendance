@@ -169,9 +169,16 @@ function renderModerationActions(
   if (currentUser.username === data.username) return actions;
   if (sessionUserModeratType !== 'Member') {
     if (sessionUserModeratType === 'Owner')
-      actions.push(
-        <ModerationAction key="setAdmin" actionData={actionData}  actionType={ActionType.SETADMIN} />
-      );
+    {
+      if (data.role ===  'Member')
+        actions.push(
+          <ModerationAction key="setAdmin" actionData={actionData}  actionType={ActionType.SETADMIN} />
+        );
+      else
+        actions.push(
+          <ModerationAction key="setUser" actionData={actionData}  actionType={ActionType.SETUSER} />
+        );
+    }
 
     if (!isOwner(data)) {
       actions.push(<ModerationAction  key="ban" actionData={actionData}   actionType={ActionType.BAN} />);

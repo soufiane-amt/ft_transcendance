@@ -50,11 +50,10 @@ export function useHandlePanel(discussionPanels: DiscussionDto[],selectedDiscuss
 
         //handle getting kicked
         const handleGettingKicked = (room_id: string ) => {
-          console.log ('Leave channel:', room_id)
           const updatedRooms = [...discussionPanels];
           const indexToModify = updatedRooms.findIndex(
             (item) => item.id === room_id
-          );
+          )
           if (indexToModify !== -1) {
             updatedRooms.splice(indexToModify, 1);
             setDiscussionRooms(updatedRooms);
