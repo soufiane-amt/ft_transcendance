@@ -18,7 +18,6 @@ export function RadioOptions({handleButtonToggle, setShowRadioOptions, selectTyp
         console.log("Selected Option:", selectedOption);
       }
       setShowRadioOptions(false);
-      setSelectedOption("1 minute");
       handleButtonToggle()
     };
   

@@ -128,7 +128,6 @@ function ModerationAction({actionData,  actionType }: ModerationActionProps) {
     // Toggle between buttons when Confirm is clicked
     const OppositeButton = getOppositeButton(currentActionType);
     setCurrentActionType(OppositeButton);
-    setShowRadioOptions(false);
   };
 
   return (
@@ -143,7 +142,7 @@ function ModerationAction({actionData,  actionType }: ModerationActionProps) {
       )}
       {!showRadioOptions && showConfirmation && (
         <ConfirmationDialog
-          onConfirm={handleClick}
+          onConfirm={()=>{handleClick(); handleButtonToggle()}}
           onCancel={() => setShowShowConfirmation(false)} // Optional cancel handler
           selectType={`${ActionType[currentActionType]}`}
         />
