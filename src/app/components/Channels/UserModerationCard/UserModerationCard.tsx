@@ -109,11 +109,15 @@ function ModerationAction({actionData,  actionType }: ModerationActionProps) {
       case ActionType.SETADMIN:
         if (!showConfirmation)
           setShowShowConfirmation(true);
+        else
+          socket.emit('upgradeMemberToAdmin', {targeted_username: actionData.targeted_user, channel_id: actionData.channel_id});
         break;
 
       case ActionType.SETUSER:
         if (!showConfirmation)
           setShowShowConfirmation(true);
+        else
+          socket.emit('setAdminToMember', {targeted_username: actionData.targeted_user, channel_id: actionData.channel_id});
         break;
       default:
         break;
