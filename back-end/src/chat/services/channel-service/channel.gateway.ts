@@ -3,7 +3,7 @@ import { OnGatewayConnection, SubscribeMessage, WebSocketGateway, WebSocketServe
 import { Server, Socket } from "socket.io";
 import { Roles } from "src/chat/decorators/chat.decorator";
 import { MessageDto, banManageSignalDto, channelMembershipDto, channelReqDto, kickSignalDto, setOwnerSignalDto } from "src/chat/dto/chat.dto";
-import { UpdateChannelDto, UpdateUserMemberShip } from "src/chat/dto/update-chat.dto";
+import { UpdateChannelDto, UpdateUserMemberShip, UserRoleSignal } from "src/chat/dto/update-chat.dto";
 import { Role } from "src/chat/enum/role.enum";
 import {  allowJoinGuard, bannedConversationGuard, channelPermission, userRoomSubscriptionGuard } from "src/chat/guards/chat.guards";
 import { ChatCrudService } from "src/prisma/chat-crud.service";
@@ -67,14 +67,7 @@ import * as cookie from 'cookie';
     //     await this.chatCrud.changeChannelName (updateType.channel_id, updateType.name)
     // }
 
-    // @Roles (Role.OWNER, Role.ADMIN)
-    // @UseGuards(channelPermission)
-    // @SubscribeMessage('upUserToAdmin')
-    // async upgradeUserToAdmin (client :Socket, updateUserM : UpdateUserMemberShip)
-    // {
-    //     await this.chatCrud.upgradeToAdmin (updateUserM.user_id, updateUserM.channel_id)
-    // }
-
+    
     // @SubscribeMessage('joinSignal')
     // //check if the user exists
     // //check the exitence of the channel
@@ -106,14 +99,30 @@ import * as cookie from 'cookie';
     //     await this.chatCrud.unblockAUserWithinGroup (banSignal.user_id, banSignal.channel_id)
     // }  
 
-  
+
+    // @Roles (Role.OWNER, Role.ADMIN)
+    // @UseGuards(channelPermission)
+    @SubscribeMessage('upgradeMemberToAdmin')
+    async upgradeUserToAdmin (client :Socket, upgradeSignal : UserRoleSignal)
+    {
+      const targeted_user_id = await this.userCrud.findUserByUsername(upgradeSignal.targeted_username)
+      await this.chatCrud.upgradeToAdmin (targeted_user_id, upgradeSignal.channel_id)
+      this.broadcastChannelChanges(upgradeSignal.channel_id)
+    }
+    @SubscribeMessage('setAdminToMember')
+    async upgradeAdminToUser (client :Socket, upgradeSignal : UserRoleSignal)
+    {
+      const targeted_user_id = await this.userCrud.findUserByUsername(upgradeSignal.targeted_username)
+      await this.chatCrud.setGradeToUser (targeted_user_id, upgradeSignal.channel_id)
+      this.broadcastChannelChanges(upgradeSignal.channel_id)
+    }
+
     // @UseGuards(allowJoinGuard) 
     // @Roles (Role.OWNER, Role.ADMIN)
     @SubscribeMessage ("kickOutUser")
     async handleChannelKicks(client: any,  kickSignal:kickSignalDto ) 
     { 
       const targeted_user_id = await this.userCrud.findUserByUsername(kickSignal.target_username)
-      console.log ('====>| ',kickSignal.channel_id) 
       this.server.to(`inbox-${targeted_user_id}`).emit('kickOutNotification', kickSignal.channel_id)
     }
 
@@ -121,7 +130,6 @@ import * as cookie from 'cookie';
     @SubscribeMessage ("leaveChannel")
     async handleChannelLeave(client: any,  channel_id : string  ) 
     { 
-      console.log ('Leave channel: ', channel_id)
       const user_id =  this.extractUserIdFromCookies(client);
       await this.chatCrud.leaveChannel (user_id, channel_id) //deleting the membership of the client in DB
       this.broadcastChannelChanges(channel_id)

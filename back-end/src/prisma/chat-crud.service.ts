@@ -696,7 +696,7 @@ export class ChatCrudService {
 
 
   async upgradeToAdmin(user_id: string, channel_id: string) {
-    this.prisma.prismaClient.channelMembership.update({
+    await this.prisma.prismaClient.channelMembership.update({
       where: {
         channel_id_user_id: {
           channel_id: channel_id,
@@ -710,7 +710,7 @@ export class ChatCrudService {
   }
 
   async setGradeToUser(user_id: string, channel_id: string) {
-    this.prisma.prismaClient.channelMembership.update({
+    await this.prisma.prismaClient.channelMembership.update({
       where: {
         channel_id_user_id: {
           channel_id: channel_id,

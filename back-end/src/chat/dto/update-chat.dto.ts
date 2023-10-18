@@ -10,3 +10,8 @@ export interface UpdateUserMemberShip extends channelMembershipDto
 {
   updater_id :string
 }
+
+export interface UserRoleSignal{
+  targeted_username: string
+  channel_id :string
+}
