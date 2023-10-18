@@ -403,7 +403,6 @@ export class ChatCrudService {
       },
     });
     
-    console.log ("last-visit", lastVisitTimestamp,"messages Count ===>>", messageCount)
     return messageCount;
   }
 
@@ -526,21 +525,22 @@ export class ChatCrudService {
     });
   }
 
-  async blockAUserWithinGroup(user_id: string, channel_id: string) {
-    return this.prisma.prismaClient.channelMembership.update({
+  async blockAUserWithinGroup(blockSignal: { user_id: string; channel_id: string; banDuration: number }) {
+    const banExpiresAt = new Date(new Date().getTime() + blockSignal.banDuration);
+    await this.prisma.prismaClient.channelMembership.update({
       where: {
         channel_id_user_id: {
-          channel_id: channel_id,
-          user_id: user_id,
+          channel_id: blockSignal.channel_id,
+          user_id: blockSignal.user_id,
         },
       },
       data: {
         is_banned: true,
-        banned_at: new Date(),
+        ban_expires_at: banExpiresAt,
       },
     });
   }
-
+  
   async unblockAUserWithinGroup(user_id: string, channel_id: string) {
     return this.prisma.prismaClient.channelMembership.update({
       where: {

@@ -52,3 +52,9 @@ export interface setOwnerSignalDto {
   channel_id: string;
 }
 
+
+export interface UserBanMuteSignalDto {
+  target_username: string;
+  channel_id: string;
+  actionDuration: number;
+}

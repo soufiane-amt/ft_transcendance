@@ -2,7 +2,7 @@ import { UseGuards } from "@nestjs/common";
 import { OnGatewayConnection, SubscribeMessage, WebSocketGateway, WebSocketServer, WsException } from "@nestjs/websockets";
 import { Server, Socket } from "socket.io";
 import { Roles } from "src/chat/decorators/chat.decorator";
-import { MessageDto, banManageSignalDto, channelMembershipDto, channelReqDto, kickSignalDto, setOwnerSignalDto } from "src/chat/dto/chat.dto";
+import { MessageDto, UserBanMuteSignalDto, banManageSignalDto, channelMembershipDto, channelReqDto, kickSignalDto, setOwnerSignalDto } from "src/chat/dto/chat.dto";
 import { UpdateChannelDto, UpdateUserMemberShip, UserRoleSignal } from "src/chat/dto/update-chat.dto";
 import { Role } from "src/chat/enum/role.enum";
 import {  allowJoinGuard, bannedConversationGuard, channelPermission, userRoomSubscriptionGuard } from "src/chat/guards/chat.guards";
@@ -90,14 +90,22 @@ import * as cookie from 'cookie';
 
     // @UseGuards(allowJoinGuard) 
     // @Roles (Role.OWNER, Role.ADMIN)
-    // @SubscribeMessage ("channelUserBanModerate")
-    // async handleChannelBan(client: any,  banSignal:banManageSignalDto ) 
-    // {
-    //   if (banSignal.type == "BAN")
-    //     await this.chatCrud.blockAUserWithinGroup(banSignal.user_id, banSignal.channel_id)
-    //   else
-    //     await this.chatCrud.unblockAUserWithinGroup (banSignal.user_id, banSignal.channel_id)
-    // }  
+    @SubscribeMessage ("channelUserBan")
+    async handleChannelBan(client: any,  banSignal:UserBanMuteSignalDto ) 
+    {
+      const targeted_user_id = await this.userCrud.findUserByUsername(banSignal.target_username)
+      function minutesToMilliseconds(minutes: number) {
+        return minutes * 60 * 1000; 
+      }
+      
+      const banData = {
+          user_id :targeted_user_id,
+          channel_id : banSignal.channel_id,
+          banExpiration : minutesToMilliseconds(banSignal.actionDuration)
+        }
+
+        await this.chatCrud.blockAUserWithinGroup(banData)
+    }  
 
 
     // @Roles (Role.OWNER, Role.ADMIN)
