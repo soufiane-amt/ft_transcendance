@@ -98,7 +98,7 @@ function ModerationAction({actionData,  actionType }: ModerationActionProps) {
         if (!showConfirmation)
           setShowShowConfirmation(true);
         else
-          // socket.emit('kickOutUser', {target_username: actionData.targeted_user, channel_id: actionData.channel_id})
+          socket.emit('kickOutUser', {target_username: actionData.targeted_user, channel_id: actionData.channel_id});
         break;
 
       case ActionType.PLAY:

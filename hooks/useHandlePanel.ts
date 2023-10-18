@@ -1,10 +1,14 @@
 import { useEffect } from "react";
 import { DiscussionDto, MinMessageDto, discussionPanelSelectType } from "../src/app/interfaces/DiscussionPanel";
 import socket from "../src/app/socket/socket";
+import { selectedPanelDefault } from "../src/app/components/Channels/ChannelsMain";
 
-export function useHandlePanel(discussionPanels: DiscussionDto[],selectedDiscussion : discussionPanelSelectType ,setDiscussionRooms:React.Dispatch<React.SetStateAction<DiscussionDto[]>>) 
+export function useHandlePanel(discussionPanels: DiscussionDto[],selectedDiscussionState : {
+  selectedDiscussion : discussionPanelSelectType,
+  selectDiscussion : (e: discussionPanelSelectType) => void
+} ,setDiscussionRooms:React.Dispatch<React.SetStateAction<DiscussionDto[]>>) 
 {
-
+  const {selectedDiscussion, selectDiscussion} = selectedDiscussionState;
     useEffect(() => {
         const handleNewMessage = (newMessage: messageDto) => {
           const updatedRooms = [...discussionPanels];
@@ -43,26 +47,31 @@ export function useHandlePanel(discussionPanels: DiscussionDto[],selectedDiscuss
             setDiscussionRooms(updatedRooms);
           }
         };
-        //handle in removing a pannel
-        const handleRemovePanel = (room: { _id: string }) => {
+
+        //handle getting kicked
+        const handleGettingKicked = (room_id: string ) => {
+          console.log ('Leave channel:', room_id)
           const updatedRooms = [...discussionPanels];
-          const indexToRemove = updatedRooms.findIndex(
-            (item) => item.id === room._id
+          const indexToModify = updatedRooms.findIndex(
+            (item) => item.id === room_id
           );
-          if (indexToRemove !== -1) {
-            updatedRooms.splice(indexToRemove, 1);
+          if (indexToModify !== -1) {
+            updatedRooms.splice(indexToModify, 1);
             setDiscussionRooms(updatedRooms);
           }
+          socket.emit("leaveChannel", room_id);
+          if (selectedDiscussion.id === room_id)
+            selectDiscussion(selectedPanelDefault);
         }
 
         socket.on("newMessage", handleNewMessage);
         socket.on("setRoomAsRead", handleReadStatusTrack);
-        socket.on("removePanel", handleRemovePanel);
+        socket.on("kickOutNotification", handleGettingKicked);
 
         return () => {
           socket.off("newMessage", handleNewMessage);
           socket.off("setRoomAsRead", handleReadStatusTrack);
-          socket.off("removePanel", handleRemovePanel);
+          socket.off("kickOutNotification", handleGettingKicked);
 
         };
       }, [discussionPanels]);

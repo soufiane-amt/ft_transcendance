@@ -69,7 +69,7 @@ export function DiscussionsBar({ selectedDiscussionState, currentRoute }: Discus
     }, [channelData, modalIsVisible])
 
     
-    useHandlePanel(discussionPanels,selectedDiscussion, setDiscussionRooms)
+    useHandlePanel(discussionPanels,selectedDiscussionState, setDiscussionRooms)
 
 
     const handlePanelClick = async (panelData: DiscussionDto) => {
