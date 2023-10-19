@@ -13,3 +13,4 @@
 
 
 note : enter game make user online, enter chat make user online
+note: protect socket getways in backend
