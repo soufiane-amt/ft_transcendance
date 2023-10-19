@@ -7,7 +7,7 @@
     justify-content: space-between;
     height: 91px;
     position: sticky;
-    z-index: 2;
+    z-index: 3; /* hadi kant 2 rditha 3*/
 }
 
 .nav_search

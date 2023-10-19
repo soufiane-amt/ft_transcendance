@@ -61,7 +61,7 @@ function GameLandingPage() {
         >
           Game Play!
         </h2>
-        <div className="flex w-full items-center justify-end z-[2] h-fit hover:cursor-pointer">
+        <div className="flex w-full items-center justify-end z-[2] h-fit">
           <img
             src="Info.png"
             alt="info picture"

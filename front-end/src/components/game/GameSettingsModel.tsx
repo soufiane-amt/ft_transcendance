@@ -54,24 +54,26 @@ function GameSettingsModel({ ...props }) {
       context.GameSettings.GameSpeed != "" &&
       context.GameSettings.Roll != null
     ) {
-      console.log("in this case I will send to the matchmaking  endpoint data\n");
+      console.log(
+        "in this case I will send to the matchmaking  endpoint data\n"
+      );
     } else {
       console.log("Please finish setuping your data\n");
     }
   };
 
   return (
-    <div className="fixed inset-0 flex items-center justify-center z-[2]">
+    <div className="fixed inset-0 flex items-center justify-center z-[4]">
       {/* this is the backdrop (the background opacity) */}
       <div
-        className="absolute bg-black w-full h-full opacity-50 z-[2]"
+        className="absolute bg-black w-full h-full opacity-50 z-[4]"
         onClick={(ev) => {
           ev.preventDefault();
           props.setSettings(false);
         }}
       ></div>
       {/* this is the main component */}
-      <div className="bg-[#E4E7FF] rounded shadow-lg w-[80vw] h-[80vh] flex flex-col   p-[30px] box-border overflow-scroll items-center z-[3] min-h-[400px] min-w-[300px] max-h-[1500px] max-w-[720px]">
+      <div className="bg-[#E4E7FF] rounded shadow-lg w-[80vw] h-[80vh] flex flex-col   p-[30px] box-border overflow-scroll items-center z-[5] min-h-[400px] min-w-[300px] max-h-[1500px] max-w-[720px]">
         <div className="flex items-center w-full flex-row-reverse h-[3%] mb-[15px]">
           <img
             src="/close.png"
