@@ -72,57 +72,53 @@ function ModerationAction({actionData,  actionType }: ModerationActionProps) {
   const [currentActionType, setCurrentActionType] = useState(actionType);
 
   const buttonSrc = getActionIcon(currentActionType);
-  const handleClick = () => {
+
+  const handleClickConfirmDialog = () => {
     switch (currentActionType) {
-      case ActionType.BAN:
-        if (!showRadioOptions)
-          setShowRadioOptions(true);
-        break;
-
       case ActionType.UNBAN:
-        if (!showConfirmation)
-          setShowShowConfirmation(true);
-        break;
-
-      case ActionType.MUTE:
-        if (!showRadioOptions)
-          setShowRadioOptions(true);
         break;
 
       case ActionType.UNMUTE:
-        if (!showConfirmation)
-          setShowShowConfirmation(true);
         break;
-
       case ActionType.KICK:
-        if (!showConfirmation)
-          setShowShowConfirmation(true);
-        else
           socket.emit('kickOutUser', {target_username: actionData.targeted_user, channel_id: actionData.channel_id});
         break;
 
       case ActionType.PLAY:
-        if (!showConfirmation)
-          setShowShowConfirmation(true);
         break;
 
       case ActionType.SETADMIN:
-        if (!showConfirmation)
-          setShowShowConfirmation(true);
-        else
           socket.emit('upgradeMemberToAdmin', {targeted_username: actionData.targeted_user, channel_id: actionData.channel_id});
         break;
 
       case ActionType.SETUSER:
-        if (!showConfirmation)
-          setShowShowConfirmation(true);
-        else
           socket.emit('setAdminToMember', {targeted_username: actionData.targeted_user, channel_id: actionData.channel_id});
         break;
       default:
         break;
     }
   };
+
+  const handleOptionsClick = () => {
+
+    switch (currentActionType) {
+      case ActionType.BAN:
+          socket.emit('channelUserBan', {target_username: actionData.targeted_user, channel_id: actionData.channel_id});
+        break;
+      case ActionType.MUTE:
+        break;
+      default:
+        break;
+    }
+  }
+  const hello = (option: string)=>{ alert(option)}
+
+  const handleClickButton = () => {
+    if (currentActionType === ActionType.BAN || currentActionType === ActionType.MUTE)
+      setShowRadioOptions(true);
+    else
+      setShowShowConfirmation(true);
+  }
 
   const handleButtonToggle = () => {
     // Toggle between buttons when Confirm is clicked
@@ -131,18 +127,18 @@ function ModerationAction({actionData,  actionType }: ModerationActionProps) {
   };
 
   return (
-    <button onClick={handleClick} className={style.moderation_action}>
+    <button onClick={handleClickButton} className={style.moderation_action}>
       <img src={buttonSrc} alt={`Action: ${ActionType[currentActionType]}`} />
       {showRadioOptions && (
         <RadioOptions
-          handleButtonToggle={handleButtonToggle}
+          handleButtonToggle={(op)=>{hello(op);handleButtonToggle()}}
           setShowRadioOptions={setShowRadioOptions}
           selectType={`${ActionType[currentActionType]}`}
         />
       )}
       {!showRadioOptions && showConfirmation && (
         <ConfirmationDialog
-          onConfirm={()=>{handleClick(); handleButtonToggle()}}
+          onConfirm={()=>{handleClickConfirmDialog}}
           onCancel={() => setShowShowConfirmation(false)} // Optional cancel handler
           selectType={`${ActionType[currentActionType]}`}
         />
@@ -150,6 +146,9 @@ function ModerationAction({actionData,  actionType }: ModerationActionProps) {
     </button>
   );
 }
+
+
+
 
 interface UserModerationCardProps {
   data: MemberType;

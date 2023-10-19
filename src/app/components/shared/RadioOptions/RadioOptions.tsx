@@ -3,7 +3,7 @@ import style from "./RadioOptions.module.css";
 import { useOutsideClick } from "../../../../../hooks/useOutsideClick";
 
 interface RadioOptionsProps {
-  handleButtonToggle: ()=> void,
+  handleButtonToggle: (op:string)=> void,
   setShowRadioOptions: React.Dispatch<React.SetStateAction<boolean>>;
   selectType: string;
 }
@@ -18,7 +18,7 @@ export function RadioOptions({handleButtonToggle, setShowRadioOptions, selectTyp
         console.log("Selected Option:", selectedOption);
       }
       setShowRadioOptions(false);
-      handleButtonToggle()
+      handleButtonToggle(selectedOption)
     };
   
     const handleCancelClick = (event: React.MouseEvent<HTMLButtonElement>) => {
