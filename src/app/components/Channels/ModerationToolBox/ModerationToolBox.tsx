@@ -46,7 +46,8 @@ export function ModerationToolBox ({selectedChannel, channelData}:ModerationTool
                                  data={{
                                  src:userData?.avatar,
                                  username:userData?.username,
-                                 role:userRole
+                                 role:userRole,
+                                 isBanned: channelData.channelBans.includes(user)===true,
                              }}/> )
                         })
 

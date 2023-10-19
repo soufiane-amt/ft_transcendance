@@ -8,11 +8,12 @@ export function useHandleBan (BanContext:IBanContext, selectedDiscussion : discu
             setIsBanned : React.Dispatch<React.SetStateAction<boolean | undefined>>)
 {
     useEffect(() => {
-        const handleUserBanned = (banSignal: { room_id: string, agent_id:string }) => {
+        const handleUserBanned = (banSignal: { room_id: string, agent_id:string, expirationDate : Date }) => {
+          console.log ('ban signal:', banSignal)
           if (banSignal.room_id === selectedDiscussion.id) {
             setIsBanned(true); 
           }
-          BanContext.banUser(banSignal.room_id, banSignal.agent_id,  new Date("9999-12-31T23:59:59.999Z"))
+          BanContext.banUser(banSignal.room_id, banSignal.agent_id,  banSignal.expirationDate)
         };
 
         socket.on("userBanned", handleUserBanned);

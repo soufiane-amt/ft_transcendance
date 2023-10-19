@@ -3,13 +3,13 @@ import style from "./RadioOptions.module.css";
 import { useOutsideClick } from "../../../../../hooks/useOutsideClick";
 
 interface RadioOptionsProps {
-  handleButtonToggle: (op:string)=> void,
+  handleButtonToggle: (op:number)=> void,
   setShowRadioOptions: React.Dispatch<React.SetStateAction<boolean>>;
   selectType: string;
 }
 
 export function RadioOptions({handleButtonToggle, setShowRadioOptions, selectType }: RadioOptionsProps) {
-    const [selectedOption, setSelectedOption] = useState("1 minute");
+    const [selectedOption, setSelectedOption] = useState("1");
     const ref = useOutsideClick(() => setShowRadioOptions(false));
   
     const handleConfirmClick = (event: React.MouseEvent<HTMLButtonElement>) => {
@@ -18,13 +18,13 @@ export function RadioOptions({handleButtonToggle, setShowRadioOptions, selectTyp
         console.log("Selected Option:", selectedOption);
       }
       setShowRadioOptions(false);
-      handleButtonToggle(selectedOption)
+      handleButtonToggle(parseInt(selectedOption))
     };
   
     const handleCancelClick = (event: React.MouseEvent<HTMLButtonElement>) => {
       event.stopPropagation();//the modal reappears because of event propogation to the parent  
       setShowRadioOptions(false);
-      setSelectedOption("1 minute");
+      setSelectedOption('1');
     };
   
     const handleRadioChange = (event: any) => {
@@ -38,8 +38,8 @@ export function RadioOptions({handleButtonToggle, setShowRadioOptions, selectTyp
             <label data-inside-modal className={style.radio_option}>
               <input
                 type="radio"
-                value="1 minute"
-                checked={selectedOption === "1 minute"}
+                value="1"
+                checked={selectedOption === "1"}
                 onChange={handleRadioChange}
                 data-inside-modal // Add data-inside-modal here
               />
@@ -48,8 +48,8 @@ export function RadioOptions({handleButtonToggle, setShowRadioOptions, selectTyp
             <label data-inside-modal className={style.radio_option}>
               <input
                 type="radio"
-                value="5  minutes"
-                checked={selectedOption === "5  minutes"}
+                value="5"
+                checked={selectedOption === "5"}
                 onChange={handleRadioChange}
                 data-inside-modal // Add data-inside-modal here
               />
@@ -58,8 +58,8 @@ export function RadioOptions({handleButtonToggle, setShowRadioOptions, selectTyp
             <label data-inside-modal className={style.radio_option}>
               <input
                 type="radio"
-                value="15  minutes"
-                checked={selectedOption === "15  minutes"}
+                value="15"
+                checked={selectedOption === "15"}
                 onChange={handleRadioChange}
                 data-inside-modal 
               />
@@ -68,8 +68,8 @@ export function RadioOptions({handleButtonToggle, setShowRadioOptions, selectTyp
             <label data-inside-modal className={style.radio_option}>
               <input
                 type="radio"
-                value="1 hour"
-                checked={selectedOption === "1 hour"}
+                value="60"
+                checked={selectedOption === "60"}
                 onChange={handleRadioChange}
                 data-inside-modal 
               />

@@ -1,5 +1,6 @@
 import { createContext, useContext, useState, ReactNode, useEffect } from 'react';
 import { fetchDataFromApi } from '../components/shared/customFetch/exmple';
+import socket from '../socket/socket';
 
 // Define the Ban type
 interface Ban {
@@ -90,15 +91,45 @@ export function BanProvider({ children }: BanProviderProps) {
         return updatedBannedRooms;
       });
   }
-  useEffect(() => {
-    // This effect will run after the state has been updated
-  }, [bannedRooms]); // Add bannedRooms as a dependency
   
   const contextValue: IBanContext = {
     bannedRooms,
     banUser,
     unbanUser,
   };
+
+  useEffect(() => {
+    const sendUnbanSignalToBackend = async (roomId: string) => {
+      socket.emit('unbanRequest', roomId);
+    }
+    const checkUnban = () => {
+      if (!bannedRooms.length) return;
+      const now = new Date();
+      const updatedBannedRooms = bannedRooms.filter((ban) => ban.expirationDate > now);
+      // Send a signal for each user that has been unbanned
+      bannedRooms
+        .filter((ban) => !updatedBannedRooms.find((updatedBan) => updatedBan.room_id === ban.room_id))
+        .forEach((ban) => {
+          // Send a signal to the backend with the ban details
+          console.log('sending unban signal to backend ', ban, ' ', now);
+          sendUnbanSignalToBackend(ban.room_id);
+        });
+
+      setBannedRooms(updatedBannedRooms);
+    };
+
+    // Check for unban at regular intervals (e.g., every minute)
+    const unbanCheckInterval = setInterval(checkUnban, 60000);
+
+    // Initial check
+    checkUnban();
+
+    // Clean up the interval when the component unmounts
+    return () => {
+      clearInterval(unbanCheckInterval);
+    };
+  }, [bannedRooms]);
+
 
   return (
     <BanContext.Provider value={contextValue}>

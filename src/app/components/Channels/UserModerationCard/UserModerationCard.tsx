@@ -16,6 +16,7 @@ interface MemberType {
   src: string;
   username: string;
   role: string;
+  isBanned: boolean;
 }
 const button = {
   play: "/images/icons/Ch/play.png",
@@ -73,9 +74,16 @@ function ModerationAction({actionData,  actionType }: ModerationActionProps) {
 
   const buttonSrc = getActionIcon(currentActionType);
 
+  const handleButtonToggle = () => {
+    // Toggle between buttons when Confirm is clicked
+    const OppositeButton = getOppositeButton(currentActionType);
+    setCurrentActionType(OppositeButton);
+  };
+
   const handleClickConfirmDialog = () => {
     switch (currentActionType) {
       case ActionType.UNBAN:
+        socket.emit('channelUserUnBan', {target_username: actionData.targeted_user, channel_id: actionData.channel_id});
         break;
 
       case ActionType.UNMUTE:
@@ -99,18 +107,21 @@ function ModerationAction({actionData,  actionType }: ModerationActionProps) {
     }
   };
 
-  const handleOptionsClick = () => {
+
+  const handleOptionsClick = (selectedOption: number) => {
 
     switch (currentActionType) {
       case ActionType.BAN:
-          socket.emit('channelUserBan', {target_username: actionData.targeted_user, channel_id: actionData.channel_id});
+          socket.emit('channelUserBan', {target_username: actionData.targeted_user, channel_id: actionData.channel_id, actionDuration: selectedOption});
         break;
       case ActionType.MUTE:
         break;
       default:
         break;
     }
+    handleButtonToggle();
   }
+
   const hello = (option: string)=>{ alert(option)}
 
   const handleClickButton = () => {
@@ -120,25 +131,20 @@ function ModerationAction({actionData,  actionType }: ModerationActionProps) {
       setShowShowConfirmation(true);
   }
 
-  const handleButtonToggle = () => {
-    // Toggle between buttons when Confirm is clicked
-    const OppositeButton = getOppositeButton(currentActionType);
-    setCurrentActionType(OppositeButton);
-  };
 
   return (
     <button onClick={handleClickButton} className={style.moderation_action}>
       <img src={buttonSrc} alt={`Action: ${ActionType[currentActionType]}`} />
       {showRadioOptions && (
         <RadioOptions
-          handleButtonToggle={(op)=>{hello(op);handleButtonToggle()}}
+          handleButtonToggle={(op)=>{handleOptionsClick(op)}}
           setShowRadioOptions={setShowRadioOptions}
           selectType={`${ActionType[currentActionType]}`}
         />
       )}
       {!showRadioOptions && showConfirmation && (
         <ConfirmationDialog
-          onConfirm={()=>{handleClickConfirmDialog}}
+          onConfirm={handleClickConfirmDialog}
           onCancel={() => setShowShowConfirmation(false)} // Optional cancel handler
           selectType={`${ActionType[currentActionType]}`}
         />
@@ -183,7 +189,13 @@ function renderModerationActions(
     }
 
     if (!isOwner(data)) {
-      actions.push(<ModerationAction  key="ban" actionData={actionData}   actionType={ActionType.BAN} />);
+      if (data.isBanned)
+        actions.push(
+          <ModerationAction key="unban" actionData={actionData}  actionType={ActionType.UNBAN} />
+        );
+      else
+        actions.push(<ModerationAction  key="ban" actionData={actionData}   actionType={ActionType.BAN} />);
+      
       actions.push(
         <ModerationAction  key="mute" actionData={actionData}   actionType={ActionType.MUTE} />
       );
