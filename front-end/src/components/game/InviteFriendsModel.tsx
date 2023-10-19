@@ -1,9 +1,11 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { Space_Mono } from "next/font/google";
 import "../../styles/TailwindRef.css";
 import Cookies from "js-cookie";
 import newSocket from "../GlobalComponents/Socket/socket";
 import { Press_Start_2P } from "next/font/google";
+import GameContext from "./GameContext";
+
 
 const mono = Space_Mono({
   subsets: ["latin"],
@@ -26,6 +28,8 @@ function Invite({ ...props }) {
   >([]);
   const [searchQuery, setsearchQuery] = useState("");
   const JwtToken = Cookies.get("access_token");
+  const context: any = useContext(GameContext);
+
 
   //--------------------------------------
   useEffect(() => {
@@ -125,6 +129,7 @@ function Invite({ ...props }) {
             .filter((friend) => friend.status === "ONLINE")
             .map((friend) => (
               <div
+                key={friend.id}
                 className={`w-full h-[50px] bg-[#0D0149] m-[10px] rounded-3xl flex justify-around items-center ${mono.className} min-w-[250px]`}
               >
                 <img
@@ -135,6 +140,12 @@ function Invite({ ...props }) {
                 {friend.username}
 
                 <div
+                  onClick={(ev) => {
+                    ev.preventDefault();
+                    context.setGameSettings({...context.GameSettings, Oponent: friend.id})
+                    props.setInvite(false);
+                    props.setSettings(true);
+                  }}
                   className={`w-[80px] h-[25px]  text-center flex items-center justify-center text-[#22EAAC]  border-[1px] border-[#22EAAC] border-solid ${mono.className} hover:opacity-[65%] hover:cursor-pointer rounded-md text-[13px]`}
                 >
                   Invite

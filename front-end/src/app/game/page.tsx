@@ -4,6 +4,7 @@ import "../../styles/TailwindRef.css";
 import GameLandingPage from "@/components/game/GameLandingPage";
 import React, { useState, createContext, useEffect } from "react";
 import GameContext from "@/components/game/GameContext";
+import GameDashboard from "@/components/game/GameDashboard";
 
 
 export interface GameSettingsInterface {
@@ -15,8 +16,8 @@ export interface GameSettingsInterface {
 }
 
 export default function Game() {
-  const [GameLandingPageBool, SetGameLandingPage] = useState(true);
-  const [GameDashboard, SetGameDashboard] = useState(false);
+  const [GameLandingPageBool, SetGameLandingPageBool] = useState(true);
+  const [GameDashboardBool, SetGameDashboardBool] = useState(false);
 
   const [GameSettings, setGameSettings] = useState<GameSettingsInterface>({
     GameMode: "",
@@ -36,14 +37,15 @@ export default function Game() {
       <GameContext.Provider
         value={{
           GameLandingPageBool,
-          SetGameLandingPage,
-          GameDashboard,
-          SetGameDashboard,
+          SetGameLandingPageBool,
+          GameDashboardBool,
+          SetGameDashboardBool,
           GameSettings,
           setGameSettings,
         }}
       >
-        {GameLandingPageBool === true && GameDashboard === false && <GameLandingPage />}
+        {GameLandingPageBool === true && GameDashboardBool === false && <GameLandingPage />}
+        {GameDashboardBool === true && GameLandingPageBool === false && <GameDashboard />}
       </GameContext.Provider>
     </Structure>
   );

@@ -41,11 +41,17 @@ function GameLandingPage() {
   const context: any = useContext(GameContext);
 
   useEffect(() => {
-    if(settings === false){
-      context.setGameSettings({...context.GameSettings, GameMode: "", GameTheme : "", GameSpeed: "", Oponent: null, Roll: null,});
+    if (settings === false) {
+      context.setGameSettings({
+        ...context.GameSettings,
+        GameMode: "",
+        GameTheme: "",
+        GameSpeed: "",
+        Oponent: null,
+        Roll: null,
+      });
     }
-
-  },[settings])
+  }, [settings]);
 
   return (
     <div className="bg-[#0D0149] max-w-[100vw] min-h-[calc(100vh-91px)] flex  items-center flex-col p-[3%] box-border  justify-between overflow-hidden">
@@ -98,7 +104,7 @@ function GameLandingPage() {
             setMatchMaking(false);
             context.setGameSettings({
               ...context.GameSettings,
-              GameMode: "practice",
+              GameMode: "Practice",
             });
           }}
         >
@@ -106,7 +112,12 @@ function GameLandingPage() {
         </div>
         <div
           onClick={() => {
-            setInvite(true), setMatchMaking(false);
+            setInvite(true);
+            setMatchMaking(false);
+            context.setGameSettings({
+              ...context.GameSettings,
+              GameMode: "Invite",
+            });
           }}
           className={`w-[180px] h-[30px]  text-center flex items-center justify-center text-[#22EAAC]  border-[2px] border-[#22EAAC] border-solid  ${mono.className} hover:opacity-[65%] hover:cursor-pointer z-[1] rounded-md animate-bounce `}
         >
@@ -115,14 +126,21 @@ function GameLandingPage() {
         <div
           className={`w-[180px] h-[30px]  text-center flex items-center justify-center text-[#fa4747]  border-[2px] border-[#DA343E] border-solid   ${mono.className} hover:opacity-[65%] hover:cursor-pointer z-[1] rounded-md animate-bounce `}
           onClick={() => {
-            setSettings(true), setMatchMaking(true);
+            setSettings(true);
+            setMatchMaking(true);
+            context.setGameSettings({
+              ...context.GameSettings,
+              GameMode: "Matchmaking",
+            });
           }}
         >
           Matchmaking Mode
         </div>
       </div>
       {info === true && <Info setInfo={setInfo} />}
-      {invite === true && <Invite setInvite={setInvite} />}
+      {invite === true && (
+        <Invite setInvite={setInvite} setSettings={setSettings} />
+      )}
       {settings === true && (
         <GameSettingsModel
           setSettings={setSettings}

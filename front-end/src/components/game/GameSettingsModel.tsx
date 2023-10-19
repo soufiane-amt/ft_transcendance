@@ -16,14 +16,49 @@ const pixelfont = Press_Start_2P({
 });
 
 function GameSettingsModel({ ...props }) {
-  const [imgtheme, setImgtheme] = useState("/GameBlueTheme.png");
+  const [imgtheme, setImgtheme] = useState("/defaultselect.png");
   const context: any = useContext(GameContext);
-  const [isClicked, setIsClicked] = useState("");
+  const [speed, setSpeed] = useState("");
+  const [Roll, setRoll] = useState("");
 
+  const slow =
+    speed === "slow" ? "cursor-pointer bg-[#E4E7FF] text-[#0D0149]" : "";
+  const normal =
+    speed === "normal" ? "cursor-pointer bg-[#E4E7FF] text-[#0D0149]" : "";
+  const fast =
+    speed === "fast" ? "cursor-pointer bg-[#E4E7FF] text-[#0D0149]" : "";
+  const Host =
+    Roll === "host" ? "cursor-pointer bg-[#E4E7FF] text-[#0D0149]" : "";
+  const Guest =
+    Roll === "guest" ? "cursor-pointer bg-[#E4E7FF] text-[#0D0149]" : "";
 
-  const slow = isClicked === 'slow' ? 'cursor-pointer bg-[#E4E7FF] text-[#0D0149]' : '';
-  const normal = isClicked === 'normal' ? 'cursor-pointer bg-[#E4E7FF] text-[#0D0149]' : '';
-  const fast = isClicked === 'fast' ? 'cursor-pointer bg-[#E4E7FF] text-[#0D0149]' : '';
+  const HandleSubmit = () => {
+    if (
+      context.GameSettings.GameMode === "Practice" &&
+      context.GameSettings.GameTheme != "" &&
+      context.GameSettings.GameSpeed != ""
+    ) {
+      props.setSettings(false);
+      context.SetGameLandingPageBool(false);
+      context.SetGameDashboardBool(true);
+    } else if (
+      context.GameSettings.GameMode === "Invite" &&
+      context.GameSettings.GameTheme != "" &&
+      context.GameSettings.GameSpeed != "" &&
+      context.GameSettings.Oponent != null
+    ) {
+      console.log("in this case I will send to the invite endpoint data\n");
+    } else if (
+      context.GameSettings.GameMode === "Matchmaking" &&
+      context.GameSettings.GameTheme != "" &&
+      context.GameSettings.GameSpeed != "" &&
+      context.GameSettings.Roll != null
+    ) {
+      console.log("in this case I will send to the matchmaking  endpoint data\n");
+    } else {
+      console.log("Please finish setuping your data\n");
+    }
+  };
 
   return (
     <div className="fixed inset-0 flex items-center justify-center z-[2]">
@@ -123,10 +158,31 @@ function GameSettingsModel({ ...props }) {
                 <div
                   className={`w-[160px] h-[40px] bg-[#0D0149] rounded-3xl text-white flex justify-around items-center ${mono.className} `}
                 >
-                  <div className="w-[50%] h-[100%]  border-l-[0px] border-b-[0px] border-t-[0px] border-r-[2px] border-[#E4E7FF] border-solid flex justify-center items-center hover:cursor-pointer hover:bg-[#E4E7FF] hover:text-[#0D0149]">
+                  <div
+                    onClick={(e) => {
+                      e.preventDefault();
+                      context.setGameSettings({
+                        ...context.GameSettings,
+                        Roll: "Host",
+                      });
+                      setRoll("host");
+                    }}
+                    className={`w-[50%] h-[100%]  border-l-[0px] border-b-[0px] border-t-[0px] border-r-[2px] border-[#E4E7FF] border-solid flex justify-center items-center hover:cursor-pointer hover:bg-[#E4E7FF] hover:text-[#0D0149] ${Host}`}
+                  >
                     Host
                   </div>
-                  <div className="w-[50%] h-[100%]  border-l-[2px] border-b-[0px] border-t-[0px] border-r-[0px] border-[#E4E7FF] border-solid flex justify-center items-center hover:cursor-pointer hover:bg-[#E4E7FF] hover:text-[#0D0149]">
+
+                  <div
+                    onClick={(e) => {
+                      e.preventDefault();
+                      context.setGameSettings({
+                        ...context.GameSettings,
+                        Roll: "Guest",
+                      });
+                      setRoll("guest");
+                    }}
+                    className={`w-[50%] h-[100%]  border-l-[2px] border-b-[0px] border-t-[0px] border-r-[0px] border-[#E4E7FF] border-solid flex justify-center items-center hover:cursor-pointer hover:bg-[#E4E7FF] hover:text-[#0D0149] ${Guest}`}
+                  >
                     Guest
                   </div>
                 </div>
@@ -144,7 +200,7 @@ function GameSettingsModel({ ...props }) {
                       ...context.GameSettings,
                       GameSpeed: "Slow",
                     });
-                    setIsClicked('slow');
+                    setSpeed("slow");
                   }}
                   className={`w-[50%] h-[100%]  border-l-[0px] border-b-[0px] border-t-[0px] border-r-[2px] border-[#E4E7FF] border-solid flex justify-center items-center hover:cursor-pointer hover:bg-[#E4E7FF] hover:text-[#0D0149] ${slow}`}
                 >
@@ -153,7 +209,7 @@ function GameSettingsModel({ ...props }) {
                 <div
                   onClick={(e) => {
                     e.preventDefault();
-                    setIsClicked('normal');
+                    setSpeed("normal");
                     context.setGameSettings({
                       ...context.GameSettings,
                       GameSpeed: "Normal",
@@ -166,7 +222,7 @@ function GameSettingsModel({ ...props }) {
                 <div
                   onClick={(e) => {
                     e.preventDefault();
-                    setIsClicked('fast');
+                    setSpeed("fast");
                     context.setGameSettings({
                       ...context.GameSettings,
                       GameSpeed: "Fast",
@@ -191,6 +247,7 @@ function GameSettingsModel({ ...props }) {
               Cancel
             </div>
             <div
+              onClick={HandleSubmit}
               className={`text-[18px] text-white font-semibold  bg-[#0D0149] px-[15px] py-[3px] rounded-xl hover:opacity-50  ${mono.className}   border-none  hover:cursor-pointer`}
             >
               submit
