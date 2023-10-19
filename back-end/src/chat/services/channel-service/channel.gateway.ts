@@ -9,6 +9,7 @@ import {  allowJoinGuard, bannedConversationGuard, channelPermission, userRoomSu
 import { ChatCrudService } from "src/prisma/chat-crud.service";
 import { UserCrudService } from "src/prisma/user-crud.service";
 import * as cookie from 'cookie';
+import { channel } from "diagnostics_channel";
 
  
 
@@ -90,21 +91,55 @@ import * as cookie from 'cookie';
 
     // @UseGuards(allowJoinGuard) 
     // @Roles (Role.OWNER, Role.ADMIN)
+    
+    @SubscribeMessage ("unbanRequest")
+    async handleUnbanRequest(client: any,  channel_id:string ) 
+    {
+      const targeted_user_id = this.extractUserIdFromCookies(client);
+      console.log ('Got Unban request .......')
+      const userBan = await this.chatCrud.findChannelUserBanData(targeted_user_id, channel_id)
+      console.log ( Date.now())
+      console.log (new Date(userBan.ban_expires_at).getTime())
+      console.log ( Date.now())
+      console.log (new Date(userBan.ban_expires_at).getTime() <= Date.now())
+      if (userBan.is_banned && new Date(userBan.ban_expires_at).getTime() <= Date.now())
+      {
+        console.log ('Unban request accepted.......')
+
+        await this.chatCrud.unblockAUserWithinGroup(targeted_user_id, channel_id)
+        this.broadcastChannelChanges(channel_id)
+      }
+    }
+    
+
     @SubscribeMessage ("channelUserBan")
     async handleChannelBan(client: any,  banSignal:UserBanMuteSignalDto ) 
     {
       const targeted_user_id = await this.userCrud.findUserByUsername(banSignal.target_username)
-      function minutesToMilliseconds(minutes: number) {
+      const  minutesToMilliseconds = (minutes: number) => {
         return minutes * 60 * 1000; 
       }
-      
+      console.log ('Date now',  Date())
+      console.log ('Date now',  new Date())
       const banData = {
           user_id :targeted_user_id,
           channel_id : banSignal.channel_id,
-          banExpiration : minutesToMilliseconds(banSignal.actionDuration)
+          banDuration : minutesToMilliseconds(banSignal.actionDuration)/6
         }
-
         await this.chatCrud.blockAUserWithinGroup(banData)
+        this.server
+        .to(`inbox-${targeted_user_id}`)
+        .emit("userBanned", { room_id: banSignal.channel_id, agent_id: '', expirationDate: new Date(Date.now() + banData.banDuration) });
+
+        this.broadcastChannelChanges(banData.channel_id)
+    }  
+
+    @SubscribeMessage ("channelUserUnBan")
+    async handleChannelUnBan(client: any,  unbanSignal:UserBanMuteSignalDto ) 
+    {
+      const targeted_user_id = await this.userCrud.findUserByUsername(unbanSignal.target_username)
+      await this.chatCrud.unblockAUserWithinGroup(targeted_user_id, unbanSignal.channel_id)
+      this.broadcastChannelChanges(unbanSignal.channel_id)
     }  
 
 
@@ -131,7 +166,9 @@ import * as cookie from 'cookie';
     async handleChannelKicks(client: any,  kickSignal:kickSignalDto ) 
     { 
       const targeted_user_id = await this.userCrud.findUserByUsername(kickSignal.target_username)
+      await this.chatCrud.leaveChannel (targeted_user_id, kickSignal.channel_id) //deleting the membership of the client in DB
       this.server.to(`inbox-${targeted_user_id}`).emit('kickOutNotification', kickSignal.channel_id)
+      this.broadcastChannelChanges(kickSignal.channel_id)
     }
 
 

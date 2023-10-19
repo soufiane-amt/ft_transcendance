@@ -481,15 +481,20 @@ export class ChatCrudService {
   async retieveBlockedChannelUsers(
     channel_id: string //for groups only
   ) {
-    return this.prisma.prismaClient.channelMembership.findMany({
+    const banned_users =  await this.prisma.prismaClient.channelMembership.findMany({
       where: {
         channel_id: channel_id,
         is_banned: true,
       },
       select: {
-        id:true,
+        user : {
+          select : {
+            id : true,
+          }
+        }
       }
     });
+    return banned_users.map ((user) => user.user.id)
   }
 
   //update
@@ -542,7 +547,7 @@ export class ChatCrudService {
   }
   
   async unblockAUserWithinGroup(user_id: string, channel_id: string) {
-    return this.prisma.prismaClient.channelMembership.update({
+    return await this.prisma.prismaClient.channelMembership.update({
       where: {
         channel_id_user_id: {
           channel_id: channel_id,
@@ -551,9 +556,24 @@ export class ChatCrudService {
       },
       data: {
         is_banned: false,
+        ban_expires_at: null,
       },
     });
   }
+
+  async findChannelUserBanData(user_id: string, channel_id: string) {
+    return await this.prisma.prismaClient.channelMembership.findFirst(
+      {
+        where: {
+          channel_id: channel_id,
+          user_id: user_id,
+        },
+        select: {
+          is_banned: true,
+          ban_expires_at: true,
+        },
+      });
+    }
 
   async blockAUserWithDm(agentId: string, dm_id: string) {
     return await this.prisma.prismaClient.directMessaging.update({
@@ -589,14 +609,20 @@ export class ChatCrudService {
   }
 
   async leaveChannel(user_id: string, channel_id: string) {
-    await this.prisma.prismaClient.channelMembership.delete({
-      where: {
-        channel_id_user_id: {
-          channel_id: channel_id,
-          user_id: user_id,
+    try {
+      await this.prisma.prismaClient.channelMembership.delete({
+        where: {
+          channel_id_user_id: {
+            channel_id: channel_id,
+            user_id: user_id,
+          },
         },
-      },
-    });
+      });
+    }
+    catch (err)
+    {
+      console.log ('error in leave channel: the channel possibilites already deleted. ')
+    }  
   }
 
   //this method espacially was created in case all the members of a channel left
