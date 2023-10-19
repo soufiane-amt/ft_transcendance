@@ -20,6 +20,7 @@ function GameSettingsModel({ ...props }) {
   const context: any = useContext(GameContext);
   const [speed, setSpeed] = useState("");
   const [Roll, setRoll] = useState("");
+  const [Error, setError] = useState("");
 
   const slow =
     speed === "slow" ? "cursor-pointer bg-[#E4E7FF] text-[#0D0149]" : "";
@@ -58,7 +59,10 @@ function GameSettingsModel({ ...props }) {
         "in this case I will send to the matchmaking  endpoint data\n"
       );
     } else {
-      console.log("Please finish setuping your data\n");
+      setError("Please finish setuping your data!");
+      setTimeout(() => {
+        setError("");
+      }, 2000);
     }
   };
 
@@ -238,7 +242,11 @@ function GameSettingsModel({ ...props }) {
             </div>
           </div>
           {/* //////////////////////////////////////// */}
-          <div className="min-h-[120px] flex  w-full flex-col md:flex-row  items-center justify-evenly">
+          <div className="min-h-[20px] flex justify-center items-center mt-[20px] text-center md:mt-0">
+            <p className={`${mono.className} text-rose-700 text-sm`}>{Error}</p>
+          </div>
+          {/* //////////////////////////////////////// */}
+          <div className="min-h-[90px] flex  w-full flex-col md:flex-row  items-center justify-evenly ">
             <div
               onClick={(ev) => {
                 ev.preventDefault();
