@@ -6,14 +6,13 @@ import socket from '../socket/socket';
 interface Ban {
   room_id: string;
   blocker_id : string;
-  expirationDate: Date ;
 }
 
 
 // Define the context interface
 export interface IBanContext {
   bannedRooms: Ban[];
-  banUser: (room_id: string, blocker_id : string,expirationDate: Date) => void;
+  banUser: (room_id: string, blocker_id : string) => void;
   unbanUser: (roomId: string, userId: string) => void;
 }
 
@@ -45,9 +44,10 @@ export function findBannedRoomContext(room_id: string) {
 // Provide the BanContext at the top level of your application
 interface BanProviderProps {
   children: ReactNode;
+  currentRoute: string; // Add a message prop
 }
 
-export function BanProvider({ children }: BanProviderProps) {
+export function BanProvider({ children,  currentRoute }: BanProviderProps) {
   const [bannedRooms, setBannedRooms] = useState<Ban[]>([]);
 
 
@@ -55,7 +55,7 @@ export function BanProvider({ children }: BanProviderProps) {
   {
     async function fetchDataAsync() {
       const userBannedRooms: Ban[] = await fetchDataFromApi(
-        "http://localhost:3001/chat/direct_messaging/bannedRooms"
+        `http://localhost:3001/chat/${currentRoute}/bannedRooms`
       );
 
       setBannedRooms(userBannedRooms)
@@ -65,12 +65,11 @@ export function BanProvider({ children }: BanProviderProps) {
   }, [])
 
   // Function to ban a user
-  function banUser(room_id: string,blocker_id : string, expirationDate: Date ) {
+  function banUser(room_id: string,blocker_id : string ) {
   
   const newBan: Ban = {
     room_id,
     blocker_id,
-    expirationDate,
   };
   setBannedRooms((prevBannedRooms) => {
       const room =  prevBannedRooms.find((room) => room.room_id === room_id)
@@ -98,39 +97,6 @@ export function BanProvider({ children }: BanProviderProps) {
     unbanUser,
   };
 
-  useEffect(() => {
-    const sendUnbanSignalToBackend = async (roomId: string) => {
-      socket.emit('unbanRequest', roomId);
-    }
-    const checkUnban = () => {
-      if (!bannedRooms.length) return;
-      const now = new Date();
-      const updatedBannedRooms = bannedRooms.filter((ban) => (new Date(ban.expirationDate).getTime() > now.getTime()));
-      // Send a signal for each user that has been unbanned
-      bannedRooms
-        .filter((ban) => !updatedBannedRooms.find((updatedBan) => updatedBan.room_id === ban.room_id))
-        .forEach((ban) => {
-          // Send a signal to the backend with the ban details
-          console.log ('new Date', new Date(ban.expirationDate).getTime(),' ',new Date().getTime(), ' ', new Date(ban.expirationDate).getTime() > now.getTime())
-          
-          // console.log('sending unban signal to backend ', ban.expirationDate.getUTCMilliseconds(), '  ', now.getUTCMilliseconds());
-          sendUnbanSignalToBackend(ban.room_id);
-        });
-
-      setBannedRooms(updatedBannedRooms);
-    };
-
-    // Check for unban at regular intervals (e.g., every minute)
-    const unbanCheckInterval = setInterval(checkUnban, 60000);
-
-    // Initial check
-    checkUnban();
-
-    // Clean up the interval when the component unmounts
-    return () => {
-      clearInterval(unbanCheckInterval);
-    };
-  }, [bannedRooms]);
 
 
   return (

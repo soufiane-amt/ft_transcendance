@@ -59,7 +59,6 @@ export function DiscussionsBar({ selectedDiscussionState, currentRoute }: Discus
 
     useEffect(() => {
       const handleNewChannelUpdate = (channel_id:string, channelNewData:ChannelData) => {
-        console.log ("Old Channel data", channel_id)
         const tmpMap = new Map(channelData);
         tmpMap.delete(channel_id);
         tmpMap.set(channel_id, channelNewData);
