@@ -98,9 +98,7 @@ import { channel } from "diagnostics_channel";
       const targeted_user_id = this.extractUserIdFromCookies(client);
       console.log ('Got Unban request .......')
       const userBan = await this.chatCrud.findChannelUserBanData(targeted_user_id, channel_id)
-      console.log ( Date.now())
-      console.log (new Date(userBan.ban_expires_at).getTime())
-      console.log ( Date.now())
+      console.log ('.......', new Date(userBan.ban_expires_at) )
       console.log (new Date(userBan.ban_expires_at).getTime() <= Date.now())
       if (userBan.is_banned && new Date(userBan.ban_expires_at).getTime() <= Date.now())
       {
@@ -119,17 +117,17 @@ import { channel } from "diagnostics_channel";
       const  minutesToMilliseconds = (minutes: number) => {
         return minutes * 60 * 1000; 
       }
-      console.log ('Date now',  Date())
-      console.log ('Date now',  new Date())
+
+      console.log ('++++mili ', minutesToMilliseconds(banSignal.actionDuration)/6)
       const banData = {
           user_id :targeted_user_id,
           channel_id : banSignal.channel_id,
           banDuration : minutesToMilliseconds(banSignal.actionDuration)/6
         }
-        await this.chatCrud.blockAUserWithinGroup(banData)
+      const banExpiration =   await this.chatCrud.blockAUserWithinGroup(banData)
         this.server
         .to(`inbox-${targeted_user_id}`)
-        .emit("userBanned", { room_id: banSignal.channel_id, agent_id: '', expirationDate: new Date(Date.now() + banData.banDuration) });
+        .emit("userBanned", { room_id: banSignal.channel_id, agent_id: '', expirationDate: banExpiration });
 
         this.broadcastChannelChanges(banData.channel_id)
     }  

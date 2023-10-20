@@ -532,6 +532,9 @@ export class ChatCrudService {
 
   async blockAUserWithinGroup(blockSignal: { user_id: string; channel_id: string; banDuration: number }) {
     const banExpiresAt = new Date(new Date().getTime() + blockSignal.banDuration);
+    
+    console.log ('new Date====',new Date())
+    console.log ('blockAUserWithinGroup',banExpiresAt)
     await this.prisma.prismaClient.channelMembership.update({
       where: {
         channel_id_user_id: {
@@ -544,7 +547,8 @@ export class ChatCrudService {
         ban_expires_at: banExpiresAt,
       },
     });
-  }
+    return banExpiresAt;
+  } 
   
   async unblockAUserWithinGroup(user_id: string, channel_id: string) {
     return await this.prisma.prismaClient.channelMembership.update({
