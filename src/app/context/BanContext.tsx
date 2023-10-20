@@ -105,13 +105,15 @@ export function BanProvider({ children }: BanProviderProps) {
     const checkUnban = () => {
       if (!bannedRooms.length) return;
       const now = new Date();
-      const updatedBannedRooms = bannedRooms.filter((ban) => ban.expirationDate > now);
+      const updatedBannedRooms = bannedRooms.filter((ban) => (new Date(ban.expirationDate).getTime() > now.getTime()));
       // Send a signal for each user that has been unbanned
       bannedRooms
         .filter((ban) => !updatedBannedRooms.find((updatedBan) => updatedBan.room_id === ban.room_id))
         .forEach((ban) => {
           // Send a signal to the backend with the ban details
-          console.log('sending unban signal to backend ', ban, ' ', now);
+          console.log ('new Date', new Date(ban.expirationDate).getTime(),' ',new Date().getTime(), ' ', new Date(ban.expirationDate).getTime() > now.getTime())
+          
+          // console.log('sending unban signal to backend ', ban.expirationDate.getUTCMilliseconds(), '  ', now.getUTCMilliseconds());
           sendUnbanSignalToBackend(ban.room_id);
         });
 
