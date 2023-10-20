@@ -28,7 +28,7 @@ function DirectMesgMain() {
     };
     return (
     <UserContactsProvider currentRoute="direct_messaging">
-      <BanProvider>
+      <BanProvider currentRoute="direct_messaging">
         <div className={style.direct_msg_main}>
           <DiscussionsBar
             selectedDiscussionState={selectState}

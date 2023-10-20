@@ -30,7 +30,7 @@ function ChannelsMain() {
     return (
       <UserContactsProvider currentRoute="channels">
         <ChannelBooksProvider>
-          <BanProvider>
+          <BanProvider currentRoute="Channels">
               <div className={style.direct_msg_main}>
                   <DiscussionsBar
                     selectedDiscussionState={selectState}

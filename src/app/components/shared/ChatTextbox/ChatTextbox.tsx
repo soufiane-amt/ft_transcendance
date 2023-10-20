@@ -41,7 +41,7 @@ function ChatTextBox({
   useHandleUnBan(BanContext, selectedDiscussion, setIsBanned)
 
   useEffect(() => {
-        setIsBanned(BanContext.bannedRooms.some((ban) => 
+        setIsBanned(BanContext.bannedRooms?.some((ban) => 
         {
           return (ban.room_id === selectedDiscussion.id)
         }));
