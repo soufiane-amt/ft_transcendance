@@ -17,6 +17,7 @@ interface MemberType {
   username: string;
   role: string;
   isBanned: boolean;
+  isMuted: boolean;
 }
 const button = {
   play: "/images/icons/Ch/play.png",
@@ -87,6 +88,7 @@ function ModerationAction({actionData,  actionType }: ModerationActionProps) {
         break;
 
       case ActionType.UNMUTE:
+        socket.emit('channelUserUnMute', {target_username: actionData.targeted_user, channel_id: actionData.channel_id});
         break;
       case ActionType.KICK:
           socket.emit('kickOutUser', {target_username: actionData.targeted_user, channel_id: actionData.channel_id});
@@ -115,6 +117,7 @@ function ModerationAction({actionData,  actionType }: ModerationActionProps) {
           socket.emit('channelUserBan', {target_username: actionData.targeted_user, channel_id: actionData.channel_id, actionDuration: selectedOption});
         break;
       case ActionType.MUTE:
+        socket.emit('channelUserMute', {target_username: actionData.targeted_user, channel_id: actionData.channel_id, actionDuration: selectedOption});
         break;
       default:
         break;
@@ -197,9 +200,14 @@ function renderModerationActions(
       else
         actions.push(<ModerationAction  key={userKey+"ban"} actionData={actionData}   actionType={ActionType.BAN} />);
       
-      actions.push(
-        <ModerationAction  key={userKey+"mute"} actionData={actionData}   actionType={ActionType.MUTE} />
-      );
+      if (data.isMuted)
+        actions.push(
+          <ModerationAction  key={userKey+"unmute"} actionData={actionData}   actionType={ActionType.UNMUTE} />
+        );
+      else
+        actions.push(
+          <ModerationAction  key={userKey+"mute"} actionData={actionData}   actionType={ActionType.MUTE} />
+        );
       actions.push(
         <ModerationAction  key={userKey+"kick"} actionData={actionData}   actionType={ActionType.KICK} />
       );

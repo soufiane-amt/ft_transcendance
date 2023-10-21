@@ -7,6 +7,7 @@ import { useHandlePanel } from "../../../../../hooks/useHandlePanel";
 import { useRouter } from "next/router";
 import UserActionModalMain from "../UserActionModal/UserActionModal";
 import socket from "../../../socket/socket";
+import { ChannelData } from "../../../interfaces/ChannelData";
 
 interface DiscussionsBarProps {
     selectedDiscussionState:{
@@ -23,7 +24,6 @@ export function DiscussionsBar({ selectedDiscussionState, currentRoute }: Discus
     const {selectedDiscussion, selectDiscussion} = selectedDiscussionState;
     const [channelData, setChannelData] = useState< Map<string, ChannelData>>(new Map());
 
-    console.log ("Current route ", currentRoute)
 
     useEffect(() => {
       async function fetchDataAsync() {
@@ -48,6 +48,7 @@ export function DiscussionsBar({ selectedDiscussionState, currentRoute }: Discus
                 channelOwner: channel.channelOwner, 
                 channelAdmins:channel.channelAdmins,
                 channelBans: channel.channelBans,
+                channelMutes: channel.channelMutes,
               });
             }
             )

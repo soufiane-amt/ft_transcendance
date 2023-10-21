@@ -5,15 +5,17 @@ import { IMuteContext } from "../src/app/context/MuteContext";
 
 
 export function useHandleMute (MuteContext:IMuteContext, selectedDiscussion : discussionPanelSelectType, 
-            setIsMuted : React.Dispatch<React.SetStateAction<boolean | undefined>>)
+            disableChatTextBox : React.Dispatch<React.SetStateAction<boolean | undefined>>)
 {
+
     useEffect(() => {
         const handleUserMuted = (MuteSignal: { room_id: string}) => {
-          console.log ('ban signal:', MuteSignal)
+
           if (MuteSignal.room_id === selectedDiscussion.id) {
-            setIsMuted(true); 
+            disableChatTextBox(true); 
           }
           MuteContext.MuteUser(MuteSignal.room_id)
+          socket.emit("suspendChannelUpdates", MuteSignal.room_id);
         };
 
         socket.on("userMuted", handleUserMuted);
@@ -25,15 +27,16 @@ export function useHandleMute (MuteContext:IMuteContext, selectedDiscussion : di
     }
 
     
-export function useHandleUnBan (MuteContext:IMuteContext, selectedDiscussion : discussionPanelSelectType, 
-    setIsMuted : React.Dispatch<React.SetStateAction<boolean | undefined>>)
+export function useHandleUnMute (MuteContext:IMuteContext, selectedDiscussion : discussionPanelSelectType, 
+    disableChatTextBox : React.Dispatch<React.SetStateAction<boolean | undefined>>)
     {
         useEffect(() => {
-            const handleUserUnMuted = (MuteSignal: { room_id: string, agent_id:string }) => {
+            const handleUserUnMuted = (MuteSignal: { room_id: string }) => {
               if (MuteSignal.room_id === selectedDiscussion.id) {
-                setIsMuted(false); // Set the isMuted state to true when Muted
+                disableChatTextBox(false); // Set the isMuted state to true when Muted
               }
               MuteContext.unMuteUser(MuteSignal.room_id )
+              socket.emit("resumeChannelUpdates", MuteSignal.room_id);
             };
         
             socket.on("userUnMuted", handleUserUnMuted);

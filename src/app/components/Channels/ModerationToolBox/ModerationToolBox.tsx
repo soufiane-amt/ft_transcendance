@@ -1,5 +1,6 @@
 import { useSessionUser } from "../../../context/SessionUserContext"
 import { findUserContacts } from "../../../context/UsersContactBookContext"
+import { ChannelData } from "../../../interfaces/ChannelData"
 import { UserModerationCard } from "../UserModerationCard/UserModerationCard"
 import style from "./ModerationToolBox.module.css"
 
@@ -50,6 +51,7 @@ export function ModerationToolBox ({selectedChannel, channelData}:ModerationTool
                                  username:userData?.username,
                                  role:userRole,
                                  isBanned: channelData.channelBans.includes(user)===true,
+                                 isMuted: channelData.channelMutes.includes(user)===true,
                              }}/> )
                         })
 

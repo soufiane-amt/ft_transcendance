@@ -8,6 +8,8 @@ import { ChatBoxStatus } from "../../../enum/displayChatBoxStatus";
 import { useBanContext } from "../../../context/BanContext";
 import { useHandleNewMsg } from "../../../../../hooks/useHandleNewMsg";
 import { useHandleBan, useHandleUnBan } from "../../../../../hooks/useHandleBan";
+import { useMuteContext } from "../../../context/MuteContext";
+import { useHandleMute, useHandleUnMute } from "../../../../../hooks/useHandleMute";
 
 
 const isMessageValid = (message:string) => { return message.trim() !== '';}
@@ -33,15 +35,18 @@ function ChatTextBox({
   const userSession = useSessionUser();
   
   const [newMessageContent, setNewMessageContent] = useState<string>("");
-  const [isBanned, setIsBanned] = useState<boolean>(); // State to track ban status
+  const [isChatTextBoxDisabled, disableChatTextBox] = useState<boolean>(); // State to track if the chatTextBox is allowed or not  
   const BanContext = useBanContext()
+  const MuteContext = useMuteContext()
 
   useHandleNewMsg(messagesHistoryState, selectedDiscussion)
-  useHandleBan(BanContext, selectedDiscussion, setIsBanned)
-  useHandleUnBan(BanContext, selectedDiscussion, setIsBanned)
+  useHandleBan(BanContext, selectedDiscussion, disableChatTextBox)
+  useHandleUnBan(BanContext, selectedDiscussion, disableChatTextBox)
+  useHandleMute(MuteContext, selectedDiscussion, disableChatTextBox)
+  useHandleUnMute(MuteContext, selectedDiscussion, disableChatTextBox)
 
   useEffect(() => {
-        setIsBanned(BanContext.bannedRooms?.some((ban) => 
+        disableChatTextBox(BanContext.bannedRooms?.some((ban) => 
         {
           return (ban.room_id === selectedDiscussion.id)
         }));
@@ -65,7 +70,7 @@ function ChatTextBox({
 
   return (
     <div className={`${style.message_bar} ${style.middlePos}`}>
-      {isBanned ? (
+      {isChatTextBoxDisabled ? (
         <div className={style.banned_message}>
           You can't message this person anymore.
         </div>
