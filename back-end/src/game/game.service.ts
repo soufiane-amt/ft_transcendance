@@ -50,8 +50,8 @@ export class GameService {
         const opponent = this.findClosestlevel(this.guestPlayers, hostPlayer.player);
         const players : CreateGame = {player1_id: hostPlayer.player.id, player2_id: opponent.player.id};
         const { game_id } = await this.gameCrudService.createGame(players);
-        this.hostPlayers = this.hostPlayers.filter((pl) => pl.player.id === hostPlayer.player.id);
-        this.guestPlayers = this.guestPlayers.filter((pl) => pl.player.id == opponent.player.id);
+        this.removePlayerFromTheQueue('host', hostPlayer.player);
+        this.removePlayerFromTheQueue('guest', opponent.player);
         const gameInfo = {
             player1_id: hostPlayer.player.id,
             player1_username: hostPlayer.player.username,
@@ -70,8 +70,6 @@ export class GameService {
           const opponent = this.findClosestlevel(matchingSettings, hostPlayer.player);
           const players : CreateGame = {player1_id: hostPlayer.player.id, player2_id: opponent.player.id};
           await this.gameCrudService.createGame(players);
-          this.hostPlayers = this.hostPlayers.filter((pl) => pl.player.id === hostPlayer.player.id);
-          this.hostPlayers = this.hostPlayers.filter((pl) => pl.player.id == opponent.player.id);
           const gameInfo = {
             player1_id: hostPlayer.player.id,
             player1_username: hostPlayer.player.username,
@@ -82,6 +80,8 @@ export class GameService {
         }
         hostPlayer.player.socket.emit('redirect_to_game', gameInfo);
         opponent.player.socket.emit('redirect_to_game', gameInfo);
+        this.removePlayerFromTheQueue('host', hostPlayer.player);
+        this.removePlayerFromTheQueue('guest', opponent.player);
         // create game object
         return 'game is found!';
         }
@@ -96,8 +96,6 @@ export class GameService {
         const opponent = this.findClosestlevel(this.hostPlayers, guestPlayer.player);
         const players: CreateGame = {player1_id: guestPlayer.player.id, player2_id: opponent.player.id};
         await this.gameCrudService.createGame(players);
-        this.guestPlayers = this.guestPlayers.filter((pl) => pl.player.id === guestPlayer.player.id);
-        this.hostPlayers = this.hostPlayers.filter((pl) => pl.player.id === opponent.player.id);
         const gameInfo = {
           player1_id: guestPlayer.player.id,
           player1_username: guestPlayer.player.username,
@@ -108,6 +106,8 @@ export class GameService {
       }
       guestPlayer.player.socket.emit('redirect_to_game', gameInfo);
       opponent.player.socket.emit('redirect_to_game', gameInfo);
+      this.removePlayerFromTheQueue('guest', guestPlayer.player);
+      this.removePlayerFromTheQueue('host', opponent.player);
       // create game object
       return 'the game is found';
     }
@@ -143,5 +143,17 @@ export class GameService {
     }
 
     return closest;
+  }
+
+  removePlayerFromTheQueue(role: string, player: Player) : void {
+    if (role === 'host') {
+      this.hostPlayers = this.hostPlayers.filter((pl) => pl.player.id !== player.id);
+    } else {
+      this.guestPlayers = this.guestPlayers.filter((pl) => pl.player.id !== player.id);
+    }
+  }
+
+  playerExist(player: Player): boolean {
+    return this.hostPlayers.some((pl) => pl.player.id === player.id) || this.guestPlayers.some((pl) => pl.player.id === player.id);
   }
 }
