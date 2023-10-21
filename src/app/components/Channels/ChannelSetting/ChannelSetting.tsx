@@ -1,7 +1,8 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import Avatar from "../../shared/Avatar/Avatar";
 import style from "./ChannelSetting.module.css";
-import { findChannelnBook } from "../../../context/ChannelInfoBook";
+import { findChannelBook } from "../../../context/ChannelInfoBook";
+import socket from "../../../socket/socket";
 
 const data = {
   src: "/images/avatar2.png",
@@ -11,13 +12,21 @@ const data = {
 
 
 interface TypeSetterProps{
-  currentType:string
+  selectedOptionState : {
+    selectedOption : string | undefined,
+    setSelectedOption : React.Dispatch<React.SetStateAction<string | undefined>>;
+  }
+  setNewPassword : React.Dispatch<React.SetStateAction<string>>;
 }
-function TypeSetter({currentType}:TypeSetterProps) {
-  const [selectedOption, setSelectedOption] = useState(""); // State to track selected option
+function TypeSetter({selectedOptionState, setNewPassword}:TypeSetterProps) {
 
+  const {selectedOption, setSelectedOption} = selectedOptionState;
+  
   const handleSelection = (event: any) => {
     setSelectedOption(event.target.value);
+  };
+  const handlePasswordTyping = (event: any) => {
+    setNewPassword(event.target.value);
   };
   return (
     <div className={`${style.type_setter} `}>
@@ -29,18 +38,19 @@ function TypeSetter({currentType}:TypeSetterProps) {
           className={`${style.user_input_fields} ${style.type_setter_select}`}
         >
           {/* disable the current type of the channel */}
-          <option disabled={currentType === "PRIVATE"} value="private">Private</option>
-          <option disabled={currentType === "PUBLIC"} value="public">Public</option>
-          <option disabled={currentType === "PROTECTED"} value="protected">Protected</option>
+          <option  value="PRIVATE">Private</option>
+          <option  value="PUBLIC">Public</option>
+          <option  value="PROTECTED">Protected</option>
         </select>
       </div>
-      {selectedOption === "protected" && (
+      {selectedOption === "PROTECTED" && (
         <div>
           <label>New Channel Password:</label>
           <input
             className={style.user_input_fields}
             placeholder="New Password"
             type="password"
+            onChange={handlePasswordTyping}
           />
         </div>
       )}
@@ -53,7 +63,16 @@ interface ChannelSettingProps{
   channel_id:string, 
 }
 export function ChannelSetting({channel_id}:ChannelSettingProps) {
-  const currentChannel = findChannelnBook(channel_id)
+  const currentChannel = findChannelBook(channel_id)
+  const [selectedOption, setSelectedOption] = useState(currentChannel?.type); // State to track selected option
+  const [settedPassword, setNewPassword] = useState(''); // State to track selected option
+
+
+  const handleConfirmClick = () => {
+    socket.emit("updateChannelType", {channel_id, type:selectedOption, password:settedPassword});
+    window.location.reload();
+
+  }
   return (
       currentChannel && (
         <div className={`${style.channel_setting} ${style.display_as_block}`}>
@@ -63,8 +82,8 @@ export function ChannelSetting({channel_id}:ChannelSettingProps) {
               <h2>{currentChannel.name}</h2>
             </div>
           </div>
-          <TypeSetter currentType={currentChannel.type}/>
-          <button>CONFIRM</button>
+          <TypeSetter  selectedOptionState={{selectedOption, setSelectedOption}} setNewPassword={setNewPassword}/>
+          <button onClick={handleConfirmClick}>CONFIRM</button>
         </div>
 
       )

@@ -6,6 +6,7 @@ import { useOutsideClick } from "../../../../../hooks/useOutsideClick";
 import { useSessionUser } from "../../../context/SessionUserContext";
 import { LeaveChannel } from "../../shared/LeaveChannel/LeaveChannel";
 import { findUserContacts } from "../../../context/UsersContactBookContext";
+import { ChannelData } from "../../../interfaces/ChannelData";
 
 
 
@@ -71,7 +72,7 @@ const ChannelActionModal = ({selectedDiscussionId, channelData, handleVisibility
             <ModerationToolBox selectedChannel={selectedDiscussionId} channelData={channelData} />
           </TabInfo>
           {
-            currentUserGrade !== 'Member' && 
+            currentUserGrade === 'Owner' && 
             <TabInfo att={"Channel settings"}>
               <ChannelSetting channel_id={selectedDiscussionId}/>
             </TabInfo>

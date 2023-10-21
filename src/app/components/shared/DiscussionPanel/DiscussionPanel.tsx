@@ -6,7 +6,7 @@ import TimeStamp from "../TimeStamp/TimeStamp";
 import { findUserContacts } from "../../../context/UsersContactBookContext";
 import socket from "../../../socket/socket";
 import clsx from "clsx";
-import { findChannelnBook } from "../../../context/ChannelInfoBook";
+import { findChannelBook } from "../../../context/ChannelInfoBook";
 
 const findDiscussions = (
   partner_id: string | undefined,
@@ -20,7 +20,7 @@ const findDiscussions = (
       avatar: discussion_data.avatar,
     };
   } else {
-    const discussion_data = findChannelnBook(discussion_id);
+    const discussion_data = findChannelBook(discussion_id);
     if (!discussion_data) return undefined;
     return {
       name: discussion_data.name,
