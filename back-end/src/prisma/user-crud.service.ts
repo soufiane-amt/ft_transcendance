@@ -1,7 +1,7 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { PrismaService } from './prisma.service';
 import { userDto } from 'src/chat/dto/user.dto';
-import { NotificationType } from '@prisma/client';
+import { NotificationType, Status, User } from '@prisma/client';
 
 
 @Injectable()
@@ -295,6 +295,18 @@ async changeVisibily (user_id : string,  status:  'IN_GAME' | 'ONLINE' | 'OFFLIN
       status :status,
     }
   })
+}
+
+async getUserStatus(id: string) : Promise<Status> {
+  const { status } = await this.prisma.prismaClient.user.findUnique({
+    where : {
+      id
+    },
+    select: {
+      status: true,
+    },
+  });
+  return status;
 }
 //this function will remain commented untill I figure out what should it does exactly
 // async incrementLadderLevel ()
