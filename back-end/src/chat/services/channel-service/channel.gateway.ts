@@ -30,7 +30,6 @@ import { channel } from "diagnostics_channel";
       if (await this.userCrud.findUserByID(userIdCookie) == null)
         throw new WsException ("User not existing");
         (await this.chatCrud.findAllJoinedChannels(userIdCookie)).forEach(room => {
-          console.log ("user : " + userIdCookie + " joined " + room.channel_id)
           client.join(`channel-${room.channel_id}`)
         });
       }
@@ -92,6 +91,12 @@ import { channel } from "diagnostics_channel";
     // @UseGuards(allowJoinGuard) 
     // @Roles (Role.OWNER, Role.ADMIN)
     
+    async broadcastExpiration(channel_id: string, user_id: string) {
+      await this.chatCrud.unblockAUserWithinGroup(user_id, channel_id)
+      this.broadcastChannelChanges(channel_id)
+      this.server.to(`inbox-${user_id}`).emit('userUnBanned', {room_id: channel_id, agent_id:'' })
+      }      
+
     @SubscribeMessage ("unbanRequest")
     async handleUnbanRequest(client: any,  channel_id:string ) 
     {
@@ -118,7 +123,6 @@ import { channel } from "diagnostics_channel";
         return minutes * 60 * 1000; 
       }
 
-      console.log ('++++mili ', minutesToMilliseconds(banSignal.actionDuration)/6)
       const banData = {
           user_id :targeted_user_id,
           channel_id : banSignal.channel_id,
@@ -133,11 +137,13 @@ import { channel } from "diagnostics_channel";
     }  
 
     @SubscribeMessage ("channelUserUnBan")
-    async handleChannelUnBan(client: any,  unbanSignal:UserBanMuteSignalDto ) 
+    async handleChannelUnBan( client :Socket, unbanSignal:UserBanMuteSignalDto ) 
     {
+      console.log ('Unban signal : ', unbanSignal)
       const targeted_user_id = await this.userCrud.findUserByUsername(unbanSignal.target_username)
       await this.chatCrud.unblockAUserWithinGroup(targeted_user_id, unbanSignal.channel_id)
       this.broadcastChannelChanges(unbanSignal.channel_id)
+      this.server.to(`inbox-${targeted_user_id}`).emit('userUnBanned', {room_id: unbanSignal.channel_id, agent_id:'' })
     }  
 
 

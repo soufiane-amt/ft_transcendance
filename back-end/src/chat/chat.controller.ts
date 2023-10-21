@@ -109,17 +109,28 @@ async findAllChannelsInContact (@Req() request : Request)
   }
 
   @Get ("/direct_messaging/bannedRooms")
-  async findBannedRooms (@Req() request : Request)
+  async findBannedRoomsDm (@Req() request : Request)
   {
-    // console.log (request["user.id"], ">>>: ", await this.chatCrud.findBannedDmRooms(request["user.id"]))
     const bannedRooms = await this.chatCrud.findBannedDmRooms(request.cookies["user.id"])
     const bannedRoomsData = bannedRooms.map( (item)=>{
-        return ({room_id : item.id, blocker_id: item.blocker_id, expirationDate: new Date('9999-12-31T23:59:59.999Z')})
+        return ({room_id : item.id, blocker_id: item.blocker_id})
     })
     console.log (bannedRoomsData)
     return bannedRoomsData;
-  }
+  } 
 
+  @Get ("/Channels/bannedRooms")
+  async findBannedRoomsChannels (@Req() request : Request)
+  {
+
+    const bannedRooms = await this.chatCrud.findBannedChannelsRooms(request.cookies["user.id"])
+    const bannedRoomsData = bannedRooms.map( (item)=>{
+        return ({room_id : item.channel_id, blocker_id: ''})
+    })
+    console.log ('Got a request and here is the data : ', bannedRoomsData)
+    return bannedRoomsData;
+  }
+ 
 
   @Get("/userData")
   async getUserData (@Req() request : Request)

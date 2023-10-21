@@ -339,7 +339,8 @@ export class ChatCrudService {
   }
 
   async findAllJoinedChannels(user_id: string) {
-    return this.prisma.prismaClient.channelMembership.findMany({
+    //check also if the user is banned from the channel
+    return await this.prisma.prismaClient.channelMembership.findMany({
       where: {
         user_id: user_id,
       },
@@ -467,6 +468,17 @@ export class ChatCrudService {
       },
     });
   }
+  async findBannedChannelsRooms(user_id: string) {
+    return await this.prisma.prismaClient.channelMembership.findMany({
+      where: {
+        user_id: user_id,
+        is_banned: true,
+      },
+      select: {
+        channel_id: true,
+      },
+    });
+  }
 
   // Retrieve direct messages between users.
   async retieveBlockedUsersList(user_id: string) {
@@ -497,8 +509,23 @@ export class ChatCrudService {
     return banned_users.map ((user) => user.user.id)
   }
 
-  //update
-
+  async findExpiredBans ()
+  {
+    const expiredBans =  await this.prisma.prismaClient.channelMembership.findMany({
+      where: {
+        ban_expires_at: {
+          lte: new Date(),
+        },
+      },
+      select: {
+        channel: true,
+        user: true,
+      },
+    });
+    return expiredBans.map ((ban) => {
+      return {channel:ban.channel.id, user:ban.user.id}
+    })
+  }
   async changeChannelPhoto(channel_id: string, newAvatarURI: string) {
     return await this.prisma.prismaClient.channel.update({
       where: { id: channel_id },
@@ -551,7 +578,7 @@ export class ChatCrudService {
   } 
   
   async unblockAUserWithinGroup(user_id: string, channel_id: string) {
-    return await this.prisma.prismaClient.channelMembership.update({
+     await this.prisma.prismaClient.channelMembership.update({
       where: {
         channel_id_user_id: {
           channel_id: channel_id,
