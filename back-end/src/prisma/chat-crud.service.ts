@@ -480,6 +480,19 @@ export class ChatCrudService {
     });
   }
 
+  async findMutedChannelsRooms(user_id: string) {
+    return await this.prisma.prismaClient.channelMembership.findMany({
+      where: {
+        user_id: user_id,
+        is_muted: true,
+      },
+      select: {
+        channel_id: true,
+      },
+    });
+  }
+
+
   // Retrieve direct messages between users.
   async retieveBlockedUsersList(user_id: string) {
     return this.prisma.prismaClient.friendships.findMany({
@@ -509,6 +522,26 @@ export class ChatCrudService {
     return banned_users.map ((user) => user.user.id)
   }
 
+
+  async retieveMutedChannelUsers(
+    channel_id: string //for groups only
+  ) {
+    const banned_users =  await this.prisma.prismaClient.channelMembership.findMany({
+      where: {
+        channel_id: channel_id,
+        is_muted: true,
+      },
+      select: {
+        user : {
+          select : {
+            id : true,
+          }
+        }
+      }
+    });
+    return banned_users.map ((user) => user.user.id)
+  }
+
   async findExpiredBans ()
   {
     const expiredBans =  await this.prisma.prismaClient.channelMembership.findMany({
@@ -526,6 +559,26 @@ export class ChatCrudService {
       return {channel:ban.channel.id, user:ban.user.id}
     })
   }
+
+  async findExpiredMutes ()
+  {
+    const expiredMutes =  await this.prisma.prismaClient.channelMembership.findMany({
+      where: {
+        mute_expires_at: {
+          lte: new Date(),
+        },
+      },
+      select: {
+        channel: true,
+        user: true,
+      },
+    });
+    return expiredMutes.map ((mute) => {
+      return {channel:mute.channel.id, user:mute.user.id}
+    })
+  }
+
+
   async changeChannelPhoto(channel_id: string, newAvatarURI: string) {
     return await this.prisma.prismaClient.channel.update({
       where: { id: channel_id },
@@ -557,6 +610,8 @@ export class ChatCrudService {
     });
   }
 
+
+//User a ban a user from a group
   async blockAUserWithinGroup(blockSignal: { user_id: string; channel_id: string; banDuration: number }) {
     const banExpiresAt = new Date(new Date().getTime() + blockSignal.banDuration);
     
@@ -605,6 +660,59 @@ export class ChatCrudService {
         },
       });
     }
+
+//User a mute a user from a group
+
+
+async muteAUserWithinGroup(muteSignal: { user_id: string; channel_id: string; muteDuration: number }) {
+  const muteExpiresAt = new Date(new Date().getTime() + muteSignal.muteDuration);
+  
+  await this.prisma.prismaClient.channelMembership.update({
+    where: {
+      channel_id_user_id: {
+        channel_id: muteSignal.channel_id,
+        user_id: muteSignal.user_id,
+      },
+    },
+    data: {
+      is_muted: true,
+      mute_expires_at: muteExpiresAt,
+    },
+  });
+  return muteExpiresAt;
+} 
+
+async unmuteAUserWithinGroup(user_id: string, channel_id: string) {
+   await this.prisma.prismaClient.channelMembership.update({
+    where: {
+      channel_id_user_id: {
+        channel_id: channel_id,
+        user_id: user_id,
+      },
+    },
+    data: {
+      is_muted: false,
+      mute_expires_at: null,
+    },
+  });
+}
+
+async findChannelUserMuteData(user_id: string, channel_id: string) {
+  return await this.prisma.prismaClient.channelMembership.findFirst(
+    {
+      where: {
+        channel_id: channel_id,
+        user_id: user_id,
+      },
+      select: {
+        is_muted: true,
+        mute_expires_at: true,
+      },
+    });
+  }
+
+
+  //
 
   async blockAUserWithDm(agentId: string, dm_id: string) {
     return await this.prisma.prismaClient.directMessaging.update({

@@ -9,7 +9,7 @@ export class channelsService {
   constructor(private readonly chatCrud: ChatCrudService, private readonly channelGateway : channelGateway ) {}
 
 
-  @Cron(CronExpression.EVERY_10_SECONDS) // Adjust the cron expression as needed
+  @Cron(CronExpression.EVERY_5_SECONDS) 
   async handleBanExpirations() {
     console.log ('handle ban expirations')
     const expiredBans = await this.chatCrud.findExpiredBans();
@@ -20,7 +20,20 @@ export class channelsService {
       const user = ban.user; // You need to define how to retrieve the user
 
       // Broadcast the expiration event to the user on the channel
-      this.channelGateway.broadcastExpiration(channel, user);
+      this.channelGateway.broadcastExpiration(channel, user, 'BAN');
     }
     }
-}
+
+    @Cron(CronExpression.EVERY_5_SECONDS) 
+    async handleMuteExpirations() {
+      console.log ('handle mute expirations')
+      const expiredmutes = await this.chatCrud.findExpiredMutes();
+      console.log ('expired mutes : ' + expiredmutes)
+      for (const mute of expiredmutes) {
+        const channel = mute.channel; 
+        const user = mute.user; 
+  
+        this.channelGateway.broadcastExpiration(channel, user, 'MUTE');
+      }
+      }
+  }

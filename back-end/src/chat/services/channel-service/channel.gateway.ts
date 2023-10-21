@@ -9,7 +9,7 @@ import {  allowJoinGuard, bannedConversationGuard, channelPermission, userRoomSu
 import { ChatCrudService } from "src/prisma/chat-crud.service";
 import { UserCrudService } from "src/prisma/user-crud.service";
 import * as cookie from 'cookie';
-import { channel } from "diagnostics_channel";
+import { subscribe } from "diagnostics_channel";
 
  
 
@@ -91,29 +91,17 @@ import { channel } from "diagnostics_channel";
     // @UseGuards(allowJoinGuard) 
     // @Roles (Role.OWNER, Role.ADMIN)
     
-    async broadcastExpiration(channel_id: string, user_id: string) {
-      await this.chatCrud.unblockAUserWithinGroup(user_id, channel_id)
-      this.broadcastChannelChanges(channel_id)
-      this.server.to(`inbox-${user_id}`).emit('userUnBanned', {room_id: channel_id, agent_id:'' })
-      }      
-
-    @SubscribeMessage ("unbanRequest")
-    async handleUnbanRequest(client: any,  channel_id:string ) 
-    {
-      const targeted_user_id = this.extractUserIdFromCookies(client);
-      console.log ('Got Unban request .......')
-      const userBan = await this.chatCrud.findChannelUserBanData(targeted_user_id, channel_id)
-      console.log ('.......', new Date(userBan.ban_expires_at) )
-      console.log (new Date(userBan.ban_expires_at).getTime() <= Date.now())
-      if (userBan.is_banned && new Date(userBan.ban_expires_at).getTime() <= Date.now())
-      {
-        console.log ('Unban request accepted.......')
-
-        await this.chatCrud.unblockAUserWithinGroup(targeted_user_id, channel_id)
-        this.broadcastChannelChanges(channel_id)
+    async broadcastExpiration(channel_id: string, user_id: string, type: 'BAN' | 'MUTE') {
+      if (type === "BAN") {
+        await this.chatCrud.unblockAUserWithinGroup(user_id, channel_id)
+        this.server.to(`inbox-${user_id}`).emit('userUnBanned', {room_id: channel_id, agent_id:'' })
       }
-    }
-    
+      else if (type === "MUTE") {
+        await this.chatCrud.unmuteAUserWithinGroup(user_id, channel_id)
+        this.server.to(`inbox-${user_id}`).emit('userUnMuted', {room_id: channel_id })
+      }
+      this.broadcastChannelChanges(channel_id)
+      }      
 
     @SubscribeMessage ("channelUserBan")
     async handleChannelBan(client: any,  banSignal:UserBanMuteSignalDto ) 
@@ -128,10 +116,10 @@ import { channel } from "diagnostics_channel";
           channel_id : banSignal.channel_id,
           banDuration : minutesToMilliseconds(banSignal.actionDuration)/6
         }
-      const banExpiration =   await this.chatCrud.blockAUserWithinGroup(banData)
+      await this.chatCrud.blockAUserWithinGroup(banData)
         this.server
         .to(`inbox-${targeted_user_id}`)
-        .emit("userBanned", { room_id: banSignal.channel_id, agent_id: '', expirationDate: banExpiration });
+        .emit("userBanned", { room_id: banSignal.channel_id, agent_id: '' });
 
         this.broadcastChannelChanges(banData.channel_id)
     }  
@@ -145,6 +133,52 @@ import { channel } from "diagnostics_channel";
       this.broadcastChannelChanges(unbanSignal.channel_id)
       this.server.to(`inbox-${targeted_user_id}`).emit('userUnBanned', {room_id: unbanSignal.channel_id, agent_id:'' })
     }  
+
+
+    @SubscribeMessage ("channelUserMute")
+    async handleChannelMute(client: any,  muteSignal:UserBanMuteSignalDto ) 
+    {
+      console.log ('Channel mute is received : ', muteSignal)
+      const targeted_user_id = await this.userCrud.findUserByUsername(muteSignal.target_username)
+      const  minutesToMilliseconds = (minutes: number) => {
+        return minutes * 60 * 1000; 
+      }
+
+      const muteData = {
+          user_id :targeted_user_id,
+          channel_id : muteSignal.channel_id,
+          muteDuration : minutesToMilliseconds(muteSignal.actionDuration)/6
+        }
+      await this.chatCrud.muteAUserWithinGroup(muteData)
+        this.server
+        .to(`inbox-${targeted_user_id}`)
+        .emit("userMuted", { room_id: muteSignal.channel_id});
+
+        this.broadcastChannelChanges(muteData.channel_id)
+    }  
+
+    @SubscribeMessage ("channelUserUnMute")
+    async handleChannelUnMute( client :Socket, unmuteSignal:UserBanMuteSignalDto ) 
+    {
+      console.log ('unmute signal : ', unmuteSignal)
+      const targeted_user_id = await this.userCrud.findUserByUsername(unmuteSignal.target_username)
+      await this.chatCrud.unmuteAUserWithinGroup(targeted_user_id, unmuteSignal.channel_id)
+      this.broadcastChannelChanges(unmuteSignal.channel_id)
+      this.server.to(`inbox-${targeted_user_id}`).emit('userUnMuted', {room_id: unmuteSignal.channel_id })
+    }  
+
+
+    @SubscribeMessage ("suspendChannelUpdates")
+    async handleSuspendChannelUpdates (client: any, channel_id:string)
+    {
+      client.leave (`channel-${channel_id}`)
+    }
+
+    @SubscribeMessage ("resumeChannelUpdates") //A gard must be added to check if the user has the right to request to unmute him
+    async handleResumeChannelUpdates (client: any, channel_id:string)
+    {
+      client.join (`channel-${channel_id}`)
+    }
 
 
     // @Roles (Role.OWNER, Role.ADMIN)
@@ -212,6 +246,7 @@ import { channel } from "diagnostics_channel";
         channelOwner: await this.chatCrud.findChannelOwner(channel_id),
         channelAdmins: await this.chatCrud.findChannelAdmins(channel_id),
         channelBans: await this.chatCrud.retieveBlockedChannelUsers(channel_id),
+        channelMutes: await this.chatCrud.retieveMutedChannelUsers(channel_id),
       }
       this.server.to(`channel-${channel_id}`).emit('updateChannelData', channel_id, channelNewData)
     }

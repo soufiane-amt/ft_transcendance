@@ -110,7 +110,10 @@ model ChannelMembership {
   last_visit DateTime @default(now())
   
   is_banned Boolean? @default(false)
-  ban_expires_at DateTime?
+  ban_expires_at     DateTime?
+
+  is_muted Boolean? @default(false)
+  mute_expires_at   DateTime?
 
   @@unique([channel_id, user_id])
 }

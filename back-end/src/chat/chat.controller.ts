@@ -62,6 +62,7 @@ async findAllDiscussionChannels (@Req() request : Request)
     const channelUsers = await this.chatCrud.findChannelUsers(chElement.id)
     const channelAdmins = await this.chatCrud.findChannelAdmins(chElement.id)
     const channelBans = await this.chatCrud.retieveBlockedChannelUsers(chElement.id)
+    const channelMutes = await this.chatCrud.retieveMutedChannelUsers(chElement.id)
 
     return { ...chElement, 
              unread_messages: unreadMessages, 
@@ -69,6 +70,7 @@ async findAllDiscussionChannels (@Req() request : Request)
              channelOwner: channelOwner, 
              channelAdmins:channelAdmins,
              channelBans: channelBans,
+             channelMutes: channelMutes
             };
   });
 
@@ -130,7 +132,19 @@ async findAllChannelsInContact (@Req() request : Request)
     console.log ('Got a request and here is the data : ', bannedRoomsData)
     return bannedRoomsData;
   }
- 
+
+
+ @Get ("/Channels/MuteRooms")
+ async findMutenedRoomsChannels (@Req() request : Request)
+ {
+
+   const mutedRooms = await this.chatCrud.findMutedChannelsRooms(request.cookies["user.id"])
+   const mutedRoomsData = mutedRooms.map( (item)=>{
+       return ({room_id : item.channel_id})
+   })
+   console.log ('Got a request and here is the data : ', mutedRoomsData)
+   return mutedRoomsData;
+ }
 
   @Get("/userData")
   async getUserData (@Req() request : Request)
