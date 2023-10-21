@@ -13,6 +13,8 @@ export function useHandleBan (BanContext:IBanContext, selectedDiscussion : discu
             disableChatTextBox(true); 
           }
           BanContext.banUser(banSignal.room_id, banSignal.agent_id)
+          socket.emit("suspendChannelUpdates", banSignal.room_id);
+          
         };
 
         socket.on("userBanned", handleUserBanned);
@@ -33,6 +35,7 @@ export function useHandleUnBan (BanContext:IBanContext, selectedDiscussion : dis
                 disableChatTextBox(false); // Set the isBanned state to true when banned
               }
               BanContext.unbanUser(banSignal.room_id, banSignal.agent_id )
+              socket.emit("resumeChannelUpdates", banSignal.room_id);
             };
         
             socket.on("userUnBanned", handleUserUnBanned);

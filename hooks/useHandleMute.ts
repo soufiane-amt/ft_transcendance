@@ -15,7 +15,6 @@ export function useHandleMute (MuteContext:IMuteContext, selectedDiscussion : di
             disableChatTextBox(true); 
           }
           MuteContext.MuteUser(MuteSignal.room_id)
-          socket.emit("suspendChannelUpdates", MuteSignal.room_id);
         };
 
         socket.on("userMuted", handleUserMuted);
@@ -36,7 +35,6 @@ export function useHandleUnMute (MuteContext:IMuteContext, selectedDiscussion : 
                 disableChatTextBox(false); // Set the isMuted state to true when Muted
               }
               MuteContext.unMuteUser(MuteSignal.room_id )
-              socket.emit("resumeChannelUpdates", MuteSignal.room_id);
             };
         
             socket.on("userUnMuted", handleUserUnMuted);

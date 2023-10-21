@@ -4,12 +4,12 @@ import { Send } from "../../svgs";
 import { useSessionUser } from "../../../context/SessionUserContext";
 import { discussionPanelSelectType, selectDiscStateType } from "../../../interfaces/DiscussionPanel";
 import socket from "../../../socket/socket"; // Import the socket object
-import { ChatBoxStatus } from "../../../enum/displayChatBoxStatus";
 import { useBanContext } from "../../../context/BanContext";
 import { useHandleNewMsg } from "../../../../../hooks/useHandleNewMsg";
 import { useHandleBan, useHandleUnBan } from "../../../../../hooks/useHandleBan";
 import { useMuteContext } from "../../../context/MuteContext";
 import { useHandleMute, useHandleUnMute } from "../../../../../hooks/useHandleMute";
+import { useHandleChattingDisable } from "../../../../../hooks/useHandleChattingDisable";
 
 
 const isMessageValid = (message:string) => { return message.trim() !== '';}
@@ -19,7 +19,6 @@ const isMessageValid = (message:string) => { return message.trim() !== '';}
 
 interface ChatTextBoxProps {
   selectedDiscussion: discussionPanelSelectType;
-  displayStatus: ChatBoxStatus;
   messagesHistoryState: [
     messageDto[],
     React.Dispatch<React.SetStateAction<messageDto[]>>
@@ -29,7 +28,6 @@ interface ChatTextBoxProps {
 function ChatTextBox({
   selectedDiscussion,
   messagesHistoryState,
-  displayStatus,
 }: ChatTextBoxProps) {
 
   const userSession = useSessionUser();
@@ -45,13 +43,7 @@ function ChatTextBox({
   useHandleMute(MuteContext, selectedDiscussion, disableChatTextBox)
   useHandleUnMute(MuteContext, selectedDiscussion, disableChatTextBox)
 
-  useEffect(() => {
-        disableChatTextBox(BanContext.bannedRooms?.some((ban) => 
-        {
-          return (ban.room_id === selectedDiscussion.id)
-        }));
-  }, [selectedDiscussion]);
-
+  useHandleChattingDisable(BanContext, MuteContext, selectedDiscussion, disableChatTextBox)
   const handleSendMessage = () => {
     if (isMessageValid(newMessageContent) === false)
       return;

@@ -2,7 +2,6 @@ import { useEffect, useRef, useState } from "react";
 import { discussionPanelSelectType } from "../../../interfaces/DiscussionPanel";
 import { fetchDataFromApi } from "../../shared/customFetch/exmple";
 import ChatTextBox from "../../shared/ChatTextbox/ChatTextbox";
-import { ChatBoxStatus } from "../../../enum/displayChatBoxStatus";
 import style from "./ChattingField.module.css";
 import Message from "../../shared/Message/Message";
 import { selectedPanelDefault } from "../DirectMsgMain";
@@ -63,12 +62,7 @@ function MessagesHistory({ messages }: { messages: messageDto[] }) {
         <ChatTextBox
           selectedDiscussion={selectedDiscussion}
           messagesHistoryState={[messagesHistory, setMessageHistory]}
-          displayStatus={
-            selectedDiscussion !== selectedPanelDefault
-              ? ChatBoxStatus.ACTIVE
-              : ChatBoxStatus.INACTIVE
-          }
-        />
+   />
       </div>
     );
   }
