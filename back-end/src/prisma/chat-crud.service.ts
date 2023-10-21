@@ -88,7 +88,7 @@ export class ChatCrudService {
       }
     )
       return channels.map ((item) =>{
-        return {id:item.channel.id, name:item.channel.name, image:item.channel.image}
+        return {id:item.channel.id, name:item.channel.name, image:item.channel.image, type:item.channel.type}
       })
   }
 
@@ -601,6 +601,7 @@ export class ChatCrudService {
       },
     });
   }
+
   async changeChannelName(channel_id: string, new_name: string) {
     return await this.prisma.prismaClient.channel.update({
       where: { id: channel_id },

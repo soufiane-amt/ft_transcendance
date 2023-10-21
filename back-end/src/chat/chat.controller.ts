@@ -101,6 +101,7 @@ async findAllChannelsInContact (@Req() request : Request)
 {
   const users = await this.chatCrud.retrieveUserChannelsBook (request.cookies["user.id"])
 
+  console.log ("Users in common membership=:", users)
   return (users)
 }
 

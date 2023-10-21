@@ -29,8 +29,13 @@ import { subscribe } from "diagnostics_channel";
         return
       if (await this.userCrud.findUserByID(userIdCookie) == null)
         throw new WsException ("User not existing");
+        // (await this.chatCrud.findAllJoinedChannels(userIdCookie)).filter(room => room.channel_id n).forEach(room => {
+        //   client.join(`channel-${room.channel_id}`)
+        // });
+        //join only the channels that you are not banned from
         (await this.chatCrud.findAllJoinedChannels(userIdCookie)).forEach(room => {
-          client.join(`channel-${room.channel_id}`)
+          if (!room.is_banned)
+            client.join(`channel-${room.channel_id}`)
         });
       }
 
@@ -51,13 +56,15 @@ import { subscribe } from "diagnostics_channel";
     //     await this.chatCrud.changeChannelPhoto (updatePic.channel_id, updatePic.image)
     // }
 
-    // @SubscribeMessage('updateChannelType')
-    // @Roles (Role.OWNER, Role.ADMIN)
+    @SubscribeMessage('updateChannelType')
+    // @Roles (Role.OWNER)
     // @UseGuards(channelPermission)
-    // async changeChannelType (client :Socket, updateType : UpdateChannelDto)
-    // {
-    //     await this.chatCrud.changeChannelType (updateType.channel_id, updateType.type, updateType.password)
-    // }
+    async changeChannelType (client :Socket, updateType : UpdateChannelDto)
+    {
+      //TODO: Check if the user is the owner of the channel using the guard above
+      //TODO: incase the channel new type is protected check if there is a new password
+        await this.chatCrud.changeChannelType (updateType.channel_id, updateType.new_type, updateType.new_password)
+    }
 
     // @SubscribeMessage('updateChannelName')
     // @Roles (Role.OWNER, Role.ADMIN)
