@@ -33,15 +33,17 @@ export function ModerationToolBox ({selectedChannel, channelData}:ModerationTool
                 {
                         channelData?.channelUsers.map((user)=>{
                             let userData;
-                            console.log ("UserData:", user)
                             if (user !==  currentUser.id)
                                 userData = findUserContacts(user)
                             else
                                 userData = {avatar:currentUser.avatar, username:currentUser.username}
                             const userRole = getUserRole (user, channelData)
+                            const cardKey = `${user}-${userRole}`;
+
                              return (userData &&
                                 <UserModerationCard 
-                                selectedChannel={selectedChannel}
+                                key={cardKey}
+                                 selectedChannel={selectedChannel}
                                  currentUserIsModerator={currentUserIsModerator}
                                  data={{
                                  src:userData?.avatar,

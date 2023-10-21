@@ -175,37 +175,38 @@ function renderModerationActions(
   const actions: ReactNode[] = [];
   const actionData = {targeted_user: data.username, channel_id: selectedChannel};
   if (currentUser.username === data.username) return actions;
+  const userKey = `user_${data.username}_${selectedChannel}`;
   if (sessionUserModeratType !== 'Member') {
     if (sessionUserModeratType === 'Owner')
     {
       if (data.role ===  'Admin')
       actions.push(
-        <ModerationAction key="setUser" actionData={actionData}  actionType={ActionType.SETUSER} />
+        <ModerationAction key={userKey+"setUser"} actionData={actionData}  actionType={ActionType.SETUSER} />
       );
       else if (data.role ===  'Member')
       actions.push(
-        <ModerationAction key="setAdmin" actionData={actionData}  actionType={ActionType.SETADMIN} />
+        <ModerationAction key={userKey+"setAdmin"} actionData={actionData}  actionType={ActionType.SETADMIN} />
       );
     }
 
     if (!isOwner(data)) {
       if (data.isBanned)
         actions.push(
-          <ModerationAction key="unban" actionData={actionData}  actionType={ActionType.UNBAN} />
+          <ModerationAction key={userKey+"unban"} actionData={actionData}  actionType={ActionType.UNBAN} />
         );
       else
-        actions.push(<ModerationAction  key="ban" actionData={actionData}   actionType={ActionType.BAN} />);
+        actions.push(<ModerationAction  key={userKey+"ban"} actionData={actionData}   actionType={ActionType.BAN} />);
       
       actions.push(
-        <ModerationAction  key="mute" actionData={actionData}   actionType={ActionType.MUTE} />
+        <ModerationAction  key={userKey+"mute"} actionData={actionData}   actionType={ActionType.MUTE} />
       );
       actions.push(
-        <ModerationAction  key="kick" actionData={actionData}   actionType={ActionType.KICK} />
+        <ModerationAction  key={userKey+"kick"} actionData={actionData}   actionType={ActionType.KICK} />
       );
     }
   }
 
-  actions.push(<ModerationAction key="play" actionData={actionData}   actionType={ActionType.PLAY} />);
+  actions.push(<ModerationAction key={userKey+"play"} actionData={actionData}   actionType={ActionType.PLAY} />);
 
   return actions;
 }
