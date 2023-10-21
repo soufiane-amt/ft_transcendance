@@ -224,12 +224,12 @@ async getUserStats (user_id:string)
 // Retrieve user's match history.
 async userMatchsRecord(user_id : string)
 {
-    return this.prisma.prismaClient.match.findMany(
+    return this.prisma.prismaClient.game.findMany(
     {
       where: {
         OR : [
-          {player_1_id: user_id},
-          {player_2_id : user_id},
+          {player1_id: user_id},
+          {player2_id : user_id},
         ],
       }
     }
@@ -249,31 +249,6 @@ async changeUserAvatar (user_id: string, newAvatarURI :string)
     )
   } 
 //other setting may be added later ... //***// */
-async addWin (id : string)
-{
-    // Use the 'increment' method to increment the numeric field
-     return this.prisma.prismaClient.stats.update({
-      where: { id },
-      data: {
-        wins: {
-          increment: 1,
-        },
-      },
-    });
-  }
-
-async addLoss (id : string)
-{
-    // Use the 'increment' method to increment the numeric field
-    return this.prisma.prismaClient.stats.update({
-      where: { id },
-      data: {
-        losses: {
-          increment: 1,
-        },
-      },
-    });
-}
 
   //friendShips
 async createFriendShip (user1_id :string, user2_id :string)
