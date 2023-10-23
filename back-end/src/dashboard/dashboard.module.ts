@@ -7,11 +7,12 @@ import { WebSocketGatewayClass } from './WebSocketGatewayClass';
 import { AuthService } from 'src/auth/auth.service';
 import { AuthModule } from 'src/auth/auth.module';
 import { JwtService } from '@nestjs/jwt';
+import { GameModule } from 'src/game/game.module';
 
 @Module({
     imports: [PrismaModule, MulterModule.register({
         dest: './uploads',
-      }), AuthModule],
+      }), AuthModule, GameModule],
       controllers: [UploadController, DashboardController],
       providers: [WebSocketGatewayClass, AuthService, JwtService],
 
