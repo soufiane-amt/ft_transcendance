@@ -19,3 +19,7 @@
     order: 2;
   }
   
+
+  @media (max-width:650px) 
+{
+}

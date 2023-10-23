@@ -33,7 +33,7 @@ function ChannelsMain() {
         <ChannelBooksProvider>
           <BanProvider currentRoute="Channels">
               <MuteProvider currentRoute="Channels">
-                <div className={style.direct_msg_main}>
+                <div className={style.channel_main}>
                   <DiscussionsBar
                     selectedDiscussionState={selectState}
                     currentRoute={"Channels"}

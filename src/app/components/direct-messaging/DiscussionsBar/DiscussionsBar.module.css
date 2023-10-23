@@ -8,3 +8,14 @@
   .discussion_panel_bar::-webkit-scrollbar {
     width: 0; /* Adjust the width as needed */
   }
+
+
+  @media (max-width:650px) 
+  {
+    .discussion_panel_bar {
+      width: 50%;
+      /* overflow-y: auto; */
+      background-color: var(--discussion_panel_back_color);
+    }
+  
+  }

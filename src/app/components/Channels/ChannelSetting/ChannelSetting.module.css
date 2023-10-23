@@ -84,6 +84,9 @@
     .type_setter select {
         height: 30px;
     }
+    .type_setter input {
+        height: 30px;
+    }
     .channel_setting__img {
         height: 125px;
         margin-bottom: 0;

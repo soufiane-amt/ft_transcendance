@@ -1,5 +1,14 @@
-.direct_msg_main {
+.channel_main {
     display: flex;
+    height: 100vh;
   }
   
 
+  @media (max-width:650px) 
+  {
+    .channel_main {
+      width: 200vw;
+
+    }
+    
+  }  

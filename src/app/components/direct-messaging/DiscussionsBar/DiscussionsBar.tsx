@@ -113,8 +113,8 @@ export function DiscussionsBar({ selectedDiscussionState, currentRoute }: Discus
               channel_data={channelData.get(selectedDiscussion.id)}
               modalState={[modalIsVisible, setModalAsVisible]}
               ActionContext={currentRoute}
-            />)}
-      </ul>
+              />)}
+          </ul>
     );
   }
  

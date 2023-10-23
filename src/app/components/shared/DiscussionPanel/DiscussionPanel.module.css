@@ -76,7 +76,7 @@
 }
 
 
-@media (max-width:600px) 
+/* @media (max-width:600px) 
 {
     .panel_last_message {
         display: none;
@@ -94,9 +94,9 @@
     .discussion_panel {
         min-width: 245px;
     }
-      .panel_central_part {
+      /* .panel_central_part :not(button) {
         display: none;
-      }
+      } */
 
 
-}
+/* } */
