@@ -30,8 +30,10 @@ export function ModerationToolBox ({selectedChannel, channelData}:ModerationTool
         {channelData && 
         <div className={style.moderation_tool_box}>
                 <h2>Channel Members</h2>
-                <div className={style.users_cards}>
-                {
+                <div className={style.user_moderation_part}>
+
+                    <div className={style.users_cards}>
+                    {
                         channelData?.channelUsers.map((user)=>{
                             let userData;
                             if (user !==  currentUser.id)
@@ -56,17 +58,16 @@ export function ModerationToolBox ({selectedChannel, channelData}:ModerationTool
                         })
 
                     }
-            </div>
-            {
-                <div className={style.user_addition}>
-                    {currentUserIsModerator !== 'Member' &&( 
-                        <>
-                            <input placeholder="Enter a username"></input>
-                            <button>Add User</button>
-                        </>
-                    )}
+                    </div>
+                    <div className={style.user_addition}>
+                        {currentUserIsModerator !== 'Member' &&( 
+                            <>
+                                <input placeholder="Enter a username"></input>
+                                <button>Add User</button>
+                            </>
+                        )}
+                    </div>
                 </div>
-            }
         </div>
         }
         </>

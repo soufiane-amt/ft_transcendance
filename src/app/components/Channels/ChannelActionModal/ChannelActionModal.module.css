@@ -44,4 +44,7 @@
     height: 550px;
     width: 300px;
   }
+  .tab {
+    font-size: medium;
+  }
 }

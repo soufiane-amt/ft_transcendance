@@ -1,12 +1,15 @@
 .moderation_tool_box {
-    display: flex;
-    flex-direction: column; 
-    justify-content: space-between;
     height: 800px;
     width: 500px;
 
-
   }
+
+.user_moderation_part{
+    display: flex;
+    flex-direction: column; 
+    justify-content: space-evenly;
+    height: 85%;
+}
 
 .moderation_tool_box h2 {
     width: 9em ;
@@ -17,6 +20,7 @@
 
 .users_cards{
     overflow: scroll;
+
 }
 .users_cards::-webkit-scrollbar {
     width: 0em; 
@@ -26,6 +30,7 @@
     display: flex;
     justify-content:space-around;
     margin-bottom: 50px;
+
 }
 
 .user_addition input
@@ -49,4 +54,29 @@
     font-weight: bold;
     background-color: #B3A4FA;
     cursor: pointer;
+}
+
+
+
+@media (max-width:650px) 
+{
+  .moderation_tool_box
+  {
+    height: 550px;
+    width: 300px;
+
+  }
+  .tab {
+    font-size: medium;
+  }
+  .user_moderation_part{
+    height: 70%;
+    
+  }
+  .user_addition input
+  {   
+    /* width: 50%; */
+    height: 30px;
+  }
+
 }

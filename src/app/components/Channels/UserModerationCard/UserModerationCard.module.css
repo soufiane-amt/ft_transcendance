@@ -2,7 +2,8 @@
 {
     display: flex;
     align-items:center;
-    flex: 0 0 50%; /* 50% width for each element */
+    justify-content:space-between;
+    width: 100%;
 }
 
 .moderation_action {
@@ -14,7 +15,7 @@
 .user_info {
     display: flex;
     align-items:center;
-    gap: 10px;
+    flex-grow: 1;
 }
 
 .user_info  h5{
@@ -24,19 +25,15 @@
 .action_buttons button:hover {
     cursor: pointer;
     border: 0.5px solid rgb(255, 0, 0);
-    /* border-radius: 20px; */
 }
-.action_buttons button img { 
+
+
+.action_buttons button img {
     width: 25px;
     margin-inline: 7px;
     padding-block: 10px;
 }
 
-
-.user_info {
-    flex-grow: 1;
-
-}
 .action_buttons{
     flex: 0 0 auto; 
 
@@ -45,6 +42,22 @@
 @media (max-width:650px) 
 {
     .user_info {
-
+        flex-grow: 0;
+        /* margin-right: 50px; */
     }
+
+    .action_buttons button img { 
+        width: 15px;
+        margin-inline: 0px;
+        gap: 0px;
+        flex-grow: 0;
+    
+    }
+    
+    .action_buttons{
+        /* position: absolute;
+        right: 0; */
+        margin-left: 10px;
+    }
+
 }

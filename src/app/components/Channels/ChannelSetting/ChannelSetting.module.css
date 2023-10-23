@@ -79,7 +79,10 @@
 {
     .channel_setting button{
         width: 150px;
-        height: 60px;
+        height: 40px;
+    }
+    .type_setter select {
+        height: 30px;
     }
     .channel_setting__img {
         height: 125px;

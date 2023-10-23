@@ -12,11 +12,25 @@
     cursor: pointer;
     font-size: larger;
     box-shadow: 10px 10px 15px -3px rgba(0, 0, 0, 0.5);
-
 }
 
 
 .channel_quitting_section button:hover{
     background-color: #3e44a0;
     color: white;
+}
+
+
+@media (max-width:650px) 
+{
+    .channel_quitting_section button{
+        width: 150px;
+        height: 30px;
+        font-size: large;
+        padding-bottom: 30px;
+    
+    }
+    .channel_quitting_section h3{
+        font-size: medium;
+    }
 }

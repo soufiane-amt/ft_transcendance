@@ -233,7 +233,7 @@ export function UserModerationCard({
   return (
     <div className={style.moderation_card}>
       <div className={style.user_info}>
-        <Avatar src={data.src} avatarToRight={false} />
+        {/* <Avatar src={data.src} avatarToRight={false} /> */}
         <div>
           <h3>{data.username}</h3>
           <h5>{data.role}</h5>
