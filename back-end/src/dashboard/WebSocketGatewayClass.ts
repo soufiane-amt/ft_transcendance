@@ -7,11 +7,16 @@ import {
   SubscribeMessage,
   ConnectedSocket,
   MessageBody,
+  WsResponse,
 } from '@nestjs/websockets';
 import { Injectable, UseGuards } from '@nestjs/common';
 import { UserCrudService } from 'src/prisma/user-crud.service';
 import { AuthService } from 'src/auth/auth.service';
 import { PrismaService } from 'src/prisma/prisma.service';
+import GameInvitationDto, { gameInvitationDto } from 'src/game/dto/GameInvitation.dto';
+import { ZodValidationPipe } from 'src/game/pipes/zod-validation-pipe';
+import { GameService } from 'src/game/game.service';
+import GameInvitationResponseDto, { gameInvitationResponseDto } from 'src/game/dto/GameInvitationResponse.dto';
 
 @WebSocketGateway({ cors: true, origins: 'http://localhost:3000' })
 @Injectable()
@@ -24,6 +29,7 @@ export class WebSocketGatewayClass
     private readonly user: UserCrudService,
     private readonly authservice: AuthService,
     private readonly service: PrismaService,
+    private readonly gameService: GameService
   ) {}
   private clients: Map<string, string> = new Map();
 
@@ -38,6 +44,8 @@ export class WebSocketGatewayClass
         // console.log('clientRoom : ', clientRoom);
         client.join(clientRoom);
         this.clients.set(client.id, clientRoom);
+        const gameInvRoom: string = `gameInv-${payload.userId}`;
+        client.join(gameInvRoom);
       }
     }
   }
@@ -220,5 +228,17 @@ export class WebSocketGatewayClass
         });
       }
     }
+  }
+
+  @SubscribeMessage('GameInvitation')
+  handleGameInvitation(@MessageBody(new ZodValidationPipe(gameInvitationDto)) gameInvitationDto: GameInvitationDto) : string {
+    this.gameService.sendInvitation(gameInvitationDto, this.server);
+    return 'invitation has been sent';
+  }
+
+  @SubscribeMessage('GameInvitationResponse')
+  handleGameInvitationResponse(@MessageBody(new ZodValidationPipe(gameInvitationResponseDto)) gameInvitationResponseDto: GameInvitationResponseDto) {
+    this.gameService.sendGameInvitationResponse(gameInvitationResponseDto, this.server);
+    return 'response has been sent';
   }
 }
