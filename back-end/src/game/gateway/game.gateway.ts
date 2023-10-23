@@ -1,14 +1,15 @@
 import { OnGatewayInit, SubscribeMessage, WebSocketGateway,OnGatewayConnection, WsResponse, MessageBody, ConnectedSocket } from '@nestjs/websockets';
 import { Server, Socket } from 'socket.io';
 import socketIOMiddleware from '../gateways.middleware';
-import { UseFilters, UseGuards } from '@nestjs/common';
+import { UseGuards, UsePipes } from '@nestjs/common';
 import { GatewaysGuard } from '../guards/gateways.guard';
 import { GameService } from '../game.service';
 import ClientSocket from '../interfaces/clientSocket.interface';
-import MatchMakingDto from '../dto/MatchMaking.dto';
-import LeaveQueueDto from '../dto/LeaveQueue.dto';
+import MatchMakingDto, { matchMakingDto } from '../dto/MatchMaking.dto';
+import LeaveQueueDto, { leaveQueueDto } from '../dto/LeaveQueue.dto';
 import { Status } from '@prisma/client';
 import { UserCrudService } from 'src/prisma/user-crud.service';
+import { ZodValidationPipe } from '../pipes/zod-validation-pipe';
 
 @UseGuards(GatewaysGuard)
 @WebSocketGateway({
@@ -27,23 +28,24 @@ export class GameGateway implements OnGatewayInit<Server>, OnGatewayConnection<C
   }
 
   @SubscribeMessage('matchMaking')
-  async matchmakingListener(@MessageBody() payload: string,@ConnectedSocket() client: ClientSocket): Promise<string> {
-    console.log(client.player);
-    const game_settings : MatchMakingDto = JSON.parse(payload);
+  async matchmakingListener(@MessageBody(new ZodValidationPipe(matchMakingDto)) game_settings: MatchMakingDto,@ConnectedSocket() client: ClientSocket): Promise<string> {
     const user_state : Status = await this.userCrudService.getUserStatus(client.userId);
     if (user_state === Status.IN_GAME) {
       return "can't join the queue";
     }
-    if (this.gameservice.playerExist(client.player) == false) {
+    if (this.gameservice.playerExist(client.player) == true) {
       return "can't join the queue";
     }
     const response = await this.gameservice.joinMatchMackingSystem(client.player, game_settings);
     return response;
   }
 
-  @SubscribeMessage('leave MatchMackingSystem')
-  handleLeaveMatchMackingSystem(@MessageBody() payload: string, @ConnectedSocket() client: ClientSocket) {
-    const { role } : LeaveQueueDto = JSON.parse(payload);
+  @SubscribeMessage('leave MatchMakingSystem')
+  handleLeaveMatchMackingSystem(@MessageBody(new ZodValidationPipe(leaveQueueDto)) leaveQueueDto: LeaveQueueDto, @ConnectedSocket() client: ClientSocket) {
+    const { role } : LeaveQueueDto = leaveQueueDto;
+    if (this.gameservice.playerExist(client.player) === false) {
+      return 'player does not exist';
+    }
     this.gameservice.removePlayerFromTheQueue(role, client.player);
     return 'the player was removed from the queue';
   }
