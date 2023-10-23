@@ -1,10 +1,13 @@
-import { IsString } from 'class-validator'
+import { z } from 'zod';
 
-export default class MatchMakingDto {
-    @IsString()
-    role: string;
-    @IsString()
-    mapType: string;
-    @IsString()
-    speed: string;
-}
+export const matchMakingDto = z
+  .object({
+    mapType: z.string(),
+    speed: z.string(),
+    role: z.string(),
+  })
+  .required().strip();
+
+type MatchMakingDto = z.infer<typeof matchMakingDto>;
+
+export default MatchMakingDto;
