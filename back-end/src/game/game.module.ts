@@ -13,6 +13,7 @@ import { PrismaModule } from 'src/prisma/prisma.module';
       provide: APP_GUARD,
       useClass: GatewaysGuard
     },
-]
+],
+exports: [GameService]
 })
 export class GameModule {}
