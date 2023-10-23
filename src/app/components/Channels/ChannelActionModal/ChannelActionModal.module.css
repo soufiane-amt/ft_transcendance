@@ -3,6 +3,7 @@
     height: 850px;
     width: 500px;
     padding-inline: 10px;
+    position: relative;
 
   }
   .tabs{
@@ -36,3 +37,11 @@
     gap: 10px;
   }
   
+@media (max-width:650px) 
+{
+  .modal
+  {
+    height: 550px;
+    width: 300px;
+  }
+}

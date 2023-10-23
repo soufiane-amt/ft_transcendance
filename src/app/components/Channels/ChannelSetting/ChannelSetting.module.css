@@ -5,23 +5,19 @@
 
     border-radius: 40px;
 
-    height: 700px;
-    width: 450px;
-    margin-left: 20px;
-    position: relative;
 }
 
 .channel_setting__img {
     border-radius: 50%;
     height: 150px;
-    margin-top: 20px;
+    margin-top: 30px;
     margin-bottom: 50px;
     border: 3px solid black;
 
 }
 
 .channel_setting button{
-    position: absolute;
+    /* position: absolute; */
     bottom: 10px ;
 
     width: 200px;
@@ -39,10 +35,11 @@
 
 .type_setter div {
     margin-bottom: 50px;
-
 }
 
 .type_setter select {
+    position: absolute;
+    left: 5%;
     appearance: none;
     background-image: url('/images/icons/Ch/select_arrow.png');
     background-repeat: no-repeat;
@@ -53,9 +50,13 @@
     text-align: center;
     cursor: pointer;
     height: 45px;
+    width: 90%;
 }
 
 .type_setter input {
+    position: absolute;
+    left: 5%;
+    width: 90%;
     color: rgb(241, 226, 226);
     text-indent: 20px;
 }
@@ -71,4 +72,17 @@
     border-radius: 20px;
     color: white;
     font-size: large;
+}
+
+  
+@media (max-width:650px) 
+{
+    .channel_setting button{
+        width: 150px;
+        height: 60px;
+    }
+    .channel_setting__img {
+        height: 125px;
+        margin-bottom: 0;
+    }
 }

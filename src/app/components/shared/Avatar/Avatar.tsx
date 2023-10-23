@@ -21,7 +21,7 @@ const Avatar: React.FC<AvatarProps> = ({ src, avatarToRight, channelType }) => {
           src={src}
           alt="user avatar"
           width={100}
-          height={1000}
+          height={100}
         />
       {channelType && (
         <div className={style.channelTypeIndicator}>
