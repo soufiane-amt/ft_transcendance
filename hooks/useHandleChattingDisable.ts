@@ -9,7 +9,7 @@ export function useHandleChattingDisable (BanContext:any, MuteContext:any, selec
         {
           return (ban.room_id === selectedDiscussion.id)
         }) 
-        const roomIsMuteded = MuteContext.MuteRooms?.some((mute: {room_id: string}) =>
+        const roomIsMuteded = MuteContext?.MuteRooms?.some((mute: {room_id: string}) =>
         {
           return (mute.room_id === selectedDiscussion.id)
           });

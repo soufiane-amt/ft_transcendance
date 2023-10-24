@@ -23,17 +23,17 @@ const MuteContext = createContext<IMuteContext | undefined>(undefined);
 
 
 // Custom hook for using the MuteContext
-export function useMuteContext(): IMuteContext {
+export function useMuteContext(): IMuteContext | undefined{
   const context = useContext(MuteContext);
-  if (!context) {
-    throw new Error('useMuteContext must be used within a MuteProvider');
-  }
+  // if (!context) {
+  //   throw new Error('useMuteContext must be used within a MuteProvider');
+  // }
   return context;
 }
 
 
 export function findMuteRoomContext(room_id: string) {
-  const MuteRooms = useMuteContext().MuteRooms || []; // Provide a default empty array if MuteRooms is undefined.
+  const MuteRooms = useMuteContext()?.MuteRooms || []; // Provide a default empty array if MuteRooms is undefined.
   const room = MuteRooms.find((Mute) => Mute.room_id === room_id);
   return room;
 }

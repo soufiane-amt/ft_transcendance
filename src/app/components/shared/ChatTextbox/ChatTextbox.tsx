@@ -40,9 +40,11 @@ function ChatTextBox({
   useHandleNewMsg(messagesHistoryState, selectedDiscussion)
   useHandleBan(BanContext, selectedDiscussion, disableChatTextBox)
   useHandleUnBan(BanContext, selectedDiscussion, disableChatTextBox)
-  useHandleMute(MuteContext, selectedDiscussion, disableChatTextBox)
-  useHandleUnMute(MuteContext, selectedDiscussion, disableChatTextBox)
-
+  if (MuteContext)
+  {
+    useHandleMute(MuteContext, selectedDiscussion, disableChatTextBox)
+    useHandleUnMute(MuteContext, selectedDiscussion, disableChatTextBox)
+  }
   useHandleChattingDisable(BanContext, MuteContext, selectedDiscussion, disableChatTextBox)
   const handleSendMessage = () => {
     if (isMessageValid(newMessageContent) === false)
