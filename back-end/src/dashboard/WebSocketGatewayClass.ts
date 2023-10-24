@@ -231,14 +231,14 @@ export class WebSocketGatewayClass
   }
 
   @SubscribeMessage('GameInvitation')
-  handleGameInvitation(@MessageBody(new ZodValidationPipe(gameInvitationDto)) gameInvitationDto: GameInvitationDto) : string {
-    this.gameService.sendInvitation(gameInvitationDto, this.server);
+  handleGameInvitation(@MessageBody(new ZodValidationPipe(gameInvitationDto)) gameInvitationDto: GameInvitationDto, @ConnectedSocket() client: Socket) : string {
+    this.gameService.sendInvitation(gameInvitationDto, this.server, client);
     return 'invitation has been sent';
   }
 
   @SubscribeMessage('GameInvitationResponse')
-  handleGameInvitationResponse(@MessageBody(new ZodValidationPipe(gameInvitationResponseDto)) gameInvitationResponseDto: GameInvitationResponseDto) {
-    this.gameService.sendGameInvitationResponse(gameInvitationResponseDto, this.server);
+  handleGameInvitationResponse(@MessageBody(new ZodValidationPipe(gameInvitationResponseDto)) gameInvitationResponseDto: GameInvitationResponseDto,@ConnectedSocket() client: Socket) : string {
+    this.gameService.sendGameInvitationResponse(gameInvitationResponseDto, this.server, client);
     return 'response has been sent';
   }
 }
