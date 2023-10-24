@@ -7,9 +7,7 @@ import {
   WsException,
 } from "@nestjs/websockets";
 
-import { DmService } from "./dm.service";
 import { MessageDto, banManageSignalDto } from "../../dto/chat.dto";
-import { inboxPacketDto } from "../../dto/userInbox.dto";
 import { Server, Socket } from "socket.io";
 import {
   bannedConversationGuard,
@@ -26,16 +24,16 @@ export class dmGateway implements OnGatewayConnection, OnGatewayDisconnect {
   server: Server;
 
   constructor(
-    private readonly dmService: DmService,
     private readonly userCrud: UserCrudService,
     private readonly chatCrud: ChatCrudService
   ) {}
 
   //When the user connects to websocket it will be passed the id of the user
   //to use it to create an inbox of notifications and new dm's to be initiated
-
+ 
   async handleConnection(client: Socket, ...args: any[]) {
     const userIdCookie = this.extractUserIdFromCookies(client);
+    console.log ('An attempt to connect: ', userIdCookie)
     if (!userIdCookie) return;
     if ((await this.userCrud.findUserByID(userIdCookie)) == null)
       throw new WsException("User not existing");
@@ -59,34 +57,8 @@ export class dmGateway implements OnGatewayConnection, OnGatewayDisconnect {
     return parsedCookies["user.id"];
   }
   
-  // @SubscribeMessage('joinInbox')
-  // handleJoinInbox(client: Socket, inbox_id: string): void {
-  //   console.log (`${client.id} is connected to ${inbox_id}`)
-  //   client.join(inbox_id);
-  // }
-
-  // //this method serves as a postman to inbox destination
-  // @SubscribeMessage('toInbox')
-  // deliver_to_inbox (client: Socket, packet: inboxPacketDto)
-  // {
-  //   //here I will send you the room  you must join
-  //   this.server.to(packet.inbox_id).emit('inboxMsg', "hello")
-  //   this.server.to("inbox-" + packet.sender_id).emit('inboxMsg', "hello")
-  //   //when the inboxMsg is triggered it will fire an event to client side
-  //     // the right client will receive that event and will trigger the joinDm
-  //     //function wich will make him join the common room , the Dm room where
-  //     //the real messaging will happen
-  // }
-
-  // //this method will be triggered right after deliver_to_inbox right after the client get the dm room id
-  // @SubscribeMessage ("joinDm")
-  // handleJoinDm(client: Socket,  dm_id:string ) {
-  //   client.join(dm_id)
-  // }
-
-  //In case
-  // @UseGuards (userRoomSubscriptionGuard)
   @UseGuards(bannedConversationGuard)
+  @UseGuards (userRoomSubscriptionGuard) 
   @SubscribeMessage("sendMsg")
   async handleSendMesDm(client: Socket, message: MessageDto) {
     message.channel_id = null;
@@ -94,6 +66,7 @@ export class dmGateway implements OnGatewayConnection, OnGatewayDisconnect {
     this.server.to(`dm-${message.dm_id}`).emit("newMessage", messageToBrodcast);
   }
 
+  @UseGuards (userRoomSubscriptionGuard)
   @SubscribeMessage("MarkMsgRead")
   async handleMarkMsgAsRead(client: Socket, room: { _id: string }) {
     const userIdCookie = this.extractUserIdFromCookies(client);
@@ -101,9 +74,9 @@ export class dmGateway implements OnGatewayConnection, OnGatewayDisconnect {
 
     await this.chatCrud.markRoomMessagesAsRead(userIdCookie, room._id); //mark the messages that unsent by this user as read
     this.server.to(`inbox-${userIdCookie}`).emit("setRoomAsRead", room);
-  }
+  } 
 
-  // @UseGuards(userRoomSubscriptionGuard)
+  @UseGuards(userRoomSubscriptionGuard)
   @SubscribeMessage("dmModeration")
   async handleDmBan(
     client: Socket,

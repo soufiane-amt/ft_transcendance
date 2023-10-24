@@ -593,13 +593,15 @@ export class ChatCrudService {
     new_type: "PUBLIC" | "PROTECTED" | "PRIVATE",
     new_pass: string
   ) {
-    return await this.prisma.prismaClient.channel.update({
-      where: { id: channel_id },
+     console.log ('Updates :',new_type, ' ' , await this.prisma.prismaClient.channel.update({
+      where: 
+      { id: channel_id 
+      },
       data: {
         type: new_type,
         password: new_pass,
       },
-    });
+    }));
   }
 
   async changeChannelName(channel_id: string, new_name: string) {
@@ -923,4 +925,37 @@ async findChannelUserMuteData(user_id: string, channel_id: string) {
       },
     });
   }
-}
+
+
+  //Authorizations ro see dm or channel
+  async  isUserInRoom(userId: string, roomId: string) {
+    // Check if the user exists in the DM table
+    const dmExists = await this.prisma.directMessaging.findFirst({
+      where: {
+        OR: [
+          {
+            user1_id: userId,
+            user2_id: roomId,
+          },
+          {
+            user1_id: roomId,
+            user2_id: userId,
+          },
+        ],
+      },
+    });
+  
+    // Check if the user exists in the ChannelMembership table
+    const membershipExists = await this.prisma.channelMembership.findFirst({
+      where: {
+        channel_id: roomId,
+        user_id: userId,
+      },
+    });
+  
+    return {
+      isInDMTable: Boolean(dmExists),
+      isInMembershipTable: Boolean(membershipExists),
+    };
+  }
+}  

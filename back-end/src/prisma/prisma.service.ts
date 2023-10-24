@@ -6,6 +6,8 @@ import { PrismaClient } from '@prisma/client';
 export class PrismaService 
 {
     private readonly prisma: PrismaClient;
+  directMessaging: any;
+  channelMembership: any;
 
     constructor ()
     {

@@ -3,7 +3,7 @@ import { channelDto } from './chat.dto';
 
 export interface UpdateChannelDto  {
   channel_id :string
-  new_type: "PUBLIC" | "PRIVATE" | "PROTECTED";
+  type: "PUBLIC" | "PRIVATE" | "PROTECTED";
   new_password?: string;
 }
 

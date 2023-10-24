@@ -1,4 +1,4 @@
-import { Controller, Get, Query,Post , Res,Req,  Param, Inject, UseGuards, Body, BadRequestException, ExecutionContext, CallHandler, SetMetadata, Put } from '@nestjs/common';
+import { Controller, Get, Query,Post , Res,Req,  Param, Inject, UseGuards, Body, BadRequestException, ExecutionContext, CallHandler, SetMetadata, Put, InternalServerErrorException } from '@nestjs/common';
 import { DmService } from './services/direct-messaging/dm.service';
 import { Request, Response } from "express"
 import { dmGateway } from './services/direct-messaging/dm.gateway';
@@ -55,6 +55,7 @@ async findAllDiscussionPartners (@Req() request : Request)
 @Get ("/Channels/discussionsBar")
 async findAllDiscussionChannels (@Req() request : Request)
 {
+  try {
   const channels = await this.chatCrud.retreiveChannelPanelsData(request.cookies['user.id']);
   const unreadMessagesPromises = channels.map(async (chElement) => {
     const unreadMessages = await this.chatCrud.getUnreadChannelMessagesNumber(request.cookies['user.id'], chElement.id);//get the number of messages unread and unsent by this user
@@ -78,6 +79,11 @@ async findAllDiscussionChannels (@Req() request : Request)
   const discussions = await Promise.all(unreadMessagesPromises);
 
   return discussions;
+  } catch (error) {
+  // Handle and log errors appropriately, avoid exposing sensitive information
+  throw new InternalServerErrorException('An error occurred while fetching discussion channels.');
+}
+
 }
 
 
@@ -85,14 +91,14 @@ async findAllDiscussionChannels (@Req() request : Request)
 async findAllUsersInContact (@Req() request : Request)
 {
   const users = await this.chatCrud.retrieveUserContactBook (request.cookies["user.id"])
-
+  
   return (users)
 }
+
 @Get ("/channels/userContactsBook")
 async findAllUsersWithCommonChannels (@Req() request : Request)
 {
   const users = await this.chatCrud.findUsersInCommonChannels (request.cookies["user.id"])
-  console.log ("Users in common membership=:", users)
   return (users)
 }
 
@@ -100,14 +106,13 @@ async findAllUsersWithCommonChannels (@Req() request : Request)
 async findAllChannelsInContact (@Req() request : Request)
 {
   const users = await this.chatCrud.retrieveUserChannelsBook (request.cookies["user.id"])
-
-  console.log ("Users in common membership=:", users)
   return (users)
 }
 
-@Get (":roomid/messages")
+  @Get (":roomid/messages")
   async findRoomMessages (@Param("roomid") roomid:string)
   {
+    console.log ('Got a request and here is the data : ', await this.chatCrud.retrieveRoomMessages(roomid))
     return await this.chatCrud.retrieveRoomMessages(roomid);
   }
 
@@ -118,7 +123,6 @@ async findAllChannelsInContact (@Req() request : Request)
     const bannedRoomsData = bannedRooms.map( (item)=>{
         return ({room_id : item.id, blocker_id: item.blocker_id})
     })
-    console.log (bannedRoomsData)
     return bannedRoomsData;
   } 
 

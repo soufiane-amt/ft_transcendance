@@ -16,6 +16,14 @@ import {
   kickSignalDto,
 } from '../dto/chat.dto';
 import { UpdateChannelDto } from '../dto/update-chat.dto';
+import * as cookie from "cookie";
+
+
+function extractUserIdFromCookies(client:Socket) {
+  const headers = client.handshake.headers;
+  const parsedCookies = cookie.parse(headers.cookie || "");
+  return parsedCookies["user.id"];
+}
 
 @Injectable()
 export class channelPermission implements CanActivate {
@@ -25,6 +33,7 @@ export class channelPermission implements CanActivate {
   ) {}
 
   canActivate(context: ExecutionContext): boolean | Promise<boolean> {
+    const user_id = extractUserIdFromCookies(context.switchToWs().getClient());
     const subscribedRoles = this.reflect.getAllAndOverride('roles', [
       context.getClass(),
       context.getHandler(),
@@ -32,14 +41,8 @@ export class channelPermission implements CanActivate {
     if (!subscribedRoles) return true;
     if (context.getType() == 'ws') {
       const data = context.switchToWs().getData();
-      if (
-        context.getHandler().name ==
-        ('changeChannelPhoto' ||
-          'changeChannelType' ||
-          'changeChannelName' ||
-          'upgradeUserToAdmin')
-      )
-        return this.verifyModificatData(data, subscribedRoles);
+      if ( context.getHandler().name == 'changeChannelType')
+        return  this.verifyChangeChannelType(user_id, data, subscribedRoles);
 
       if (context.getHandler().name == 'handleChannelBan')
         return this.verifyBanData(data, subscribedRoles);
@@ -91,12 +94,13 @@ export class channelPermission implements CanActivate {
     return false;
   }
 
-  async verifyModificatData(
+  async verifyChangeChannelType(
+    user_id: string,
     updateChannel: UpdateChannelDto,
     subscribedRoles: Role[],
   ): Promise<boolean> {
     const membership = await this.chatCrud.getMemeberShip(
-      updateChannel.user_id,
+      user_id,
       updateChannel.channel_id,
     );
     if (!membership) return false;
@@ -185,7 +189,6 @@ export class FriendShipExistenceGuard implements CanActivate {
 @Injectable()
 export class userRoomSubscriptionGuard implements CanActivate {
   constructor(
-    private readonly dmService: DmService,
     private readonly chatCrud: ChatCrudService,
   ) {}
 
@@ -193,29 +196,70 @@ export class userRoomSubscriptionGuard implements CanActivate {
     if (context.getType() == 'http') {
       const request = context.switchToHttp().getRequest();
       const user_id = request.cookies['user.id'];
-      if (context.getHandler().name == 'findAllDm')
-        var room_id = request.params.id;
-      return (await this.chatCrud.checkUserInDm(user_id, room_id)) != null;
+      if (context.getHandler().name == 'findRoomMessages')
+      {
+        var room_id = request.params.roomid;
+        const userIsSubscribed = await this.chatCrud.isUserInRoom(user_id, room_id);
+        return userIsSubscribed.isInDMTable || userIsSubscribed.isInMembershipTable;
+      }
+      if (context.getHandler().name == 'markMessagesAsRead')
+      {
+        var room_id = request.params.room.id;
+        const userIsSubscribed = await this.chatCrud.isUserInRoom(user_id, room_id);
+        return userIsSubscribed.isInDMTable || userIsSubscribed.isInMembershipTable;
+      }
     } else if (context.getType() == 'ws') {
       const packet_data = context.switchToWs().getData();
+      const user_id = extractUserIdFromCookies(context.switchToWs().getClient());
       if (context.getClass() == dmGateway)
-        return (
-          (await this.chatCrud.checkUserInDm(
-            packet_data.user_id,
-            packet_data.dm_id,
-          )) != null
-        );
+        if (this.verfiyDirectMessagingSubscription(context, packet_data, user_id))
+          return true;
       if (context.getClass() == channelGateway)
         return (
           (await this.chatCrud.getMemeberShip(
             packet_data.user_id,
-            packet_data.channel_id,
+            packet_data.message.channel_id,
           )) != null
         );
     }
     return true;
   }
+
+  async verfiyDirectMessagingSubscription(context:ExecutionContext , packet_data:any , user_id: string) {
+    console.log('packet_data: ', packet_data)
+    if (context.getHandler().name == 'handleSendMesDm')
+        return (
+        (await this.chatCrud.checkUserInDm(
+            user_id,
+            packet_data.dm_id,
+          )) != null
+        );
+    else if (context.getHandler().name == 'handleMarkMsgAsRead')
+        return (
+          (await this.chatCrud.checkUserInDm(
+            user_id,
+            packet_data._id,
+          )) != null
+        );
+    else if (context.getHandler().name == 'handleDmBan')
+      {
+        const dm = this.chatCrud.findDmByUsers(
+          user_id,
+          packet_data.targetedUserId
+        );
+        
+        return (
+        (await this.chatCrud.checkUserInDm(
+          user_id,
+          (await dm).id,
+        )) != null
+        );
+      }
+  }
 }
+
+
+
 
 @Injectable()
 export class bannedConversationGuard implements CanActivate {
@@ -223,16 +267,35 @@ export class bannedConversationGuard implements CanActivate {
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const packet_data = context.switchToWs().getData();
+    const user_id = extractUserIdFromCookies(context.switchToWs().getClient());
     if (context.getClass() == dmGateway) {
       const dm_data = await this.chatCrud.findDmById(packet_data.dm_id);
       return dm_data.status == 'ALLOWED';
     } else {
       const memeberShip = await this.chatCrud.getMemeberShip(
-        packet_data.channel_id,
-        packet_data.user_id,
+        user_id,
+        packet_data.channel_id
       );
       return memeberShip?.is_banned != false;
     }
   }
 }
-import { channelGateway } from '../services/channel-service/channel.gateway';
+
+@Injectable()
+export class muteConversationGuard implements CanActivate {
+  constructor(private readonly chatCrud: ChatCrudService) {}
+
+  async canActivate(context: ExecutionContext): Promise<boolean> {
+    const packet_data = context.switchToWs().getData();
+    const user_id = extractUserIdFromCookies(context.switchToWs().getClient());
+    if (context.getClass() == channelGateway) {
+      const memeberShip = await this.chatCrud.getMemeberShip(
+        user_id,
+        packet_data.channel_id
+      );
+      return memeberShip?.is_muted != false;
+    }
+  }
+}
+import { channelGateway } from '../services/channel-service/channel.gateway';import { Socket } from 'socket.io';
+
