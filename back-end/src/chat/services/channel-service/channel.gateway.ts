@@ -52,8 +52,8 @@ import { subscribe } from "diagnostics_channel";
     //     await this.chatCrud.changeChannelPhoto (updatePic.channel_id, updatePic.image)
     // }
 
-    // @Roles (Role.OWNER)
-    // @UseGuards(channelPermission)
+    @Roles (Role.OWNER)
+    @UseGuards(channelPermission)
     @SubscribeMessage('updateChannelType')
     async changeChannelType (client :Socket, updateType : UpdateChannelDto)
     {
@@ -61,13 +61,6 @@ import { subscribe } from "diagnostics_channel";
       await this.chatCrud.changeChannelType (updateType.channel_id, updateType.type, updateType.new_password)
     }
 
-    // @SubscribeMessage('updateChannelName')
-    // @Roles (Role.OWNER, Role.ADMIN)
-    // @UseGuards(channelPermission)
-    // async changeChannelName (client :Socket, updateType : UpdateChannelDto)
-    // {
-    //     await this.chatCrud.changeChannelName (updateType.channel_id, updateType.name)
-    // }
 
     
     // @SubscribeMessage('joinSignal')
@@ -105,6 +98,9 @@ import { subscribe } from "diagnostics_channel";
       this.broadcastChannelChanges(channel_id)
       }      
 
+
+    @Roles (Role.OWNER, Role.ADMIN)
+    @UseGuards(channelPermission)  
     @SubscribeMessage ("channelUserBan")
     async handleChannelBan(client: any,  banSignal:UserBanMuteSignalDto ) 
     {
@@ -126,6 +122,7 @@ import { subscribe } from "diagnostics_channel";
         this.broadcastChannelChanges(banData.channel_id)
     }  
 
+    
     @SubscribeMessage ("channelUserUnBan")
     async handleChannelUnBan( client :Socket, unbanSignal:UserBanMuteSignalDto ) 
     {

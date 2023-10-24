@@ -11,6 +11,7 @@ import { DmService } from '../services/direct-messaging/dm.service';
 import { dmGateway } from '../services/direct-messaging/dm.gateway';
 import { Role } from '../enum/role.enum';
 import {
+  UserBanMuteSignalDto,
   banManageSignalDto,
   channelReqDto,
   kickSignalDto,
@@ -30,6 +31,7 @@ export class channelPermission implements CanActivate {
   constructor(
     private readonly reflect: Reflector,
     private readonly chatCrud: ChatCrudService,
+    private readonly userCrud: UserCrudService,
   ) {}
 
   canActivate(context: ExecutionContext): boolean | Promise<boolean> {
@@ -45,9 +47,9 @@ export class channelPermission implements CanActivate {
         return  this.verifyChangeChannelType(user_id, data, subscribedRoles);
 
       if (context.getHandler().name == 'handleChannelBan')
-        return this.verifyBanData(data, subscribedRoles);
-      // if (context.getHandler().name == 'handleChannelKicks')
-      //   return this.verifyKickData(data, subscribedRoles);
+        return this.verifyBanPermission(user_id, data, subscribedRoles);
+      if (context.getHandler().name == 'channelUserUnBan')
+        return this.verifyKickData(data, subscribedRoles);
     }
     return false;
   }
@@ -73,23 +75,24 @@ export class channelPermission implements CanActivate {
   //   return false;
   // }
 
-  async verifyBanData(
-    update: banManageSignalDto,
+  async verifyBanPermission(
+    user_id: string,
+    update: UserBanMuteSignalDto,
     subscribedRoles: Role[],
   ): Promise<boolean> {
     const targetedMember = await this.chatCrud.getMemeberShip(
-      update.user_id,
+      await this.userCrud.findUserByUsername(update.target_username),
       update.channel_id,
     );
     const memberToAct = await this.chatCrud.getMemeberShip(
-      update.banner_id,
+      user_id,
       update.channel_id,
     );
     if (!targetedMember || !memberToAct) return false;
+    if (!memberToAct.is_banned || !targetedMember.is_banned) return false;
     if (
       subscribedRoles.some((role) => memberToAct.role.includes(role)) &&
-      !subscribedRoles.some((role) => targetedMember.role.includes(role))
-    )
+      targetedMember.role != 'OWNER')
       return true;
     return false;
   }
@@ -298,4 +301,5 @@ export class muteConversationGuard implements CanActivate {
   }
 }
 import { channelGateway } from '../services/channel-service/channel.gateway';import { Socket } from 'socket.io';
+import { User } from '@prisma/client';
 
