@@ -1,8 +1,11 @@
-import React, { useContext, useState } from "react";
+"use client";
+import React, { useContext, useEffect, useState } from "react";
 import "../../styles/TailwindRef.css";
 import { Space_Mono } from "next/font/google";
 import { Press_Start_2P } from "next/font/google";
 import GameContext from "./GameContext";
+import Cookies from "js-cookie";
+import axios from "axios";
 
 const mono = Space_Mono({
   subsets: ["latin"],
@@ -21,6 +24,27 @@ function GameSettingsModel({ ...props }) {
   const [speed, setSpeed] = useState("");
   const [Roll, setRoll] = useState("");
   const [Error, setError] = useState("");
+  const jwtToken = Cookies.get("access_token");
+  const [User, setUser] = useState<any>({});
+
+  useEffect(() => {
+    async function getUserData() {
+      try {
+        const response = await axios.get(
+          `${process.env.NEXT_PUBLIC_BACKEND_SERV}/auth/user`,
+          {
+            headers: {
+              Authorization: `Bearer ${jwtToken}`,
+            },
+          }
+        );
+        setUser(response.data);
+      } catch (error) {
+        console.log(error);
+      }
+    }
+    getUserData();
+  }, [jwtToken]);
 
   const slow =
     speed === "slow" ? "cursor-pointer bg-[#E4E7FF] text-[#0D0149]" : "";
@@ -48,16 +72,24 @@ function GameSettingsModel({ ...props }) {
       context.GameSettings.GameSpeed != "" &&
       context.GameSettings.Oponent != null
     ) {
-      console.log("in this case I will send to the invite endpoint data\n");
+      context.newSocket.emit("GameInvitation", {
+        invitor_id: User.id,
+        invitee_id: context.GameSettings.Oponent,
+        mapType: context.GameSettings.GameTheme,
+        speed: context.GameSettings.GameSpeed,
+      });
     } else if (
       context.GameSettings.GameMode === "Matchmaking" &&
       context.GameSettings.GameTheme != "" &&
       context.GameSettings.GameSpeed != "" &&
       context.GameSettings.Roll != null
     ) {
-      console.log(
-        "in this case I will send to the matchmaking  endpoint data\n"
-      );
+      context.gameSocket.emit('matchMaking', {
+        mapType: context.GameSettings.GameTheme,
+        speed: context.GameSettings.GameSpeed,
+        role: context.GameSettings.Roll,
+      }, (res : any) => console.log(res))
+      
     } else {
       setError("Please finish setuping your data!");
       setTimeout(() => {

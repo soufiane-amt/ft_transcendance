@@ -6,8 +6,7 @@ import React, { useState, createContext, useEffect } from "react";
 import GameContext from "@/components/game/GameContext";
 import GameDashboard from "@/components/game/GameDashboard";
 import { io, Socket } from "socket.io-client";
-import Cookies from "js-cookie";
-
+import newSocket from "@/components/GlobalComponents/Socket/socket";
 
 export interface GameSettingsInterface {
   GameMode: string;
@@ -28,8 +27,7 @@ export default function Game() {
     Oponent: null,
     Roll: null,
   });
-  const [gameSocket, setGameSocket] = useState<null | Socket>(null)
-
+  const [gameSocket, setGameSocket] = useState<null | Socket>(null);
 
   useEffect(() => {
     if (gameSocket === null) {
@@ -42,7 +40,7 @@ export default function Game() {
         setGameSocket(null);
       }
     }
-  }, [GameSettings]);
+  }, []);
 
   return (
     <Structure>
@@ -54,11 +52,16 @@ export default function Game() {
           SetGameDashboardBool,
           GameSettings,
           setGameSettings,
-          gameSocket
+          gameSocket,
+          newSocket,
         }}
       >
-        {GameLandingPageBool === true && GameDashboardBool === false && <GameLandingPage />}
-        {GameDashboardBool === true && GameLandingPageBool === false && <GameDashboard />}
+        {GameLandingPageBool === true && GameDashboardBool === false && (
+          <GameLandingPage />
+        )}
+        {GameDashboardBool === true && GameLandingPageBool === false && (
+          <GameDashboard />
+        )}
       </GameContext.Provider>
     </Structure>
   );

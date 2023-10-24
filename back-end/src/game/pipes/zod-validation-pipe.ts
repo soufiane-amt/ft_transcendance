@@ -3,15 +3,17 @@ import { WsException } from '@nestjs/websockets';
 import { ZodObject } from 'zod';
 import MatchMakingDto from '../dto/MatchMaking.dto';
 import LeaveQueueDto from '../dto/LeaveQueue.dto';
+import GameInvitationDto from '../dto/GameInvitation.dto';
+import GameInvitationResponseDto from '../dto/GameInvitationResponse.dto';
+import JoinGameDto from '../dto/JoinGame.dto';
 
 @Injectable()
 export class ZodValidationPipe implements PipeTransform {
   constructor(private schema: ZodObject<any>) {}
 
-  transform(value: string, metadata: ArgumentMetadata): MatchMakingDto | LeaveQueueDto {
+  transform(value: any, metadata: ArgumentMetadata): MatchMakingDto | LeaveQueueDto {
     try {
-      let pl: MatchMakingDto | LeaveQueueDto = JSON.parse(value);
-      pl = this.schema.parse(pl);
+      const pl: MatchMakingDto | LeaveQueueDto | GameInvitationDto | GameInvitationResponseDto | JoinGameDto = this.schema.parse(value);
       return pl;
     } catch (error) {
       throw new WsException('Validation failed');
