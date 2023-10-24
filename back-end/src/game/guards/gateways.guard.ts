@@ -26,7 +26,7 @@ export class GatewaysGuard implements CanActivate {
   }
 
   static validateJwt(client: Socket): string {
-    const token: string = client.handshake.headers.authorization;
+    const token: string = (client.handshake.query.token as string).split(' ')[1];
     const payload: any = verify(token, process.env.JWT_SECRET);
     return payload.userId;
   }
