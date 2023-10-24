@@ -5,6 +5,8 @@ import GameLandingPage from "@/components/game/GameLandingPage";
 import React, { useState, createContext, useEffect } from "react";
 import GameContext from "@/components/game/GameContext";
 import GameDashboard from "@/components/game/GameDashboard";
+import { io, Socket } from "socket.io-client";
+import Cookies from "js-cookie";
 
 
 export interface GameSettingsInterface {
@@ -26,10 +28,20 @@ export default function Game() {
     Oponent: null,
     Roll: null,
   });
+  const [gameSocket, setGameSocket] = useState<null | Socket>(null)
 
 
   useEffect(() => {
-    console.log(GameSettings);
+    if (gameSocket === null) {
+      const socket: Socket = io(`${process.env.NEXT_PUBLIC_BACKEND_SERV}/Game`);
+      setGameSocket(socket);
+    }
+    return () => {
+      if (gameSocket !== null) {
+        gameSocket.close();
+        setGameSocket(null);
+      }
+    }
   }, [GameSettings]);
 
   return (
@@ -42,6 +54,7 @@ export default function Game() {
           SetGameDashboardBool,
           GameSettings,
           setGameSettings,
+          gameSocket
         }}
       >
         {GameLandingPageBool === true && GameDashboardBool === false && <GameLandingPage />}
