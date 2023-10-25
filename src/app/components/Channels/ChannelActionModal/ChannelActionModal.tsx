@@ -62,15 +62,22 @@ interface ChannelActionModalProps {
   handleVisibility: (parm: boolean) => void, 
 }
 const ChannelActionModal = ({selectedDiscussionId, channelData, handleVisibility}:ChannelActionModalProps)=>{
+  const currentUser = useSessionUser();
   const ref = useOutsideClick(handleVisibility);
   const currentUserGrade = getUserRole(useSessionUser().id, channelData) 
+  const checkUserBan = () => {
+    return (channelData?.channelBans.find((user) => user === currentUser.id) != null);
+  }
   return (
     <div ref={ref} className={style.modal}>
       <Tabs>
-          <TabInfo att={"Show users"}>
-
-            <ModerationToolBox selectedChannel={selectedDiscussionId} channelData={channelData} />
-          </TabInfo>
+          {
+            //Check if user is banned from channel
+            !checkUserBan() &&
+            <TabInfo att={"Show users"}>
+              <ModerationToolBox selectedChannel={selectedDiscussionId} channelData={channelData} />
+            </TabInfo>
+          }
           {
             currentUserGrade === 'Owner' && 
             <TabInfo att={"Channel settings"}>

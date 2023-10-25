@@ -5,6 +5,7 @@ import { useSessionUser } from "../../../context/SessionUserContext";
 import { RadioOptions } from "../../shared/RadioOptions/RadioOptions";
 import { ConfirmationDialog } from "../../shared/ConfirmationDialog/ConfirmationDialog";
 import socket from "../../../socket/socket";
+import { findBannedRoomContext } from "../../../context/BanContext";
 
 const data = {
   src: "/images/avatar.png",
@@ -177,7 +178,7 @@ function renderModerationActions(
   const actionData = {targeted_user: targetedUser.username, channel_id: selectedChannel};
   if (currentUser.username === targetedUser.username) return actions;
   const userKey = `user_${targetedUser.username}_${selectedChannel}`;
-  if (sessionUserModeratType !== 'Member') {
+  if (sessionUserModeratType !== 'Member' && findBannedRoomContext(selectedChannel) == null) {
     if (sessionUserModeratType === 'Owner')
     {
       if (targetedUser.role ===  'Admin')
