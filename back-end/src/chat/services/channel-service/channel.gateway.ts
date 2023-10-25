@@ -173,6 +173,9 @@ import { subscribe } from "diagnostics_channel";
       client.leave (`channel-${channel_id}`)
     }
 
+    @UseGuards(bannedConversationGuard)
+    @UseGuards(muteConversationGuard)
+    @UseGuards (userRoomSubscriptionGuard)  
     @SubscribeMessage ("resumeChannelUpdates") //A gard must be added to check if the user has the right to request to unmute him
     async handleResumeChannelUpdates (client: any, channel_id:string)
     {
@@ -180,8 +183,8 @@ import { subscribe } from "diagnostics_channel";
     }
 
 
-    // @Roles (Role.OWNER, Role.ADMIN)
-    // @UseGuards(channelPermission)
+    @Roles (Role.OWNER)
+    @UseGuards(channelPermission)
     @SubscribeMessage('upgradeMemberToAdmin')
     async upgradeUserToAdmin (client :Socket, upgradeSignal : UserRoleSignal)
     {
@@ -189,6 +192,9 @@ import { subscribe } from "diagnostics_channel";
       await this.chatCrud.upgradeToAdmin (targeted_user_id, upgradeSignal.channel_id)
       this.broadcastChannelChanges(upgradeSignal.channel_id)
     }
+
+    @Roles (Role.OWNER)
+    @UseGuards(channelPermission)
     @SubscribeMessage('setAdminToMember')
     async upgradeAdminToUser (client :Socket, upgradeSignal : UserRoleSignal)
     {
@@ -197,8 +203,8 @@ import { subscribe } from "diagnostics_channel";
       this.broadcastChannelChanges(upgradeSignal.channel_id)
     }
 
-    // @UseGuards(allowJoinGuard) 
-    // @Roles (Role.OWNER, Role.ADMIN)
+    @Roles (Role.OWNER, Role.ADMIN)
+    @UseGuards(channelPermission)
     @SubscribeMessage ("kickOutUser")
     async handleChannelKicks(client: any,  kickSignal:kickSignalDto ) 
     { 
@@ -218,6 +224,8 @@ import { subscribe } from "diagnostics_channel";
       client.leave (`channel-${channel_id}`)                              //Deleting the user from the websocket room
     }  
 
+    @Roles (Role.OWNER)
+    @UseGuards(channelPermission)
     @SubscribeMessage ("setOwner")
     async handleGradeUserTOwner(client: any,  setOwnerSignal : setOwnerSignalDto  ) 
     {

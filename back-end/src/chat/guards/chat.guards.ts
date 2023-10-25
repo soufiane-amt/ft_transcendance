@@ -15,8 +15,9 @@ import {
   banManageSignalDto,
   channelReqDto,
   kickSignalDto,
+  setOwnerSignalDto,
 } from '../dto/chat.dto';
-import { UpdateChannelDto } from '../dto/update-chat.dto';
+import { UpdateChannelDto, UserRoleSignal } from '../dto/update-chat.dto';
 import * as cookie from "cookie";
 
 
@@ -43,13 +44,19 @@ export class channelPermission implements CanActivate {
     if (!subscribedRoles) return true;
     if (context.getType() == 'ws') {
       const data = context.switchToWs().getData();
-      if ( context.getHandler().name == 'changeChannelType')
+      if ( context.getHandler().name === 'changeChannelType')
         return  this.verifyChangeChannelType(user_id, data, subscribedRoles);
-
-      if (context.getHandler().name == 'handleChannelBan')
-        return this.verifyBanPermission(user_id, data, subscribedRoles);
-      if (context.getHandler().name == 'channelUserUnBan')
-        return this.verifyKickData(data, subscribedRoles);
+      if (context.getHandler().name === 'handleChannelBan')
+        return this.verifyMuteBanPermission(user_id, data, subscribedRoles);
+      if (context.getHandler().name === 'handleChannelUnBan' || context.getHandler().name === 'handleChannelUnMute')
+        return this.verifyUnBanUnMutePermission(user_id, data, subscribedRoles);
+      if (context.getHandler().name === 'upgradeUserToAdmin' ||
+            context.getHandler().name === 'upgradeAdminToUser')
+        return this.verifyGradeUpdatePermission(user_id, data, subscribedRoles);
+      if (context.getHandler().name === 'handleChannelKicks')
+        return this.verifyPermissionToKickUser(user_id, data, subscribedRoles);
+      if (context.getHandler().name === 'handleGradeUserTOwner')
+        return this.verifyPermissionGradeUserTOwner(user_id, data, subscribedRoles);
     }
     return false;
   }
@@ -75,7 +82,29 @@ export class channelPermission implements CanActivate {
   //   return false;
   // }
 
-  async verifyBanPermission(
+    async verifyMuteBanPermission(
+      user_id: string,
+      update: UserBanMuteSignalDto,
+      subscribedRoles: Role[],
+    ): Promise<boolean> {
+      const targetedMember = await this.chatCrud.getMemeberShip(
+      await this.userCrud.findUserByUsername(update.target_username),
+      update.channel_id,
+    );
+    const memberToAct = await this.chatCrud.getMemeberShip(
+      user_id,
+      update.channel_id,
+    );
+    if (!targetedMember || !memberToAct) return false;
+    if (memberToAct.is_banned || targetedMember.is_banned || targetedMember.is_muted) return false;
+    if (
+      subscribedRoles.some((role) => memberToAct.role.includes(role)) &&
+      targetedMember.role != 'OWNER')
+      return true;
+    return false;
+  }
+
+  async verifyUnBanUnMutePermission(
     user_id: string,
     update: UserBanMuteSignalDto,
     subscribedRoles: Role[],
@@ -89,7 +118,7 @@ export class channelPermission implements CanActivate {
       update.channel_id,
     );
     if (!targetedMember || !memberToAct) return false;
-    if (!memberToAct.is_banned || !targetedMember.is_banned) return false;
+    if (memberToAct.is_banned ) return false;
     if (
       subscribedRoles.some((role) => memberToAct.role.includes(role)) &&
       targetedMember.role != 'OWNER')
@@ -111,7 +140,60 @@ export class channelPermission implements CanActivate {
       return true;
     return false;
   }
+
+  async verifyGradeUpdatePermission (
+    user_id: string,
+    updateChannel: UserRoleSignal,
+    subscribedRoles: Role[],
+  )
+  {
+    const membership = await this.chatCrud.getMemeberShip(
+      user_id,
+      updateChannel.channel_id,
+    );
+    if (!membership) return false;
+    if (subscribedRoles.some((role) => membership.role.includes(role)))
+      return true;
+    return false;
+  }  
+  
+  async verifyPermissionToKickUser (
+    user_id: string,
+    kickAction: kickSignalDto,
+    subscribedRoles: Role[],
+  )
+  {
+    const membership = await this.chatCrud.getMemeberShip(
+      user_id,
+      kickAction.channel_id,
+    );
+    if (!membership) return false;
+    if (subscribedRoles.some((role) => membership.role.includes(role)))
+      return true;
+    return false;
+  }
+
+  async verifyPermissionGradeUserTOwner (
+    user_id: string,
+    signal: setOwnerSignalDto,
+    subscribedRoles: Role[],
+  )
+  {
+    const membership = await this.chatCrud.getMemeberShip(
+      await this.userCrud.findUserByUsername(signal.targeted_username),
+      signal.channel_id,
+    );
+    if (!membership) return false;
+    if (subscribedRoles.some((role) => membership.role.includes(role)))
+      return true;
+    return false;
+  }
 }
+
+
+
+
+
 
 @Injectable()
 export class allowJoinGuard implements CanActivate {
@@ -296,7 +378,24 @@ export class muteConversationGuard implements CanActivate {
         user_id,
         packet_data.channel_id
       );
-      return memeberShip?.is_muted != false;
+      return memeberShip?.is_muted == false;
+    }
+  }
+}
+
+@Injectable()
+export class userCanBeIntegratedInConversation implements CanActivate {
+  constructor(private readonly chatCrud: ChatCrudService) {}
+
+  async canActivate(context: ExecutionContext): Promise<boolean> {
+    const packet_data = context.switchToWs().getData();
+    const user_id = extractUserIdFromCookies(context.switchToWs().getClient());
+    if (context.getClass() == channelGateway) {
+      const memeberShip = await this.chatCrud.getMemeberShip(
+        user_id,
+        packet_data.channel_id
+      );
+      return memeberShip?.is_muted == false;
     }
   }
 }
