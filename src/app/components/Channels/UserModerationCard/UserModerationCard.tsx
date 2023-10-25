@@ -125,8 +125,6 @@ function ModerationAction({actionData,  actionType }: ModerationActionProps) {
     handleButtonToggle();
   }
 
-  const hello = (option: string)=>{ alert(option)}
-
   const handleClickButton = () => {
     if (currentActionType === ActionType.BAN || currentActionType === ActionType.MUTE)
       setShowRadioOptions(true);
@@ -164,47 +162,47 @@ interface UserModerationCardProps {
 }
 
 // Helper function to determine if user is not the owner
-function isOwner(data: MemberType) {
-  return data.role === "Owner";
+function isOwner(targetedUser: MemberType) {
+  return targetedUser.role === "Owner";
 }
 
 // Helper function to render moderation actions
 function renderModerationActions(
   selectedChannel: string,
-  data: MemberType,
+  targetedUser: MemberType,
   currentUser: any,
   sessionUserModeratType: string
 ) {
   const actions: ReactNode[] = [];
-  const actionData = {targeted_user: data.username, channel_id: selectedChannel};
-  if (currentUser.username === data.username) return actions;
-  const userKey = `user_${data.username}_${selectedChannel}`;
+  const actionData = {targeted_user: targetedUser.username, channel_id: selectedChannel};
+  if (currentUser.username === targetedUser.username) return actions;
+  const userKey = `user_${targetedUser.username}_${selectedChannel}`;
   if (sessionUserModeratType !== 'Member') {
     if (sessionUserModeratType === 'Owner')
     {
-      if (data.role ===  'Admin')
+      if (targetedUser.role ===  'Admin')
       actions.push(
         <ModerationAction key={userKey+"setUser"} actionData={actionData}  actionType={ActionType.SETUSER} />
       );
-      else if (data.role ===  'Member')
+      else if (targetedUser.role ===  'Member')
       actions.push(
         <ModerationAction key={userKey+"setAdmin"} actionData={actionData}  actionType={ActionType.SETADMIN} />
       );
     }
 
-    if (!isOwner(data)) {
-      if (data.isBanned)
+    if (!isOwner(targetedUser)) {
+      if (targetedUser.isBanned)
         actions.push(
           <ModerationAction key={userKey+"unban"} actionData={actionData}  actionType={ActionType.UNBAN} />
         );
-      else
+      else if (!targetedUser.isMuted)
         actions.push(<ModerationAction  key={userKey+"ban"} actionData={actionData}   actionType={ActionType.BAN} />);
       
-      if (data.isMuted)
+      if (targetedUser.isMuted)
         actions.push(
           <ModerationAction  key={userKey+"unmute"} actionData={actionData}   actionType={ActionType.UNMUTE} />
         );
-      else
+      else if  (!targetedUser.isBanned)
         actions.push(
           <ModerationAction  key={userKey+"mute"} actionData={actionData}   actionType={ActionType.MUTE} />
         );
@@ -221,26 +219,26 @@ function renderModerationActions(
 interface UserModerationCardProps {
   selectedChannel: string;
   currentUserIsModerator: string;
-  data: MemberType;
+  targetedUser: MemberType;
 }
 export function UserModerationCard({
   selectedChannel,
   currentUserIsModerator,
-  data,
+  targetedUser,
 }: UserModerationCardProps) {
   const currentUser = useSessionUser();
 
   return (
     <div className={style.moderation_card}>
       <div className={style.user_info}>
-        <Avatar src={data.src} avatarToRight={false} />
+        <Avatar src={targetedUser?.src} avatarToRight={false} />
         <div>
-          <h3>{data.username}</h3>
-          <h5>{data.role}</h5>
+          <h3>{targetedUser.username}</h3>
+          <h5>{targetedUser.role}</h5>
         </div>
       </div>
       <div className={style.action_buttons}>
-        {renderModerationActions(selectedChannel, data, currentUser, currentUserIsModerator)}
+        {renderModerationActions(selectedChannel, targetedUser, currentUser, currentUserIsModerator)}
       </div>
     </div>
   );

@@ -48,7 +48,7 @@ export function ModerationToolBox ({selectedChannel, channelData}:ModerationTool
                                 key={cardKey}
                                  selectedChannel={selectedChannel}
                                  currentUserIsModerator={currentUserIsModerator}
-                                 data={{
+                                 targetedUser={{
                                  src:userData?.avatar,
                                  username:userData?.username,
                                  role:userRole,

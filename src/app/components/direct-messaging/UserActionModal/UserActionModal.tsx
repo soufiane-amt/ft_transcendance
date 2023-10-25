@@ -13,6 +13,7 @@ import {
 import { useOutsideClick } from "../../../../../hooks/useOutsideClick";
 import ChannelActionModal from "../../Channels/ChannelActionModal/ChannelActionModal";
 import { ChannelSetting } from "../../Channels/ChannelSetting/ChannelSetting";
+import { ChannelData } from "../../../interfaces/ChannelData";
 
 
 
