@@ -9,13 +9,26 @@
     width: 0; /* Adjust the width as needed */
   }
 
+  .discussions_bar_swither
+  {
+    width: 20px;
+    background-color:var(--discussion_panel_back_color);
+    border: 0;
+    cursor: pointer;
+    font-size: larger;
+    font-weight: bolder;
+    color: white;
+  }
+
+  .discussions_bar_swither:hover
+  {
+    background-color: rgb(123, 123, 255);
+  }
 
   @media (max-width:650px) 
   {
     .discussion_panel_bar {
-      width: 50%;
-      /* overflow-y: auto; */
-      background-color: var(--discussion_panel_back_color);
+      width: 300vw;
     }
   
   }

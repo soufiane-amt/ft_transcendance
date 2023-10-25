@@ -16,4 +16,9 @@
     color: rgb(255, 255, 255);
   }
   
-  
+  @media (max-width:650px) 
+{
+  .time_stamp {
+    display: none;
+  }
+}

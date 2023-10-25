@@ -24,6 +24,11 @@ function ChannelsMain() {
     const selectDiscussion = (e : discussionPanelSelectType) => {
       setSelectedDiscussion(e);
     };
+
+    const [openBar, setOpenBar] = useState(true);
+    const handleOpenBar = () => {
+      setOpenBar(!openBar);
+    }
     const selectState = {
       selectedDiscussion,
       selectDiscussion,
@@ -34,13 +39,18 @@ function ChannelsMain() {
           <BanProvider currentRoute="Channels">
               <MuteProvider currentRoute="Channels">
                 <div className={style.channel_main}>
-                  <DiscussionsBar
-                    selectedDiscussionState={selectState}
-                    currentRoute={"Channels"}
-                    />
-                  <ChattingField
-                    selectDiscussionState={selectState}
-                  />
+                      <DiscussionsBar
+                        openBarState={{openBar, handleOpenBar}}
+                        selectedDiscussionState={selectState}
+                        currentRoute={"Channels"}
+                        />
+                  {
+                     (
+                    <ChattingField
+                      selectDiscussionState={selectState}
+                    />)
+
+                  }
                 </div>
               </MuteProvider>
             </BanProvider>

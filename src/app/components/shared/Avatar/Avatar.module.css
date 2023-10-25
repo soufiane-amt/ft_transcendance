@@ -20,6 +20,9 @@
   }
   
 
-  @media (max-width:650px) 
+  /* @media (max-width:650px) 
 {
-}
+  .avatar__style {
+    display: none;
+  }
+} */

@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { DiscussionDto, MinMessageDto, discussionPanelSelectType } from "../../../interfaces/DiscussionPanel";
 import style from "./DiscussionsBar.module.css";
 import { fetchDataFromApi } from "../../shared/customFetch/exmple";
@@ -10,6 +10,12 @@ import socket from "../../../socket/socket";
 import { ChannelData } from "../../../interfaces/ChannelData";
 
 interface DiscussionsBarProps {
+  openBarState: 
+  {
+    openBar : boolean, 
+    handleOpenBar :() => void, 
+  }
+  ,
     selectedDiscussionState:{
       selectedDiscussion : discussionPanelSelectType,
       selectDiscussion : (e: discussionPanelSelectType) => void
@@ -18,12 +24,12 @@ interface DiscussionsBarProps {
 }
   
 
-export function DiscussionsBar({ selectedDiscussionState, currentRoute }: DiscussionsBarProps) {
+export function DiscussionsBar({openBarState,  selectedDiscussionState, currentRoute }: DiscussionsBarProps) {
     const [discussionPanels, setDiscussionRooms] = useState<DiscussionDto[]>([]);
     const [modalIsVisible, setModalAsVisible] = useState<boolean>(false);
     const {selectedDiscussion, selectDiscussion} = selectedDiscussionState;
     const [channelData, setChannelData] = useState< Map<string, ChannelData>>(new Map());
-
+    const {openBar, handleOpenBar} = openBarState;
 
     useEffect(() => {
       async function fetchDataAsync() {
@@ -87,6 +93,8 @@ export function DiscussionsBar({ selectedDiscussionState, currentRoute }: Discus
        
     const displayActionModal = () => setModalAsVisible(true);
     return (
+      <>
+      {openBar &&
       <ul className={style.discussion_panel_bar}>
         {discussionPanels.map((panelElement) => {
           const isSelected = panelElement?.id === selectedDiscussion.id;
@@ -114,7 +122,9 @@ export function DiscussionsBar({ selectedDiscussionState, currentRoute }: Discus
               modalState={[modalIsVisible, setModalAsVisible]}
               ActionContext={currentRoute}
               />)}
-          </ul>
+          </ul>}
+          <button className={style.discussions_bar_swither} onClick={handleOpenBar}>{openBar === true ? '<' : '>'}</button>
+          </>
     );
   }
  

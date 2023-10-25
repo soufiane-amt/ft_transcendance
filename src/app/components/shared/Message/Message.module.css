@@ -82,3 +82,17 @@
   margin-left: auto;
   text-align: right;
 }
+
+
+
+@media (max-width:650px) 
+{
+  .message_bubble {
+    font-size: smaller;
+      padding: 5px 25px;
+
+  }
+  .message_username__style {
+    font-size: small;
+  }
+}

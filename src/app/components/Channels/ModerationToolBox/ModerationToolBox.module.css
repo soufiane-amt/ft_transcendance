@@ -7,7 +7,7 @@
 .user_moderation_part{
     display: flex;
     flex-direction: column; 
-    justify-content: space-evenly;
+    justify-content: space-between;
     height: 85%;
 }
 
@@ -29,7 +29,7 @@
 .user_addition{
     display: flex;
     justify-content:space-around;
-    margin-bottom: 50px;
+    /* margin-bottom: 50px; */
 
 }
 
