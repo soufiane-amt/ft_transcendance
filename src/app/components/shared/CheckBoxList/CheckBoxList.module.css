@@ -39,3 +39,16 @@
   .checkbox_list p {
     font-weight: bold;
   }
+
+  @media (max-width:650px) 
+{
+    .checkbox_list{
+      width: 200px;
+      height: 250px;
+    }
+
+    
+  .checkbox_list p:first-child {
+    font-size: medium;
+  }
+}

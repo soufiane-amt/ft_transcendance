@@ -42,7 +42,7 @@ function CheckboxList({selectedDiscussion, confirmSelection, options }: Checkbox
       <p>Selected user: {selectedOption}</p>
       {selectedOption && 
       
-      <button onClick={handleSelect}>Confirm and Leave</button>
+        <button  onClick={handleSelect}>Confirm and Leave</button>
       }
     </div>
   );
