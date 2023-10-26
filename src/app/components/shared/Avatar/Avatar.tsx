@@ -5,8 +5,7 @@ import Image from 'next/image';
 interface AvatarProps {
   src: string;
   avatarToRight : boolean;
-  status?: 'online' | 'offline'; // Optional status prop for user avatars
-  channelType?: 'public' | 'private' | 'announcement'; // Type prop to specify channel type
+  channelType?: string | undefined; // Type prop to specify channel type
 }
 
 const Avatar: React.FC<AvatarProps> = ({ src, avatarToRight, channelType }) => {
@@ -25,7 +24,7 @@ const Avatar: React.FC<AvatarProps> = ({ src, avatarToRight, channelType }) => {
         />
       {channelType && (
         <div className={style.channelTypeIndicator}>
-          {channelType === 'public' ? '🌐' : channelType === 'private' ? '🔒' : '🔑'}
+          {channelType === 'PUBLIC' ? '🌐' : channelType === 'PRIVATE' ? '🔒' : '🔑'}
         </div>
       )}
     </div>

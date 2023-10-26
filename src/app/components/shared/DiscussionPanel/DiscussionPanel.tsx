@@ -25,6 +25,7 @@ const findDiscussions = (
     return {
       name: discussion_data.name,
       avatar: discussion_data.avatar,
+      type: discussion_data.type,
     };
   }
 };
@@ -75,7 +76,7 @@ function DiscussionPanel({
           className={`${style.discussion_panel} ${panelThemeClass} `}
           onClick={handleDiscussionPanelClick}
         >
-          <Avatar src={panel.avatar} avatarToRight={false} />
+          <Avatar src={panel.avatar} avatarToRight={false} channelType={panel.type} />
 
           <div className={style.panel_central_part}>
             <h3>{panel.name}</h3>

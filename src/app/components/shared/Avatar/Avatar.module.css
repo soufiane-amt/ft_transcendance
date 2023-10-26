@@ -19,7 +19,11 @@
     order: 2;
   }
   
-
+  .channelTypeIndicator{
+    position: absolute;
+    bottom: 0;
+    right: 0;
+  }
   /* @media (max-width:650px) 
 {
   .avatar__style {
