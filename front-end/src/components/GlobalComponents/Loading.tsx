@@ -4,7 +4,7 @@ import LoadingAnimation from "../../../public/LoadingAnimation.json";
 
 export default function Loading() {
   return (
-    <div className="loading">
+    <div className="loading w-[100vw] h-[100vh] overflow-hidden">
       <Lottie
         loop
         animationData={LoadingAnimation}
