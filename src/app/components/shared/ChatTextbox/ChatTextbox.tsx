@@ -63,7 +63,7 @@ function ChatTextBox({
   if (!selectedDiscussion.id ) return null;
 
   return (
-    <div className={`${style.message_bar} ${style.middlePos}`}>
+    <div className={`${style.message_bar} `}>
       {isChatTextBoxDisabled ? (
         <div className={style.banned_message}>
           You can't message this person anymore.

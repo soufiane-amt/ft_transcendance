@@ -76,7 +76,7 @@
 }
 
 
-/* @media (max-width:600px) 
+ @media (max-width:600px) 
 {
     .panel_last_message {
         display: none;
@@ -88,7 +88,7 @@
         margin-bottom: 20px;
       }
 }
-
+/*
 @media (max-width:478px) 
 {
     .discussion_panel {

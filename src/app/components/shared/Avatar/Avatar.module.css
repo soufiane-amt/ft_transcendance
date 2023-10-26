@@ -24,9 +24,10 @@
     bottom: 0;
     right: 0;
   }
-  /* @media (max-width:650px) 
+  @media (max-width:650px) 
 {
-  .avatar__style {
-    display: none;
+  .avatar__dimentions {
+    height: 50px;
+    width: 50px;
   }
-} */
+}

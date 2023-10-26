@@ -8,6 +8,7 @@
     border: 1px solid black;
     position: absolute;
 }
+
 .confirmation_dialog h3{
     border-bottom: 1px solid red;
     font-size:medium;
@@ -34,4 +35,22 @@
 }
 .confirmation_dialog h3{
     margin-block: 5px;
+}
+
+
+@media (max-width:650px) 
+{
+    .confirmation_dialog{
+        width: 150px;
+        position: absolute;
+        right: 50px;
+    }
+    .confirmation_dialog h3{
+        font-size:small;
+    
+    }
+    .confirmation_buttons button {
+        font-size: small;
+
+    }
 }

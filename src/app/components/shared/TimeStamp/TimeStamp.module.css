@@ -16,7 +16,7 @@
     color: rgb(255, 255, 255);
   }
   
-  @media (max-width:650px) 
+  @media (max-width:1300px) 
 {
   .time_stamp {
     display: none;
