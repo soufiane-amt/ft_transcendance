@@ -152,9 +152,9 @@ export class GameService {
   }
 
   removePlayerFromTheQueue(role: string, player: Player) : void {
-    if (role === 'host') {
+    if (role.toLowerCase() === 'host') {
       this.hostPlayers = this.hostPlayers.filter((pl) => pl.player.id !== player.id);
-    } else {
+    } else if (role.toLowerCase() === 'guest') {
       this.guestPlayers = this.guestPlayers.filter((pl) => pl.player.id !== player.id);
     }
   }
