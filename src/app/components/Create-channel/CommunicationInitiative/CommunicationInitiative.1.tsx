@@ -1,11 +1,11 @@
-import style from './CommunicationInitiative.module.css';
+import style from './UserInitiativeTalk.module.css';
 
-export interface CommunicationInitiativeProps
+export interface UserInitiativeTalkProps
 {
     userData: {username : string, avatar : string},
 }
 
-export function CommunicationInitiative({ userData }: CommunicationInitiativeProps) {
+export function UserInitiativeTalk({ userData }: UserInitiativeTalkProps) {
     return (
         <div className={style.communication_initiative}>
             <div className={style.communication_initiative__user}>
