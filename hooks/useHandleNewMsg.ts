@@ -27,6 +27,4 @@ export function useHandleNewMsg(messagesHistoryState: any, selectedDiscussion:di
           socket.off("newMessage", handleNewMessage);
         };
       }, [selectedDiscussion]);
-
-
 }

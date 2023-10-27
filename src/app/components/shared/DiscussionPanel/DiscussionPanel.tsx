@@ -72,7 +72,6 @@ function DiscussionPanel({
     <>
       {panel && (
         <li
-          key={DiscussionPanel.id}
           className={`${style.discussion_panel} ${panelThemeClass} `}
           onClick={handleDiscussionPanelClick}
         >

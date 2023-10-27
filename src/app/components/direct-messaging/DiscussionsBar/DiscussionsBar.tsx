@@ -36,6 +36,7 @@ export function DiscussionsBar({openBarState,  selectedDiscussionState, currentR
         const fetchedData = await fetchDataFromApi(
           `http://localhost:3001/chat/${currentRoute}/discussionsBar`
           );
+          console.log('fetchedData:',fetchedData)
         if (currentRoute === "Direct_messaging")
           setDiscussionRooms(fetchedData);
         else 
@@ -93,10 +94,11 @@ export function DiscussionsBar({openBarState,  selectedDiscussionState, currentR
        
     const displayActionModal = () => setModalAsVisible(true);
     return (
-      <>
-      {openBar &&
+      // <>
+      // {openBar &&
       <ul className={style.discussion_panel_bar}>
         {discussionPanels.map((panelElement) => {
+          console.log('key', panelElement.id)
           const isSelected = panelElement?.id === selectedDiscussion.id;
           return (  
             <DiscussionPanel
@@ -122,9 +124,10 @@ export function DiscussionsBar({openBarState,  selectedDiscussionState, currentR
               modalState={[modalIsVisible, setModalAsVisible]}
               ActionContext={currentRoute}
               />)}
-          </ul>}
-          <button className={style.discussions_bar_swither} onClick={handleOpenBar}>{openBar === true ? '<' : '>'}</button>
-          </>
-    );
-  }
+          </ul>
+          // }
+          // </>
+          );
+        }
+        // {/* <button className={style.discussions_bar_swither} onClick={handleOpenBar}>{openBar === true ? '<' : '>'}</button> */}
  

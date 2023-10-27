@@ -159,7 +159,7 @@ function ModerationAction({actionData,  actionType }: ModerationActionProps) {
 
 
 interface UserModerationCardProps {
-  data: MemberType;
+  targetedUser: MemberType;
 }
 
 // Helper function to determine if user is not the owner

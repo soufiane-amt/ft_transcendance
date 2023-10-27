@@ -10,7 +10,7 @@ export function useHandlePanel(discussionPanels: DiscussionDto[],selectedDiscuss
 {
   const {selectedDiscussion, selectDiscussion} = selectedDiscussionState;
     useEffect(() => {
-        const handleNewMessage = (newMessage: messageDto) => {
+        const handleNewMessage = async (newMessage: messageDto) => {
           const updatedRooms = [...discussionPanels];
           const messageRoomId = newMessage.dm_id
             ? newMessage.dm_id
@@ -27,24 +27,31 @@ export function useHandlePanel(discussionPanels: DiscussionDto[],selectedDiscuss
             updatedRooms[indexToModify].last_message = messageContent;
             //incrementing unread messages
             updatedRooms[indexToModify].unread_messages += 1;
+            // console.log('updatedRoomsupdatedRooms:', updatedRooms);
     
             const movedElement = updatedRooms.splice(indexToModify, 1)[0];
     
             // Insert it at the beginning of the array
-            updatedRooms.unshift(movedElement);
-    
-            setDiscussionRooms(updatedRooms);
+            // updatedRooms.unshift(movedElement);
+            console.log('updatedRoomBefore:', [movedElement, ...updatedRooms]);
+            await setDiscussionRooms(() => [movedElement, ...updatedRooms]);
+            // await setDiscussionRooms(updatedRooms);
+            console.log('updatedRoomsAfter:', discussionPanels);
           }
         };
+
         const handleReadStatusTrack = (room: { _id: string }) => {
+          // console.log('updatedRoomsbef:', discussionPanels);
+
           const updatedRooms = [...discussionPanels];
           const indexToModify = updatedRooms.findIndex(
             (item) => item.id === room._id
           );
           if (indexToModify !== -1) {
             updatedRooms[indexToModify].unread_messages = 0;
-    
-            setDiscussionRooms(updatedRooms);
+
+            console.log('updatedRooms2:', updatedRooms);
+            // setDiscussionRooms(updatedRooms);
           }
         };
 

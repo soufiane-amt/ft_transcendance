@@ -22,6 +22,11 @@ function DirectMesgMain() {
     const selectDiscussion = (e : discussionPanelSelectType) => {
       setSelectedDiscussion(e);
     };
+    const [openBar, setOpenBar] = useState(true);
+    const handleOpenBar = () => {
+      setOpenBar(!openBar);
+    }
+
     const selectState = {
       selectedDiscussion,
       selectDiscussion,
@@ -31,6 +36,7 @@ function DirectMesgMain() {
       <BanProvider currentRoute="direct_messaging">
         <div className={style.direct_msg_main}>
           <DiscussionsBar
+            openBarState={{openBar, handleOpenBar}}
             selectedDiscussionState={selectState}
             currentRoute={"Direct_messaging"}
           />
