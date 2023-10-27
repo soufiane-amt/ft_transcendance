@@ -94,8 +94,8 @@ export function DiscussionsBar({openBarState,  selectedDiscussionState, currentR
        
     const displayActionModal = () => setModalAsVisible(true);
     return (
-      // <>
-      // {openBar &&
+      <>
+      {openBar &&
       <ul className={style.discussion_panel_bar}>
         {discussionPanels.map((panelElement) => {
           console.log('key', panelElement.id)
@@ -124,10 +124,9 @@ export function DiscussionsBar({openBarState,  selectedDiscussionState, currentR
               modalState={[modalIsVisible, setModalAsVisible]}
               ActionContext={currentRoute}
               />)}
-          </ul>
-          // }
-          // </>
+          </ul>}
+          <button className={style.discussions_bar_swither} onClick={handleOpenBar}>{openBar === true ? '<' : '>'}</button> 
+          </>
           );
         }
-        // {/* <button className={style.discussions_bar_swither} onClick={handleOpenBar}>{openBar === true ? '<' : '>'}</button> */}
  

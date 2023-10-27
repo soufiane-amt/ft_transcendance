@@ -27,21 +27,17 @@ export function useHandlePanel(discussionPanels: DiscussionDto[],selectedDiscuss
             updatedRooms[indexToModify].last_message = messageContent;
             //incrementing unread messages
             updatedRooms[indexToModify].unread_messages += 1;
-            // console.log('updatedRoomsupdatedRooms:', updatedRooms);
     
             const movedElement = updatedRooms.splice(indexToModify, 1)[0];
     
             // Insert it at the beginning of the array
             // updatedRooms.unshift(movedElement);
-            console.log('updatedRoomBefore:', [movedElement, ...updatedRooms]);
             await setDiscussionRooms(() => [movedElement, ...updatedRooms]);
             // await setDiscussionRooms(updatedRooms);
-            console.log('updatedRoomsAfter:', discussionPanels);
           }
         };
 
         const handleReadStatusTrack = (room: { _id: string }) => {
-          // console.log('updatedRoomsbef:', discussionPanels);
 
           const updatedRooms = [...discussionPanels];
           const indexToModify = updatedRooms.findIndex(
@@ -50,7 +46,6 @@ export function useHandlePanel(discussionPanels: DiscussionDto[],selectedDiscuss
           if (indexToModify !== -1) {
             updatedRooms[indexToModify].unread_messages = 0;
 
-            console.log('updatedRooms2:', updatedRooms);
             // setDiscussionRooms(updatedRooms);
           }
         };
