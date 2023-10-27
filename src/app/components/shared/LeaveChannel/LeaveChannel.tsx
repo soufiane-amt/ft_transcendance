@@ -29,7 +29,7 @@ export function LeaveChannel({selectedDiscussion, userGrade, channelUsers }: Lea
     <div className={style.channel_quitting_section}>
       <h3>This section provides a way to leave the channel.</h3>
       <button onClick={handleClickLeave}>Leave Channel</button>
-      {userGrade === 'Owner' && (
+      {userGrade === 'Owner' && ( channelUsers?.length !== 1) && (
         <>
             <h3>You can't leave the channel until you select your successor to be the channel Owner:</h3>
             <div >
