@@ -6,9 +6,34 @@
     width: 20vw;
 }
 
+.chat_space{
+    display: flex;
+    align-items: center;
+    margin-bottom: 60px;
+}
+
+.chat_space__icon img{
+    width: 45px;
+    height: 45px;
+    margin-left: 10px;
+    margin-right: 10px;
+}
+
+.chat_space__name{
+    font-size: 16px;
+    color: #ffffff;
+    margin-bottom: 10px;
+    margin-top: 10px;
+    text-align: center;
+}
+
+
 @media (max-width:650px) 
 {
     .chat_left_bar__side_bar{
         width: 15vw;
+    }
+    .chat_space__name{
+        display: none;
     }
 }
