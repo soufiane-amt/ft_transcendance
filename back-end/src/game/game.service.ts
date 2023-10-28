@@ -24,7 +24,7 @@ export class GameService {
   constructor(private readonly userCrudService: UserCrudService, private readonly gameCrudService: GameCrudService) {}
 
   async joinMatchMackingSystem(player: Player, matchMakingDto: MatchMakingDto): Promise<string> {
-    if (matchMakingDto.role === 'host') {
+    if (matchMakingDto.role.toLowerCase() === 'host') {
         const game_settings: GameSettings = { 
                                 mapType : matchMakingDto.mapType,
                                 speed: matchMakingDto.speed
@@ -35,7 +35,7 @@ export class GameService {
                         }
         const response: string = await this.HostLookForOpponent(hostPlayer);
         return response;
-    } else {
+    } else if (matchMakingDto.role.toLowerCase() === 'guest') {
         const guestPlayer: GuestPlayer = { player }; 
         const response: string = await this.GuestLookForOpponent(guestPlayer);
         return response;
@@ -65,7 +65,8 @@ export class GameService {
             player1_username: hostPlayer.player.username,
             player2_id : opponent.player.id,
             player2_username: opponent.player.username,
-            mapType: hostPlayer.game_settings.mapType
+            mapType: hostPlayer.game_settings.mapType,
+            speed: hostPlayer.game_settings.speed
           }
         hostPlayer.player.socket.emit('redirect_to_game', gameInfo);
         opponent.player.socket.emit('redirect_to_game', gameInfo);

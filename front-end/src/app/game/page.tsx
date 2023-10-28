@@ -2,12 +2,13 @@
 import Structure from "../Structure";
 import "../../styles/TailwindRef.css";
 import GameLandingPage from "@/components/game/GameLandingPage";
-import React, { useState, createContext, useEffect } from "react";
+import React, { useState, createContext, useEffect, useContext } from "react";
 import GameContext from "@/components/game/GameContext";
 import GameDashboard from "@/components/game/GameDashboard";
 import { io, Socket } from "socket.io-client";
 import newSocket from "@/components/GlobalComponents/Socket/socket";
 import Cookies from "js-cookie";
+import gameDataContext, { GameData, GameDataContext } from "@/components/GlobalComponents/GameDataContext";
 
 export interface GameSettingsInterface {
   GameMode: string;
@@ -21,6 +22,7 @@ export default function Game() {
   const [GameLandingPageBool, SetGameLandingPageBool] = useState(true);
   const [GameDashboardBool, SetGameDashboardBool] = useState(false);
   const jwtToken: string | undefined = Cookies.get('access_token');
+  const gamedatacontext : GameDataContext | null = useContext<GameDataContext | null>(gameDataContext);
 
   const [GameSettings, setGameSettings] = useState<GameSettingsInterface>({
     GameMode: "",
@@ -47,6 +49,13 @@ export default function Game() {
       }
     }
   }, []);
+
+  useEffect(() => {
+      if (gamedatacontext !== null && gamedatacontext.gamePlayData !== null) {
+        SetGameLandingPageBool(false);
+        SetGameDashboardBool(true);
+      }
+  }, [])
 
   return (
     <Structure>

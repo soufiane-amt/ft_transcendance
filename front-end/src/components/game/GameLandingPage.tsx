@@ -12,6 +12,7 @@ import Invite from "./InviteFriendsModel";
 import GameSettingsModel from "./GameSettingsModel";
 import GameContext from "./GameContext";
 import MatchMakingLoadingComponent from "./MatchMakingAnimation";
+import gameDataContext, { GameData, GameDataContext } from "../GlobalComponents/GameDataContext";
 
 const pixelfont = Press_Start_2P({
   subsets: ["latin"],
@@ -41,6 +42,7 @@ function GameLandingPage() {
   const [isMatchMaking, setMatchMaking] = useState(false);
   const [isMatchMakingLoading, setIsMatchMakingLoading] = useState(false);
   const context: any = useContext(GameContext);
+  const gamedatacontext: GameDataContext | null = useContext<GameDataContext | null>(gameDataContext);
 
   useEffect(() => {
     if (settings === false) {
@@ -54,6 +56,14 @@ function GameLandingPage() {
       });
     }
   }, [settings]);
+
+  useEffect(() => {
+    context.gameSocket.on('redirect_to_game', (payload : GameData) => {
+      gamedatacontext?.setgamePlayData(payload);
+      context.SetGameLandingPageBool(false);
+      context.SetGameDashboardBool(true);
+    })
+  }, [])
 
   return (
     <div className="bg-[#0D0149] max-w-[100vw] min-h-[calc(100vh-91px)] flex  items-center flex-col p-[3%] box-border  justify-between overflow-hidden">
