@@ -1,0 +1,26 @@
+.side_bar_item{
+    display: flex;
+    align-items: center;
+    padding: 10px 20px;
+    cursor: pointer;
+    border-radius: 10px;
+    transition: all 0.2s ease-in-out;
+    background-color: #24234F;
+
+}
+
+.side_bar_item:hover{
+    background-color: #5256ad;
+}
+
+.side_bar_item__icon img{
+    width: 30px;
+    height: 30px;
+    margin-right: 10px;
+}
+
+.side_bar_item__name{
+    font-size: 15px;
+    font-weight: bold;
+    color: white;
+}

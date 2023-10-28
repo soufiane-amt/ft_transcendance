@@ -34,7 +34,7 @@ export function ChannelJoin({ channelData }: ChannelJoinProps) {
                 <button onClick={handleClickJoin}>
                     Join
                 </button>
-                </div>
+            </div>
             </div>
             {
                 showPasswordInput &&

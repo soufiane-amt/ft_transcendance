@@ -1,0 +1,27 @@
+.welcoming_page{
+    background-color: #7270A8;
+}
+
+.user_initiative_talks,  .channel_joins  {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    height: 300px;
+    overflow: scroll;
+
+
+}
+.user_initiative_talks::-webkit-scrollbar,
+ .channel_joins::-webkit-scrollbar {
+    width: 0em; 
+  }
+
+
+.welcoming_page_talks__title {
+    color: white;
+    font-size: 15px;
+    font-weight: bolder;
+    letter-spacing: 6px;
+    border-bottom: 3px solid rgb(209, 189, 228);
+}

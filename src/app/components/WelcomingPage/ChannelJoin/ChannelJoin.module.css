@@ -4,13 +4,15 @@
     width: 80%;
     align-items: center;
     background-color: #6361A2;
-    border-radius: 10px;
+    border-radius: 15px;
     padding-inline: 10px;
+    margin-bottom: 10px;
 }
 
 .channel_join__user{
     display: flex;
     align-items: center;
+
     width: 30%;
     height: 100%;
 }

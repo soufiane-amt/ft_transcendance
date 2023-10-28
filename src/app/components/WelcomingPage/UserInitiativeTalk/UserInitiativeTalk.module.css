@@ -4,13 +4,13 @@
     width: 80%;
     align-items: center;
     background-color: #6361A2;
-    border-radius: 10px;
+    border-radius: 15px;
     padding-inline: 10px;
+    margin-bottom: 10px;
 }
 
 .communication_initiative__user{
     display: flex;
-    justify-content: center;
     align-items: center;
     width: 30%;
     height: 100%;
@@ -34,6 +34,9 @@
     cursor: pointer;
     width: 50px;
     height: 50px;
+    display: flex;
+    align-items: center;
+
 }
 .communication_initiative__message button{
     background-color: transparent;
