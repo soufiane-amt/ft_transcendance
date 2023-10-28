@@ -11,7 +11,6 @@ export function UserInitiativeTalk({ userData }: UserInitiativeTalkProps) {
         <div className={style.communication_initiative}>
             <div className={style.communication_initiative__user}>
                 <img className={style.communication_initiative__user__avatar} src={userData.avatar} alt="avatar" />
-                {/* <Avatar src={userData.avatar} avatarToRight={false} /> */}
                 <span className={style.communication_initiative__user__name}>{userData.username}</span>
             </div>
             <div className={style.communication_initiative__message}>

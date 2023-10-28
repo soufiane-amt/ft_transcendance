@@ -27,7 +27,7 @@ export function WelcomingPage() {
             </div>
             <div className={style.channel_joins}>
                 <h5 className={style.welcoming_page_talks__title}>Join a rooom:</h5>
-                <ChannelJoin channelData={{name : "channel name", picture : "http://localhost:3001/chat/image/550e8400-e29b-41d4-a716-446655440000.jpeg", type : "PUBLIC"}}/>
+                <ChannelJoin channelData={{name : "channel name", picture : "http://localhost:3001/chat/image/550e8400-e29b-41d4-a716-446655440000.jpeg", type : "PROTECTED"}}/>
                 <ChannelJoin channelData={{name : "channel name", picture : "http://localhost:3001/chat/image/550e8400-e29b-41d4-a716-446655440000.jpeg", type : "PUBLIC"}}/>
                 <ChannelJoin channelData={{name : "channel name", picture : "http://localhost:3001/chat/image/550e8400-e29b-41d4-a716-446655440000.jpeg", type : "PUBLIC"}}/>
                 <ChannelJoin channelData={{name : "channel name", picture : "http://localhost:3001/chat/image/550e8400-e29b-41d4-a716-446655440000.jpeg", type : "PUBLIC"}}/>

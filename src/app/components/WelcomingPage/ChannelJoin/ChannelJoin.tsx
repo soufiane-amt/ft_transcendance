@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import { ChannelPasswordInput } from '../ChannelPasswordInput/ChannelPasswordInput';
 import style from './ChannelJoin.module.css';
-import { useOutsideClick } from '../../../../../hooks/useOutsideClick';
 
 export interface ChannelJoinProps
 {
@@ -10,9 +9,6 @@ export interface ChannelJoinProps
 
 export function ChannelJoin({ channelData }: ChannelJoinProps) {
     const [showPasswordInput, setShowPasswordInput] = useState(false);
-    const showPasswordInputRef = useOutsideClick( () => {
-        setShowPasswordInput(false);
-    });
     const handleClickJoin = () => {
         if (channelData.type === 'PUBLIC') {
             // join channel
@@ -38,7 +34,7 @@ export function ChannelJoin({ channelData }: ChannelJoinProps) {
             </div>
             {
                 showPasswordInput &&
-                <ChannelPasswordInput ref={showPasswordInputRef} channelData={channelData} />
+                <ChannelPasswordInput handleVisibility={()=>setShowPasswordInput(false)} channelData={channelData} />
             }
         </>
     );
