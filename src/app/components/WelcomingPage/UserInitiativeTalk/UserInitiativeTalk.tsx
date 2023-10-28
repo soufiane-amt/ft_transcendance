@@ -1,4 +1,5 @@
 import style from './UserInitiativeTalk.module.css';
+import helloIcon from '../../../images/icons/CreateChannel/hello.png';
 
 export interface UserInitiativeTalkProps
 {
@@ -15,7 +16,7 @@ export function UserInitiativeTalk({ userData }: UserInitiativeTalkProps) {
             </div>
             <div className={style.communication_initiative__message}>
                 <button>
-                    <img className={style.communication_initiative__message_icon} src='../../../images/icons/CreateChannel/hello.png' alt="send hello icon" />
+                    <img className={style.communication_initiative__message_icon} src={helloIcon.src} alt="send hello icon" />
                 </button>
             </div>
         </div>
