@@ -1,0 +1,14 @@
+.chat_left_bar__side_bar{
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    background-color: #24234F;
+    width: 20vw;
+}
+
+@media (max-width:650px) 
+{
+    .chat_left_bar__side_bar{
+        width: 15vw;
+    }
+}

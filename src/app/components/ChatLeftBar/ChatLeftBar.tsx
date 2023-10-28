@@ -1,8 +1,8 @@
 import { SideBarItem } from "./SideBarItem/SideBarItem";
 import style from './ChatLeftBar.module.css';
-import channelsIcon from '../../../images/icons/left-bar/channel-icon.png';
-import dmIcon from '../../../images/icons/left-bar/dm-icon.png';
-import createChannelIcon from '../../../images/icons/left-bar/chat-bubble-icon.png';
+import channelsIcon from '../../../../public/images/icons/left-bar/channel-icon.png';
+import dmIcon from '../../../../public/images/icons/left-bar/dm-icon.png';
+import createChannelIcon from '../../../../public/images/icons/left-bar/chat-bubble-icon.png';
 
 
 
