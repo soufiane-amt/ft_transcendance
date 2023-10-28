@@ -1,3 +1,4 @@
+'use client'
 import { useState } from 'react';
 import style from './CreateChannel.module.css';
 
@@ -17,6 +18,11 @@ export function CreateChannel() {
     
     return (
         <div className={style.create_channel}>
+            //upload an image 
+            <div className={style.create_channel__image}>
+                <input type="image" src="http://upload.wikimedia.org/wikipedia/commons/c/ca/Button-Lightblue.svg" width="30px"/>
+                <input type="file" id="my_file"  />
+            </div>
             <div className={style.create_channel__title}>
                 <span>Create Channel</span>
             </div>
