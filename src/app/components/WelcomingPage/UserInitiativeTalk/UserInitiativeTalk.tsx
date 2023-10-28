@@ -1,5 +1,5 @@
 import style from './UserInitiativeTalk.module.css';
-import helloIcon from '../../../images/icons/CreateChannel/hello.png';
+import helloIcon from '../../../../../public/images/icons/CreateChannel/hello.png';
 
 export interface UserInitiativeTalkProps
 {

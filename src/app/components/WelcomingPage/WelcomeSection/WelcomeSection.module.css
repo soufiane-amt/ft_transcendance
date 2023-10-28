@@ -25,3 +25,14 @@
     font-weight: bolder;
     color: antiquewhite;
 }
+
+@media (max-width:650px) 
+{
+    .welcome_section{
+        font-size: small   ;
+    }
+
+    .welcome_section_instrucation{
+        font-size: x-small;
+    }
+}

@@ -1,9 +1,11 @@
 .chat_left_bar__side_bar{
     display: flex;
     flex-direction: column;
-    height: 100vh;
     background-color: #24234F;
-    width: 20vw;
+    width: 18vw;
+    position: sticky;
+    top: 0;
+    height: 100vh;
 }
 
 .chat_space{
@@ -31,7 +33,7 @@
 @media (max-width:650px) 
 {
     .chat_left_bar__side_bar{
-        width: 15vw;
+        width: 16vw;
     }
     .chat_space__name{
         display: none;

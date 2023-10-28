@@ -1,5 +1,6 @@
 .welcoming_page{
     background-color: #7270A8;
+    width: 84vw;
 }
 
 .user_initiative_talks,  .channel_joins  {
@@ -24,4 +25,11 @@
     font-weight: bolder;
     letter-spacing: 6px;
     border-bottom: 3px solid rgb(209, 189, 228);
+}
+
+@media (max-width:650px) 
+{
+    .welcoming_page_talks__title{
+        font-size: x-small;
+    }
 }
