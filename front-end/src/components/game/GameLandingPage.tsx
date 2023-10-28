@@ -11,6 +11,7 @@ import Info from "./InfoModel";
 import Invite from "./InviteFriendsModel";
 import GameSettingsModel from "./GameSettingsModel";
 import GameContext from "./GameContext";
+import MatchMakingLoadingComponent from "./MatchMakingAnimation";
 
 const pixelfont = Press_Start_2P({
   subsets: ["latin"],
@@ -38,6 +39,7 @@ function GameLandingPage() {
   const [invite, setInvite] = useState(false);
   const [settings, setSettings] = useState(false);
   const [isMatchMaking, setMatchMaking] = useState(false);
+  const [isMatchMakingLoading, setIsMatchMakingLoading] = useState(false);
   const context: any = useContext(GameContext);
 
   useEffect(() => {
@@ -145,8 +147,10 @@ function GameLandingPage() {
         <GameSettingsModel
           setSettings={setSettings}
           isMatchMaking={isMatchMaking}
+          setIsMatchMakingLoading={setIsMatchMakingLoading}
         />
       )}
+      { isMatchMakingLoading && <MatchMakingLoadingComponent  setSettings={setSettings} setIsMatchMakingLoading={setIsMatchMakingLoading} />}
     </div>
   );
 }

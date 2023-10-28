@@ -15,7 +15,8 @@ const config: Config = {
     './src/components/game/InfoModel.tsx',
     './src/components/game/InviteFriendsModel.tsx',
     './src/components/game/GameSettingsModel.tsx',
-    './src/components/GlobalComponents/GameInvitation.tsx'
+    './src/components/GlobalComponents/GameInvitation.tsx',
+    './src/components/game/MatchMakingAnimation.tsx'
   ],
   theme: {
     extend: {

@@ -7,6 +7,7 @@ import GameContext from "@/components/game/GameContext";
 import GameDashboard from "@/components/game/GameDashboard";
 import { io, Socket } from "socket.io-client";
 import newSocket from "@/components/GlobalComponents/Socket/socket";
+import Cookies from "js-cookie";
 
 export interface GameSettingsInterface {
   GameMode: string;
@@ -19,6 +20,7 @@ export interface GameSettingsInterface {
 export default function Game() {
   const [GameLandingPageBool, SetGameLandingPageBool] = useState(true);
   const [GameDashboardBool, SetGameDashboardBool] = useState(false);
+  const jwtToken: string | undefined = Cookies.get('access_token');
 
   const [GameSettings, setGameSettings] = useState<GameSettingsInterface>({
     GameMode: "",
@@ -31,7 +33,11 @@ export default function Game() {
 
   useEffect(() => {
     if (gameSocket === null) {
-      const socket: Socket = io(`${process.env.NEXT_PUBLIC_BACKEND_SERV}/Game`);
+      const socket: Socket = io(`${process.env.NEXT_PUBLIC_BACKEND_SERV}/Game`, {
+        query: {
+          token: `$bearer ${jwtToken}`
+        }
+      });
       setGameSocket(socket);
     }
     return () => {

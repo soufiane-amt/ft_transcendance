@@ -88,8 +88,11 @@ function GameSettingsModel({ ...props }) {
         mapType: context.GameSettings.GameTheme,
         speed: context.GameSettings.GameSpeed,
         role: context.GameSettings.Roll,
-      }, (res : any) => console.log(res))
-      
+      })
+      props.setIsMatchMakingLoading(true);
+      setRoll("");
+      setSpeed("");
+      setImgtheme("/defaultselect.png");
     } else {
       setError("Please finish setuping your data!");
       setTimeout(() => {
