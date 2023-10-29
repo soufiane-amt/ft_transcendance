@@ -1,4 +1,4 @@
-@tailwind base;
+@import url('https://fonts.googleapis.com/css2?family=Bangers&display=swap');
 @tailwind components;
 @tailwind utilities;
 
@@ -51,4 +51,25 @@
 
 .content {
   min-height: calc(100vh - 91px);
+}
+
+.content-height {
+  height: calc(100vh - 91px);
+}
+
+.score-board-height {
+  height: 13%;
+}
+
+.responsive-font {
+  font-size: 1.5vw;
+}
+
+.Bangers-font {
+  font-family: 'Bangers', sans-serif;
+}
+ 
+
+.score-board-item-with {
+  width: calc(100% / 8);
 }
