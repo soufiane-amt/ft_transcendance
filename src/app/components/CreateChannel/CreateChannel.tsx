@@ -2,6 +2,7 @@
 import { useRef, useState } from 'react';
 import style from './CreateChannel.module.css';
 import UploadChannelIcon from '../../../../public/images/icons/CreateChannel/UploadChannelIcon.jpg'
+import { ChannelInvitor } from './ChannelInvitor/ChannelInvitor';
 
 export function CreateChannel() {
 
@@ -22,35 +23,38 @@ export function CreateChannel() {
     }
     
     return (
-        <div className={style.create_channel}>
-            <h3>Create Channel :</h3>
-            <div className={style.create_channel__image}>
-                <input onClick={handleClickUpload} type="image" src={UploadChannelIcon.src} width="30px"/>
-                <input ref={fileInputRef} type="file" style={{display:'none'}}  />
-            </div>
-            <div className={style.create_channel__name}>
-                <label>Channel name :</label>
-                <input type="text"  />
-            </div>
-            <div className={style.create_channel__select}>
-                <label>Choose the type of the channel :</label>
-                <select
-                    value={selectedOption}
-                    onChange={handleSelection}>
-                    <option value="PUBLIC">Public</option>
-                    <option value="PRIVATE">Private</option>
-                    <option value="PROTECTED">Private</option>
-                </select>
-            </div>
-            {
-                        selectedOption === "PROTECTED" &&
-                <div className={style.create_channel__input}>
-                    <input type="password" placeholder="Password" />
-                </div>
-            }
-            {/* <div className={style.create_channel__button}>
-                <button>Create</button>
-            </div> */}
-        </div>
+        // <div className={style.create_channel}>
+        //     <h3>Create Channel :</h3>
+        //     <div className={style.create_channel__image}>
+        //         <input onClick={handleClickUpload} type="image" src={UploadChannelIcon.src} width="30px"/>
+        //         <input ref={fileInputRef} type="file" style={{display:'none'}}  />
+        //     </div>
+        //     <div className={style.create_channel__name}>
+        //         <label>Channel name :</label>
+        //         <input type="text"  placeholder='Type in the channel name ...' />
+        //     </div>
+        //     <div className={style.create_channel__select}>
+        //         <label>Choose the type of the channel :</label>
+        //         <select
+        //             value={selectedOption}
+        //             onChange={handleSelection}>
+        //             <option value="PUBLIC">Public</option>
+        //             <option value="PRIVATE">Private</option>
+        //             <option value="PROTECTED">Protected</option>
+        //         </select>
+        //     </div>
+        //     {
+        //         selectedOption === "PROTECTED" &&
+        //         <div className={style.create_channel__input}>
+        //             <input type="password" placeholder="Password" />
+        //         </div>
+        //     }
+        //     //Add users 
+
+        //     {/* <div className={style.create_channel__button}>
+        //         <button>Create</button>
+        //     </div> */}
+        // </div>
+        <ChannelInvitor/>
     )
 }

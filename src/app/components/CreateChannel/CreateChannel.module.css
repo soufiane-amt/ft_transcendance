@@ -38,27 +38,32 @@
     margin-bottom: 60px;
 }
 
+.create_channel__name input   {
+    background-color: #3c3b6c;
+    border-radius: 30px;
+    border: none;
+    outline: none;
+    color: rgb(164, 223, 35);
+    font-size: 20px;
+    padding: 5px;   
+    width: 90%;
+    margin-bottom: 10px;
+    height: 60px;
+    padding-inline: 20px;
+}
 .create_channel__select select
 {
     background-color: #3c3b6c;
     border-radius: 30px;
     border: none;
     outline: none;
-    color: white;
+    color: rgb(164, 223, 35);
+    font-size: larger;
+    font-weight: bolder;
     padding: 5px;   
-    width: 91%;
+    width: 92%;
     margin-bottom: 10px;
     height: 75px;
-}
-.create_channel__name input   {
-    background-color: #3c3b6c;
-    border-radius: 30px;
-    border: none;
-    outline: none;
-    color: white;
-    padding: 5px;   
-    width: 90%;
-    margin-bottom: 10px;
-    height: 60px;
+    padding-inline: 20px;
 }
 
