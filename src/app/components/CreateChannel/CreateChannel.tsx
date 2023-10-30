@@ -1,36 +1,39 @@
 'use client'
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import style from './CreateChannel.module.css';
-
+import UploadChannelIcon from '../../../../public/images/icons/CreateChannel/UploadChannelIcon.jpg'
 
 export function CreateChannel() {
 
+    const fileInputRef = useRef<HTMLInputElement>(null);
     const [selectedOption, setSelectedOption] = useState("PUBLIC");
     const [newPassword, setNewPassword] = useState('');
     
-    const handleSelection = (event: any) => {
+    const handleSelection = (event: React.ChangeEvent<HTMLSelectElement>) => {
         setSelectedOption(event.target.value);
-      };
+    };
     
-    const handlePasswordTyping = (event: any) => {
+    const handlePasswordTyping = (event: React.ChangeEvent<HTMLInputElement>) => {
         setNewPassword(event.target.value);
-      };
+    };
+
+    const handleClickUpload  = () => {
+        fileInputRef.current!.click();
+    }
     
     return (
         <div className={style.create_channel}>
-            //upload an image 
+            <h3>Create Channel :</h3>
             <div className={style.create_channel__image}>
-                <input type="image" src="http://upload.wikimedia.org/wikipedia/commons/c/ca/Button-Lightblue.svg" width="30px"/>
-                <input type="file" id="my_file"  />
+                <input onClick={handleClickUpload} type="image" src={UploadChannelIcon.src} width="30px"/>
+                <input ref={fileInputRef} type="file" style={{display:'none'}}  />
             </div>
-            <div className={style.create_channel__title}>
-                <span>Create Channel</span>
+            <div className={style.create_channel__name}>
+                <label>Channel name :</label>
+                <input type="text"  />
             </div>
-            <div className={style.create_channel__input}>
-                <input type="text" placeholder="Channel Name" />
-            </div>
-            //Select the type of the channel
             <div className={style.create_channel__select}>
+                <label>Choose the type of the channel :</label>
                 <select
                     value={selectedOption}
                     onChange={handleSelection}>
@@ -39,16 +42,15 @@ export function CreateChannel() {
                     <option value="PROTECTED">Private</option>
                 </select>
             </div>
-            //GIVE THE CHANNEL A PASSWORD 
             {
-                selectedOption === "PROTECTED" &&
+                        selectedOption === "PROTECTED" &&
                 <div className={style.create_channel__input}>
                     <input type="password" placeholder="Password" />
                 </div>
             }
-            <div className={style.create_channel__button}>
+            {/* <div className={style.create_channel__button}>
                 <button>Create</button>
-            </div>
+            </div> */}
         </div>
     )
 }

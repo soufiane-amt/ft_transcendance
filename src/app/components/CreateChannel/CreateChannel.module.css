@@ -1,3 +1,64 @@
 .create_channel{
+    width: 100%;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items:center;
+    padding: 10px;
     background-color: #7270A8;
 }
+
+.create_channel h3{
+    align-self: flex-start;
+    color: aqua;
+    font-size: 30px;
+    border-bottom: #82ec3c solid 5px;
+}
+
+.create_channel label {
+    font-size: 20px;
+    color: rgb(237, 224, 224);
+    margin-bottom: 10px;
+    align-self: left;
+    font-weight: bold;
+}
+.create_channel__image input {
+    border-radius: 50%;
+    width: 150px;
+}
+.create_channel__name, .create_channel__select
+{
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    margin-left: 10%;
+}
+.create_channel__name
+{
+    margin-bottom: 60px;
+}
+
+.create_channel__select select
+{
+    background-color: #3c3b6c;
+    border-radius: 30px;
+    border: none;
+    outline: none;
+    color: white;
+    padding: 5px;   
+    width: 91%;
+    margin-bottom: 10px;
+    height: 75px;
+}
+.create_channel__name input   {
+    background-color: #3c3b6c;
+    border-radius: 30px;
+    border: none;
+    outline: none;
+    color: white;
+    padding: 5px;   
+    width: 90%;
+    margin-bottom: 10px;
+    height: 60px;
+}
+
