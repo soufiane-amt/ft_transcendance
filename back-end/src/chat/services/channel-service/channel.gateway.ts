@@ -121,7 +121,7 @@ import { subscribe } from "diagnostics_channel";
 
         this.broadcastChannelChanges(banData.channel_id)
     }  
-
+ 
     
     @SubscribeMessage ("channelUserUnBan")
     async handleChannelUnBan( client :Socket, unbanSignal:UserBanMuteSignalDto ) 
@@ -170,11 +170,12 @@ import { subscribe } from "diagnostics_channel";
     @SubscribeMessage ("suspendChannelUpdates")
     async handleSuspendChannelUpdates (client: any, channel_id:string)
     {
+      console.log ('Suspend channel updates : ', channel_id)
       client.leave (`channel-${channel_id}`)
     }
 
-    @UseGuards(bannedConversationGuard)
-    @UseGuards(muteConversationGuard)
+    // @UseGuards(bannedConversationGuard)
+    // @UseGuards(muteConversationGuard)
     @UseGuards (userRoomSubscriptionGuard)  
     @SubscribeMessage ("resumeChannelUpdates") //A gard must be added to check if the user has the right to request to unmute him
     async handleResumeChannelUpdates (client: any, channel_id:string)

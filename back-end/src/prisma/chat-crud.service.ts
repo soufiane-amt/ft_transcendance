@@ -159,42 +159,44 @@ export class ChatCrudService {
     });
   }
 
-  async retreiveDmInitPanelData(user_id) {
-    const dmUsersIds = await this.prisma.prismaClient.directMessaging.findMany({
-      where: {
-        OR: [{ user1_id: user_id }, { user2_id: user_id }],
-      },
-      orderBy: {
-        updatedAt: "desc",
-      },
-      select: {
-        id: true,
-        user1_id: true,
-        user2_id: true,
-        messages: {
-          select: {
-            id: true,
-            content: true,
-            createdAt: true,
-            is_read: true,
-          },
-          orderBy: {
-            createdAt: "desc",
-          },
-          take: 1,
+async retreiveDmInitPanelData(user_id :string) {
+  const dmUsersIds = await this.prisma.prismaClient.directMessaging.findMany({
+    where: {
+      OR: [{ user1_id: user_id }, { user2_id: user_id }],
+    },
+    select: {
+      id: true,
+      user1_id: true,
+      user2_id: true,
+      messages: {
+        select: {
+          id: true,
+          content: true,
+          createdAt: true,
+          is_read: true,
         },
+        orderBy: {
+          createdAt: "desc",
+        },
+        take: 1,
       },
-    });
-    return dmUsersIds.map((dm_item) => {
-      const partner =
-        user_id == dm_item.user1_id ? dm_item.user2_id : dm_item.user1_id;
-      return {
-        id: dm_item.id,
-        partner_id: partner,
-        last_message: dm_item.messages[0],
-      };
-    });
-  }
+    },
+  });
+  dmUsersIds.sort((a, b) => {
+    const dateA = a.messages[0]?.createdAt || new Date(1900, 0, 1);
+    const dateB = b.messages[0]?.createdAt || new Date(1900, 0, 1);
+    return dateB > dateA ? 1 : dateB < dateA ? -1 : 0;
+  });
+
+  return dmUsersIds.map((dm_item) => {
+    const partner = user_id == dm_item.user1_id ? dm_item.user2_id : dm_item.user1_id;
+    return {
+      id: dm_item.id,
+      partner_id: partner,
+      last_message: dm_item.messages[0],
+    };
+  });
+}
 
   async retreiveChannelPanelsData(user_id: string) {
     const channelMemberships =
@@ -314,28 +316,92 @@ export class ChatCrudService {
   //this method finds all the channels that exist in the server
 
   async findAllChannelsAvailbleToJoin(user_id: string) {
-    const notJoinedChannels =
-      await this.prisma.prismaClient.channelMembership.findMany({
-        where: {
-          user_id: {
-            not: user_id,
+    const joinedChannels = await  this.prisma.prismaClient.channelMembership.findMany(
+        {
+          where:{
+            user_id:user_id,
+            
           },
-        },
-        select: {
-          id: true,
-        },
-      });
-    //the type of the retrieved id's look like this { id: string }[], the nest function tries to add them to an array of string
-    const channelIds: string[] = notJoinedChannels.map((item) => item.id);
-
-    return this.prisma.prismaClient.channel.findMany({
-      where: {
-        id: {
-          in: channelIds,
-        },
+          select:{
+            channel_id:true,
+          }
+        }
+      )
+    const notJoinedChannels = await this.prisma.prismaClient.channel.findMany(
+      {
+        where:{
+          id:{
+            notIn: joinedChannels.map((item) => item.channel_id),
+          },
         OR: [{ type: "PUBLIC" }, { type: "PROTECTED" }],
-      },
+
+        },
+        select:{
+          name:true,
+          image:true,
+          type:true,
+        }
+      }
+    )
+    console.log('notJoinedChannels: ', notJoinedChannels)
+    return notJoinedChannels
+  }
+
+
+  async findAllDmsAvailbleToJoin (user_id: string){
+    //find the friends that the user doesn't have a dm with
+    // if (friendsIds.length == 0)
+    //   return null;
+    const joinedDm = await this.prisma.prismaClient.directMessaging.findMany(
+      {
+        where:{
+          OR: [
+            {user1_id: user_id,},
+            {user2_id: user_id,},
+          ],
+        },
+        select:{
+          user1_id:true,
+          user2_id:true,
+        }
+      }
+    )
+    const conatactedUsers = joinedDm.map((item) => {
+      return item.user1_id == user_id ? item.user2_id : item.user1_id;
     });
+
+      const friends = await this.prisma.prismaClient.friendships.findMany({
+      where: {
+        OR: [{ user1_id: user_id }, { user2_id: user_id }],
+      },
+      select: {
+        user1_id: true,
+        user2_id: true,
+      },
+    }); 
+
+    const friendsIds = friends.map((item) => {
+      return item.user1_id == user_id ? item.user2_id : item.user1_id;
+    });
+
+    //get the friends that the user doesn't have a dm with
+    const notDmedUsersIds = friendsIds.filter((item) => {
+      return !conatactedUsers.includes(item);
+    });
+    console.log ('notDmedUsersIds: ', notDmedUsersIds)
+    return await this.prisma.prismaClient.user.findMany(
+      {
+        where:{
+          id:{
+            in: notDmedUsersIds,
+          }
+        },
+        select:{
+          username:true,
+          avatar:true,
+        }
+      }
+    )
   }
 
   async findAllJoinedChannels(user_id: string) {
@@ -892,16 +958,14 @@ async findChannelUserMuteData(user_id: string, channel_id: string) {
   }
 
   async getMemeberShip(user_id: string, channel_id: string) {
-    return await this.prisma.prismaClient.channelMembership.findUnique({
-      where: {
-        channel_id_user_id: {
+    return await this.prisma.prismaClient.channelMembership.findFirst(
+      {
+        where: {
           channel_id: channel_id,
           user_id: user_id,
         },
-      },
-    });
-  }
-
+      });
+    }
   async makeOwner(user_id: string, channel_id: string) {
     await this.prisma.prismaClient.channelMembership.update({
       where: {

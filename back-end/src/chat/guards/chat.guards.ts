@@ -303,7 +303,7 @@ export class userRoomSubscriptionGuard implements CanActivate {
         return (
           (await this.chatCrud.getMemeberShip(
             packet_data.user_id,
-            packet_data.message.channel_id,
+            packet_data.channel_id,
           )) != null
         );
     }
@@ -361,7 +361,7 @@ export class bannedConversationGuard implements CanActivate {
         user_id,
         packet_data.channel_id
       );
-      return memeberShip?.is_banned != false;
+      return memeberShip?.is_banned == false;
     }
   }
 }
