@@ -101,7 +101,6 @@
 @media (max-width:650px) 
 {
     .create_channel__image input {
-        border-radius: 50%;
         width: 100px;
     }
     .create_channel label {
@@ -113,6 +112,7 @@
     {
         height: 50px;
         width: 80%;
+        font-size: 15px;
     }    
     .create_channel h3{
         font-size: 20px;
@@ -121,3 +121,10 @@
         margin-bottom: 20px;
     }
 }  
+
+@media (max-width:427px) 
+{   
+    .create_channel__image input {
+        width: 80px;
+    }
+}
