@@ -97,6 +97,14 @@
     font-weight: bolder;
 }
 
+.create_channel_warning_message::before{
+    content: "⚠️ ";
+}
+.create_channel_warning_message{
+    color: #ff0000;
+    font-size: 15px;
+    font-weight: bolder;
+}
 
 @media (max-width:650px) 
 {
