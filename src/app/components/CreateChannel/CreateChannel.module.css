@@ -1,6 +1,6 @@
 .create_channel{
-    width: 100%;
-    height: 100vh;
+    width: 84vw;
+    height: 100%;
     display: flex;
     flex-direction: column;
     align-items:center;
@@ -22,11 +22,17 @@
     align-self: left;
     font-weight: bold;
 }
+.create_channel__image{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
 .create_channel__image input {
     border-radius: 50%;
     width: 150px;
 }
-.create_channel__name, .create_channel__select
+.create_channel__name, 
+.create_channel__select
 {
     display: flex;
     flex-direction: column;
@@ -51,7 +57,8 @@
     height: 60px;
     padding-inline: 20px;
 }
-.create_channel__select select
+.create_channel__select select,
+.create_channel__password input
 {
     background-color: #3c3b6c;
     border-radius: 30px;
@@ -67,3 +74,50 @@
     padding-inline: 20px;
 }
 
+.create_channel__button{
+    display: flex;
+    justify-content: center;
+    width: 100%; 
+    margin-top: 40px;
+}
+.create_channel__button button{
+    width: 80%;
+    height: 60px;
+    background-color: #92dc61;
+    color: rgb(113, 167, 167);
+    font-weight: bolder;
+    cursor: pointer;
+    border-radius: 4px;
+    border: 0;
+}
+
+.create_channel__button button:hover{
+    background-color: #82ec3c;
+    color: black;
+    font-weight: bolder;
+}
+
+
+@media (max-width:650px) 
+{
+    .create_channel__image input {
+        border-radius: 50%;
+        width: 100px;
+    }
+    .create_channel label {
+        font-size: x-small;
+    }
+    .create_channel__name input,
+    .create_channel__select select,
+    .create_channel__password input
+    {
+        height: 50px;
+        width: 80%;
+    }    
+    .create_channel h3{
+        font-size: 20px;
+    }
+    .create_channel__image{
+        margin-bottom: 20px;
+    }
+}  

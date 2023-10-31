@@ -1,23 +1,46 @@
 
+.dark_background{
+    background-color: #0000006c;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+
+}
+
 .user_invitor_modal {
     width: 400px;
     height: 500px;
     background-color: rgb(255, 255, 255);
     display: flex; 
     flex-direction: column;
-    padding-left: 10px;
-    border: black solid 1px;
+    padding-left: 20px;
+    /* border: black solid 1px; */
+    position: absolute;
+    top: 20%;
+    left: 40%;
+    border-radius: 30px;
 }
 
-.user_invitor_modal_search{width: 90%;}
+.user_invitor_modal h3 {
+    color: black;
+}
+.user_invitor_modal_search{
+    width: 90%;
+    padding-top: 50px;
+}
 .user_invitor_modal_search input{
     width: 100%;    
-    height: 30px;
+    height: 35px;
     background-color: #171678;
-    border-radius: 3px;
+    color: aliceblue;
+    border-radius: 15px;
     border: none;
     outline: none;
+    padding-inline: 10px;
     }
+    
 .selected{
     background-color: #f23cf5;
 }
@@ -37,27 +60,49 @@
 .user_invitor_modal_selection ul{
     width: 100%;
     background-color: white;
-    border: black solid 1px;
+    margin-top: 30px;
+    /* border: black solid 3px; */
 }
 .user_invitor_modal_selection li{
     list-style-type: none; /* Remove default list bullets */
     cursor: pointer;
     width: 98%;
-    padding-block: 10px;
-    padding-inline: 10px;
+    padding: 10px;
+    border-bottom: rgb(225, 216, 216) solid 0.5px;
   }
 
+  .user_invitor_modal_confirm{
+    display: flex;
+    justify-content: center;
+  }
 
+.user_invitor_modal button:hover{ background-color: #091142;}
 .user_invitor_modal button
 {
-    width: 90%;
-    height: 30px;
-    background-color: #785b16;
-    border-radius: 3px;
+    width: 40%;
+    height: 40px;
+    background-color: #0d1b6c;
+    padding-block: 10px;
+    border-radius: 15px;
     border: none;
     outline: none;
     color: white;
-    font-weight: bold;
+    font-weight: bolder;
     cursor: pointer;
-    margin-top: 10px;
+    margin-top: 50px;
+    font-weight: bolder;
+}
+
+
+/* This section for the items of the displayed users in the modal */
+
+.user_card_item {
+    display: flex;
+    align-items: center;
+}
+.user_card_item img{
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    margin-right: 10px;
 }
