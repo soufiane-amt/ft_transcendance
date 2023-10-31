@@ -14,6 +14,14 @@ export interface channelDto {
   password?: string;
 }
 
+
+export  interface channelCreateDto {
+  channelName: string;
+  channelType: "PUBLIC" | "PRIVATE" | "PROTECTED";
+  selectedImage:  {content : string | ArrayBuffer , extension: string};
+  invitedUsers: string[];
+  password?: string;
+}
 export interface dmDto {
   user1_id: string;
   user2_id: string;

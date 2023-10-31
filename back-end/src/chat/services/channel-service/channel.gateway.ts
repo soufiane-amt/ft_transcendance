@@ -2,7 +2,7 @@ import { UseGuards } from "@nestjs/common";
 import { OnGatewayConnection, SubscribeMessage, WebSocketGateway, WebSocketServer, WsException } from "@nestjs/websockets";
 import { Server, Socket } from "socket.io";
 import { Roles } from "src/chat/decorators/chat.decorator";
-import { MessageDto, UserBanMuteSignalDto, banManageSignalDto, channelMembershipDto, channelReqDto, kickSignalDto, setOwnerSignalDto } from "src/chat/dto/chat.dto";
+import { MessageDto, UserBanMuteSignalDto, banManageSignalDto, channelCreateDto, channelDto, channelMembershipDto, channelReqDto, kickSignalDto, setOwnerSignalDto } from "src/chat/dto/chat.dto";
 import { UpdateChannelDto, UpdateUserMemberShip, UserRoleSignal } from "src/chat/dto/update-chat.dto";
 import { Role } from "src/chat/enum/role.enum";
 import {  allowJoinGuard, bannedConversationGuard, channelPermission, muteConversationGuard, userRoomSubscriptionGuard } from "src/chat/guards/chat.guards";
@@ -257,4 +257,43 @@ import { subscribe } from "diagnostics_channel";
       }
       this.server.to(`channel-${channel_id}`).emit('updateChannelData', channel_id, channelNewData)
     }
+
+
+    
+// export interface channelDto {
+//   type: "PUBLIC" | "PRIVATE" | "PROTECTED";
+//   name: string;
+//   image: string;
+//   password?: string;
+// }
+    @SubscribeMessage ("createChannel")
+    async handleCreateChannel (client :Socket, channelData : channelCreateDto)
+    {
+      console.log ('Channel data : ', channelData)
+      const userIdCookie = this.extractUserIdFromCookies(client);
+      if (!userIdCookie)
+        return
+      const channel_data :channelDto = {
+        name : channelData.channelName,
+        type : channelData.channelType,
+        password : channelData.password,
+        image : `.`
+      };
+
+      const channel_id = await this.chatCrud.createChannel (userIdCookie, channel_data, channelData.selectedImage.extension,  channelData.invitedUsers)
+      this.handleUploadImage(channel_id, channelData.selectedImage)
+      client.join('channel-' + channel_id)
+    }
+    //This method takes the image sent by the front end and store in the upload folder and database
+    // @SubscribeMessage('uploadImage')
+    handleUploadImage(channel_id :string, channel_image: {content : string | ArrayBuffer | null, extension: string}) {
+      const imagePath =  `upload/${channel_id}.${channel_image.extension}`;
+      const fs = require('fs');
+      fs.writeFile(imagePath, channel_image.content, 'base64', (err: any) => {
+        if (err) {
+          console.log(err);
+        }
+      });
+    }
+  
 }
