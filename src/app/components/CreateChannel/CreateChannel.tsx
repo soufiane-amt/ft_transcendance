@@ -3,6 +3,8 @@ import { useRef, useState } from 'react';
 import style from './CreateChannel.module.css';
 import UploadChannelIcon from '../../../../public/images/icons/CreateChannel/UploadChannelIcon.jpg'
 import { ChannelInvitor } from './ChannelInvitor/ChannelInvitor';
+import socket from '../../socket/socket';
+import { read } from 'fs';
 
 
 const MaxChannelNameLength = 15;
@@ -10,24 +12,36 @@ const MinChannelNameLength = 3;
 const MaxPasswordLength = 50;
 const MinPasswordLength = 8;
 
-export function CreateChannel() {
 
+export function CreateChannel() {
     const fileInputRef = useRef<HTMLInputElement>(null);
     const [channelName, setChannelName] = useState<string>('');
     const [password, setPassword] = useState<string>('');
-    const [selectedOption, setSelectedOption] = useState("PUBLIC");
+    const [channelType, setChannelType] = useState("PUBLIC");
     const [displayChannelInvitor, setDisplayChannelInvitor] = useState <boolean> (false)
-    const [selectedImage, setSelectedImage] = useState<string | ArrayBuffer | null>(UploadChannelIcon.src);
+    const [selectedImage, setSelectedImage] = useState<{content : string | ArrayBuffer | null, extension: string}>({content :  UploadChannelIcon.src,
+                                                             extension :'jpg'});
 
+    const handleSubmitData = (invitedUsers: string[]) => {
+        socket.emit('uploadImage', selectedImage); // Send the image data to the server
+        socket.emit('createChannel', {channelName,
+                                        channelType,
+                                        selectedImage,
+                                        password,
+                                        invitedUsers
+                                    });
+    }
     const handleImageChange = (event:any) => {
       const file = event.target.files[0];
       if (file && file.type.startsWith('image/')) {
         const reader = new FileReader();
         reader.onload = () => {
-          setSelectedImage(reader.result);
+            const imageExtension = file.name.split('.').pop();
+            console.log('imageExtension:',imageExtension);
+            setSelectedImage({content: reader.result, extension:imageExtension});
         };
         reader.readAsDataURL(file);
-      } else {
+    } else {
         setSelectedImage(selectedImage);
       }
     };
@@ -49,13 +63,9 @@ export function CreateChannel() {
       };
     
     const handleSelection = (event: React.ChangeEvent<HTMLSelectElement>) => {
-        setSelectedOption(event.target.value);
+        setChannelType(event.target.value);
     };
     
-    const handlePasswordTyping = (event: React.ChangeEvent<HTMLInputElement>) => {
-        setPassword(event.target.value);
-    };
-
     const handleClickUpload  = () => {
         fileInputRef.current!.click();
     }
@@ -67,11 +77,11 @@ export function CreateChannel() {
             alert(`Your channel name must be at least ${MinChannelNameLength} characters long!`);
             return;
         }
-        if (selectedOption === "PROTECTED" && password.length < MinPasswordLength) {
+        if (channelType === "PROTECTED" && password.length < MinPasswordLength) {
             alert(`Your password must be at least ${MinPasswordLength} characters long!`);
             return;
         }
-        if (selectedImage === UploadChannelIcon.src) {
+        if (selectedImage.content === UploadChannelIcon.src) {
             alert(`Please choose a picture for the channel!`);
             return;
         }
@@ -82,7 +92,7 @@ export function CreateChannel() {
             <h3>Create Channel :</h3>
             <div className={style.create_channel__image}>
                 <input ref={fileInputRef} type="file" accept="image/*" onChange={handleImageChange} style={{display:'none'}} width="30px" height="30px"/>
-                {selectedImage && <img  onClick={handleClickUpload} src={selectedImage.toString()} alt="Selected" style={{ maxWidth: '100%', maxHeight: '300px' }} />}
+                {selectedImage && <img  onClick={handleClickUpload} src={selectedImage.content?.toString()} alt="Selected" style={{ maxWidth: '100%', maxHeight: '300px' }} />}
 
                 <label >Choose a picture to the channel</label>
             </div>
@@ -100,7 +110,7 @@ export function CreateChannel() {
             <div className={style.create_channel__select}>
                 <label>Choose the type of the channel :</label>
                 <select
-                    value={selectedOption}
+                    value={channelType}
                     onChange={handleSelection}>
                     <option value="PUBLIC">Public</option>
                     <option value="PRIVATE">Private</option>
@@ -108,7 +118,7 @@ export function CreateChannel() {
                 </select>
             </div>
             {
-                selectedOption === "PROTECTED" && (
+                channelType === "PROTECTED" && (
                 <>
                     <label>Channel password :</label>
                     <div className={style.create_channel__password}>
@@ -132,7 +142,7 @@ export function CreateChannel() {
             </div>
             {
                 displayChannelInvitor && (
-                    <ChannelInvitor handleVisibility={handleInviteUsersModal}/>
+                    <ChannelInvitor handleVisibility={handleInviteUsersModal} />
                 )
             }
         </div>
