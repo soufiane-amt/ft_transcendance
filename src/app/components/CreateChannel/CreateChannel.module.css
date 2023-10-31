@@ -26,10 +26,14 @@
     display: flex;
     flex-direction: column;
     align-items: center;
+
 }
-.create_channel__image input {
+.create_channel__image img {
     border-radius: 50%;
+    border: black solid 3px;
     width: 150px;
+    height: 150px;
+    cursor: pointer;
 }
 .create_channel__name, 
 .create_channel__select
@@ -132,7 +136,7 @@
 
 @media (max-width:427px) 
 {   
-    .create_channel__image input {
+    .create_channel__image img {
         width: 80px;
     }
 }
