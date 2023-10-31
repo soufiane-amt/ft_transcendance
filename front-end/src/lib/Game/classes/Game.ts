@@ -135,7 +135,7 @@ export default class Game {
                 this.socket.emit('stop_game', payload);
             }          
         })
-        this.socket.on('move_ball', (payload: any) => {
+        this.socket.on('move_puck', (payload: any) => {
             this.puck.move(payload);
         })
         window.addEventListener('resize', () => this.resize());

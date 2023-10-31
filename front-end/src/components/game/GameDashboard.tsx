@@ -19,10 +19,7 @@ function GameDashboard() {
     body.style.overflow = 'scroll';
     const socket: Socket = gameContext.gameSocket;
     if (isGameStarted === true) {
-      const payload: any = {
-        side: gamedataContext.gamePlayData.side
-      }
-      socket.emit('leave_game', payload);
+      socket.emit('leave_game');
     }
   }
 
@@ -44,7 +41,7 @@ function GameDashboard() {
       speed: gamedataContext.gamePlayData.gameInfo.speed,
       game_id: gamedataContext.gamePlayData.gameInfo.game_id
     }
-    gameContext.gameSocket.emit('join_a_game', payload);
+    gameContext.gameSocket.emit('join_a_game', payload)
     return () => cleanUp();
   }, []);
 

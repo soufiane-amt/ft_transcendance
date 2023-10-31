@@ -25,7 +25,17 @@ function GameSceneComponent(props: any) {
             const mapType: MapType = gamedataContext.gamePlayData.gameInfo.mapType.toLowerCase() as MapType;
             const game: Game = new Game(userSide, gameSocket, mapType);
             const FRAME_PER_SECOND: number = 60 / 1000;
-            game.render();
+            let startTime: DOMHighResTimeStamp | undefined = undefined;
+            const frameRequestCall = (timestamp: DOMHighResTimeStamp) => {
+                if (startTime === undefined) {
+                    startTime = timestamp;
+                }
+                if (gameIsStarted === true && (timestamp - startTime) >= FRAME_PER_SECOND) {
+                    game.render();
+                }
+                requestAnimationFrame(frameRequestCall);
+            }
+            requestAnimationFrame(frameRequestCall);
     }, [])
     return (
         <div className="ml-auto mr-auto bg-green-900 h-3/5 w-3/5 -mt-[11%] border-[1px] border-dashed overflow-hidden rounded-[10px] border-[#E5E7FF]" id="canvas-container">

@@ -33,7 +33,7 @@ export class GameCrudService
         const state: Stats = await this.prisma.prismaClient.stats.update(
             {
                 where: {
-                    id: user_id
+                    user_id
                 },
                 data: {
                     wins: {
@@ -69,7 +69,7 @@ export class GameCrudService
                                 }})
     }
 
-    async upateGameScore(game_id: string, score: GameScore) {
+    async updateGameScore(game_id: string, score: GameScore) {
         await this.prisma.prismaClient.game.update({
             where: {
                 game_id

@@ -20,13 +20,15 @@ function ScoreBoardComponent() {
     useEffect(() => {
         gameContext.gameSocket.on('update_score', (side: string) => {
             if (side === 'left') {
-                setPlayer1_score(player1_score + 1);
+                setPlayer1_score((player1_score) => player1_score + 1);
             } else if (side === 'right') {
-                setPlayer2_score(player2_score + 1);
+                setPlayer2_score((player2_score) => + player2_score + 1);
             }
         })
         gameContext.gameSocket.on('move_next_round', () => {
-            setNextRound(round + 1);
+            setNextRound((round) => round + 1);
+            setPlayer1_score(0);
+            setPlayer2_score(0);
         })
     }, [])
 

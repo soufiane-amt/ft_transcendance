@@ -14,12 +14,14 @@ import { gameInvitationResponseDto } from './dto/GameInvitationResponse.dto';
 import GameInvitationResponseDto from './dto/GameInvitationResponse.dto';
 import JoinGameDto from './dto/JoinGame.dto';
 import { GameGateway } from './gateway/game.gateway';
+import Game from './Game/classes/Game';
+import GameScore from 'src/prisma/interfaces/GameScore.interface';
 
 @Injectable()
 export class GameService {
   private hostPlayers: HostPlayer[] = [];
   private guestPlayers: GuestPlayer[] = [];
-  private pandingGames: Map<string, Socket> = new Map();
+  private pandingGames: Map<string, ClientSocket> = new Map();
 
   constructor(private readonly userCrudService: UserCrudService, private readonly gameCrudService: GameCrudService) {}
 
@@ -213,16 +215,48 @@ export class GameService {
     server.of('/').adapter.rooms.delete(invitationRoom);
   }
 
-  joinGame(joinGame: JoinGameDto, client: Socket, server: Server) {
+  joinGame(joinGame: JoinGameDto, client: ClientSocket, server: Server) {
     const game = this.pandingGames.get(joinGame.game_id);
     if (game === undefined) {
       this.pandingGames.set(joinGame.game_id, client);
     } else {
-      const firstPlayer: Socket = this.pandingGames.get(joinGame.game_id);
+      const firstPlayer: ClientSocket = this.pandingGames.get(joinGame.game_id);
       const gameRoom: string = `${joinGame.player1_id}-${joinGame.player2_id}`;
       client.join(gameRoom);
       firstPlayer.join(gameRoom);
       this.pandingGames.delete(joinGame.game_id);
+      this.startGame(client, firstPlayer, gameRoom, joinGame, server);
     }
-  } 
+  }
+
+  async startGame(player1Socket: ClientSocket, player2Socket: ClientSocket, gameRoom: string, joinGame: JoinGameDto, server: Server) : Promise<void> {
+    const leftPlayerSocket: Socket = player1Socket.player.id === joinGame.player1_id ? player1Socket : player2Socket;
+    const rightPlayerSocket: Socket = player1Socket.player.id === joinGame.player2_id ? player1Socket : player2Socket;
+    const speed: string = joinGame.speed;
+    const gameId: string = joinGame.game_id;
+    const game: Game = new Game(gameId, leftPlayerSocket, rightPlayerSocket, speed, server, gameRoom);
+    await this.gameCrudService.updateGameStatus(gameId, 'IN_PROGRESS');
+    const intervalId: NodeJS.Timeout = setInterval(() => {
+      if (game.status === 'started') {
+        game.play();
+      }
+      if (game.status === 'finished') {
+        const gameScore : GameScore = {
+          player1_score: game.leftPlayer.winningRounds,
+          player2_score: game.rightPlayer.winningRounds
+        }
+        this.updateDataBase(gameId, gameScore, player1Socket.player.id, player2Socket.player.id);
+        clearInterval(intervalId);
+      }
+    }, 60);
+  }
+
+  async updateDataBase(game_id: string, gameScore: GameScore, player1_id: string, player2_id: string) : Promise<void> {
+    await this.gameCrudService.updateGameStatus(game_id, 'FINISHED');
+    await this.gameCrudService.updateGameScore(game_id, gameScore);
+    const loser: string = gameScore.player1_score > gameScore.player2_score ? player2_id : player1_id;
+    const winner: string = gameScore.player1_score > gameScore.player2_score ? player1_id : player2_id;
+    await this.gameCrudService.addLossesToUser(loser);
+    await this.gameCrudService.addWinsToUser(winner);
+  }
 }
