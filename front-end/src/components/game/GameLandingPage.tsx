@@ -12,7 +12,7 @@ import Invite from "./InviteFriendsModel";
 import GameSettingsModel from "./GameSettingsModel";
 import GameContext from "./GameContext";
 import MatchMakingLoadingComponent from "./MatchMakingAnimation";
-import gameDataContext, { GameData, GameDataContext } from "../GlobalComponents/GameDataContext";
+import gameDataContext, { GameData, GameDataContext, GameInfo } from "../GlobalComponents/GameDataContext";
 
 const pixelfont = Press_Start_2P({
   subsets: ["latin"],
@@ -58,8 +58,9 @@ function GameLandingPage() {
   }, [settings]);
 
   useEffect(() => {
-    context.gameSocket.on('redirect_to_game', (payload : GameData) => {
-      gamedatacontext?.setgamePlayData(payload);
+    context.gameSocket.on('redirect_to_game', (gameInfo : GameInfo, side: string) => {
+      const gameData : GameData = {gameInfo, side};
+      gamedatacontext?.setgamePlayData(gameData);
       context.SetGameLandingPageBool(false);
       context.SetGameDashboardBool(true);
     })

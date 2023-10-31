@@ -6,7 +6,7 @@ import React, { useContext, useEffect, useState } from "react";
 import "../styles/TailwindRef.css";
 import newSocket from "@/components/GlobalComponents/Socket/socket";
 import GameInvitation from "@/components/GlobalComponents/GameInvitation";
-import gameDataContext, { GameData } from "@/components/GlobalComponents/GameDataContext";
+import gameDataContext, { GameData, GameInfo } from "@/components/GlobalComponents/GameDataContext";
 import { useRouter } from "next/navigation";
 
 const Structure = ({ children }: { children: React.ReactNode }) => {
@@ -25,8 +25,9 @@ const Structure = ({ children }: { children: React.ReactNode }) => {
         setTimer(20);
       }
     });
-    newSocket.on('redirect_to_game', (payload : GameData) => {
-      setgamePlayData(payload);
+    newSocket.on('redirect_to_game', (gameInfo : GameInfo, side: string) => {
+      const gameData : GameData = {gameInfo, side };
+      setgamePlayData(gameData);
       router.push('/Game');
     })
   });

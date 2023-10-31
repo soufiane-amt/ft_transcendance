@@ -1,6 +1,6 @@
 import { Dispatch, SetStateAction, createContext, useContext } from "react";
 
-export interface GameData {
+export interface GameInfo {
     game_id: string;
     player1_id: string;
     player1_username: string;
@@ -8,6 +8,11 @@ export interface GameData {
     player2_username: string;
     mapType: string;
     speed: string;
+}
+
+export interface GameData {
+    gameInfo: GameInfo;
+    side: string;
 }
 
 export interface GameDataContext {

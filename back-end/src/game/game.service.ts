@@ -68,8 +68,10 @@ export class GameService {
             mapType: hostPlayer.game_settings.mapType,
             speed: hostPlayer.game_settings.speed
           }
-        hostPlayer.player.socket.emit('redirect_to_game', gameInfo);
-        opponent.player.socket.emit('redirect_to_game', gameInfo);
+        const hostPlayerSide : string = 'left';
+        const opponentPlayerSide : string = 'right'; 
+        hostPlayer.player.socket.emit('redirect_to_game', gameInfo, hostPlayerSide);
+        opponent.player.socket.emit('redirect_to_game', gameInfo, opponentPlayerSide);
         return 'game is found!';
     } else if (this.hostPlayers.length !== 0) {
         const matchingSettings: HostPlayer[] = this.hostPlayers.filter((pl: HostPlayer) => (pl.game_settings.speed === hostPlayer.game_settings.speed
@@ -87,8 +89,10 @@ export class GameService {
             mapType: hostPlayer.game_settings.mapType,
             speed: hostPlayer.game_settings.speed
         }
-        hostPlayer.player.socket.emit('redirect_to_game', gameInfo);
-        opponent.player.socket.emit('redirect_to_game', gameInfo);
+        const hostPlayerSide : string = 'left';
+        const opponentPlayerSide : string = 'right'; 
+        hostPlayer.player.socket.emit('redirect_to_game', gameInfo, hostPlayerSide);
+        opponent.player.socket.emit('redirect_to_game', gameInfo, opponentPlayerSide);
         this.removePlayerFromTheQueue('host', hostPlayer.player);
         this.removePlayerFromTheQueue('guest', opponent.player);
         return 'game is found!';
@@ -113,8 +117,10 @@ export class GameService {
           mapType: opponent.game_settings.mapType,
           speed: opponent.game_settings.speed
       }
-      guestPlayer.player.socket.emit('redirect_to_game', gameInfo);
-      opponent.player.socket.emit('redirect_to_game', gameInfo);
+      const guestPlayerSide: string = 'left';
+      const opponentPlayerSide: string = 'right';
+      guestPlayer.player.socket.emit('redirect_to_game', gameInfo, guestPlayerSide);
+      opponent.player.socket.emit('redirect_to_game', gameInfo, opponentPlayerSide);
       this.removePlayerFromTheQueue('guest', guestPlayer.player);
       this.removePlayerFromTheQueue('host', opponent.player);
       return 'the game is found';
@@ -196,8 +202,10 @@ export class GameService {
         mapType: gameInvitationResponseDto.mapType,
         speed: gameInvitationResponseDto.speed
       }
-      inviteeSocket.join(invitationRoom);
-      server.to(invitationRoom).emit('redirect_to_game', gameInfo);
+      const invitorSide:string = 'left';
+      const inviteeSide: string = 'right';
+      server.to(invitationRoom).emit('redirect_to_game', gameInfo, invitorSide);
+      inviteeSocket.emit('redirect_to_game', gameInfo, inviteeSide);
     } else if (gameInvitationResponseDto.response === 'decline') {
       const payload: string = 'invitation declined';
       server.to(invitationRoom).emit('GameInvitationResponse', payload);
