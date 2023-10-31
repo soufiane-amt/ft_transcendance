@@ -24,16 +24,18 @@ function UserItemCard ({userCardData, extraStyle, handleUserClick}:UserItemProps
 
 
 interface ChannelInvitorProps {
-    handleVisibility: ()=>void
+    userCondidates: Map<string, string>,
+    handleVisibility: ()=>void,
+    onConfirm : (invitedUsers: string[])=> void
 }
-export function ChannelInvitor({handleVisibility}: ChannelInvitorProps) {
-    const map = new Map <string, string>() 
-    map.set('samajat', 'http://localhost:3001/chat/image/6ba7b810-9dad-11d1-80b4-00c04fd430c8.png')
-    map.set('batman50', 'http://localhost:3001/chat/image/550e8400-e29b-41d4-a716-446655440000.jpeg')
-    map.set('johnSnow67', 'http://localhost:3001/chat/image/f47ac10b-58cc-4372-a567-0e02b2c3d479.jpeg')
+export function ChannelInvitor({userCondidates, onConfirm, handleVisibility}: ChannelInvitorProps) {
+    // const map = new Map <string, string>() 
+    // map.set('samajat', 'http://localhost:3001/chat/image/6ba7b810-9dad-11d1-80b4-00c04fd430c8.png')
+    // map.set('batman50', 'http://localhost:3001/chat/image/550e8400-e29b-41d4-a716-446655440000.jpeg')
+    // map.set('johnSnow67', 'http://localhost:3001/chat/image/f47ac10b-58cc-4372-a567-0e02b2c3d479.jpeg')
 
-    const list= ['samajat', 'batman50', 'johnSnow67',]
-    const [searchedUsers, setSearchedUsers] = useState<string[]>(list);
+    const usersList = Array.from(userCondidates.keys());
+    const [searchedUsers, setSearchedUsers] = useState<string[]>(usersList);
     const [searchedUsername, setSearchedUsername] = useState<string>('');
     const [invitedUsers, setInvitedUsers] = useState<string[]>([]);
     const ref = useOutsideClick(handleVisibility);
@@ -64,6 +66,11 @@ export function ChannelInvitor({handleVisibility}: ChannelInvitorProps) {
             setSearchedUsers(list);
         }
     };
+
+    const handleConfirm = () => {
+        onConfirm(invitedUsers);
+        window.location.reload();
+    }
         return (
         <div   className={style.dark_background}>
 
@@ -119,7 +126,7 @@ export function ChannelInvitor({handleVisibility}: ChannelInvitorProps) {
                 </ul>
             </div>
             <div className={style.user_invitor_modal_confirm}>
-                <button  onClick={handleVisibility}>Confirm and Create Channel</button>
+                <button  onClick={handleConfirm}>Confirm and Create Channel</button>
             </div>
         </div>
         </div>

@@ -1,5 +1,5 @@
 'use client'
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import style from './CreateChannel.module.css';
 import UploadChannelIcon from '../../../../public/images/icons/CreateChannel/UploadChannelIcon.jpg'
 import { ChannelInvitor } from './ChannelInvitor/ChannelInvitor';
@@ -22,8 +22,9 @@ export function CreateChannel() {
     const [selectedImage, setSelectedImage] = useState<{content : string | ArrayBuffer | null, extension: string}>({content :  UploadChannelIcon.src,
                                                              extension :'jpg'});
 
+
+    //send a post request to the server to get usernames along with their avatars
     const handleSubmitData = (invitedUsers: string[]) => {
-        socket.emit('uploadImage', selectedImage); // Send the image data to the server
         socket.emit('createChannel', {channelName,
                                         channelType,
                                         selectedImage,
@@ -142,7 +143,7 @@ export function CreateChannel() {
             </div>
             {
                 displayChannelInvitor && (
-                    <ChannelInvitor handleVisibility={handleInviteUsersModal} />
+                    <ChannelInvitor handleVisibility={handleInviteUsersModal} onConfirm={handleSubmitData} />
                 )
             }
         </div>
