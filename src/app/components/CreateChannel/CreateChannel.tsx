@@ -3,7 +3,6 @@ import { useRef, useState } from 'react';
 import style from './CreateChannel.module.css';
 import UploadChannelIcon from '../../../../public/images/icons/CreateChannel/UploadChannelIcon.jpg'
 import { ChannelInvitor } from './ChannelInvitor/ChannelInvitor';
-import { stringifyCookie } from 'next/dist/compiled/@edge-runtime/cookies';
 
 
 const MaxChannelNameLength = 15;
@@ -62,6 +61,20 @@ export function CreateChannel() {
     }
     
     const handleInviteUsersModal = ()=>{
+        //Check if channel name and password and image are valid 
+
+        if (channelName.length < MinChannelNameLength) {
+            alert(`Your channel name must be at least ${MinChannelNameLength} characters long!`);
+            return;
+        }
+        if (selectedOption === "PROTECTED" && password.length < MinPasswordLength) {
+            alert(`Your password must be at least ${MinPasswordLength} characters long!`);
+            return;
+        }
+        if (selectedImage === UploadChannelIcon.src) {
+            alert(`Please choose a picture for the channel!`);
+            return;
+        }
         setDisplayChannelInvitor(!displayChannelInvitor)
     }
     return (
