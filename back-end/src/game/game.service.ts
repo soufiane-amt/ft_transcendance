@@ -96,7 +96,7 @@ export class GameService {
         hostPlayer.player.socket.emit('redirect_to_game', gameInfo, hostPlayerSide);
         opponent.player.socket.emit('redirect_to_game', gameInfo, opponentPlayerSide);
         this.removePlayerFromTheQueue('host', hostPlayer.player);
-        this.removePlayerFromTheQueue('guest', opponent.player);
+        this.removePlayerFromTheQueue('host', opponent.player);
         return 'game is found!';
         }
     }
@@ -147,11 +147,10 @@ export class GameService {
       } else {
         right = mid - 1;
       }
-
       if (
         closest === null ||
         Math.abs(queue[mid].player.level - player.level) <
-          Math.abs(closest.level - player.level)
+          Math.abs(closest.player.level - player.level)
       ) {
         closest = queue[mid];
       }
