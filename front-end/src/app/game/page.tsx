@@ -35,19 +35,14 @@ export default function Game() {
   const [gameSocket, setGameSocket] = useState<null | Socket>(null);
 
   useEffect(() => {
-    if (gameSocket === null) {
       const socket: Socket = io(`${process.env.NEXT_PUBLIC_BACKEND_SERV}/Game`, {
         query: {
           token: `$bearer ${jwtToken}`
         }
       });
       setGameSocket(socket);
-    }
     return () => {
-      if (gameSocket !== null) {
-        gameSocket.close();
-        setGameSocket(null);
-      }
+      socket.close();
     }
   }, []);
 
