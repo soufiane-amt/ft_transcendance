@@ -17,16 +17,12 @@ function GameDashboard() {
   const cleanUp = () => {
     const body : HTMLElement | null = document.body;
     body.style.overflow = 'scroll';
-    const socket: Socket = gameContext.gameSocket;
-    if (isGameStarted === true) {
-      socket.emit('leave_game');
-    }
   }
 
   useEffect(() => {
     const body : HTMLElement | null = document.body;
     body.style.overflow = 'hidden';
-    gameContext.gameSocket.on('game_start', () => {
+    gameContext.gameSocket.on('game_started', () => {
       setIsGameStarted(true);
     });
     gameContext.gameSocket.on('game_finished', (result: string) => {
@@ -34,12 +30,12 @@ function GameDashboard() {
       setIsGameFinished(true);
       setresult(result);
     })
-    setIsGameStarted(true);
     const payload: any = {
       player1_id: gamedataContext.gamePlayData.gameInfo.player1_id,
       player2_id: gamedataContext.gamePlayData.gameInfo.player2_id,
       speed: gamedataContext.gamePlayData.gameInfo.speed,
-      game_id: gamedataContext.gamePlayData.gameInfo.game_id
+      game_id: gamedataContext.gamePlayData.gameInfo.game_id,
+      mapType: gamedataContext.gamePlayData.gameInfo.mapType
     }
     gameContext.gameSocket.emit('join_a_game', payload)
     return () => cleanUp();

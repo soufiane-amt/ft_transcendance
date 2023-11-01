@@ -8,7 +8,7 @@ export default class Game {
     scene: Scene;
     roundsScores: number[];
     leftPlayerSocket: Socket;
-    rightPlayerSoket: Socket;
+    rightPlayerSocket: Socket;
     leftPlayer: Player;
     rightPlayer: Player;
     puck: Puck;
@@ -17,13 +17,14 @@ export default class Game {
     speed: string;
     round: number;
     server: Server;
-    pausedSide: string;
+    pausedSide: string | undefined;
     gameId: string;
+    mapType: string;
 
-    constructor(gameId: string, leftPlayerSokcet: Socket, rightPlayerSocket: Socket, speed: string, server: Server, gameRoom: string) {
+    constructor(gameId: string, leftPlayerSokcet: Socket, rightPlayerSocket: Socket, speed: string, server: Server, gameRoom: string, mapType: string) {
         this.roundsScores = [5, 4, 3];
         this.leftPlayerSocket = leftPlayerSokcet;
-        this.rightPlayerSoket = rightPlayerSocket;
+        this.rightPlayerSocket = rightPlayerSocket;
         this.speed = speed;
         this.room = gameRoom;
         this.status = 'started';
@@ -37,9 +38,11 @@ export default class Game {
         this.scene.height = 1;
         this.leftPlayer = new Player('left');
         this.rightPlayer = new Player('right');
-        this.puck = new Puck(this.speed, this.scene);
+        this.puck = new Puck(this.speed, this.scene, mapType);
         this.server = server;
         this.gameId = gameId;
+        this.pausedSide = undefined;
+        this.mapType = mapType;
         this.setup();
     }
 
@@ -61,19 +64,19 @@ export default class Game {
             }
             this.puck.reset();
             if (this.leftPlayer.score === this.roundsScores[this.round] || this.rightPlayer.score === this.roundsScores[this.round]) {
+                if (this.leftPlayer.score > this.rightPlayer.score) {
+                    this.leftPlayer.winningRounds++;
+                } else {
+                    this.rightPlayer.winningRounds++;
+                }
                 if (this.round === 2) {
                     const leftPlayerResult: string = this.leftPlayer.winningRounds > this.rightPlayer.winningRounds ? 'win' : 'lose';
                     this.leftPlayerSocket.emit('game_finished', leftPlayerResult);
                     const rightPlayerResult: string = this.rightPlayer.winningRounds > this.leftPlayer.winningRounds ? 'win' : 'lose';
-                    this.rightPlayerSoket.emit('game_finished', rightPlayerResult);
+                    this.rightPlayerSocket.emit('game_finished', rightPlayerResult);
                     this.status = 'finished';
                 } else {
                     this.round++;
-                    if (this.leftPlayer.score > this.rightPlayer.score) {
-                        this.leftPlayer.winningRounds++;
-                    } else {
-                        this.rightPlayer.winningRounds++;
-                    }
                     this.leftPlayer.score = 0;
                     this.rightPlayer.score = 0;
                     this.server.to(this.room).emit('move_next_round');
@@ -82,9 +85,11 @@ export default class Game {
         }
         const player = (this.puck.velocityX > 0) ? this.rightPlayer : this.leftPlayer;
         this.puck.move(player);
+        const direction = this.puck.velocityX > 0 ? 1 : -1;
         const payload: any = {
             centerX: this.puck.centerX,
-            centerY: this.puck.centerY
+            centerY: this.puck.centerY,
+            direction
         }
         this.server.to(this.room).emit('move_puck', payload);
     }
@@ -95,27 +100,19 @@ export default class Game {
 
     setup(): void {
         this.leftPlayerSocket.join(this.room);
-        this.rightPlayerSoket.join(this.room);
-        this.leftPlayerSocket.on('stop_game', (side: string) => { this.handlePausingGame(side) });
-        this.rightPlayerSoket.on('stop_game', (side: string) => { this.handlePausingGame(side) });
-        this.rightPlayerSoket.on('leave_game', () => {
+        this.rightPlayerSocket.join(this.room);
+        this.leftPlayerSocket.on('stop_game', (payload: any) => { this.handlePausingGame(payload) });
+        this.rightPlayerSocket.on('stop_game', (payload: any) => { this.handlePausingGame(payload) });
+        this.rightPlayerSocket.on('disconnect', () => {
             const payload: string = 'win';
             this.leftPlayerSocket.emit('game_finished', payload);
-            this.status = 'finished';
-        });
-        this.leftPlayerSocket.on('leave_game', () => {
-            const payload: string = 'win';
-            this.rightPlayerSoket.emit('game_finished', payload);
-            this.status = 'finished';
-        })
-        this.rightPlayerSoket.on('disconnect', () => {
-            const payload: string = 'win';
-            this.leftPlayerSocket.emit('game_finished', payload);
+            this.leftPlayer.winningRounds = 3;
             this.status = 'finished';
         })
         this.leftPlayerSocket.on('disconnect', () => {
             const payload: string = 'win';
-            this.rightPlayerSoket.emit('game_finished', payload);
+            this.rightPlayerSocket.emit('game_finished', payload);
+            this.rightPlayer.winningRounds = 3;
             this.status = 'finished';
         })
         this.leftPlayerSocket.on('move_paddle', (payload: any) => {
@@ -123,7 +120,7 @@ export default class Game {
             this.leftPlayer.move(pos);
             this.server.to(this.room).emit('move_paddle', payload);
         })
-        this.rightPlayerSoket.on('move_paddle', (payload: any) => {
+        this.rightPlayerSocket.on('move_paddle', (payload: any) => {
             const pos: number = payload.pos;
             this.rightPlayer.move(pos);
             this.server.to(this.room).emit('move_paddle', payload);
@@ -131,12 +128,12 @@ export default class Game {
         this.server.to(this.room).emit('game_started');
     }
 
-    handlePausingGame(side: string) : void {
+    handlePausingGame(payload: any) : void {
         if (this.status === 'started') {
-            this.pausedSide = side;
+            this.pausedSide = payload.side;
             this.status = 'paused';
             this.server.to(this.room).emit('game_paused');
-        } else if (this.status === 'paused' && this.pausedSide === side){
+        } else if (this.status === 'paused' && this.pausedSide === payload.side){
             this.status = 'started';
             this.server.to(this.room).emit('game_continued');
         }

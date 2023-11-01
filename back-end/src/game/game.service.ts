@@ -232,9 +232,10 @@ export class GameService {
   async startGame(player1Socket: ClientSocket, player2Socket: ClientSocket, gameRoom: string, joinGame: JoinGameDto, server: Server) : Promise<void> {
     const leftPlayerSocket: Socket = player1Socket.player.id === joinGame.player1_id ? player1Socket : player2Socket;
     const rightPlayerSocket: Socket = player1Socket.player.id === joinGame.player2_id ? player1Socket : player2Socket;
-    const speed: string = joinGame.speed;
+    const speed: string = joinGame.speed.toLowerCase();
     const gameId: string = joinGame.game_id;
-    const game: Game = new Game(gameId, leftPlayerSocket, rightPlayerSocket, speed, server, gameRoom);
+    const mapType: string = joinGame.mapType.toLowerCase();
+    const game: Game = new Game(gameId, leftPlayerSocket, rightPlayerSocket, speed, server, gameRoom, mapType);
     await this.gameCrudService.updateGameStatus(gameId, 'IN_PROGRESS');
     const intervalId: NodeJS.Timeout = setInterval(() => {
       if (game.status === 'started') {

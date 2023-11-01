@@ -46,7 +46,10 @@ export default class Game {
         this.ctx.drawImage(this.offscreenCanvas, 0, 0);
         this.Opponent.draw();
         this.User.draw();
-        this.puck.draw();
+        const leftPlayer: Player = this.User.side === 'left' ? this.User : this.Opponent;
+        const rightPlayer: Player = this.User.side === 'right' ? this.User : this.Opponent;
+        const player: Player = this.puck.direction === 1 ? rightPlayer : leftPlayer;
+        this.puck.draw(player);
     }
 
     drawbackground(mapType: MapType) : void {
@@ -127,18 +130,10 @@ export default class Game {
             const newPos: number = payload.pos;
             player.upadatepos(newPos);
         })
-        window.addEventListener('keypress', (e) => {
-            if (e.key === ' ') {
-                const payload: any = {
-                    side: this.User.side,
-                }
-                this.socket.emit('stop_game', payload);
-            }          
-        })
+
         this.socket.on('move_puck', (payload: any) => {
             this.puck.move(payload);
         })
-        window.addEventListener('resize', () => this.resize());
         this.canvas.addEventListener('mousemove', (e) => {
             const newPosition: number = (e.offsetY / this.canvas.height);
             this.User.move(newPosition);

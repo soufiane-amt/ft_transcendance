@@ -9,15 +9,24 @@ export default class Puck {
     speed: number;
     scene: Scene;
     boundaries: Boundaries;
+    mapType: string;
     velocityX: number;
     velocityY: number;
 
-    constructor(speed: string, scene: Scene) {
+    constructor(speed: string, scene: Scene, mapType: string) {
         this.scene = scene;
         this.centerX = (this.scene.width / 2);
         this.centerY = (this.scene.height / 2);
-        this.raduis = 0.009;
-        this.speed = 0.02;
+        this.raduis = 0.006;
+        this.mapType = mapType;
+        if (speed === 'slow') {
+            this.speed = 0.01;
+        }
+        else if (speed === 'fast') {
+            this.speed = 0.02;
+        } else if (speed === 'normal') {
+            this.speed = 0.015;
+        }
         this.boundaries = {} as Boundaries;
         this.boundaries.top = this.centerY - this.raduis;
         this.boundaries.bottom = this.centerY + this.raduis;
@@ -31,13 +40,20 @@ export default class Puck {
         this.centerX += this.velocityX;
         this.centerY += this.velocityY;
         this.updateBoundaries();
+        if (this.mapType === 'random') {
+            const start: number = (this.scene.width / 2) - (0.05 / 2);
+            const end: number = (this.scene.width / 2) + (0.05 / 2);
+            this.centerY = this.boundaries.left >= start && this.boundaries.right <= end ? this.scene.height * Math.random() : this.centerY;
+            this.centerY = this.centerY + this.raduis >= this.scene.height ? this.scene.height - this.raduis : this.centerY;
+            this.centerY = this.centerY - this.raduis < 0 ? this.raduis : this.centerY;
+        }
         if (this.hitTopOrBottom() === true) {
             const sceneVCenter = this.scene.height / 2;
             this.centerY = this.centerY > sceneVCenter ? this.scene.bottom - this.raduis : this.raduis;
             this.velocityY *= -1;
         }
         if (this.checkCollision(player) === true) {
-            this.centerX = player.side === 'left' ? player.boundaries.right + this.raduis : player.boundaries.left - this.raduis;
+             this.centerX = player.side === 'left' ? player.boundaries.right + this.raduis : player.boundaries.left - this.raduis;
             let collidePoint = this.centerY - (player.boundaries.top + (player.height / 2));
             collidePoint = collidePoint / (player.height / 2);
             collidePoint = Math.max(-1, collidePoint);
@@ -46,6 +62,8 @@ export default class Puck {
             const angle = collidePoint * (Math.PI / 4);
             this.velocityX = direction * this.speed * Math.cos(angle);
             this.velocityY = this.speed * Math.sin(angle);
+            this.centerY += this.velocityY;
+            this.velocityX = direction * this.speed;
         }
     }
 
@@ -75,6 +93,5 @@ export default class Puck {
     reset() {
         this.centerX = 0.5;
         this.centerY = 0.5;
-        this.speed = 0.02;
     }
 }
