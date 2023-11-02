@@ -280,20 +280,28 @@ import { subscribe } from "diagnostics_channel";
         image : `.`
       };
 
-      const channel_id = await this.chatCrud.createChannel (userIdCookie, channel_data, channelData.selectedImage.extension,  channelData.invitedUsers)
-      this.handleUploadImage(channel_id, channelData.selectedImage)
-      client.join('channel-' + channel_id)
+      // const channel_id = await this.chatCrud.createChannel (userIdCookie, channel_data, channelData.selectedImage.extension,  channelData.invitedUsers)
+      this.handleUploadImage('channel_id', channelData.selectedImage)
+      client.join('channel-' + 'channel_id')
     }
     //This method takes the image sent by the front end and store in the upload folder and database
     // @SubscribeMessage('uploadImage')
-    handleUploadImage(channel_id :string, channel_image: {content : string | ArrayBuffer | null, extension: string}) {
-      const imagePath =  `upload/${channel_id}.${channel_image.extension}`;
-      const fs = require('fs');
-      fs.writeFile(imagePath, channel_image.content, 'base64', (err: any) => {
-        if (err) {
-          console.log(err);
+    private handleUploadImage(channel_id :string, channel_image: {content : string | ArrayBuffer | null, extension: string}) {
+        if (channel_image.content) {
+          // Extract the Base64-encoded content from the data URL
+          const base64Data = channel_image.content.toString();
+          console.log('Base64 data : ', base64Data)
+          // Create the image path
+          const imagePath = `upload/${channel_id}.${channel_image.extension}`;
+      
+          // Write the image to the file without specifying the encoding as 'base64'
+          const fs = require('fs');
+          fs.writeFile(imagePath, base64Data, (err: any) => {
+            if (err) {
+              console.log(err);
+            }
+          });
         }
-      });
-    }
+      }
   
 }

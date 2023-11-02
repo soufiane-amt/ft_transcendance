@@ -95,13 +95,29 @@ async findFriendsList(id: string)
 
     }
   )
-  const friends_ids = friendShips.filter ((frienship) =>{
-    return id === frienship.user1_id ? frienship.user2_id : frienship.user1_id;
-  })
-  return friends_ids
+const friends_ids = friendShips.map((friendship) =>
+  id === friendship.user1_id ? friendship.user2_id : friendship.user1_id
+);  
+return friends_ids
 }
 
+async findFriendsUsernameAvatar(user_id: string)
+{
+  const friends_ids = await this.findFriendsList(user_id)
+  const friends = await this.prisma.prismaClient.user.findMany({
+    where: {
+      id: {
+        in: friends_ids,
+      },
+    },
+    select:{
+      username:true, 
+      avatar:true,
 
+    }
+  });
+  return friends;
+}
 async  findNonFriendsUsers(userId: string) {
   const friendships = await this.prisma.prismaClient.friendships.findMany({
     where: {

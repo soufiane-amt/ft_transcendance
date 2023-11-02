@@ -248,7 +248,7 @@ async retreiveDmInitPanelData(user_id :string) {
         id:channel_id,
       },
       data:{
-        image: `http://localhost:3000/uploads/${channel_id}.${image_extention}`,
+        image: `http://localhost:3001/chat/image/${channel_id}.${image_extention}`,
       }
       }
     )

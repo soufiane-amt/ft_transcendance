@@ -1,4 +1,4 @@
-import { Controller, Get, Query,Post , Res,Req,  Param, Inject, UseGuards, Body, BadRequestException, ExecutionContext, CallHandler, SetMetadata, Put, InternalServerErrorException } from '@nestjs/common';
+import { Controller, Get, Query,Post , Res,Req,  Param, Inject, UseGuards, Body, BadRequestException, ExecutionContext, CallHandler, SetMetadata, Put, InternalServerErrorException, UseInterceptors, UploadedFile } from '@nestjs/common';
 import { DmService } from './services/direct-messaging/dm.service';
 import { Request, Response } from "express"
 import { dmGateway } from './services/direct-messaging/dm.gateway';
@@ -9,8 +9,10 @@ import { ChatCrudService } from 'src/prisma/chat-crud.service';
 import * as path from 'path';
 import * as fs from 'fs';
 import { UserCrudService } from 'src/prisma/user-crud.service';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { v4 as uuidv4 } from 'uuid';
+import { diskStorage } from 'multer';
 
-  
 
 
 
@@ -51,7 +53,8 @@ async findAllDiscussionPartners (@Req() request : Request)
 
   return discussions;
 }
- 
+
+
 @Get ("/Channels/discussionsBar")
 async findAllDiscussionChannels (@Req() request : Request)
 {
@@ -151,11 +154,40 @@ async findAllChannelsInContact (@Req() request : Request)
    return mutedRoomsData;
  }
 
-  @Get("/userData")
-  async getUserData (@Req() request : Request)
-  {
-    return (this.userCrud.findUserSessionDataByID(request.cookies["user.id"]))
-  }
+ @Get("/userData")
+ async getUserData (@Req() request : Request)
+ {
+   return (this.userCrud.findUserSessionDataByID(request.cookies["user.id"]))
+ }
+
+
+ @Post('upload')
+ @UseInterceptors(FileInterceptor('file'))
+ uploadFile(@UploadedFile() file) {
+   if (!file) {
+     return { message: 'No file uploaded' };
+   }
+   file.filename = uuidv4() + file.originalname;
+   if (typeof file.filename !== 'string') {
+     console.log('file.filename', file.filename)
+     return { message: 'Invalid file data' };
+   }
+ 
+   const filePath = path.join(__dirname, '..', '../upload/', file.filename);
+ 
+   // Save the file to the server
+   fs.writeFileSync(filePath, file.buffer);
+ 
+   return { message: 'File uploaded and saved on the server' };
+ }
+ 
+
+ @Get("/memberCondidatesOfChannelCreation")
+ async getFriends (@Req() request : Request)
+ {
+  console.log('Got a request and here is the data : ', await this.userCrud.findFriendsUsernameAvatar(request.cookies["user.id"]))
+   return (await this.userCrud.findFriendsUsernameAvatar(request.cookies["user.id"]))
+ }
 
  
 @Put("/messages/markAsRead")
