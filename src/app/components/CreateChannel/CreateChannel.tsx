@@ -59,7 +59,8 @@ export function CreateChannel() {
           alert(`Your password must be at least ${MinPasswordLength} characters long!`);
           return;
         }
-        const response = axios.post('http://localhost:3001/chat/upload', image,{
+        try {
+        const response = await axios.post('http://localhost:3001/chat/upload', image,{
             headers: {
               'Content-Type': 'multipart/form-data',
             },}    
@@ -68,21 +69,20 @@ export function CreateChannel() {
               console.log('Axios response: ', res)
             })
       
-        try {
       
-        //   if (response.status === 200) {
-        //     console.log('Image uploaded successfully');
-        //     // Continue with the rest of your createChannel logic
-        //     socket.emit('createChannel', {
-        //       channelName,
-        //       channelType,
-        //       image: selectedImage.extension, // Send the image extension
-        //       password,
-        //       invitedUsers,
-        //     });
-        //   } else {
-        //     console.error('Image upload failed');
-        //   }
+          if (response.status === 200) {
+            console.log('Image uploaded successfully');
+            // Continue with the rest of your createChannel logic
+            socket.emit('createChannel', {
+              channelName,
+              channelType,
+              image: selectedImage.extension, // Send the image extension
+              password,
+              invitedUsers,
+            });
+          } else {
+            console.error('Image upload failed');
+          }
         } catch (error) {
           console.error('Error uploading image:', error);
         }
