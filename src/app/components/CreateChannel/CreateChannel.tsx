@@ -21,8 +21,12 @@ export function CreateChannel() {
     const [password, setPassword] = useState<string>('');
     const [channelType, setChannelType] = useState("PUBLIC");
     const [displayChannelInvitor, setDisplayChannelInvitor] = useState <boolean> (false)
-    const [selectedImage, setSelectedImage] = useState<{content : string | ArrayBuffer | null, extension: string}>({content :  UploadChannelIcon.src,
-                                         extension :'jpg'});
+    // const [selectedImage, setSelectedImage] = useState<{content : string | ArrayBuffer | null, extension: string}>({content :  UploadChannelIcon.src,
+    //                                      extension :'jpg'});
+    const [image, setImage] = useState<FormData | null>(null);
+
+        
+        
     const [condidateUsers, setUserCondidates] = useState<Map<string, string>>(new Map<string, string>()); // [username, avatar
     useEffect(() => {
       async function fetchDataAsync() {
@@ -41,7 +45,7 @@ export function CreateChannel() {
 
     //send a post request to the server to get usernames along with their avatars
     const handleSubmitData = async (invitedUsers: string[]) => {
-        if (!selectedImage.content) {
+        if (!image) {
           alert('Please choose a picture for the channel!');
           return;
         }
@@ -55,17 +59,16 @@ export function CreateChannel() {
           alert(`Your password must be at least ${MinPasswordLength} characters long!`);
           return;
         }
+        const response = axios.post('http://localhost:3001/chat/upload', image,{
+            headers: {
+              'Content-Type': 'multipart/form-data',
+            },}    
+            )
+            .then(res => {
+              console.log('Axios response: ', res)
+            })
       
-        // try {
-        // const formData = new FormData();
-        // const blob = new Blob([selectedImage.content], { type: `image/${selectedImage.extension}` });
-        // formData.append('image', blob);
-
-        
-        // // Post the image to your server's endpoint for image upload
-        // const response = await axios.post('http://localhost:3001/chat/upload', formData, {
-        //     withCredentials: true,
-        //   });
+        try {
       
         //   if (response.status === 200) {
         //     console.log('Image uploaded successfully');
@@ -80,28 +83,15 @@ export function CreateChannel() {
         //   } else {
         //     console.error('Image upload failed');
         //   }
-        // } catch (error) {
-        //   console.error('Error uploading image:', error);
-        // }
+        } catch (error) {
+          console.error('Error uploading image:', error);
+        }
       };
     
       const handleImageChange = (event:any) => {
-        console.log('event.target.files[0]:' + event.target.files[0]);
-    //   const file = event.target.files[0];
-    //   if (file && file.type.startsWith('image/')) {
-    //     const reader = new FileReader();
-    //     reader.onload = () => {
-    //         const imageExtension = file.name.split('.').pop();
-    //         console.log('imageExtension:');
-    //         setSelectedImage({content: reader.result, extension:imageExtension});
-    //     };
-    //     reader.readAsDataURL(file);
-    // } else {
-    //     setSelectedImage(selectedImage);
-    //   }
-      // const file = event.target.files[0];
-      // setSelectedImage({ extension:file.name.split('.').pop(), content: URL.createObjectURL(file) });
-      // console.log('selectedImage:' + file.);
+        const formData = new FormData(); 
+        formData.append('file', event.target.files[0], event.target.files[0].name);
+        setImage(formData);    
     };
   
     const handleChannelNameChange = (e :React.ChangeEvent<HTMLInputElement>) => {
@@ -139,10 +129,10 @@ export function CreateChannel() {
             alert(`Your password must be at least ${MinPasswordLength} characters long!`);
             return;
         }
-        if (selectedImage.content === UploadChannelIcon.src) {
-            alert(`Please choose a picture for the channel!`);
-            return;
-        }
+        // if (image === UploadChannelIcon.src) {
+        //     alert(`Please choose a picture for the channel!`);
+        //     return;
+        // }
         setDisplayChannelInvitor(!displayChannelInvitor)
     }
     return (
@@ -150,7 +140,12 @@ export function CreateChannel() {
             <h3>Create Channel :</h3>
             <div className={style.create_channel__image}>
                 <input ref={fileInputRef} type="file" accept="image/*" onChange={handleImageChange} style={{display:'none'}} width="30px" height="30px"/>
-                {selectedImage && <img  onClick={handleClickUpload} src={selectedImage.content?.toString()} alt="Selected" style={{ maxWidth: '100%', maxHeight: '300px' }} />}
+                {
+                <img  onClick={handleClickUpload}
+                src={image ? URL.createObjectURL(image.get('file') as Blob) : UploadChannelIcon.src}
+                alt="Selected"
+                style={{
+                    maxWidth: '100%', maxHeight: '300px' }} />}
 
                 <label >Choose a picture to the channel</label>
             </div>
