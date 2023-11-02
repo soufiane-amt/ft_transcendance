@@ -29,11 +29,6 @@ interface ChannelInvitorProps {
     onConfirm : (invitedUsers: string[])=> void
 }
 export function ChannelInvitor({userCondidates, onConfirm, handleVisibility}: ChannelInvitorProps) {
-    // const map = new Map <string, string>() 
-    // map.set('samajat', 'http://localhost:3001/chat/image/6ba7b810-9dad-11d1-80b4-00c04fd430c8.png')
-    // map.set('batman50', 'http://localhost:3001/chat/image/550e8400-e29b-41d4-a716-446655440000.jpeg')
-    // map.set('johnSnow67', 'http://localhost:3001/chat/image/f47ac10b-58cc-4372-a567-0e02b2c3d479.jpeg')
-
     const usersList = Array.from(userCondidates.keys());
     const [searchedUsers, setSearchedUsers] = useState<string[]>(usersList);
     const [searchedUsername, setSearchedUsername] = useState<string>('');
@@ -63,9 +58,9 @@ export function ChannelInvitor({userCondidates, onConfirm, handleVisibility}: Ch
             setSearchedUsers(filteredUsers);
         } 
         else {
-            setSearchedUsers(list);
+            setSearchedUsers(usersList);
         }
-    };
+    };  
 
     const handleConfirm = () => {
         onConfirm(invitedUsers);
@@ -85,41 +80,9 @@ export function ChannelInvitor({userCondidates, onConfirm, handleVisibility}: Ch
                     />
                 </div>
             <div className={style.user_invitor_modal_selection}>
-                {/* <label>Select the users to include:</label> */}
                 <ul>
                 {searchedUsers.map((user) => (
-                        // <li
-                        //     key={user}
-                        //     className={checkUserInvited(user) ? style.selected : ''}
-                        //     onClick={() => handleClickUser(user)}
-                        // >
-                        //     {user}
-                        // </li>
-                        <UserItemCard userCardData={{username:user, avatar: map.get(user)}} 
-                                extraStyle={checkUserInvited(user) ? style.selected : ''}
-                                handleUserClick={() => handleClickUser(user)}/>
-                ))}
-                {searchedUsers.map((user) => (
-                        // <li
-                        //     key={user}
-                        //     className={checkUserInvited(user) ? style.selected : ''}
-                        //     onClick={() => handleClickUser(user)}
-                        // >
-                        //     {user}
-                        // </li>
-                        <UserItemCard userCardData={{username:user, avatar: map.get(user)}} 
-                                extraStyle={checkUserInvited(user) ? style.selected : ''}
-                                handleUserClick={() => handleClickUser(user)}/>
-                ))}
-                {searchedUsers.map((user) => (
-                        // <li
-                        //     key={user}
-                        //     className={checkUserInvited(user) ? style.selected : ''}
-                        //     onClick={() => handleClickUser(user)}
-                        // >
-                        //     {user}
-                        // </li>
-                        <UserItemCard userCardData={{username:user, avatar: map.get(user)}} 
+                        <UserItemCard userCardData={{username:user, avatar: userCondidates.get(user)}} 
                                 extraStyle={checkUserInvited(user) ? style.selected : ''}
                                 handleUserClick={() => handleClickUser(user)}/>
                 ))}

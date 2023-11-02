@@ -5,6 +5,8 @@ import UploadChannelIcon from '../../../../public/images/icons/CreateChannel/Upl
 import { ChannelInvitor } from './ChannelInvitor/ChannelInvitor';
 import socket from '../../socket/socket';
 import { read } from 'fs';
+import { fetchDataFromApi } from '../shared/customFetch/exmple';
+import axios from 'axios';
 
 
 const MaxChannelNameLength = 15;
@@ -20,31 +22,86 @@ export function CreateChannel() {
     const [channelType, setChannelType] = useState("PUBLIC");
     const [displayChannelInvitor, setDisplayChannelInvitor] = useState <boolean> (false)
     const [selectedImage, setSelectedImage] = useState<{content : string | ArrayBuffer | null, extension: string}>({content :  UploadChannelIcon.src,
-                                                             extension :'jpg'});
-
+                                         extension :'jpg'});
+    const [condidateUsers, setUserCondidates] = useState<Map<string, string>>(new Map<string, string>()); // [username, avatar
+    useEffect(() => {
+      async function fetchDataAsync() {
+        const messagesHistory_tmp = await fetchDataFromApi(
+          `http://localhost:3001/chat/memberCondidatesOfChannelCreation`
+        );
+        const condidateUsers_tmp = new Map<string, string>();
+        messagesHistory_tmp?.forEach((user: any) => {
+            condidateUsers_tmp.set(user.username, user.avatar);
+        });
+        setUserCondidates(condidateUsers_tmp);        
+      }
+      fetchDataAsync();
+    }, []);
+                                                                  
 
     //send a post request to the server to get usernames along with their avatars
-    const handleSubmitData = (invitedUsers: string[]) => {
-        socket.emit('createChannel', {channelName,
-                                        channelType,
-                                        selectedImage,
-                                        password,
-                                        invitedUsers
-                                    });
-    }
-    const handleImageChange = (event:any) => {
-      const file = event.target.files[0];
-      if (file && file.type.startsWith('image/')) {
-        const reader = new FileReader();
-        reader.onload = () => {
-            const imageExtension = file.name.split('.').pop();
-            console.log('imageExtension:',imageExtension);
-            setSelectedImage({content: reader.result, extension:imageExtension});
-        };
-        reader.readAsDataURL(file);
-    } else {
-        setSelectedImage(selectedImage);
-      }
+    const handleSubmitData = async (invitedUsers: string[]) => {
+        if (!selectedImage.content) {
+          alert('Please choose a picture for the channel!');
+          return;
+        }
+      
+        if (channelName.length < MinChannelNameLength) {
+          alert(`Your channel name must be at least ${MinChannelNameLength} characters long!`);
+          return;
+        }
+      
+        if (channelType === 'PROTECTED' && password.length < MinPasswordLength) {
+          alert(`Your password must be at least ${MinPasswordLength} characters long!`);
+          return;
+        }
+      
+        // try {
+        // const formData = new FormData();
+        // const blob = new Blob([selectedImage.content], { type: `image/${selectedImage.extension}` });
+        // formData.append('image', blob);
+
+        
+        // // Post the image to your server's endpoint for image upload
+        // const response = await axios.post('http://localhost:3001/chat/upload', formData, {
+        //     withCredentials: true,
+        //   });
+      
+        //   if (response.status === 200) {
+        //     console.log('Image uploaded successfully');
+        //     // Continue with the rest of your createChannel logic
+        //     socket.emit('createChannel', {
+        //       channelName,
+        //       channelType,
+        //       image: selectedImage.extension, // Send the image extension
+        //       password,
+        //       invitedUsers,
+        //     });
+        //   } else {
+        //     console.error('Image upload failed');
+        //   }
+        // } catch (error) {
+        //   console.error('Error uploading image:', error);
+        // }
+      };
+    
+      const handleImageChange = (event:any) => {
+        console.log('event.target.files[0]:' + event.target.files[0]);
+    //   const file = event.target.files[0];
+    //   if (file && file.type.startsWith('image/')) {
+    //     const reader = new FileReader();
+    //     reader.onload = () => {
+    //         const imageExtension = file.name.split('.').pop();
+    //         console.log('imageExtension:');
+    //         setSelectedImage({content: reader.result, extension:imageExtension});
+    //     };
+    //     reader.readAsDataURL(file);
+    // } else {
+    //     setSelectedImage(selectedImage);
+    //   }
+      // const file = event.target.files[0];
+      // setSelectedImage({ extension:file.name.split('.').pop(), content: URL.createObjectURL(file) });
+      // console.log('selectedImage:' + file.);
     };
   
     const handleChannelNameChange = (e :React.ChangeEvent<HTMLInputElement>) => {
@@ -143,7 +200,7 @@ export function CreateChannel() {
             </div>
             {
                 displayChannelInvitor && (
-                    <ChannelInvitor handleVisibility={handleInviteUsersModal} onConfirm={handleSubmitData} />
+                    <ChannelInvitor userCondidates={condidateUsers} handleVisibility={handleInviteUsersModal} onConfirm={handleSubmitData} />
                 )
             }
         </div>
