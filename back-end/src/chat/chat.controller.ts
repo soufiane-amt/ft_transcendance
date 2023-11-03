@@ -168,17 +168,13 @@ async findAllChannelsInContact (@Req() request : Request)
      return { message: 'No file uploaded' };
    }
    file.filename = uuidv4() + file.originalname;
-   if (typeof file.filename !== 'string') {
-     console.log('file.filename', file.filename)
-     return { message: 'Invalid file data' };
-   }
  
    const filePath = path.join(__dirname, '..', '../upload/', file.filename);
  
    // Save the file to the server
    fs.writeFileSync(filePath, file.buffer);
  
-   return { message: 'File uploaded and saved on the server' };
+   return { message: 'File uploaded and saved on the server', imageSrc: file.filename };
  }
  
 

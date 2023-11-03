@@ -17,8 +17,8 @@ export interface channelDto {
 
 export  interface channelCreateDto {
   channelName: string;
+  imageSrc: string;
   channelType: "PUBLIC" | "PRIVATE" | "PROTECTED";
-  selectedImage:  {content : string | ArrayBuffer , extension: string};
   invitedUsers: string[];
   password?: string;
 }

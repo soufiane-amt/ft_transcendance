@@ -239,19 +239,11 @@ async retreiveDmInitPanelData(user_id :string) {
   
   // Create a new chat channel (public, or password-protected).
 
-  async createChannel(user_id:string,  data: channelDto, image_extention:string, invitedUsers:string[]) {
+  async createChannel(user_id:string,  data: channelDto, invitedUsers:string[]) {
     const channel_id: string = (
       await this.prisma.prismaClient.channel.create({ data })
     ).id;
-    await this.prisma.prismaClient.channel.update({
-      where:{
-        id:channel_id,
-      },
-      data:{
-        image: `http://localhost:3001/chat/image/${channel_id}.${image_extention}`,
-      }
-      }
-    )
+
     const memberShipData: channelMembershipDto = {
       channel_id: channel_id,
       user_id: user_id,
