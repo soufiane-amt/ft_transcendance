@@ -116,14 +116,18 @@ export default class Game {
             this.status = 'finished';
         })
         this.leftPlayerSocket.on('move_paddle', (payload: any) => {
-            const pos: number = payload.pos;
-            this.leftPlayer.move(pos);
-            this.server.to(this.room).emit('move_paddle', payload);
+            if (this.status === 'started') {
+                const pos: number = payload.pos;
+                this.leftPlayer.move(pos);
+                this.server.to(this.room).emit('move_paddle', payload);
+            }
         })
         this.rightPlayerSocket.on('move_paddle', (payload: any) => {
-            const pos: number = payload.pos;
-            this.rightPlayer.move(pos);
-            this.server.to(this.room).emit('move_paddle', payload);
+            if (this.status === 'started') {
+                const pos: number = payload.pos;
+                this.rightPlayer.move(pos);
+                this.server.to(this.room).emit('move_paddle', payload);
+            }
         });
         this.server.to(this.room).emit('game_started');
     }
