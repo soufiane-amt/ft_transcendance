@@ -851,6 +851,13 @@ async findChannelUserMuteData(user_id: string, channel_id: string) {
           },
         },
       });
+      if (!await this.prisma.prismaClient.channelMembership.count(
+        {
+          where: {
+            channel_id: channel_id,
+          },
+        }))
+        await this.deleteChannel(channel_id);
     }
     catch (err)
     {
