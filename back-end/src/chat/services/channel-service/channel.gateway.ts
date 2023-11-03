@@ -220,10 +220,11 @@ import { subscribe } from "diagnostics_channel";
     async handleChannelLeave(client: any,  channel_id : string  ) 
     { 
       const user_id =  this.extractUserIdFromCookies(client);
-      await this.chatCrud.leaveChannel (user_id, channel_id) //deleting the membership of the client in DB
-      this.broadcastChannelChanges(channel_id)
+      const delete_channel = await this.chatCrud.leaveChannel (user_id, channel_id) //deleting the membership of the client in DB
+      if (!delete_channel) //if the user was the owner of the channel  
+        this.broadcastChannelChanges(channel_id)
       client.leave (`channel-${channel_id}`)                              //Deleting the user from the websocket room
-    }  
+    }
 
     @Roles (Role.OWNER)
     @UseGuards(channelPermission)

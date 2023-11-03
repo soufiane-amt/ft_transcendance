@@ -856,8 +856,12 @@ async findChannelUserMuteData(user_id: string, channel_id: string) {
           where: {
             channel_id: channel_id,
           },
-        }))
-        await this.deleteChannel(channel_id);
+        })){
+
+          await this.deleteChannel(channel_id);
+          return true;
+        }
+        return false;
     }
     catch (err)
     {
@@ -943,6 +947,7 @@ async findChannelUserMuteData(user_id: string, channel_id: string) {
   
   
   async findChannelOwner(channel_id: string) {
+    console.log ('>>>>channel_id: ', channel_id)
     const owner =  await this.prisma.prismaClient.channelMembership.findFirst(
       {
         where: {
