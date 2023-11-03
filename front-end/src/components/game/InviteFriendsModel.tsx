@@ -97,7 +97,7 @@ function Invite({ ...props }) {
         }}
       ></div>
       {/* this is the main component */}
-      <div className="bg-[#E4E7FF] rounded shadow-lg w-[80vw] h-[80vh] flex flex-col   p-[30px] box-border overflow-scroll items-center z-[5] min-h-[400px] min-w-[300px] max-h-[1500px] max-w-[720px]">
+      <div className="bg-[#E4E7FF] rounded shadow-lg w-[80vw] h-[80vh] flex flex-col   p-[30px] box-border overflow-scroll items-center z-[5] min-h-[400px] min-w-[300px] max-h-[800px] max-w-[720px]">
         <div className="flex items-center w-full flex-row-reverse h-[3%] mb-[15px]">
           <img
             src="/close.png"
