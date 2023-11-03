@@ -5,8 +5,8 @@ import "../../styles/TailwindRef.css";
 import Game from "@/lib/Game/classes/Game";
 import GameContext from "./GameContext";
 import { Socket } from "socket.io-client";
-import gameDataContext, { GameDataContext } from "../GlobalComponents/GameDataContext";
 import MapType from "@/lib/Game/types/MapType";
+
 
 const cleanUp = (handleClick: any, handleResize: any, animationId: number) => {
         cancelAnimationFrame(animationId);
@@ -16,7 +16,6 @@ const cleanUp = (handleClick: any, handleResize: any, animationId: number) => {
 
 function GameSceneComponent(props: any) {
     const gameContext: any = useContext<any>(GameContext);
-    const gamedataContext: GameDataContext = useContext<GameDataContext>(gameDataContext);
     let gameIsStarted: boolean = true;
 
     useEffect(() => {
@@ -27,8 +26,8 @@ function GameSceneComponent(props: any) {
             gameSocket.on('game_continued', () => {
                 gameIsStarted = true;
             });
-            const userSide: string = gamedataContext.gamePlayData.side;
-            const mapType: MapType = gamedataContext.gamePlayData.gameInfo.mapType.toLowerCase() as MapType;
+            const userSide: string = gameContext.gameDataInfo.side;
+            const mapType: MapType = gameContext.gameDataInfo.gameInfo.mapType.toLowerCase() as MapType;
             let game: Game | null = new Game(userSide, gameSocket, mapType);
             const handleResize: EventListener = (e: Event) => game?.resize();
             const handleClick: (event: KeyboardEvent) => void = (e: KeyboardEvent) => {

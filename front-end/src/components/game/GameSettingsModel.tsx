@@ -90,9 +90,7 @@ function GameSettingsModel({ ...props }) {
         role: context.GameSettings.Roll,
       })
       props.setIsMatchMakingLoading(true);
-      setRoll("");
-      setSpeed("");
-      setImgtheme("/defaultselect.png");
+      props.setSettings(false);
     } else {
       setError("Please finish setuping your data!");
       setTimeout(() => {

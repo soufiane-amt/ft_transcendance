@@ -1,7 +1,6 @@
 "use client"
 
 import React, { useContext, useEffect, useState } from 'react'
-import gameDataContext, { GameData, GameDataContext } from '../GlobalComponents/GameDataContext'
 import ScoreBoardComponent from './ScoreBoardComponent';
 import GameSceneComponent from './GameSceneComponent';
 import GameContext from './GameContext';
@@ -9,7 +8,6 @@ import { Socket } from 'socket.io-client';
 
 function GameDashboard() {
   const gameContext: any = useContext<any>(GameContext);
-  const gamedataContext: GameDataContext = useContext<GameDataContext>(gameDataContext);
   const [isGameStarted, setIsGameStarted] = useState<boolean>(false);
   const [isGameFinished, setIsGameFinished] = useState<boolean>(false);
   const [result, setresult] = useState("");
@@ -30,14 +28,15 @@ function GameDashboard() {
       setIsGameFinished(true);
       setresult(result);
     })
+
     const payload: any = {
-      player1_id: gamedataContext.gamePlayData.gameInfo.player1_id,
-      player2_id: gamedataContext.gamePlayData.gameInfo.player2_id,
-      speed: gamedataContext.gamePlayData.gameInfo.speed,
-      game_id: gamedataContext.gamePlayData.gameInfo.game_id,
-      mapType: gamedataContext.gamePlayData.gameInfo.mapType
+      player1_id: gameContext.gameDataInfo.gameInfo.player1_id,
+      player2_id: gameContext.gameDataInfo.gameInfo.player2_id,
+      speed: gameContext.gameDataInfo.gameInfo.speed,
+      game_id: gameContext.gameDataInfo.gameInfo.game_id,
+      mapType: gameContext.gameDataInfo.gameInfo.mapType
     }
-    gameContext.gameSocket.emit('join_a_game', payload)
+    gameContext.gameSocket.emit('join_a_game', payload);
     return () => cleanUp();
   }, []);
 

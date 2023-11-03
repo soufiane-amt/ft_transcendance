@@ -11,6 +11,7 @@ import { Status } from '@prisma/client';
 import { UserCrudService } from 'src/prisma/user-crud.service';
 import { ZodValidationPipe } from '../pipes/zod-validation-pipe';
 import JoinGameDto, { joinGameDto } from '../dto/JoinGame.dto';
+import RequestInvitationGame, { requestInvitationGameDto } from '../dto/RequestInvitationGame.dto';
 
 @UseGuards(GatewaysGuard)
 @WebSocketGateway({
@@ -62,5 +63,10 @@ export class GameGateway implements OnGatewayInit<Server>, OnGatewayConnection<C
   @SubscribeMessage('join_a_game')
   handlejoingame(@MessageBody(new ZodValidationPipe(joinGameDto)) joinGameDto: JoinGameDto, @ConnectedSocket() client: ClientSocket) {
     this.gameservice.joinGame(joinGameDto, client, this.server);
+  }
+
+  @SubscribeMessage('requestInvitationGame')
+  handlerequest_for_invitation_game(@MessageBody(new ZodValidationPipe(requestInvitationGameDto)) requestInvitationGameDto: RequestInvitationGame, @ConnectedSocket() client : ClientSocket) {
+    this.gameservice.handleInvitationGame(requestInvitationGameDto, client);
   }
 }

@@ -7,9 +7,12 @@ import GameContext from "@/components/game/GameContext";
 import { io, Socket } from "socket.io-client";
 import newSocket from "@/components/GlobalComponents/Socket/socket";
 import Cookies from "js-cookie";
-import gameDataContext, { GameData, GameDataContext } from "@/components/GlobalComponents/GameDataContext";
 import GameSceneComponent from "@/components/game/GameSceneComponent";
 import GameDashboard from "@/components/game/GameDashboard";
+import { useSearchParams } from 'next/navigation'
+import { useRouter } from "next/navigation";
+import { GameData } from "@/components/game/interfaces/GameData";
+import { GameInfo } from "@/components/game/interfaces/GameInfo";
 
 export interface GameSettingsInterface {
   GameMode: string;
@@ -23,7 +26,9 @@ export default function Game() {
   const [GameLandingPageBool, SetGameLandingPageBool] = useState(true);
   const [GameDashboardBool, SetGameDashboardBool] = useState(false);
   const jwtToken: string | undefined = Cookies.get('access_token');
-  const gamedatacontext : GameDataContext | null = useContext<GameDataContext | null>(gameDataContext);
+  const usesearchParams = useSearchParams();
+  const [gameDataInfo, setgameDataInfo] = useState<GameData | null>(null);
+  const router = useRouter();
 
   const [GameSettings, setGameSettings] = useState<GameSettingsInterface>({
     GameMode: "",
@@ -40,18 +45,32 @@ export default function Game() {
           token: `$bearer ${jwtToken}`
         }
       });
+        socket.on('redirect_to_game', (gameInfo: GameInfo, side: string) => {
+          const gameData: GameData = {
+            gameInfo,
+            side
+          }
+          setgameDataInfo(gameData);
+          SetGameLandingPageBool(false);
+          SetGameDashboardBool(true);
+        })
       setGameSocket(socket);
     return () => {
       socket.close();
     }
   }, []);
 
+
   useEffect(() => {
-      if (gamedatacontext !== null && gamedatacontext.gamePlayData !== null) {
-        SetGameLandingPageBool(false);
-        SetGameDashboardBool(true);
+    const id: string | null = usesearchParams.get('id');
+    if (gameSocket !== null && id !== null) {
+      const payload: any = {
+        game_id: id
       }
-  }, [])
+      gameSocket.emit('requestInvitationGame', payload);
+      router.replace('/game');
+    }
+  })
 
   return (
     <Structure>
@@ -65,6 +84,7 @@ export default function Game() {
           setGameSettings,
           gameSocket,
           newSocket,
+          gameDataInfo
         }}
       >
         {GameLandingPageBool === true && GameDashboardBool === false && (

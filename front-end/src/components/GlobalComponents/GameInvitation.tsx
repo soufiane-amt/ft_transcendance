@@ -5,6 +5,7 @@ import "../../styles/TailwindRef.css";
 import { Press_Start_2P } from "next/font/google";
 import Cookies from "js-cookie";
 import axios from "axios";
+import newSocket  from "./Socket/socket";
 
 const mono = Space_Mono({
   subsets: ["latin"],
@@ -16,6 +17,14 @@ const pixelfont = Press_Start_2P({
   subsets: ["latin"],
   weight: ["400"],
 });
+
+const HandleSubmit = (data: any) => {
+  const payload: any = {
+    ...data,
+    response: 'accepted',
+  }
+  newSocket.emit('GameInvitationResponse', payload);
+}
 
 function GameInvitation({ ...props }) {
   const jwtToken = Cookies.get("access_token");
@@ -110,13 +119,18 @@ function GameInvitation({ ...props }) {
             onClick={(ev) => {
               ev.preventDefault();
               props.State(false);
+              const payload: any = {
+                ...props.data,
+                response: 'declined'
+              }
+              newSocket.emit('GameInvitationResponse', payload);
             }}
             className={`${mono.className} font-semibold hover:opacity-50 hover:cursor-pointer`}
           >
             Decline
           </div>
           <div
-            // onClick={HandleSubmit}
+            onClick={(e) => {e.preventDefault(); HandleSubmit(props.data)}}
             className={`text-[18px] text-white font-semibold  bg-[#0D0149] px-[15px] py-[3px] rounded-xl hover:opacity-50  ${mono.className}   border-none  hover:cursor-pointer`}
           >
             Accept

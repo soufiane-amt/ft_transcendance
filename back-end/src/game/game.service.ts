@@ -16,12 +16,16 @@ import JoinGameDto from './dto/JoinGame.dto';
 import { GameGateway } from './gateway/game.gateway';
 import Game from './Game/classes/Game';
 import GameScore from 'src/prisma/interfaces/GameScore.interface';
+import GameInfo from './interfaces/GameInfo';
+import RequestInvitationGameDto from './dto/RequestInvitationGame.dto';
 
 @Injectable()
 export class GameService {
   private hostPlayers: HostPlayer[] = [];
   private guestPlayers: GuestPlayer[] = [];
   private pandingGames: Map<string, ClientSocket> = new Map();
+  private invitationGamesInfo: Map<string, GameInfo> = new Map();
+  private invitationGames: Map<string, string[]> = new Map();
 
   constructor(private readonly userCrudService: UserCrudService, private readonly gameCrudService: GameCrudService) {}
 
@@ -61,7 +65,7 @@ export class GameService {
         const game_id: string = (await this.gameCrudService.createGame(players)).game_id;
         this.removePlayerFromTheQueue('host', hostPlayer.player);
         this.removePlayerFromTheQueue('guest', opponent.player);
-        const gameInfo = {
+        const gameInfo : GameInfo = {
             player1_id: hostPlayer.player.id,
             game_id,
             player1_username: hostPlayer.player.username,
@@ -82,7 +86,7 @@ export class GameService {
           const opponent = this.findClosestlevel(matchingSettings, hostPlayer.player);
           const players : CreateGame = {player1_id: hostPlayer.player.id, player2_id: opponent.player.id};
           const game_id: string = (await this.gameCrudService.createGame(players)).game_id;
-          const gameInfo = {
+          const gameInfo: GameInfo = {
             game_id,
             player1_id: hostPlayer.player.id,
             player1_username: hostPlayer.player.username,
@@ -110,7 +114,7 @@ export class GameService {
         const opponent = this.findClosestlevel(this.hostPlayers, guestPlayer.player);
         const players: CreateGame = {player1_id: guestPlayer.player.id, player2_id: opponent.player.id};
         const game_id: string = (await this.gameCrudService.createGame(players)).game_id;
-        const gameInfo = {
+        const gameInfo : GameInfo = {
           game_id,
           player1_id: guestPlayer.player.id,
           player1_username: guestPlayer.player.username,
@@ -194,7 +198,7 @@ export class GameService {
       const game_id = (await this.gameCrudService.createGame(players)).game_id;
       const invitorUsername: string = (await this.userCrudService.findUserByID(gameInvitationResponseDto.invitor_id)).username;
       const inviteeUsername: string = (await this.userCrudService.findUserByID(gameInvitationResponseDto.invitee_id)).username;
-      const gameInfo = {
+      const gameInfo : GameInfo = {
         game_id,
         player1_id: gameInvitationResponseDto.invitor_id,
         player1_username: invitorUsername,
@@ -203,11 +207,11 @@ export class GameService {
         mapType: gameInvitationResponseDto.mapType,
         speed: gameInvitationResponseDto.speed
       }
-      const invitorSide:string = 'left';
-      const inviteeSide: string = 'right';
-      server.to(invitationRoom).emit('redirect_to_game', gameInfo, invitorSide);
-      inviteeSocket.emit('redirect_to_game', gameInfo, inviteeSide);
-    } else if (gameInvitationResponseDto.response === 'decline') {
+      this.invitationGamesInfo.set(game_id, gameInfo);
+      const payload: string = game_id;
+      server.to(invitationRoom).emit('redirect_to_invitation_game', payload);
+      inviteeSocket.emit('redirect_to_invitation_game', payload);
+    } else if (gameInvitationResponseDto.response === 'declined') {
       const payload: string = 'invitation declined';
       server.to(invitationRoom).emit('GameInvitationResponse', payload);
     }
@@ -258,5 +262,21 @@ export class GameService {
     const winner: string = gameScore.player1_score > gameScore.player2_score ? player1_id : player2_id;
     await this.gameCrudService.addLossesToUser(loser);
     await this.gameCrudService.addWinsToUser(winner);
+  }
+
+  handleInvitationGame(requestInvitationGameDto : RequestInvitationGameDto, client: ClientSocket) {
+    const gameInfo: GameInfo = this.invitationGamesInfo.get(requestInvitationGameDto.game_id);
+    if (gameInfo !== undefined) {
+      const side: string = client.player.id === gameInfo.player1_id ? "left" : "right";
+      const players: string[] = this.invitationGames.get(requestInvitationGameDto.game_id);
+      if (players === undefined) {
+        this.invitationGames.set(requestInvitationGameDto.game_id, Array<string>(client.player.id));
+        client.emit('redirect_to_game', gameInfo, side);
+      } else if (players.includes(client.player.id) !== true) {
+        client.emit('redirect_to_game', gameInfo, side);
+        this.invitationGames.delete(requestInvitationGameDto.game_id);
+        this.invitationGamesInfo.delete(requestInvitationGameDto.game_id);
+      }
+    }
   }
 }

@@ -6,15 +6,12 @@ import React, { useContext, useEffect, useState } from "react";
 import "../styles/TailwindRef.css";
 import newSocket from "@/components/GlobalComponents/Socket/socket";
 import GameInvitation from "@/components/GlobalComponents/GameInvitation";
-import gameDataContext, { GameData, GameInfo } from "@/components/GlobalComponents/GameDataContext";
 import { useRouter } from "next/navigation";
 
 const Structure = ({ children }: { children: React.ReactNode }) => {
   const [GameInvitationBool, setGameInvitationBool] = useState(false);
   const [GameReqData, setGameReqData] = useState();
   const [Timer, setTimer]: any = useState(0);
-  const [gamePlayData, setgamePlayData] = useState<GameData | null>(null);
-  const gamedatacontext : any = useContext(gameDataContext);
   const router = useRouter();
 
   useEffect(() => {
@@ -25,10 +22,13 @@ const Structure = ({ children }: { children: React.ReactNode }) => {
         setTimer(20);
       }
     });
-    newSocket.on('redirect_to_game', (gameInfo : GameInfo, side: string) => {
-      const gameData : GameData = {gameInfo, side };
-      setgamePlayData(gameData);
-      router.push('/Game');
+
+    newSocket.on('GameInvitationResponse', (response: any) => {
+      console.log(response);
+    })
+
+    newSocket.on('redirect_to_invitation_game', (game_id: string) => {
+      router.push(`/game?id=${game_id}`);
     })
   });
 
@@ -51,9 +51,7 @@ const Structure = ({ children }: { children: React.ReactNode }) => {
     <main>
       <NavBar />
       {/* <div className="h-[91px] bg-white w-full">this is nav</div> */}
-      <gameDataContext.Provider value={{gamePlayData, setgamePlayData}}>
       {children}
-      </gameDataContext.Provider>
       {GameInvitationBool && (
         <GameInvitation
           data={GameReqData}
