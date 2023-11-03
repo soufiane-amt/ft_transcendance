@@ -19,7 +19,7 @@ export function LeaveChannel({selectedDiscussion, userGrade, channelUsers }: Lea
   }
 
   const handleClickLeave = () => {
-    if (userGrade === 'Owner')
+    if (userGrade === 'Owner' && channelUsers?.length !== 1)
       setShowDropDownList(!showDropDownList);
     else
       handleSendingLeavingSignal()  
