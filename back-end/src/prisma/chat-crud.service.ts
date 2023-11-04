@@ -228,21 +228,15 @@ async retreiveDmInitPanelData(user_id :string) {
       });
 
 
-    console.log('channelMemberships: ', channelMemberships.map((membership) => {
-      // const last_message = (membership.createdAt < membership.channel.messages[0].createdAt) ? membership.channel.messages[0] : undefined;
-      console.log('>>>>>last_message: ', membership.channel.messages[0]?.createdAt);
-    }));
-
     // Structure the data with the desired fields
     const formattedData = channelMemberships.map((membership) => {
       const last_message = (membership.createdAt < membership.channel.messages[0]?.createdAt) ? membership.channel.messages[0] : undefined;
       return ({
       id: membership.channel.id,
       partner_id: undefined,
-      // last_message: membership.channel.messages[0] ,
       last_message: last_message,
       type: membership.channel.type,
-      createdAt: membership.channel.createdAt,
+      createdAt: membership.createdAt,
     })});
     // Sort the data by last message datefetchedData.map( (item : DiscussionDto)=>
     formattedData.sort((a, b) => {
@@ -306,7 +300,19 @@ async retreiveDmInitPanelData(user_id :string) {
 
   async joinChannel(data: channelMembershipDto) {
 
-    return await this.prisma.prismaClient.channelMembership.create({ data });
+    return await this.prisma.prismaClient.channelMembership.create({
+       data ,
+       select:{
+          channel:{
+            select:{
+              id:true,
+              name:true,
+              image:true,
+              type:true,
+            }
+          }
+       }
+      });
   }
 
   async findChannelById(channel_id: string) {
@@ -497,7 +503,7 @@ async retreiveDmInitPanelData(user_id :string) {
       });
       const channelJoiningTime = channelMembership.createdAt;
       
-      const msg =   messages.filter((message) => {
+      const msg = messages.filter((message) => {
         return message.createdAt > channelJoiningTime;
       });
       console.log ('msg: ', msg)
@@ -543,6 +549,7 @@ async retreiveDmInitPanelData(user_id :string) {
     
     return messageCount;
   }
+
 
   async markRoomMessagesAsRead(user_id: string, room_id: string) {
     // Check if room_id corresponds to a DM

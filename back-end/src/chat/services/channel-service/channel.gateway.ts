@@ -63,11 +63,7 @@ import { subscribe } from "diagnostics_channel";
 
 
     
-    //check if the user exists
-    //check the exitence of the channel
-    //Check if the data sent to the channel is actually 
-    //comptible with the requirement of the channel .e.g (protected has to have password ... )
-    // @UseGuards(allowJoinGuard) 
+    @UseGuards(allowJoinGuard) 
     @SubscribeMessage('joinSignal')
     async handleJoinChannel (client :Socket, membReq : channelReqDto)//this event is only triggered by the users that will join not the admin that already joined and created channel
     {
@@ -76,8 +72,14 @@ import { subscribe } from "diagnostics_channel";
       const channelMembership:channelMembershipDto =  {channel_id: membReq.channel_id,
         user_id: user_id,
         role:'USER'}
-      await this.chatCrud.joinChannel (channelMembership)
-      // client.join(membReq.channel_id)
+      const channel_data = await this.chatCrud.joinChannel (channelMembership)
+      client.join(membReq.channel_id)
+      this.server.to(`inbox-${user_id}`)
+      .emit('joinChannel', {id:channel_data.channel.id, 
+        name: channel_data.channel.name, 
+        image: channel_data.channel.image, 
+        type:channel_data.channel.type
+      })
     }
 
 
@@ -288,7 +290,6 @@ import { subscribe } from "diagnostics_channel";
  
       const channel = await this.chatCrud.createChannel (userIdCookie, channel_data,  channelData.invitedUsers)
       for (let i = 0; i < channel.memberUsersIds.length; i++) {
-        console.log('----------Channel member : ', channel.memberUsersIds[i])
         this.server.to(`inbox-${channel.memberUsersIds[i]}`)
           .emit('joinChannel', {id:channel.id, 
             name: channel_data.name, 
@@ -297,7 +298,7 @@ import { subscribe } from "diagnostics_channel";
           })
       } 
       // this.server.to(`inbox-${userIdCookie}`).emit('joinChannel', {room_id:channel_id} )
-      // client.join('channel-' + channel_id)
+      // client.('channel-' + channel_id)
     }
 
     //This method takes the image sent by the front end and store in the upload folder and database
