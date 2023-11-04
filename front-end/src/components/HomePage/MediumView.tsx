@@ -71,7 +71,10 @@ export default function MediumView() {
             style={{ width: 400, height: 275 }}
           />
         </motion.div>
-        <Link href={`${process.env.NEXT_PUBLIC_BACKEND_SERV}/auth/login`} className="no-underline">
+        <Link
+          href={`${process.env.NEXT_PUBLIC_BACKEND_SERV}/auth/login`}
+          className="no-underline"
+        >
           <HomePageIntraLoginButton />
         </Link>
       </section>
@@ -187,7 +190,7 @@ export default function MediumView() {
           <div className="flex items-center justify-evenly  min-h-1/2 w-full my-[35px]">
             <AboutPersonInfo
               Picture="/Abdellah.jpg"
-              TwitterLink="https://twitter.com/withabdellah"
+              TwitterLink="https://twitter.com/c0d3crush3r"
               LinkedinLink="https://www.linkedin.com/in/abdellah-bellakrim-0027b6233"
               GithubLink="https://www.github.com/AbdellahBellakrim"
             />
