@@ -11,6 +11,8 @@ import GameSettingsModel from "./GameSettingsModel";
 import GameContext from "./GameContext";
 import MatchMakingLoadingComponent from "./MatchMakingAnimation";
 import InvitorWaiting from "./GameInviterwaiting";
+import newSocket from "../GlobalComponents/Socket/socket";
+import Cookies from "js-cookie";
 
 const pixelfont = Press_Start_2P({
   subsets: ["latin"],
@@ -24,15 +26,15 @@ const mono = Space_Mono({
 });
 
 function GameLandingPage() {
-  // const JwtToken = Cookies.get("access_token");
+  const JwtToken = Cookies.get("access_token");
 
-  // useEffect(() => {
-  //   const data = {
-  //     status: "INGAME",
-  //     token: `Bearer ${JwtToken}`,
-  //   };
-  //   newSocket.emit("status", data);
-  // }, [JwtToken]);
+  useEffect(() => {
+    const data = {
+      // status: "INGAME",
+      token: `Bearer ${JwtToken}`,
+    };
+    newSocket.emit("status", data);
+  }, [JwtToken]);
 
   const [info, setInfo] = useState(false);
   const [invite, setInvite] = useState(false);
@@ -173,7 +175,9 @@ function GameLandingPage() {
           setIsMatchMakingLoading={setIsMatchMakingLoading}
         />
       )}
-      {invitor && <InvitorWaiting Timer={Timer} setInvitorWaiting={setInvitor} />}
+      {invitor && (
+        <InvitorWaiting Timer={Timer} setInvitorWaiting={setInvitor} />
+      )}
     </div>
   );
 }

@@ -7,7 +7,6 @@ import Cookies from "js-cookie";
 import axios from "axios";
 import newSocket from "./Socket/socket";
 
-
 const mono = Space_Mono({
   subsets: ["latin"],
   style: ["normal"],
@@ -132,6 +131,7 @@ function GameInvitation({ ...props }) {
           <div
             onClick={(e) => {
               e.preventDefault();
+              props.State(false);
               HandleSubmit(props.data);
             }}
             className={`text-[18px] text-white font-semibold  bg-[#0D0149] px-[15px] py-[3px] rounded-xl hover:opacity-50  ${mono.className}   border-none  hover:cursor-pointer`}
