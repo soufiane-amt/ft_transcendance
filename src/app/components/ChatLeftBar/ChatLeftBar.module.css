@@ -9,6 +9,7 @@
     height: 100vh;
 }
 
+.chat_space:hover{cursor: pointer;}
 .chat_space{
     display: flex;
     align-items: center;

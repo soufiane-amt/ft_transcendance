@@ -6,9 +6,15 @@ import style from './WelcomingPage.module.css';
 import { fetchDataFromApi } from "../shared/customFetch/exmple";
 
 
+type DmType = {username:string, avatar:string}
+export type ChannelType = {id: string
+                    name:string
+                    image:string
+                    type:string}
+
 interface dataToDisplayType{
-    dmsToJoin: {username:string, avatar:string}[],
-    channelsToJoin: {name:string, image:string,  type:string}[]
+    dmsToJoin: DmType[],
+    channelsToJoin: ChannelType[]
 }
 export function WelcomingPage() {
   const [dataToDisplay, setDataToDisplay] = useState<dataToDisplayType>({dmsToJoin:[], channelsToJoin:[]});
@@ -49,8 +55,8 @@ export function WelcomingPage() {
             <div className={style.channel_joins}>
                 <h5 className={style.welcoming_page_talks__title}>Join a rooom:</h5>
                 {
-                    dataToDisplay?.channelsToJoin.map((channel:{ name: string; image: string; type: string }) => {
-                      return <ChannelJoin channelData={{name: channel.name, picture: channel.image, type: channel.type}}/>
+                    dataToDisplay?.channelsToJoin.map((channel:ChannelType) => {
+                      return <ChannelJoin channelData={channel}/>
                     })
                 }
                 {/* <ChannelJoin channelData={{name : "channel name", picture : "http://localhost:3001/chat/image/550e8400-e29b-41d4-a716-446655440000.jpeg", type : "PROTECTED"}}/>

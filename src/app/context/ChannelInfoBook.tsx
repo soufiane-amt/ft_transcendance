@@ -75,7 +75,7 @@ export function ChannelBooksProvider({
       return () => {
         socket.off("joinChannel", handleJoinChannel);
       };
-    }, []);
+    }, [ChannelBooksBook]);
 
   const updateChannelBook = (key: string, value: ChannelBookDto) => {
     setChannelBooksBook((prevState) => {

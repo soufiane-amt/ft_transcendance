@@ -1,10 +1,12 @@
 import { useState } from 'react';
 import { ChannelPasswordInput } from '../ChannelPasswordInput/ChannelPasswordInput';
 import style from './ChannelJoin.module.css';
+import socket from '../../../socket/socket';
+import { ChannelType } from '../WelcomingPage';
 
 export interface ChannelJoinProps
 {
-    channelData: {name : string, picture : string, type : string},
+    channelData: ChannelType,
 }
 
 export function ChannelJoin({ channelData }: ChannelJoinProps) {
@@ -12,6 +14,7 @@ export function ChannelJoin({ channelData }: ChannelJoinProps) {
     const handleClickJoin = () => {
         if (channelData.type === 'PUBLIC') {
             // join channel
+            socket.emit('joinSignal', { channelName: channelData.name });
             //and redirect to channel
         }
         else {
@@ -23,7 +26,7 @@ export function ChannelJoin({ channelData }: ChannelJoinProps) {
         <>
             <div className={style.channel_join}>
                 <div className={style.channel_join__user}>
-                <img className={style.channel_join__user__avatar} src={channelData.picture} alt="avatar" />
+                <img className={style.channel_join__user__avatar} src={channelData.image} alt="avatar" />
                 <span className={style.channel_join__user__name}>{channelData.name}</span>
             </div>
             <div className={style.channel_join__message}>

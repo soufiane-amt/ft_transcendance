@@ -33,12 +33,15 @@ export function UserContactsProvider({
         `http://localhost:3001/chat/${currentRoute}/userContactsBook`
       );
       const map = new Map();
-      userContactsBook_tmp.forEach((user: any) => {
-        map.set(user.id, {
-          username: user.username,
-          avatar: user.avatar,
+      if (Array.isArray(userContactsBook_tmp)) {
+        userContactsBook_tmp?.forEach((user: any) => {
+          map.set(user.id, {
+            username: user.username,
+            avatar: user.avatar,
+          });
         });
-      });
+      }
+
       setUserContactsBook(map);
     }
     fetchDataAsync();

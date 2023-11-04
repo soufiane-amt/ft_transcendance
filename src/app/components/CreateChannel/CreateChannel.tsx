@@ -4,7 +4,6 @@ import style from './CreateChannel.module.css';
 import UploadChannelIcon from '../../../../public/images/icons/CreateChannel/UploadChannelIcon.jpg'
 import { ChannelInvitor } from './ChannelInvitor/ChannelInvitor';
 import socket from '../../socket/socket';
-import { read } from 'fs';
 import { fetchDataFromApi } from '../shared/customFetch/exmple';
 import axios from 'axios';
 
@@ -65,10 +64,8 @@ export function CreateChannel() {
             },
           })
             .then(res => {
-              console.log('Axios response: ', res.status)
 
               if (res.status === 201 || res.status === 200) {
-                console.log('Image uploaded successfully');
                 // Continue with the rest of your createChannel logic
                 socket.emit('createChannel', {
                   channelName,
@@ -125,10 +122,10 @@ export function CreateChannel() {
             alert(`Your password must be at least ${MinPasswordLength} characters long!`);
             return;
         }
-        // if (image === UploadChannelIcon.src) {
-        //     alert(`Please choose a picture for the channel!`);
-        //     return;
-        // }
+        if (image === null) {
+            alert(`Please choose a picture for the channel!`);
+            return;
+        }
         setDisplayChannelInvitor(!displayChannelInvitor)
     }
     return (

@@ -39,16 +39,17 @@ export function DiscussionsBar({openBarState,  selectedDiscussionState, currentR
           );
           console.log('fetchedData:',fetchedData)
         if (currentRoute === "Direct_messaging")
-          setDiscussionRooms(fetchedData);
+          setDiscussionRooms(()=>fetchedData);
         else 
           {
-            const room_data:DiscussionDto[] =  fetchedData.map( (item : DiscussionDto)=>{
+            console.log ('room_data: ', fetchedData)
+            const room_data:DiscussionDto[] =  fetchedData?.map( (item : DiscussionDto)=>{
               return {id:item.id,
                       partner_id: item.partner_id,
                       last_message: item.last_message,
                       unread_messages:item.unread_messages}
             })
-            setDiscussionRooms(room_data);
+            setDiscussionRooms(()=>room_data);
             const tmpMap  = new Map();
             fetchedData.map((channel:any)=>{
               tmpMap.set(channel.id, {
@@ -58,9 +59,9 @@ export function DiscussionsBar({openBarState,  selectedDiscussionState, currentR
                 channelBans: channel.channelBans,
                 channelMutes: channel.channelMutes,
               });
-            }
+              }
             )
-            setChannelData (tmpMap)
+            setChannelData (()=> tmpMap)
           }
       }
       fetchDataAsync();
@@ -71,7 +72,7 @@ export function DiscussionsBar({openBarState,  selectedDiscussionState, currentR
         const tmpMap = new Map(channelData);
         tmpMap.delete(channel_id);
         tmpMap.set(channel_id, channelNewData);
-        setChannelData(tmpMap);
+        setChannelData(()=> tmpMap);
       }
       socket.on('updateChannelData', handleNewChannelUpdate)
     }, [channelData, modalIsVisible])
