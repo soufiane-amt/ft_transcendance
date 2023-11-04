@@ -57,7 +57,7 @@ function GameSettingsModel({ ...props }) {
   const Guest =
     Roll === "guest" ? "cursor-pointer bg-[#E4E7FF] text-[#0D0149]" : "";
 
-  const HandleSubmit = (ev : any) => {
+  const HandleSubmit = (ev: any) => {
     if (
       context.GameSettings.GameMode === "Practice" &&
       context.GameSettings.GameTheme != "" &&
@@ -78,17 +78,20 @@ function GameSettingsModel({ ...props }) {
         mapType: context.GameSettings.GameTheme,
         speed: context.GameSettings.GameSpeed,
       });
+      ev.preventDefault();
+      props.setInvitorWaiting(true);
+      props.setTimer(20);
     } else if (
       context.GameSettings.GameMode === "Matchmaking" &&
       context.GameSettings.GameTheme != "" &&
       context.GameSettings.GameSpeed != "" &&
       context.GameSettings.Roll != null
     ) {
-      context.gameSocket.emit('matchMaking', {
+      context.gameSocket.emit("matchMaking", {
         mapType: context.GameSettings.GameTheme,
         speed: context.GameSettings.GameSpeed,
         role: context.GameSettings.Roll,
-      })
+      });
       props.setIsMatchMakingLoading(true);
       props.setSettings(false);
     } else {
@@ -97,10 +100,7 @@ function GameSettingsModel({ ...props }) {
         setError("");
       }, 2000);
     }
-    ev.preventDefault();
     props.setSettings(false);
-    props.setInvitorWaiting(true);
-    props.setTimer(20);
   };
 
   return (

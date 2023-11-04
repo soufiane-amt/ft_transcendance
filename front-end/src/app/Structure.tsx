@@ -1,9 +1,9 @@
 "use client";
 
+import "../styles/TailwindRef.css";
 import withAuth from "@/components/GlobalComponents/HigherOrderComponent";
 import NavBar from "@/components/GlobalComponents/ProfileNavBar/NavBar";
 import React, { useContext, useEffect, useState } from "react";
-import "../styles/TailwindRef.css";
 import newSocket from "@/components/GlobalComponents/Socket/socket";
 import GameInvitation from "@/components/GlobalComponents/GameInvitation";
 import { useRouter } from "next/navigation";
@@ -23,13 +23,13 @@ const Structure = ({ children }: { children: React.ReactNode }) => {
       }
     });
 
-    newSocket.on('GameInvitationResponse', (response: any) => {
+    newSocket.on("GameInvitationResponse", (response: any) => {
       // console.log(response);
-    })
+    });
 
-    newSocket.on('redirect_to_invitation_game', (game_id: string) => {
+    newSocket.on("redirect_to_invitation_game", (game_id: string) => {
       router.push(`/game?id=${game_id}`);
-    })
+    });
   });
 
   useEffect(() => {
@@ -50,7 +50,6 @@ const Structure = ({ children }: { children: React.ReactNode }) => {
   return (
     <main>
       <NavBar />
-      {/* <div className="h-[91px] bg-white w-full">this is nav</div> */}
       {children}
       {GameInvitationBool && (
         <GameInvitation

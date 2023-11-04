@@ -1,6 +1,6 @@
 "use client";
-import Structure from "../Structure";
 import "../../styles/TailwindRef.css";
+import Structure from "../Structure";
 import GameLandingPage from "@/components/game/GameLandingPage";
 import React, { useState, createContext, useEffect, useContext } from "react";
 import GameContext from "@/components/game/GameContext";
@@ -9,7 +9,7 @@ import newSocket from "@/components/GlobalComponents/Socket/socket";
 import Cookies from "js-cookie";
 import GameSceneComponent from "@/components/game/GameSceneComponent";
 import GameDashboard from "@/components/game/GameDashboard";
-import { useSearchParams } from 'next/navigation'
+import { useSearchParams } from "next/navigation";
 import { useRouter } from "next/navigation";
 import { GameData } from "@/components/game/interfaces/GameData";
 import { GameInfo } from "@/components/game/interfaces/GameInfo";
@@ -25,7 +25,7 @@ export interface GameSettingsInterface {
 export default function Game() {
   const [GameLandingPageBool, SetGameLandingPageBool] = useState(true);
   const [GameDashboardBool, SetGameDashboardBool] = useState(false);
-  const jwtToken: string | undefined = Cookies.get('access_token');
+  const jwtToken: string | undefined = Cookies.get("access_token");
   const usesearchParams = useSearchParams();
   const [gameDataInfo, setgameDataInfo] = useState<GameData | null>(null);
   const router = useRouter();
@@ -40,37 +40,36 @@ export default function Game() {
   const [gameSocket, setGameSocket] = useState<null | Socket>(null);
 
   useEffect(() => {
-      const socket: Socket = io(`${process.env.NEXT_PUBLIC_BACKEND_SERV}/Game`, {
-        query: {
-          token: `$bearer ${jwtToken}`
-        }
-      });
-        socket.on('redirect_to_game', (gameInfo: GameInfo, side: string) => {
-          const gameData: GameData = {
-            gameInfo,
-            side
-          }
-          setgameDataInfo(gameData);
-          SetGameLandingPageBool(false);
-          SetGameDashboardBool(true);
-        })
-      setGameSocket(socket);
+    const socket: Socket = io(`${process.env.NEXT_PUBLIC_BACKEND_SERV}/Game`, {
+      query: {
+        token: `$bearer ${jwtToken}`,
+      },
+    });
+    socket.on("redirect_to_game", (gameInfo: GameInfo, side: string) => {
+      const gameData: GameData = {
+        gameInfo,
+        side,
+      };
+      setgameDataInfo(gameData);
+      SetGameLandingPageBool(false);
+      SetGameDashboardBool(true);
+    });
+    setGameSocket(socket);
     return () => {
       socket.close();
-    }
+    };
   }, []);
 
-
   useEffect(() => {
-    const id: string | null = usesearchParams.get('id');
+    const id: string | null = usesearchParams.get("id");
     if (gameSocket !== null && id !== null) {
       const payload: any = {
-        game_id: id
-      }
-      gameSocket.emit('requestInvitationGame', payload);
-      router.replace('/game');
+        game_id: id,
+      };
+      gameSocket.emit("requestInvitationGame", payload);
+      router.replace("/game");
     }
-  })
+  });
 
   return (
     <Structure>
@@ -84,7 +83,7 @@ export default function Game() {
           setGameSettings,
           gameSocket,
           newSocket,
-          gameDataInfo
+          gameDataInfo,
         }}
       >
         {GameLandingPageBool === true && GameDashboardBool === false && (

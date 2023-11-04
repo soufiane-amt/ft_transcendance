@@ -2,7 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
-
 .card-shadow {
   box-shadow: 1px 1px 15px #000000;
 }
@@ -11,6 +10,11 @@
   margin: 0;
   padding: 0;
   box-sizing: content-box;
+}
+
+/* to be contin[ */
+body {
+  overflow: auto;
 }
 
 /* For Chrome and Brave */
@@ -48,7 +52,6 @@
 *::-webkit-scrollbar-thumb:hover {
   background-color: rgba(99, 81, 81, 0.4);
 }
-
 
 .content {
   min-height: calc(100vh - 91px);

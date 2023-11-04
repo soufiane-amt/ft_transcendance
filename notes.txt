@@ -2,15 +2,22 @@
 
 //TODO: erros  
 -> check user status with oussama in disconnect
--> what do need to do global socket , one getway , namespaces etc...
--> start on game models : 
-  add friends
-  game settings
-  game waiting for accepting req
-  game request model
-  waiting for matchmaking
-
-
-
 note : enter game make user online, enter chat make user online
 note: protect socket getways in backend
+
+
+
+
+
+
+
+
+
+
+oussama: scroll in oussama dashboard
+hna + oussma : user visibily | state
+hna + oussma : ingame b sockets
+abdellah: in invite once click submit setstate of invite model to false in structure
+zac : submit event for close game invitaion in accept for multiple sessions
+zac : change user status to be ingame in starting game
+zac : reset state after ending game , fonts
