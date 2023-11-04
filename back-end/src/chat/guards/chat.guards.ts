@@ -180,7 +180,7 @@ export class channelPermission implements CanActivate {
   )
   {
     const membership = await this.chatCrud.getMemeberShip(
-      await this.userCrud.findUserByUsername(signal.targeted_username),
+      user_id,
       signal.channel_id,
     );
     if (!membership) return false;
@@ -354,8 +354,9 @@ export class bannedConversationGuard implements CanActivate {
     const packet_data = context.switchToWs().getData();
     const user_id = extractUserIdFromCookies(context.switchToWs().getClient());
     if (context.getClass() == dmGateway) {
+      console.log('----------Entered------------')
       const dm_data = await this.chatCrud.findDmById(packet_data.dm_id);
-      return dm_data.status == 'ALLOWED';
+        return dm_data?.status == 'ALLOWED';
     } else {
       const memeberShip = await this.chatCrud.getMemeberShip(
         user_id,

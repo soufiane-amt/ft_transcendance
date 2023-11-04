@@ -238,8 +238,9 @@ async retreiveDmInitPanelData(user_id :string) {
 
   
   // Create a new chat channel (public, or password-protected).
-
+  
   async createChannel(user_id:string,  data: channelDto, invitedUsers:string[]) {
+  var memberUsersIds = [];  memberUsersIds.push(user_id);
     const channel_id: string = (
       await this.prisma.prismaClient.channel.create({ data })
     ).id;
@@ -263,8 +264,9 @@ async retreiveDmInitPanelData(user_id :string) {
               id : true
             }
           }
-        ).then ((user) => user.id)
-      
+          ).then ((user) => user.id)
+          
+          memberUsersIds.push(invitedUser_id);
         if (invitedUser_id) {
           const memberShipData: channelMembershipDto = {
             channel_id: channel_id,
@@ -276,12 +278,13 @@ async retreiveDmInitPanelData(user_id :string) {
       }
 
     } catch (error) {}
-    return channel_id;
+    return {id :channel_id, memberUsersIds};
   }
 
   //user joins channel
 
   async joinChannel(data: channelMembershipDto) {
+
     return await this.prisma.prismaClient.channelMembership.create({ data });
   }
 

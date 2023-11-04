@@ -57,8 +57,8 @@ export class dmGateway implements OnGatewayConnection, OnGatewayDisconnect {
     return parsedCookies["user.id"];
   }
   
-  @UseGuards(bannedConversationGuard)
   @UseGuards (userRoomSubscriptionGuard) 
+  @UseGuards(bannedConversationGuard)
   @SubscribeMessage("sendMsg")
   async handleSendMesDm(client: Socket, message: MessageDto) {
     message.channel_id = null;

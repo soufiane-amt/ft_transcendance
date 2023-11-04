@@ -11,9 +11,7 @@ export class channelsService {
 
   @Cron(CronExpression.EVERY_5_SECONDS) 
   async handleBanExpirations() {
-    console.log ('handle ban expirations')
     const expiredBans = await this.chatCrud.findExpiredBans();
-    console.log ('expired bans : ' + expiredBans)
     for (const ban of expiredBans) {
       // Determine the channel and user to broadcast to
       const channel = ban.channel; // You need to define how to retrieve the channel
@@ -26,9 +24,7 @@ export class channelsService {
 
     @Cron(CronExpression.EVERY_5_SECONDS) 
     async handleMuteExpirations() {
-      console.log ('handle mute expirations')
       const expiredmutes = await this.chatCrud.findExpiredMutes();
-      console.log ('expired mutes : ' + expiredmutes)
       for (const mute of expiredmutes) {
         const channel = mute.channel; 
         const user = mute.user; 

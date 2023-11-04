@@ -180,6 +180,7 @@ import { subscribe } from "diagnostics_channel";
     @SubscribeMessage ("resumeChannelUpdates") //A gard must be added to check if the user has the right to request to unmute him
     async handleResumeChannelUpdates (client: any, channel_id:string)
     {
+      console.log ('Resume channel updates : ', channel_id)
       client.join (`channel-${channel_id}`)
     }
 
@@ -220,10 +221,10 @@ import { subscribe } from "diagnostics_channel";
     async handleChannelLeave(client: any,  channel_id : string  ) 
     { 
       const user_id =  this.extractUserIdFromCookies(client);
+      client.leave (`channel-${channel_id}`)                              //Deleting the user from the websocket room
       const delete_channel = await this.chatCrud.leaveChannel (user_id, channel_id) //deleting the membership of the client in DB
       if (!delete_channel) //if the user was the owner of the channel  
         this.broadcastChannelChanges(channel_id)
-      client.leave (`channel-${channel_id}`)                              //Deleting the user from the websocket room
     }
 
     @Roles (Role.OWNER)
@@ -231,17 +232,19 @@ import { subscribe } from "diagnostics_channel";
     @SubscribeMessage ("setOwner")
     async handleGradeUserTOwner(client: any,  setOwnerSignal : setOwnerSignalDto  ) 
     {
+      console.log ('++++++ Set owner signal : ', setOwnerSignal)
       const targeted_user_id = await this.userCrud.findUserByUsername(setOwnerSignal.targeted_username)
       await this.chatCrud.makeOwner (targeted_user_id, setOwnerSignal.channel_id) 
     }  
  
 
-    @UseGuards(bannedConversationGuard)
-    @UseGuards(muteConversationGuard)
-    @UseGuards (userRoomSubscriptionGuard)  
+    // @UseGuards(bannedConversationGuard)
+    // @UseGuards(muteConversationGuard)
+    // @UseGuards (userRoomSubscriptionGuard)  
     @SubscribeMessage ("sendMsg")
-    async handleSendMesDm(client: any,  message:MessageDto ) 
+    async handleSendMesChannels(client: any,  message:MessageDto ) 
     {
+      console.log ('I got a new message!')
       message.dm_id = null;
       const messageToBrodcast = await this.chatCrud.createMessage(message)
       this.server.to(`channel-${message.channel_id}`).emit('newMessage', messageToBrodcast)
@@ -270,7 +273,6 @@ import { subscribe } from "diagnostics_channel";
     @SubscribeMessage ("createChannel")
     async handleCreateChannel (client :Socket, channelData : channelCreateDto)
     {
-      console.log ('Channel data : ', channelData)
       const userIdCookie = this.extractUserIdFromCookies(client);
       if (!userIdCookie)
         return
@@ -280,10 +282,19 @@ import { subscribe } from "diagnostics_channel";
         password : channelData.password,
         image : `http://localhost:3001/chat/image/${channelData.imageSrc}`
       };
-
-      const channel_id = await this.chatCrud.createChannel (userIdCookie, channel_data,  channelData.invitedUsers)
-      // this.handleUploadImage('channel_id', channelData.selectedImage)
-      client.join('channel-' + channel_id)
+ 
+      const channel = await this.chatCrud.createChannel (userIdCookie, channel_data,  channelData.invitedUsers)
+      for (let i = 0; i < channel.memberUsersIds.length; i++) {
+        console.log('----------Channel member : ', channel.memberUsersIds[i])
+        this.server.to(`inbox-${channel.memberUsersIds[i]}`)
+          .emit('joinChannel', {id:channel.id, 
+            name: channel_data.name, 
+            image: channel_data.image, 
+            type:channel_data.type
+          })
+      } 
+      // this.server.to(`inbox-${userIdCookie}`).emit('joinChannel', {room_id:channel_id} )
+      // client.join('channel-' + channel_id)
     }
 
     //This method takes the image sent by the front end and store in the upload folder and database

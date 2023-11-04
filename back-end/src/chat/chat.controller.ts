@@ -60,7 +60,6 @@ async findAllDiscussionChannels (@Req() request : Request)
 {
   try {
   const channels = await this.chatCrud.retreiveChannelPanelsData(request.cookies['user.id']);
-  console.log ('Got a request and here is the data : ', channels)
   const unreadMessagesPromises = channels.map(async (chElement) => {
     const unreadMessages = await this.chatCrud.getUnreadChannelMessagesNumber(request.cookies['user.id'], chElement.id);//get the number of messages unread and unsent by this user
     const channelOwner = await this.chatCrud.findChannelOwner(chElement.id)
@@ -116,7 +115,6 @@ async findAllChannelsInContact (@Req() request : Request)
   @Get (":roomid/messages")
   async findRoomMessages (@Param("roomid") roomid:string)
   {
-    console.log ('Got a request and here is the data : ', await this.chatCrud.retrieveRoomMessages(roomid))
     return await this.chatCrud.retrieveRoomMessages(roomid);
   }
 
@@ -138,7 +136,6 @@ async findAllChannelsInContact (@Req() request : Request)
     const bannedRoomsData = bannedRooms.map( (item)=>{
         return ({room_id : item.channel_id, blocker_id: ''})
     })
-    console.log ('Got a request and here is the data : ', bannedRoomsData)
     return bannedRoomsData;
   }
 
@@ -151,7 +148,6 @@ async findAllChannelsInContact (@Req() request : Request)
    const mutedRoomsData = mutedRooms.map( (item)=>{
        return ({room_id : item.channel_id})
    })
-   console.log ('Got a request and here is the data : ', mutedRoomsData)
    return mutedRoomsData;
  }
 
@@ -182,7 +178,6 @@ async findAllChannelsInContact (@Req() request : Request)
  @Get("/memberCondidatesOfChannelCreation")
  async getFriends (@Req() request : Request)
  {
-  console.log('Got a request and here is the data : ', await this.userCrud.findFriendsUsernameAvatar(request.cookies["user.id"]))
    return (await this.userCrud.findFriendsUsernameAvatar(request.cookies["user.id"]))
  }
 
