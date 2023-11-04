@@ -60,7 +60,7 @@ export function useHandlePanel(discussionPanels: DiscussionDto[],selectedDiscuss
           if (indexToModify !== -1) {
             updatedRooms[indexToModify].unread_messages = 0;
 
-            // setDiscussionRooms(updatedRooms);
+            setDiscussionRooms(()=>updatedRooms);
           }
         };
 
