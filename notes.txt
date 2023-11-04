@@ -10,3 +10,10 @@ hna + oussma : ingame b sockets
 zac : submit event for close game invitaion in accept for multiple sessions
 zac : change user status to be ingame in starting game
 zac : reset state after ending game , fonts
+
+
+=================================
+waiting in game
+win , lose
+docker 
+more test for game 
