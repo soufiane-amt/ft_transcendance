@@ -18,7 +18,6 @@ export function useHandleNewMsg(messagesHistoryState: any, selectedDiscussion:di
               newMessage,
             ]);
     
-            socket.emit("MarkMsgRead", { _id: messageRoomId });
           }
         };
     

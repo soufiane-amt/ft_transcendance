@@ -49,21 +49,27 @@ export function useHandlePanel(discussionPanels: DiscussionDto[],selectedDiscuss
              setDiscussionRooms(() => [newDiscussionPanel, ...discussionPanels]);
 
           }
+                      
+          //wait untill discussion panel is updated
+          setTimeout(() => {
+            socket.emit("MarkMsgRead", { _id: messageRoomId });
+          }, 1000);
+        
         };
 
-        const handleReadStatusTrack = (room: { _id: string }) => {
-
+        const handleReadStatusTrack = async (room: { _id: string }) => {
           const updatedRooms = [...discussionPanels];
-          const indexToModify = updatedRooms.findIndex(
-            (item) => item.id === room._id
-          );
+          const indexToModify = updatedRooms.findIndex((item) => item.id === room._id);
+        
           if (indexToModify !== -1) {
             updatedRooms[indexToModify].unread_messages = 0;
+        
+            // Use async/await when setting state (although it may not be necessary)
 
-            setDiscussionRooms(()=>updatedRooms);
+              setDiscussionRooms(() => updatedRooms);
           }
         };
-
+        
         //handle getting kicked
         const handleGettingKicked = (room_id: string ) => {
           const updatedRooms = [...discussionPanels];
