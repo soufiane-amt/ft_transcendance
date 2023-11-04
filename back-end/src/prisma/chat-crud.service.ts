@@ -209,13 +209,14 @@ async retreiveDmInitPanelData(user_id :string) {
             select: {
               id: true,
               type: true,
+              createdAt: true,
               messages: {
                 select: {
                   id: true,
                   content: true,
                   createdAt: true,
                 },
-                orderBy: {
+                orderBy: { 
                   createdAt: "desc",
                 },
                 take: 1,
@@ -231,8 +232,19 @@ async retreiveDmInitPanelData(user_id :string) {
       partner_id: undefined,
       last_message: membership.channel.messages[0],
       type: membership.channel.type,
+      createdAt: membership.channel.createdAt,
     }));
 
+    // Sort the data by last message date
+    formattedData.sort((a, b) => {
+      const dateA = (a.last_message ? a.last_message.createdAt : a.createdAt) || new Date(1900, 0, 1);
+      const dateB = (b.last_message ? b.last_message.createdAt : b.createdAt) || new Date(1900, 0, 1);
+      return dateB > dateA ? 1 : dateB < dateA ? -1 : 0;
+    });
+    //the channels that dont' have messages you should use the date of creation of the channel as a date of the last message
+    formattedData.forEach((item) => {
+      delete item.createdAt;
+    });
     return formattedData;
   }
 
