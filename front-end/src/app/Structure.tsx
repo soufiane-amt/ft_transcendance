@@ -7,6 +7,7 @@ import React, { useContext, useEffect, useState } from "react";
 import newSocket from "@/components/GlobalComponents/Socket/socket";
 import GameInvitation from "@/components/GlobalComponents/GameInvitation";
 import { useRouter } from "next/navigation";
+import Cookies from "js-cookie";
 
 const Structure = ({ children }: { children: React.ReactNode }) => {
   const [GameInvitationBool, setGameInvitationBool] = useState(false);
@@ -47,6 +48,15 @@ const Structure = ({ children }: { children: React.ReactNode }) => {
     };
   }, [Timer]);
 
+  const JwtToken = Cookies.get("access_token");
+
+  useEffect(() => {
+    const data = {
+      // status: "INGAME",
+      token: `Bearer ${JwtToken}`,
+    };
+    newSocket.emit("status", data);
+  }, [JwtToken]);
   return (
     <main>
       <NavBar />
