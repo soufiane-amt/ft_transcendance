@@ -8,6 +8,7 @@ import { useRouter } from "next/router";
 import UserActionModalMain from "../UserActionModal/UserActionModal";
 import socket from "../../../socket/socket";
 import { ChannelData } from "../../../interfaces/ChannelData";
+import { useHandleJoinChannel } from "../../../../../hooks/useHandleJoinChannel";
 
 interface DiscussionsBarProps {
   openBarState: 
@@ -75,6 +76,7 @@ export function DiscussionsBar({openBarState,  selectedDiscussionState, currentR
       socket.on('updateChannelData', handleNewChannelUpdate)
     }, [channelData, modalIsVisible])
 
+    // useHandleJoinChannel(selectedDiscussion)
     
     useHandlePanel(discussionPanels,selectedDiscussionState, setDiscussionRooms)
 

@@ -30,14 +30,14 @@ export function useHandleUnBan (BanContext:IBanContext, selectedDiscussion : dis
     disableChatTextBox : React.Dispatch<React.SetStateAction<boolean | undefined>>)
     {
         useEffect(() => {
-            const handleUserUnBanned = (banSignal: { room_id: string, agent_id:string }) => {
-              if (banSignal.room_id === selectedDiscussion.id) {
-                disableChatTextBox(false); // Set the isBanned state to true when banned
-              }
-              BanContext.unbanUser(banSignal.room_id, banSignal.agent_id )
-              socket.emit("resumeChannelUpdates", banSignal.room_id);
-            };
-        
+          const handleUserUnBanned = (banSignal: { room_id: string, agent_id:string }) => {
+            if (banSignal.room_id === selectedDiscussion.id) {
+              disableChatTextBox(false); // Set the isBanned state to true when banned
+            }
+            BanContext.unbanUser(banSignal.room_id, banSignal.agent_id )
+            socket.emit("resumeChannelUpdates", banSignal.room_id);
+          };
+      
             socket.on("userUnBanned", handleUserUnBanned);
         
             return () => {

@@ -11,6 +11,7 @@ export function useHandlePanel(discussionPanels: DiscussionDto[],selectedDiscuss
   const {selectedDiscussion, selectDiscussion} = selectedDiscussionState;
     useEffect(() => {
         const handleNewMessage = async (newMessage: messageDto) => {
+          console.log ('I got a new message!')
           const updatedRooms = [...discussionPanels];
           const messageRoomId = newMessage.dm_id
             ? newMessage.dm_id
@@ -30,10 +31,23 @@ export function useHandlePanel(discussionPanels: DiscussionDto[],selectedDiscuss
     
             const movedElement = updatedRooms.splice(indexToModify, 1)[0];
     
-            // Insert it at the beginning of the array
-            // updatedRooms.unshift(movedElement);
-            await setDiscussionRooms(() => [movedElement, ...updatedRooms]);
-            // await setDiscussionRooms(updatedRooms);
+             setDiscussionRooms(() => [movedElement, ...updatedRooms]);
+          }
+          else{
+            const messageContent: MinMessageDto = {
+              id: newMessage.id,
+              content: newMessage.content,
+              createdAt: newMessage.createdAt,
+            };
+            var newDiscussionPanel: DiscussionDto  = updatedRooms[0]
+             newDiscussionPanel = {
+              id : messageRoomId !== undefined ? messageRoomId:'',
+              last_message: messageContent,
+              unread_messages : 1,
+              partner_id: undefined
+            } 
+             setDiscussionRooms(() => [newDiscussionPanel, ...discussionPanels]);
+
           }
         };
 

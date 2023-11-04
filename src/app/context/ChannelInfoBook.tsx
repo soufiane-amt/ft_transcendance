@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
 import { fetchDataFromApi } from "../components/shared/customFetch/exmple";
 import { channel } from "diagnostics_channel";
+import socket from "../socket/socket";
 
 /* This interface represents the minimum data needed for a user contact */
 interface ChannelBookDto {
@@ -47,6 +48,34 @@ export function ChannelBooksProvider({
     }
     fetchDataAsync();
   }, []);
+
+  useEffect(() => {
+    const handleJoinChannel = (joinSignal: { id:string, 
+      name: string, 
+        image: string, 
+        type:string }) => {
+          const updatedChannelBooksBook = new Map(ChannelBooksBook);
+
+          // Update the copy with the new value
+          updatedChannelBooksBook.set(joinSignal.id, {
+            name: joinSignal.name,
+            avatar: joinSignal.image,
+            type: joinSignal.type,
+          });
+        
+          // Set the state to the updated Map
+          setChannelBooksBook(updatedChannelBooksBook);
+              
+
+      socket.emit("resumeChannelUpdates", joinSignal.id);
+  };
+
+      socket.on("joinChannel", handleJoinChannel);
+  
+      return () => {
+        socket.off("joinChannel", handleJoinChannel);
+      };
+    }, []);
 
   const updateChannelBook = (key: string, value: ChannelBookDto) => {
     setChannelBooksBook((prevState) => {

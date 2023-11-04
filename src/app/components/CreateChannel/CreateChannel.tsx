@@ -66,7 +66,7 @@ export function CreateChannel() {
           })
             .then(res => {
               console.log('Axios response: ', res.status)
-              // while(1){}
+
               if (res.status === 201 || res.status === 200) {
                 console.log('Image uploaded successfully');
                 // Continue with the rest of your createChannel logic

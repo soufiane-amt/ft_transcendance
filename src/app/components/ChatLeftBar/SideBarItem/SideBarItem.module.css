@@ -3,14 +3,14 @@
     align-items: center;
     padding: 10px 20px;
     cursor: pointer;
-    border-radius: 10px;
+    /* border-radius: 10px; */
     transition: all 0.2s ease-in-out;
     background-color: #24234F;
 
 }
 
 .side_bar_item:hover{
-    background-color: #5256ad;
+    background-color: #b2d8ff;
 }
 
 .side_bar_item__icon img{
