@@ -1,21 +1,11 @@
 
 
 //TODO: erros  
--> check user status with oussama in disconnect
-note : enter game make user online, enter chat make user online
+-> check user status with oussama in disconnect for multiple sessions
 note: protect socket getways in backend
-
-
-
-
-
-
-
-
-
-
 oussama: scroll in oussama dashboard
-hna + oussma : user visibily | state
+
+
 hna + oussma : ingame b sockets
 zac : submit event for close game invitaion in accept for multiple sessions
 zac : change user status to be ingame in starting game
