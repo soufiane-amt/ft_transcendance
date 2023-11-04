@@ -8,12 +8,12 @@ services:
       - pingpong
     env_file:
       - .env
-    volumes:
-      - /home/abdellah/projects/ft_transcendance/data-base/pg-data:/var/lib/postgresql/data
+    # volumes:
+    #   - /Users/abellakr/goinfre/ft_transcendance/data-base/pg-data:/var/lib/postgresql/data
     restart: on-failure
 
 networks:
   pingpong:
     driver: bridge
 
-# /Users/abellakr/goinfre/ft_transcendance/data-base
+      # - /home/abdellah/projects/ft_transcendance/data-base/pg-data:/var/lib/postgresql/data

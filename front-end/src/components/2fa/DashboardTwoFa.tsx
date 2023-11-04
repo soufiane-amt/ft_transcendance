@@ -134,7 +134,7 @@ function DashboardTwoFa(props: any) {
           />
         </div>
 
-        <div className="w-full md:max-w-[800px] h-[97%] flex flex-col">
+        <div className="w-full md:max-w-[800px] h-[97%] flex flex-col items-center justify-center">
           <div className="m-[8px] mb-[20px] ">
             <h2 className={`${mono.className} text-sm`}>
               Two-Factor Authentication (2Fa) Setup
