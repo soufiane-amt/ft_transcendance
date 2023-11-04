@@ -205,6 +205,7 @@ async retreiveDmInitPanelData(user_id :string) {
           user_id: user_id,
         },
         select: {
+          createdAt: true,
           channel: {
             select: {
               id: true,
@@ -226,16 +227,24 @@ async retreiveDmInitPanelData(user_id :string) {
         },
       });
 
-    // Structure the data with the desired fields
-    const formattedData = channelMemberships.map((membership) => ({
-      id: membership.channel.id,
-      partner_id: undefined,
-      last_message: membership.channel.messages[0],
-      type: membership.channel.type,
-      createdAt: membership.channel.createdAt,
+
+    console.log('channelMemberships: ', channelMemberships.map((membership) => {
+      // const last_message = (membership.createdAt < membership.channel.messages[0].createdAt) ? membership.channel.messages[0] : undefined;
+      console.log('>>>>>last_message: ', membership.channel.messages[0]?.createdAt);
     }));
 
-    // Sort the data by last message date
+    // Structure the data with the desired fields
+    const formattedData = channelMemberships.map((membership) => {
+      const last_message = (membership.createdAt < membership.channel.messages[0]?.createdAt) ? membership.channel.messages[0] : undefined;
+      return ({
+      id: membership.channel.id,
+      partner_id: undefined,
+      // last_message: membership.channel.messages[0] ,
+      last_message: last_message,
+      type: membership.channel.type,
+      createdAt: membership.channel.createdAt,
+    })});
+    // Sort the data by last message datefetchedData.map( (item : DiscussionDto)=>
     formattedData.sort((a, b) => {
       const dateA = (a.last_message ? a.last_message.createdAt : a.createdAt) || new Date(1900, 0, 1);
       const dateB = (b.last_message ? b.last_message.createdAt : b.createdAt) || new Date(1900, 0, 1);
@@ -377,6 +386,7 @@ async retreiveDmInitPanelData(user_id :string) {
 
         },
         select:{
+          id:true,
           name:true,
           image:true,
           type:true,
@@ -454,10 +464,11 @@ async retreiveDmInitPanelData(user_id :string) {
   }
 
   async retrieveRoomMessages(
+    user_id:string, 
     room_id: string //This method is used both for dm and groups
   ) {
     try {
-      return await this.prisma.prismaClient.message.findMany({
+      const messages =  await this.prisma.prismaClient.message.findMany({
         where: {
           OR: [{ channel_id: room_id }, { dm_id: room_id }],
         },
@@ -471,6 +482,26 @@ async retreiveDmInitPanelData(user_id :string) {
           createdAt: "asc",
         },
       });
+    if (await this.roomIsDm(room_id)) return messages
+      const channelMembership = await this.prisma.prismaClient.channelMembership.findFirst({
+        where: { channel_id: room_id, user_id: user_id },
+        select: 
+        { 
+          createdAt: true,
+          channel:
+          {
+            select: 
+            { createdAt: true }
+          }, 
+        },
+      });
+      const channelJoiningTime = channelMembership.createdAt;
+      
+      const msg =   messages.filter((message) => {
+        return message.createdAt > channelJoiningTime;
+      });
+      console.log ('msg: ', msg)
+      return msg;
     } catch {
       throw new NotFoundException(`Channel with ID ${room_id} not found.`);
     }

@@ -115,6 +115,7 @@ model ChannelMembership {
   is_muted Boolean? @default(false)
   mute_expires_at   DateTime?
 
+  createdAt DateTime? @default(now())
   @@unique([channel_id, user_id])
 }
 

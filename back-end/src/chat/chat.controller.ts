@@ -60,7 +60,7 @@ async findAllDiscussionChannels (@Req() request : Request)
 {
   try {
   const channels = await this.chatCrud.retreiveChannelPanelsData(request.cookies['user.id']);
-  console.log('Channels order', channels)
+
   const unreadMessagesPromises = channels.map(async (chElement) => {
     const unreadMessages = await this.chatCrud.getUnreadChannelMessagesNumber(request.cookies['user.id'], chElement.id);//get the number of messages unread and unsent by this user
     const channelOwner = await this.chatCrud.findChannelOwner(chElement.id)
@@ -114,9 +114,9 @@ async findAllChannelsInContact (@Req() request : Request)
 }
 
   @Get (":roomid/messages")
-  async findRoomMessages (@Param("roomid") roomid:string)
+  async findRoomMessages (@Req() request : Request, @Param("roomid") roomid:string)
   {
-    return await this.chatCrud.retrieveRoomMessages(roomid);
+    return await this.chatCrud.retrieveRoomMessages(request.cookies["user.id"], roomid);
   }
 
   @Get ("/direct_messaging/bannedRooms")

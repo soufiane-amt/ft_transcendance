@@ -201,36 +201,28 @@ export class allowJoinGuard implements CanActivate {
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const joinRequest = context.switchToWs().getData();
-    return this.allowJoining(joinRequest);
+    return this.allowJoining(context, joinRequest);
   }
 
-  async allowJoining(joinRequest: channelReqDto): Promise<boolean> {
+  async allowJoining(context: ExecutionContext, joinRequest: channelReqDto): Promise<boolean> {
     const targetedChannel = await this.chatCrud.findChannelById(
       joinRequest.channel_id,
     );
-    console.log('1');
     if (!targetedChannel) return false;
-    console.log('2');
+    const user_id = extractUserIdFromCookies(context.switchToWs().getClient());
+
     //check if the user wanting to join is already there in  join
     const user_membership = await this.chatCrud.getMemeberShip(
-      joinRequest.user_id,
+      user_id,
       joinRequest.channel_id,
     );
     if (user_membership == null) {
-      console.log('3');
-
-      if (
-        targetedChannel.type == 'PROTECTED' &&
-        (!joinRequest.password ||
-          joinRequest.password != targetedChannel.password)
-      )
+      if ( targetedChannel.type == 'PROTECTED' &&
+            (!joinRequest.password ||
+              joinRequest.password != targetedChannel.password))
         return false;
       return true;
     }
-    if (user_membership.role == 'OWNER')
-      //this condition checks wether the channel is just created, and the owner is requesting to join its own channel
-      return true;
-    console.log('4');
     return false;
   }
 }

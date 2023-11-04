@@ -63,19 +63,22 @@ import { subscribe } from "diagnostics_channel";
 
 
     
-    // @SubscribeMessage('joinSignal')
-    // //check if the user exists
-    // //check the exitence of the channel
-    // //Check if the data sent to the channel is actually 
-    // //comptible with the requirement of the channel .e.g (protected has to have password ... )
+    //check if the user exists
+    //check the exitence of the channel
+    //Check if the data sent to the channel is actually 
+    //comptible with the requirement of the channel .e.g (protected has to have password ... )
     // @UseGuards(allowJoinGuard) 
-    // async handleJoinChannel (client :Socket, membReq : channelReqDto)//this event is only triggered by the users that will join not the admin that already joined and created channel
-    // {
-    //   console.log ("Passed")
-    //   const channelMembership:channelMembershipDto =  {channel_id: membReq.channel_id, user_id: membReq.user_id, role:'USER'}
-    //   await this.chatCrud.joinChannel (channelMembership)
-    //   client.join(membReq.channel_id)
-    // }
+    @SubscribeMessage('joinSignal')
+    async handleJoinChannel (client :Socket, membReq : channelReqDto)//this event is only triggered by the users that will join not the admin that already joined and created channel
+    {
+      console.log ("Passed")
+      const user_id = this.extractUserIdFromCookies(client);
+      const channelMembership:channelMembershipDto =  {channel_id: membReq.channel_id,
+        user_id: user_id,
+        role:'USER'}
+      await this.chatCrud.joinChannel (channelMembership)
+      // client.join(membReq.channel_id)
+    }
 
 
     // //User Moderation :

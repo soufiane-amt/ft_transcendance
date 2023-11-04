@@ -38,8 +38,8 @@ export interface channelMembershipDto {
 
 export interface channelReqDto {
   channel_id: string;
-  user_id: string;
-  password?: string;
+  channeltype: "PUBLIC" | "PRIVATE" | "PROTECTED"; 
+  password: string;
 }
 
 export interface banManageSignalDto {
