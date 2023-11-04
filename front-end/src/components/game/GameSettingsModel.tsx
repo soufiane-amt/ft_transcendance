@@ -57,7 +57,7 @@ function GameSettingsModel({ ...props }) {
   const Guest =
     Roll === "guest" ? "cursor-pointer bg-[#E4E7FF] text-[#0D0149]" : "";
 
-  const HandleSubmit = () => {
+  const HandleSubmit = (ev : any) => {
     if (
       context.GameSettings.GameMode === "Practice" &&
       context.GameSettings.GameTheme != "" &&
@@ -97,6 +97,10 @@ function GameSettingsModel({ ...props }) {
         setError("");
       }, 2000);
     }
+    ev.preventDefault();
+    props.setSettings(false);
+    props.setInvitorWaiting(true);
+    props.setTimer(20);
   };
 
   return (

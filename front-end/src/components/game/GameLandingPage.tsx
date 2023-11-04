@@ -10,6 +10,7 @@ import Invite from "./InviteFriendsModel";
 import GameSettingsModel from "./GameSettingsModel";
 import GameContext from "./GameContext";
 import MatchMakingLoadingComponent from "./MatchMakingAnimation";
+import InvitorWaiting from "./GameInviterwaiting";
 
 const pixelfont = Press_Start_2P({
   subsets: ["latin"],
@@ -36,6 +37,8 @@ function GameLandingPage() {
   const [info, setInfo] = useState(false);
   const [invite, setInvite] = useState(false);
   const [settings, setSettings] = useState(false);
+  const [invitor, setInvitor] = useState(false);
+  const [Timer, setTimer]: any = useState(0);
   const [isMatchMaking, setMatchMaking] = useState(false);
   const [isMatchMakingLoading, setIsMatchMakingLoading] = useState(false);
   const context: any = useContext(GameContext);
@@ -52,6 +55,21 @@ function GameLandingPage() {
       });
     }
   }, [settings]);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      if (Timer > 0) {
+        setTimer(Timer - 1);
+      } else {
+        clearInterval(interval);
+        setInvitor(false);
+      }
+    }, 1000);
+
+    return () => {
+      clearInterval(interval);
+    };
+  }, [Timer]);
 
   return (
     <div className="bg-[#0D0149] max-w-[100vw] min-h-[calc(100vh-91px)] flex  items-center flex-col p-[3%] box-border  justify-between overflow-hidden">
@@ -146,9 +164,16 @@ function GameLandingPage() {
           setSettings={setSettings}
           isMatchMaking={isMatchMaking}
           setIsMatchMakingLoading={setIsMatchMakingLoading}
+          setInvitorWaiting={setInvitor}
+          setTimer={setTimer}
         />
       )}
-      { isMatchMakingLoading && <MatchMakingLoadingComponent  setIsMatchMakingLoading={setIsMatchMakingLoading} />}
+      {isMatchMakingLoading && (
+        <MatchMakingLoadingComponent
+          setIsMatchMakingLoading={setIsMatchMakingLoading}
+        />
+      )}
+      {invitor && <InvitorWaiting Timer={Timer} setInvitorWaiting={setInvitor} />}
     </div>
   );
 }

@@ -24,7 +24,7 @@ const Structure = ({ children }: { children: React.ReactNode }) => {
     });
 
     newSocket.on('GameInvitationResponse', (response: any) => {
-      console.log(response);
+      // console.log(response);
     })
 
     newSocket.on('redirect_to_invitation_game', (game_id: string) => {

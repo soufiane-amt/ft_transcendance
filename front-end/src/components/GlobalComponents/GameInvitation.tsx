@@ -5,7 +5,8 @@ import "../../styles/TailwindRef.css";
 import { Press_Start_2P } from "next/font/google";
 import Cookies from "js-cookie";
 import axios from "axios";
-import newSocket  from "./Socket/socket";
+import newSocket from "./Socket/socket";
+
 
 const mono = Space_Mono({
   subsets: ["latin"],
@@ -21,10 +22,10 @@ const pixelfont = Press_Start_2P({
 const HandleSubmit = (data: any) => {
   const payload: any = {
     ...data,
-    response: 'accepted',
-  }
-  newSocket.emit('GameInvitationResponse', payload);
-}
+    response: "accepted",
+  };
+  newSocket.emit("GameInvitationResponse", payload);
+};
 
 function GameInvitation({ ...props }) {
   const jwtToken = Cookies.get("access_token");
@@ -50,8 +51,7 @@ function GameInvitation({ ...props }) {
     }
     getUserData(props.data.invitor_id, setInvitor);
     getUserData(props.data.invitee_id, setInvitee);
-
-  }, [ jwtToken]);
+  }, [jwtToken]);
 
   return (
     <div className="fixed inset-0 flex items-center justify-center z-[4]">
@@ -63,7 +63,7 @@ function GameInvitation({ ...props }) {
         }}
       ></div>
       {/* this is the main component */}
-      <div className="bg-[#E4E7FF] rounded shadow-lg w-[80vw] h-[80vh] flex flex-col   p-[30px] box-border overflow-y-scroll overflow-x-hidden items-center z-[5] min-h-[400px] min-w-[300px] max-h-[1500px] max-w-[720px] text-[#0D0149] justify-between md:justify-evenly">
+      <div className="bg-[#E4E7FF] rounded shadow-lg w-[80vw] h-[80vh] flex flex-col   p-[30px] box-border overflow-y-scroll overflow-x-hidden items-center z-[5] min-h-[400px] min-w-[300px] max-h-[800px] max-w-[720px] text-[#0D0149] justify-between md:justify-evenly">
         <h2
           className={`text-[#0D0149] text-center font-bold text-[15px] md:text-[20px] ${pixelfont.className} min-h-[30px]`}
         >
@@ -111,7 +111,7 @@ function GameInvitation({ ...props }) {
         </div>
         <div className="min-h-[40px] md:min-h-0">
           <p className={`${mono.className} text-center font-bold text-red-600`}>
-            {props.Timer} S:
+            {props.Timer} S
           </p>
         </div>
         <div className="min-h-[80px] flex  w-full flex-col md:flex-row  items-center justify-between md:justify-evenly md:min-h-0">
@@ -121,16 +121,19 @@ function GameInvitation({ ...props }) {
               props.State(false);
               const payload: any = {
                 ...props.data,
-                response: 'declined'
-              }
-              newSocket.emit('GameInvitationResponse', payload);
+                response: "declined",
+              };
+              newSocket.emit("GameInvitationResponse", payload);
             }}
             className={`${mono.className} font-semibold hover:opacity-50 hover:cursor-pointer`}
           >
             Decline
           </div>
           <div
-            onClick={(e) => {e.preventDefault(); HandleSubmit(props.data)}}
+            onClick={(e) => {
+              e.preventDefault();
+              HandleSubmit(props.data);
+            }}
             className={`text-[18px] text-white font-semibold  bg-[#0D0149] px-[15px] py-[3px] rounded-xl hover:opacity-50  ${mono.className}   border-none  hover:cursor-pointer`}
           >
             Accept
