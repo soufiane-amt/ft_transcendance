@@ -1,15 +1,40 @@
 version: "3.8"
 services:
-  db:
-    image: postgres:13
+  # ================= database ==================
+  # db:
+  #   image: postgres:13
+  #   ports:
+  #     - 5434:5432
+  #   networks:
+  #     - pingpong
+  #   env_file:
+  #     - .env
+  #   volumes:
+  #     - ./data-base/pg-data:/var/lib/postgresql/data
+  #   restart: on-failure
+  #============== frontend ===============
+  frontend:
+    build: ./front-end/.
+    image: frontend
     ports:
-      - 5434:5432
+      - 3000:3000
+    container_name: frontend
     networks:
       - pingpong
-    env_file:
+    environment:
       - .env
-    volumes:
-      - ./data-base/pg-data:/var/lib/postgresql/data
+    restart: on-failure
+  #============== frontend ===============
+  backend:
+    build: ./back-end/.
+    image: backend
+    ports:
+      - 3001:3001
+    container_name: backend
+    networks:
+      - pingpong
+    environment:
+      - .env
     restart: on-failure
 
 networks:
