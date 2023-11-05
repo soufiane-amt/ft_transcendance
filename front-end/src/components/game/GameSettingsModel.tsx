@@ -66,51 +66,61 @@ function GameSettingsModel({ ...props }) {
       props.setSettings(false);
       context.SetGameLandingPageBool(false);
       context.SetGameDashboardBool(true);
+      props.setSettings(false);
     } else if (
       context.GameSettings.GameMode === "Invite" &&
       context.GameSettings.GameTheme != "" &&
       context.GameSettings.GameSpeed != "" &&
       context.GameSettings.Oponent != null
     ) {
-      context.newSocket.emit("GameInvitation", {
-        invitor_id: User.id,
-        invitee_id: context.GameSettings.Oponent,
-        mapType: context.GameSettings.GameTheme,
-        speed: context.GameSettings.GameSpeed,
-      }, (response: string) => {
-        if (response === 'invitation has been sent') {
-          ev.preventDefault();
-          props.setInvitorWaiting(true);
-          props.setTimer(20);
-        } else {
-          props.setSettings(false);
+      props.setSettings(false);
+      context.newSocket.emit(
+        "GameInvitation",
+        {
+          invitor_id: User.id,
+          invitee_id: context.GameSettings.Oponent,
+          mapType: context.GameSettings.GameTheme,
+          speed: context.GameSettings.GameSpeed,
+        },
+        (response: string) => {
+          if (response === "invitation has been sent") {
+            ev.preventDefault();
+            props.setInvitorWaiting(true);
+            props.setTimer(20);
+          } else {
+            props.setSettings(false);
+          }
         }
-      });
+      );
     } else if (
       context.GameSettings.GameMode === "Matchmaking" &&
       context.GameSettings.GameTheme != "" &&
       context.GameSettings.GameSpeed != "" &&
       context.GameSettings.Roll != null
     ) {
-      context.gameSocket.emit("matchMaking", {
-        mapType: context.GameSettings.GameTheme,
-        speed: context.GameSettings.GameSpeed,
-        role: context.GameSettings.Roll,
-      }, (response: string) => {
-        if (response === 'You are already in the game') {
+      props.setSettings(false);
+      context.gameSocket.emit(
+        "matchMaking",
+        {
+          mapType: context.GameSettings.GameTheme,
+          speed: context.GameSettings.GameSpeed,
+          role: context.GameSettings.Roll,
+        },
+        (response: string) => {
+          if (response === "You are already in the game") {
             props.setSettings(false);
-        } else {
-          props.setIsMatchMakingLoading(true);
-          props.setSettings(false);
+          } else {
+            props.setIsMatchMakingLoading(true);
+            props.setSettings(false);
+          }
         }
-      });
+      );
     } else {
       setError("Please finish setuping your data!");
       setTimeout(() => {
         setError("");
       }, 2000);
     }
-    props.setSettings(false);
   };
 
   return (
