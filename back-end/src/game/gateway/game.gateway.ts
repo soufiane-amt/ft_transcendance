@@ -41,7 +41,7 @@ export class GameGateway implements OnGatewayInit<Server>, OnGatewayConnection<C
   async matchmakingListener(@MessageBody(new ZodValidationPipe(matchMakingDto)) game_settings: MatchMakingDto,@ConnectedSocket() client: ClientSocket): Promise<string> {
     const user_state : Status = await this.userCrudService.getUserStatus(client.userId);
     if (user_state === Status.IN_GAME) {
-      return "can't join the queue";
+      return "You are already in the game";
     }
     if (this.gameservice.playerExist(client.player) !== undefined) {
       return "can't join the queue";

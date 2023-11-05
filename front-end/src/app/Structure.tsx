@@ -24,8 +24,9 @@ const Structure = ({ children }: { children: React.ReactNode }) => {
       }
     });
 
-    newSocket.on("GameInvitationResponse", (response: any) => {
-      // console.log(response);
+    newSocket.on("close_game_invitation_model", () => {
+      setGameInvitationBool(false);
+      setTimer(0);
     });
 
     newSocket.on("redirect_to_invitation_game", (game_id: string) => {
@@ -51,11 +52,14 @@ const Structure = ({ children }: { children: React.ReactNode }) => {
   const JwtToken = Cookies.get("access_token");
 
   useEffect(() => {
-    const data = {
-      // status: "INGAME",
-      token: `Bearer ${JwtToken}`,
-    };
-    newSocket.emit("status", data);
+    newSocket.emit('get_status', (response: string) => {
+      if (response !== 'IN_GAME') {
+        const data = {
+          token: `Bearer ${JwtToken}`,
+        };
+        newSocket.emit("status", data);
+      }
+    })
   }, [JwtToken]);
   return (
     <main>

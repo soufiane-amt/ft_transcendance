@@ -211,9 +211,13 @@ export class GameService {
       const payload: string = game_id;
       server.to(invitationRoom).emit('redirect_to_invitation_game', payload);
       inviteeSocket.emit('redirect_to_invitation_game', payload);
+      const inviteeRoom: string = `gameInv-${gameInvitationResponseDto.invitee_id}`;
+      server.to(inviteeRoom).emit('close_game_invitation_model');
     } else if (gameInvitationResponseDto.response === 'declined') {
       const payload: string = 'invitation declined';
       server.to(invitationRoom).emit('GameInvitationResponse', payload);
+      const inviteeRoom: string = `gameInv-${gameInvitationResponseDto.invitee_id}`;
+      server.to(inviteeRoom).emit('close_game_invitation_model');
     }
     server.of('/').adapter.rooms.delete(invitationRoom);
   }
@@ -233,8 +237,8 @@ export class GameService {
   }
 
   async startGame(player1Socket: ClientSocket, player2Socket: ClientSocket, gameRoom: string, joinGame: JoinGameDto, server: Server) : Promise<void> {
-    const leftPlayerSocket: Socket = player1Socket.player.id === joinGame.player1_id ? player1Socket : player2Socket;
-    const rightPlayerSocket: Socket = player1Socket.player.id === joinGame.player2_id ? player1Socket : player2Socket;
+    const leftPlayerSocket: Socket = player1Socket.player.id === joinGame.player1_id ? player1Socket.player.socket : player2Socket.player.socket;
+    const rightPlayerSocket: Socket = player1Socket.player.id === joinGame.player2_id ? player1Socket.player.socket : player2Socket.player.socket;
     const speed: string = joinGame.speed.toLowerCase();
     const gameId: string = joinGame.game_id;
     const mapType: string = joinGame.mapType.toLowerCase();
@@ -262,6 +266,8 @@ export class GameService {
     const winner: string = gameScore.player1_score > gameScore.player2_score ? player1_id : player2_id;
     await this.gameCrudService.addLossesToUser(loser);
     await this.gameCrudService.addWinsToUser(winner);
+    await this.userCrudService.changeVisibily(player1_id, 'ONLINE');
+    await this.userCrudService.changeVisibily(player2_id, 'ONLINE');
   }
 
   handleInvitationGame(requestInvitationGameDto : RequestInvitationGameDto, client: ClientSocket) {

@@ -77,10 +77,15 @@ function GameSettingsModel({ ...props }) {
         invitee_id: context.GameSettings.Oponent,
         mapType: context.GameSettings.GameTheme,
         speed: context.GameSettings.GameSpeed,
+      }, (response: string) => {
+        if (response === 'invitation has been sent') {
+          ev.preventDefault();
+          props.setInvitorWaiting(true);
+          props.setTimer(20);
+        } else {
+          props.setSettings(false);
+        }
       });
-      ev.preventDefault();
-      props.setInvitorWaiting(true);
-      props.setTimer(20);
     } else if (
       context.GameSettings.GameMode === "Matchmaking" &&
       context.GameSettings.GameTheme != "" &&
@@ -91,9 +96,14 @@ function GameSettingsModel({ ...props }) {
         mapType: context.GameSettings.GameTheme,
         speed: context.GameSettings.GameSpeed,
         role: context.GameSettings.Roll,
+      }, (response: string) => {
+        if (response === 'You are already in the game') {
+            props.setSettings(false);
+        } else {
+          props.setIsMatchMakingLoading(true);
+          props.setSettings(false);
+        }
       });
-      props.setIsMatchMakingLoading(true);
-      props.setSettings(false);
     } else {
       setError("Please finish setuping your data!");
       setTimeout(() => {

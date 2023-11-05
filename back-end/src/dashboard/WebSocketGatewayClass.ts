@@ -17,6 +17,9 @@ import GameInvitationDto, { gameInvitationDto } from 'src/game/dto/GameInvitatio
 import { ZodValidationPipe } from 'src/game/pipes/zod-validation-pipe';
 import { GameService } from 'src/game/game.service';
 import GameInvitationResponseDto, { gameInvitationResponseDto } from 'src/game/dto/GameInvitationResponse.dto';
+import { Status } from '@prisma/client';
+import ClientSocket from 'src/game/interfaces/clientSocket.interface';
+import { GatewaysGuard } from 'src/game/guards/gateways.guard';
 
 @WebSocketGateway({ cors: true, origins: 'http://localhost:3000' })
 @Injectable()
@@ -231,7 +234,11 @@ export class WebSocketGatewayClass
   }
 
   @SubscribeMessage('GameInvitation')
-  handleGameInvitation(@MessageBody(new ZodValidationPipe(gameInvitationDto)) gameInvitationDto: GameInvitationDto, @ConnectedSocket() client: Socket) : string {
+  async handleGameInvitation(@MessageBody(new ZodValidationPipe(gameInvitationDto)) gameInvitationDto: GameInvitationDto, @ConnectedSocket() client: Socket) : Promise<string> {
+    const invitorStatus: Status = await this.user.getUserStatus(gameInvitationDto.invitor_id);
+    if (invitorStatus === Status.IN_GAME) {
+      return 'You are already in game';
+    }
     this.gameService.sendInvitation(gameInvitationDto, this.server, client);
     return 'invitation has been sent';
   }
@@ -240,5 +247,16 @@ export class WebSocketGatewayClass
   handleGameInvitationResponse(@MessageBody(new ZodValidationPipe(gameInvitationResponseDto)) gameInvitationResponseDto: GameInvitationResponseDto,@ConnectedSocket() client: Socket) : string {
     this.gameService.sendGameInvitationResponse(gameInvitationResponseDto, this.server, client);
     return 'response has been sent';
+  }
+
+  @SubscribeMessage('get_status')
+  async handleGetStatus(client: Socket) : Promise<string> {
+    try {
+      const userId: string = GatewaysGuard.validateJwt(client);
+      const status: Status = await this.user.getUserStatus(userId);
+      return status;
+    } catch {
+      return 'invalid token';
+    }
   }
 }
