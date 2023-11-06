@@ -33,40 +33,27 @@ export function WelcomingPage() {
   return (
         <div className={style.welcoming_page}>
             <WelcomeSection/>
+            {dataToDisplay?.dmsToJoin.length > 0 &&
             <div className={style.user_initiative_talks}>
+              
                 <h5 className={style.welcoming_page_talks__title}>Start a conversation:</h5>
                   {
-                    dataToDisplay?.dmsToJoin.map((user:{ username: string; avatar: string }) => {
+                    dataToDisplay?.dmsToJoin.length && dataToDisplay?.dmsToJoin.map((user:{ username: string; avatar: string }) => {
                       return <UserInitiativeTalk userData={{username: user.username, avatar: user.avatar}}/>
                     })}
-                    {/* <UserInitiativeTalk userData={userData}/>
-                    <UserInitiativeTalk userData={userData}/>
-                    <UserInitiativeTalk userData={userData}/>
-                    <UserInitiativeTalk userData={userData}/>
-                    <UserInitiativeTalk userData={userData}/>
-                    <UserInitiativeTalk userData={userData}/>
-                    <UserInitiativeTalk userData={userData}/>
-                    <UserInitiativeTalk userData={userData}/>
-                    <UserInitiativeTalk userData={userData}/>
-                    <UserInitiativeTalk userData={userData}/>
-                    <UserInitiativeTalk userData={userData}/>
-                    <UserInitiativeTalk userData={userData}/> */}
             </div>
-            <div className={style.channel_joins}>
+            }
+            {
+            dataToDisplay?.channelsToJoin.length > 0 &&
+              <div className={style.channel_joins}>
                 <h5 className={style.welcoming_page_talks__title}>Join a rooom:</h5>
                 {
-                    dataToDisplay?.channelsToJoin.map((channel:ChannelType) => {
+                     dataToDisplay?.channelsToJoin.map((channel:ChannelType) => {
                       return <ChannelJoin channelData={channel}/>
                     })
                 }
-                {/* <ChannelJoin channelData={{name : "channel name", picture : "http://localhost:3001/chat/image/550e8400-e29b-41d4-a716-446655440000.jpeg", type : "PROTECTED"}}/>
-                <ChannelJoin channelData={{name : "channel name", picture : "http://localhost:3001/chat/image/550e8400-e29b-41d4-a716-446655440000.jpeg", type : "PUBLIC"}}/>
-                <ChannelJoin channelData={{name : "channel name", picture : "http://localhost:3001/chat/image/550e8400-e29b-41d4-a716-446655440000.jpeg", type : "PUBLIC"}}/>
-                <ChannelJoin channelData={{name : "channel name", picture : "http://localhost:3001/chat/image/550e8400-e29b-41d4-a716-446655440000.jpeg", type : "PUBLIC"}}/>
-                <ChannelJoin channelData={{name : "channel name", picture : "http://localhost:3001/chat/image/550e8400-e29b-41d4-a716-446655440000.jpeg", type : "PUBLIC"}}/>
-                <ChannelJoin channelData={{name : "channel name", picture : "http://localhost:3001/chat/image/550e8400-e29b-41d4-a716-446655440000.jpeg", type : "PUBLIC"}}/>
-                <ChannelJoin channelData={{name : "channel name", picture : "http://localhost:3001/chat/image/550e8400-e29b-41d4-a716-446655440000.jpeg", type : "PUBLIC"}}/> */}
             </div>
+            }
         </div>
     )
 }
