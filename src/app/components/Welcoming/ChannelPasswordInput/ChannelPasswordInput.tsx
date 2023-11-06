@@ -72,7 +72,7 @@ export function ChannelPasswordInput ({handleVisibility,  channelData}: ChannelP
                     <button onClick={handleJoinClick}>
                         Join
                     </button>
-                    {displayJoinFailure && <span className={style.channel_password_input__join_failure}>Wrong password</span>}
+                    {displayJoinFailure && <span className={style.channel_password_input__join_failure}>Denied permission</span>}
                 </div>
             </div>
         </div>

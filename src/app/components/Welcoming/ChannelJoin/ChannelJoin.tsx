@@ -3,6 +3,7 @@ import { ChannelPasswordInput } from '../ChannelPasswordInput/ChannelPasswordInp
 import style from './ChannelJoin.module.css';
 import socket from '../../../socket/socket';
 import { ChannelType } from '../WelcomingPage';
+import axios from 'axios';
 
 export interface ChannelJoinProps
 {
@@ -11,10 +12,35 @@ export interface ChannelJoinProps
 
 export function ChannelJoin({ channelData }: ChannelJoinProps) {
     const [showPasswordInput, setShowPasswordInput] = useState(false);
-    const handleClickJoin = () => {
+    const handleClickJoin = async () => {
+        const channelRequestMembership = {
+            channel_id : channelData.id,
+            password: '',
+            type: channelData.type
+        }
+
         if (channelData.type === 'PUBLIC') {
             // join channel
-            socket.emit('joinSignal', { channelName: channelData.name });
+            try
+            {
+                // join channel
+                await axios.post('http://localhost:3001/chat/channelJoinRequest', 
+                channelRequestMembership,
+                { withCredentials: true
+                  })
+                    .then(res => {
+                      if (res.status === 200) {
+                        socket.emit('joinSignal', channelData.id);
+                        window.location.href = `/chat/Channels/`;
+                      }
+                })
+            }
+            catch(err)
+            {
+                window.location.reload();
+                alert('Channel joining has failed!');
+            }
+    
             //and redirect to channel
         }
         else {

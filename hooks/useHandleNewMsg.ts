@@ -19,6 +19,7 @@ export function useHandleNewMsg(messagesHistoryState: any, selectedDiscussion:di
             ]);
     
           }
+          console.log("new message", newMessage);
         };
     
         socket.on("newMessage", handleNewMessage);
