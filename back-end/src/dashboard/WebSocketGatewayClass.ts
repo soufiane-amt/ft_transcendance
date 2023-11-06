@@ -13,10 +13,14 @@ import { Injectable, UseGuards } from '@nestjs/common';
 import { UserCrudService } from 'src/prisma/user-crud.service';
 import { AuthService } from 'src/auth/auth.service';
 import { PrismaService } from 'src/prisma/prisma.service';
-import GameInvitationDto, { gameInvitationDto } from 'src/game/dto/GameInvitation.dto';
+import GameInvitationDto, {
+  gameInvitationDto,
+} from 'src/game/dto/GameInvitation.dto';
 import { ZodValidationPipe } from 'src/game/pipes/zod-validation-pipe';
 import { GameService } from 'src/game/game.service';
-import GameInvitationResponseDto, { gameInvitationResponseDto } from 'src/game/dto/GameInvitationResponse.dto';
+import GameInvitationResponseDto, {
+  gameInvitationResponseDto,
+} from 'src/game/dto/GameInvitationResponse.dto';
 import { Status } from '@prisma/client';
 import ClientSocket from 'src/game/interfaces/clientSocket.interface';
 import { GatewaysGuard } from 'src/game/guards/gateways.guard';
@@ -32,7 +36,7 @@ export class WebSocketGatewayClass
     private readonly user: UserCrudService,
     private readonly authservice: AuthService,
     private readonly service: PrismaService,
-    private readonly gameService: GameService
+    private readonly gameService: GameService,
   ) {}
   private clients: Map<string, string> = new Map();
 
@@ -200,17 +204,15 @@ export class WebSocketGatewayClass
               }),
             );
             this.server.to(targetClientRoom).emit('online', users);
-            const myuser = this.user.findUserByID(payload.userId);
+            const myuser = await this.user.findUserByID(payload.userId);
             this.server.emit('changestatus', myuser);
           }
-          const user = await this.service.prismaClient.user.findUnique({
-            where: {
-              id: payload.userId,
-            },
-          });
-          if (
-            notificationData.status != 'INGAME'
-          ) {
+          // const user = await this.service.prismaClient.user.findUnique({
+          //   where: {
+          //     id: payload.userId,
+          //   },
+          // });
+          else if (notificationData.status != 'INGAME') {
             const targetClientRoom = `room_${userId}`;
             //     // console.log('target : ', targetClientRoom);
             await this.user.changeVisibily(payload.userId, 'ONLINE');
@@ -234,8 +236,14 @@ export class WebSocketGatewayClass
   }
 
   @SubscribeMessage('GameInvitation')
-  async handleGameInvitation(@MessageBody(new ZodValidationPipe(gameInvitationDto)) gameInvitationDto: GameInvitationDto, @ConnectedSocket() client: Socket) : Promise<string> {
-    const invitorStatus: Status = await this.user.getUserStatus(gameInvitationDto.invitor_id);
+  async handleGameInvitation(
+    @MessageBody(new ZodValidationPipe(gameInvitationDto))
+    gameInvitationDto: GameInvitationDto,
+    @ConnectedSocket() client: Socket,
+  ): Promise<string> {
+    const invitorStatus: Status = await this.user.getUserStatus(
+      gameInvitationDto.invitor_id,
+    );
     if (invitorStatus === Status.IN_GAME) {
       return 'You are already in game';
     }
@@ -244,13 +252,21 @@ export class WebSocketGatewayClass
   }
 
   @SubscribeMessage('GameInvitationResponse')
-  handleGameInvitationResponse(@MessageBody(new ZodValidationPipe(gameInvitationResponseDto)) gameInvitationResponseDto: GameInvitationResponseDto,@ConnectedSocket() client: Socket) : string {
-    this.gameService.sendGameInvitationResponse(gameInvitationResponseDto, this.server, client);
+  handleGameInvitationResponse(
+    @MessageBody(new ZodValidationPipe(gameInvitationResponseDto))
+    gameInvitationResponseDto: GameInvitationResponseDto,
+    @ConnectedSocket() client: Socket,
+  ): string {
+    this.gameService.sendGameInvitationResponse(
+      gameInvitationResponseDto,
+      this.server,
+      client,
+    );
     return 'response has been sent';
   }
 
   @SubscribeMessage('get_status')
-  async handleGetStatus(client: Socket) : Promise<string> {
+  async handleGetStatus(client: Socket): Promise<string> {
     try {
       const userId: string = GatewaysGuard.validateJwt(client);
       const status: Status = await this.user.getUserStatus(userId);

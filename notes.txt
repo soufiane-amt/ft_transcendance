@@ -17,3 +17,25 @@ waiting in game
 win , lose
 docker 
 more test for game 
+
+=========================
+zac : submit event for close game invitaion in accept for multiple sessions
+zac : change user status to be ingame in starting game
+zac : reset state after ending game , fonts 
+zakaria + oussama : bakend of history data
+abdellah + oussama : file upload not image but has extention of image , sharp, jimp
+
+abdellah: tester game mzyan
+abdellah: all my components 'use client', protect backendendpoints
+
+zac: invitee set to ingame from dashboard, no connection in browser set pause game or stop game
+zac:first error of id 
+
+
+
+
+
+check subject and correction for game pause or disconnect
+zac + abdellah : settings problem correption
+zac + abdellah : invitaion 2 times
+zac : change data for invitee

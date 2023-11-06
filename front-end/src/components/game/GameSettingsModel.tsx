@@ -8,12 +8,14 @@ import Cookies from "js-cookie";
 import axios from "axios";
 
 const mono = Space_Mono({
+  preload: false,
   subsets: ["latin"],
   style: ["normal"],
   weight: ["400", "700"],
 });
 
 const pixelfont = Press_Start_2P({
+  preload: false,
   subsets: ["latin"],
   weight: ["400"],
 });

@@ -27,24 +27,30 @@ export class GameService {
   private invitationGamesInfo: Map<string, GameInfo> = new Map();
   private invitationGames: Map<string, string[]> = new Map();
 
-  constructor(private readonly userCrudService: UserCrudService, private readonly gameCrudService: GameCrudService) {}
+  constructor(
+    private readonly userCrudService: UserCrudService,
+    private readonly gameCrudService: GameCrudService,
+  ) {}
 
-  async joinMatchMackingSystem(player: Player, matchMakingDto: MatchMakingDto): Promise<string> {
+  async joinMatchMackingSystem(
+    player: Player,
+    matchMakingDto: MatchMakingDto,
+  ): Promise<string> {
     if (matchMakingDto.role.toLowerCase() === 'host') {
-        const game_settings: GameSettings = { 
-                                mapType : matchMakingDto.mapType,
-                                speed: matchMakingDto.speed
-                            }
-        const hostPlayer = {
-                            player,
-                            game_settings
-                        }
-        const response: string = await this.HostLookForOpponent(hostPlayer);
-        return response;
+      const game_settings: GameSettings = {
+        mapType: matchMakingDto.mapType,
+        speed: matchMakingDto.speed,
+      };
+      const hostPlayer = {
+        player,
+        game_settings,
+      };
+      const response: string = await this.HostLookForOpponent(hostPlayer);
+      return response;
     } else if (matchMakingDto.role.toLowerCase() === 'guest') {
-        const guestPlayer: GuestPlayer = { player }; 
-        const response: string = await this.GuestLookForOpponent(guestPlayer);
-        return response;
+      const guestPlayer: GuestPlayer = { player };
+      const response: string = await this.GuestLookForOpponent(guestPlayer);
+      return response;
     }
   }
   async get_player(client: ClientSocket): Promise<Player> {
@@ -54,55 +60,88 @@ export class GameService {
       id: client.userId,
       username,
       level,
-      socket: client
+      socket: client,
     };
   }
 
   async HostLookForOpponent(hostPlayer: HostPlayer): Promise<string> {
     if (this.guestPlayers.length !== 0) {
-        const opponent = this.findClosestlevel(this.guestPlayers, hostPlayer.player);
-        const players : CreateGame = {player1_id: hostPlayer.player.id, player2_id: opponent.player.id};
-        const game_id: string = (await this.gameCrudService.createGame(players)).game_id;
-        this.removePlayerFromTheQueue('host', hostPlayer.player);
-        this.removePlayerFromTheQueue('guest', opponent.player);
-        const gameInfo : GameInfo = {
-            player1_id: hostPlayer.player.id,
-            game_id,
-            player1_username: hostPlayer.player.username,
-            player2_id : opponent.player.id,
-            player2_username: opponent.player.username,
-            mapType: hostPlayer.game_settings.mapType,
-            speed: hostPlayer.game_settings.speed
-          }
-        const hostPlayerSide : string = 'left';
-        const opponentPlayerSide : string = 'right'; 
-        hostPlayer.player.socket.emit('redirect_to_game', gameInfo, hostPlayerSide);
-        opponent.player.socket.emit('redirect_to_game', gameInfo, opponentPlayerSide);
-        return 'game is found!';
+      const opponent = this.findClosestlevel(
+        this.guestPlayers,
+        hostPlayer.player,
+      );
+      const players: CreateGame = {
+        player1_id: hostPlayer.player.id,
+        player2_id: opponent.player.id,
+      };
+      const game_id: string = (await this.gameCrudService.createGame(players))
+        .game_id;
+      this.removePlayerFromTheQueue('host', hostPlayer.player);
+      this.removePlayerFromTheQueue('guest', opponent.player);
+      const gameInfo: GameInfo = {
+        player1_id: hostPlayer.player.id,
+        game_id,
+        player1_username: hostPlayer.player.username,
+        player2_id: opponent.player.id,
+        player2_username: opponent.player.username,
+        mapType: hostPlayer.game_settings.mapType,
+        speed: hostPlayer.game_settings.speed,
+      };
+      const hostPlayerSide: string = 'left';
+      const opponentPlayerSide: string = 'right';
+      hostPlayer.player.socket.emit(
+        'redirect_to_game',
+        gameInfo,
+        hostPlayerSide,
+      );
+      opponent.player.socket.emit(
+        'redirect_to_game',
+        gameInfo,
+        opponentPlayerSide,
+      );
+      return 'game is found!';
     } else if (this.hostPlayers.length !== 0) {
-        const matchingSettings: HostPlayer[] = this.hostPlayers.filter((pl: HostPlayer) => (pl.game_settings.speed === hostPlayer.game_settings.speed
-                                                                                              && pl.game_settings.mapType === hostPlayer.game_settings.mapType));
-        if (matchingSettings.length !== 0) {
-          const opponent = this.findClosestlevel(matchingSettings, hostPlayer.player);
-          const players : CreateGame = {player1_id: hostPlayer.player.id, player2_id: opponent.player.id};
-          const game_id: string = (await this.gameCrudService.createGame(players)).game_id;
-          const gameInfo: GameInfo = {
-            game_id,
-            player1_id: hostPlayer.player.id,
-            player1_username: hostPlayer.player.username,
-            player2_id : opponent.player.id,
-            player2_username: opponent.player.username,
-            mapType: hostPlayer.game_settings.mapType,
-            speed: hostPlayer.game_settings.speed
-        }
-        const hostPlayerSide : string = 'left';
-        const opponentPlayerSide : string = 'right'; 
-        hostPlayer.player.socket.emit('redirect_to_game', gameInfo, hostPlayerSide);
-        opponent.player.socket.emit('redirect_to_game', gameInfo, opponentPlayerSide);
+      const matchingSettings: HostPlayer[] = this.hostPlayers.filter(
+        (pl: HostPlayer) =>
+          pl.game_settings.speed === hostPlayer.game_settings.speed &&
+          pl.game_settings.mapType === hostPlayer.game_settings.mapType,
+      );
+      if (matchingSettings.length !== 0) {
+        const opponent = this.findClosestlevel(
+          matchingSettings,
+          hostPlayer.player,
+        );
+        const players: CreateGame = {
+          player1_id: hostPlayer.player.id,
+          player2_id: opponent.player.id,
+        };
+        const game_id: string = (await this.gameCrudService.createGame(players))
+          .game_id;
+        const gameInfo: GameInfo = {
+          game_id,
+          player1_id: hostPlayer.player.id,
+          player1_username: hostPlayer.player.username,
+          player2_id: opponent.player.id,
+          player2_username: opponent.player.username,
+          mapType: hostPlayer.game_settings.mapType,
+          speed: hostPlayer.game_settings.speed,
+        };
+        const hostPlayerSide: string = 'left';
+        const opponentPlayerSide: string = 'right';
+        hostPlayer.player.socket.emit(
+          'redirect_to_game',
+          gameInfo,
+          hostPlayerSide,
+        );
+        opponent.player.socket.emit(
+          'redirect_to_game',
+          gameInfo,
+          opponentPlayerSide,
+        );
         this.removePlayerFromTheQueue('host', hostPlayer.player);
         this.removePlayerFromTheQueue('host', opponent.player);
         return 'game is found!';
-        }
+      }
     }
     this.hostPlayers.push(hostPlayer);
     this.hostPlayers.sort((pl1, pl2) => pl1.player.level - pl2.player.level);
@@ -111,22 +150,37 @@ export class GameService {
 
   async GuestLookForOpponent(guestPlayer: GuestPlayer): Promise<string> {
     if (this.hostPlayers.length !== 0) {
-        const opponent = this.findClosestlevel(this.hostPlayers, guestPlayer.player);
-        const players: CreateGame = {player1_id: guestPlayer.player.id, player2_id: opponent.player.id};
-        const game_id: string = (await this.gameCrudService.createGame(players)).game_id;
-        const gameInfo : GameInfo = {
-          game_id,
-          player1_id: guestPlayer.player.id,
-          player1_username: guestPlayer.player.username,
-          player2_id : opponent.player.id,
-          player2_username: opponent.player.username,
-          mapType: opponent.game_settings.mapType,
-          speed: opponent.game_settings.speed
-      }
+      const opponent = this.findClosestlevel(
+        this.hostPlayers,
+        guestPlayer.player,
+      );
+      const players: CreateGame = {
+        player1_id: guestPlayer.player.id,
+        player2_id: opponent.player.id,
+      };
+      const game_id: string = (await this.gameCrudService.createGame(players))
+        .game_id;
+      const gameInfo: GameInfo = {
+        game_id,
+        player1_id: guestPlayer.player.id,
+        player1_username: guestPlayer.player.username,
+        player2_id: opponent.player.id,
+        player2_username: opponent.player.username,
+        mapType: opponent.game_settings.mapType,
+        speed: opponent.game_settings.speed,
+      };
       const guestPlayerSide: string = 'left';
       const opponentPlayerSide: string = 'right';
-      guestPlayer.player.socket.emit('redirect_to_game', gameInfo, guestPlayerSide);
-      opponent.player.socket.emit('redirect_to_game', gameInfo, opponentPlayerSide);
+      guestPlayer.player.socket.emit(
+        'redirect_to_game',
+        gameInfo,
+        guestPlayerSide,
+      );
+      opponent.player.socket.emit(
+        'redirect_to_game',
+        gameInfo,
+        opponentPlayerSide,
+      );
       this.removePlayerFromTheQueue('guest', guestPlayer.player);
       this.removePlayerFromTheQueue('host', opponent.player);
       return 'the game is found';
@@ -163,50 +217,75 @@ export class GameService {
     return closest;
   }
 
-  removePlayerFromTheQueue(role: string, player: Player) : void {
+  removePlayerFromTheQueue(role: string, player: Player): void {
     if (role.toLowerCase() === 'host') {
-      this.hostPlayers = this.hostPlayers.filter((pl) => pl.player.id !== player.id);
+      this.hostPlayers = this.hostPlayers.filter(
+        (pl) => pl.player.id !== player.id,
+      );
     } else if (role.toLowerCase() === 'guest') {
-      this.guestPlayers = this.guestPlayers.filter((pl) => pl.player.id !== player.id);
+      this.guestPlayers = this.guestPlayers.filter(
+        (pl) => pl.player.id !== player.id,
+      );
     }
   }
 
   playerExist(player: Player): string | undefined {
     if (this.hostPlayers.some((pl) => pl.player.id === player.id) === true)
       return 'host';
-    else if (this.guestPlayers.some((pl) => pl.player.id === player.id) === true)
+    else if (
+      this.guestPlayers.some((pl) => pl.player.id === player.id) === true
+    )
       return 'guest';
     return undefined;
   }
 
-  sendInvitation(gameInvitationDto: GameInvitationDto, server: Server, invitorSocket: Socket): void {
+  sendInvitation(
+    gameInvitationDto: GameInvitationDto,
+    server: Server,
+    invitorSocket: Socket,
+  ): void {
     const inviteeRoom: string = `gameInv-${gameInvitationDto.invitee_id}`;
     const invitationRoom: string = `inv-${gameInvitationDto.invitor_id}`;
     invitorSocket.join(invitationRoom);
     server.to(inviteeRoom).emit('GameInvitation', gameInvitationDto);
   }
 
-  async sendGameInvitationResponse(gameInvitationResponseDto: GameInvitationResponseDto, server: Server, inviteeSocket: Socket): Promise<void> {
+  async sendGameInvitationResponse(
+    gameInvitationResponseDto: GameInvitationResponseDto,
+    server: Server,
+    inviteeSocket: Socket,
+  ): Promise<void> {
     const invitationRoom: string = `inv-${gameInvitationResponseDto.invitor_id}`;
     if (!server.of('/').adapter.rooms.has(invitationRoom)) {
       const payload: string = 'the invitor is offline';
       inviteeSocket.emit('GameInvitationResponse', payload);
-      return ;
+      return;
     }
     if (gameInvitationResponseDto.response === 'accepted') {
-      const players: CreateGame = {player1_id:  gameInvitationResponseDto.invitor_id, player2_id: gameInvitationResponseDto.invitee_id};
+      const players: CreateGame = {
+        player1_id: gameInvitationResponseDto.invitor_id,
+        player2_id: gameInvitationResponseDto.invitee_id,
+      };
       const game_id = (await this.gameCrudService.createGame(players)).game_id;
-      const invitorUsername: string = (await this.userCrudService.findUserByID(gameInvitationResponseDto.invitor_id)).username;
-      const inviteeUsername: string = (await this.userCrudService.findUserByID(gameInvitationResponseDto.invitee_id)).username;
-      const gameInfo : GameInfo = {
+      const invitorUsername: string = (
+        await this.userCrudService.findUserByID(
+          gameInvitationResponseDto.invitor_id,
+        )
+      ).username;
+      const inviteeUsername: string = (
+        await this.userCrudService.findUserByID(
+          gameInvitationResponseDto.invitee_id,
+        )
+      ).username;
+      const gameInfo: GameInfo = {
         game_id,
         player1_id: gameInvitationResponseDto.invitor_id,
         player1_username: invitorUsername,
-        player2_id : gameInvitationResponseDto.invitee_id,
+        player2_id: gameInvitationResponseDto.invitee_id,
         player2_username: inviteeUsername,
         mapType: gameInvitationResponseDto.mapType,
-        speed: gameInvitationResponseDto.speed
-      }
+        speed: gameInvitationResponseDto.speed,
+      };
       this.invitationGamesInfo.set(game_id, gameInfo);
       const payload: string = game_id;
       server.to(invitationRoom).emit('redirect_to_invitation_game', payload);
@@ -236,47 +315,94 @@ export class GameService {
     }
   }
 
-  async startGame(player1Socket: ClientSocket, player2Socket: ClientSocket, gameRoom: string, joinGame: JoinGameDto, server: Server) : Promise<void> {
-    const leftPlayerSocket: Socket = player1Socket.player.id === joinGame.player1_id ? player1Socket.player.socket : player2Socket.player.socket;
-    const rightPlayerSocket: Socket = player1Socket.player.id === joinGame.player2_id ? player1Socket.player.socket : player2Socket.player.socket;
+  async startGame(
+    player1Socket: ClientSocket,
+    player2Socket: ClientSocket,
+    gameRoom: string,
+    joinGame: JoinGameDto,
+    server: Server,
+  ): Promise<void> {
+    const leftPlayerSocket: Socket =
+      player1Socket.player.id === joinGame.player1_id
+        ? player1Socket.player.socket
+        : player2Socket.player.socket;
+    const rightPlayerSocket: Socket =
+      player1Socket.player.id === joinGame.player2_id
+        ? player1Socket.player.socket
+        : player2Socket.player.socket;
     const speed: string = joinGame.speed.toLowerCase();
     const gameId: string = joinGame.game_id;
     const mapType: string = joinGame.mapType.toLowerCase();
-    const game: Game = new Game(gameId, leftPlayerSocket, rightPlayerSocket, speed, server, gameRoom, mapType);
+    const game: Game = new Game(
+      gameId,
+      leftPlayerSocket,
+      rightPlayerSocket,
+      speed,
+      server,
+      gameRoom,
+      mapType,
+    );
     await this.gameCrudService.updateGameStatus(gameId, 'IN_PROGRESS');
     const intervalId: NodeJS.Timeout = setInterval(() => {
       if (game.status === 'started') {
         game.play();
       }
       if (game.status === 'finished') {
-        const gameScore : GameScore = {
+        const gameScore: GameScore = {
           player1_score: game.leftPlayer.winningRounds,
-          player2_score: game.rightPlayer.winningRounds
-        }
-        this.updateDataBase(gameId, gameScore, player1Socket.player.id, player2Socket.player.id);
+          player2_score: game.rightPlayer.winningRounds,
+        };
+        this.updateDataBase(
+          gameId,
+          gameScore,
+          player1Socket.player.id,
+          player2Socket.player.id,
+        );
         clearInterval(intervalId);
       }
     }, 60);
   }
 
-  async updateDataBase(game_id: string, gameScore: GameScore, player1_id: string, player2_id: string) : Promise<void> {
+  async updateDataBase(
+    game_id: string,
+    gameScore: GameScore,
+    player1_id: string,
+    player2_id: string,
+  ): Promise<void> {
     await this.gameCrudService.updateGameStatus(game_id, 'FINISHED');
     await this.gameCrudService.updateGameScore(game_id, gameScore);
-    const loser: string = gameScore.player1_score > gameScore.player2_score ? player2_id : player1_id;
-    const winner: string = gameScore.player1_score > gameScore.player2_score ? player1_id : player2_id;
+    const loser: string =
+      gameScore.player1_score > gameScore.player2_score
+        ? player2_id
+        : player1_id;
+    const winner: string =
+      gameScore.player1_score > gameScore.player2_score
+        ? player1_id
+        : player2_id;
     await this.gameCrudService.addLossesToUser(loser);
     await this.gameCrudService.addWinsToUser(winner);
     await this.userCrudService.changeVisibily(player1_id, 'ONLINE');
     await this.userCrudService.changeVisibily(player2_id, 'ONLINE');
   }
 
-  handleInvitationGame(requestInvitationGameDto : RequestInvitationGameDto, client: ClientSocket) {
-    const gameInfo: GameInfo = this.invitationGamesInfo.get(requestInvitationGameDto.game_id);
+  handleInvitationGame(
+    requestInvitationGameDto: RequestInvitationGameDto,
+    client: ClientSocket,
+  ) {
+    const gameInfo: GameInfo = this.invitationGamesInfo.get(
+      requestInvitationGameDto.game_id,
+    );
     if (gameInfo !== undefined) {
-      const side: string = client.player.id === gameInfo.player1_id ? "left" : "right";
-      const players: string[] = this.invitationGames.get(requestInvitationGameDto.game_id);
+      const side: string =
+        client.player.id === gameInfo.player1_id ? 'left' : 'right';
+      const players: string[] = this.invitationGames.get(
+        requestInvitationGameDto.game_id,
+      );
       if (players === undefined) {
-        this.invitationGames.set(requestInvitationGameDto.game_id, Array<string>(client.player.id));
+        this.invitationGames.set(
+          requestInvitationGameDto.game_id,
+          Array<string>(client.player.id),
+        );
         client.emit('redirect_to_game', gameInfo, side);
       } else if (players.includes(client.player.id) !== true) {
         client.emit('redirect_to_game', gameInfo, side);

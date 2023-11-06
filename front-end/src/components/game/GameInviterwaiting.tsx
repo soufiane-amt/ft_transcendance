@@ -6,6 +6,7 @@ import LoadingAnimation from "../../../public/MatchMakingAnimation.json";
 import newSocket from "@/components/GlobalComponents/Socket/socket";
 
 const mono = Space_Mono({
+  preload: false,
   subsets: ["latin"],
   style: ["normal"],
   weight: ["400", "700"],

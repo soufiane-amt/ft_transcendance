@@ -7,12 +7,14 @@ import { Press_Start_2P } from "next/font/google";
 import GameContext from "./GameContext";
 
 const mono = Space_Mono({
+  preload: false,
   subsets: ["latin"],
   style: ["normal"],
   weight: ["400", "700"],
 });
 
 const pixelfont = Press_Start_2P({
+  preload: false,
   subsets: ["latin"],
   weight: ["400"],
 });

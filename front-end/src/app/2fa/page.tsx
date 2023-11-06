@@ -1,6 +1,6 @@
 "use client";
 import { Space_Mono } from "next/font/google";
-import { useState} from "react";
+import { useState } from "react";
 import { motion } from "framer-motion";
 import { useRouter } from "next/navigation";
 import "../../styles/Homepage.css";
@@ -10,6 +10,7 @@ import axios from "axios";
 import Cookies from "js-cookie";
 
 const mono = Space_Mono({
+  preload: false,
   subsets: ["latin"],
   style: ["normal"],
   weight: ["400", "700"],
@@ -31,7 +32,7 @@ const Home = () => {
       const data = {
         twoFactorAuthenticationCode: code,
       };
-      const response : any = await axios.post(
+      const response: any = await axios.post(
         `${process.env.NEXT_PUBLIC_BACKEND_SERV}/2fa/login`,
         data,
         {
@@ -40,11 +41,11 @@ const Home = () => {
           },
         }
       );
-      console.log(response.data)
+      console.log(response.data);
       if (response.status === 201) {
-        Cookies.remove('twofa_token');
-        Cookies.set('access_token', response.data.accessToken);
-        router.push("/dashboard"); 
+        Cookies.remove("twofa_token");
+        Cookies.set("access_token", response.data.accessToken);
+        router.push("/dashboard");
       }
     } catch (err) {
       setError("** Invalid Code **");

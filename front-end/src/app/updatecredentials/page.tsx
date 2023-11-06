@@ -8,8 +8,8 @@ import { useRouter } from "next/navigation";
 import withAuth from "@/components/GlobalComponents/HigherOrderComponent";
 import "../../styles/Homepage.css";
 
-
 const mono = Space_Mono({
+  preload: false,
   subsets: ["latin"],
   style: ["normal"],
   weight: ["400", "700"],

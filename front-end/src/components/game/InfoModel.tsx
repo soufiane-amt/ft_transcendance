@@ -3,6 +3,7 @@ import { Space_Mono } from "next/font/google";
 import "../../styles/TailwindRef.css";
 
 const mono = Space_Mono({
+  preload: false,
   subsets: ["latin"],
   style: ["normal"],
   weight: ["400", "700"],

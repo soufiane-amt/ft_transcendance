@@ -12,11 +12,13 @@ import BackgroundCircle from "./BackgroundCircle";
 import { useInView } from "react-intersection-observer";
 
 const pixelfont = Press_Start_2P({
+  preload: false,
   subsets: ["latin"],
   weight: ["400"],
 });
 
 const mono = Space_Mono({
+  preload: false,
   subsets: ["latin"],
   style: ["normal"],
   weight: ["400", "700"],
