@@ -52,15 +52,16 @@ const Structure = ({ children }: { children: React.ReactNode }) => {
   const JwtToken = Cookies.get("access_token");
 
   useEffect(() => {
-    newSocket.emit('get_status', (response: string) => {
-      if (response !== 'IN_GAME') {
+    newSocket.emit("get_status", (response: string) => {
+      if (response !== "IN_GAME") {
         const data = {
           token: `Bearer ${JwtToken}`,
         };
         newSocket.emit("status", data);
       }
-    })
+    });
   }, [JwtToken]);
+
   return (
     <main>
       <NavBar />
