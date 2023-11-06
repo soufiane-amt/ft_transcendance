@@ -199,13 +199,13 @@ export class allowJoinGuard implements CanActivate {
   }
 
   async allowJoiningBySocket (user_id: string, channel_id: string): Promise<boolean> {
-    // console.log (']]userid', user_id)
-    // console.log (']]joinRequest.channel', joinRequest.channel_id)
-    // console.log (']]joinRequest', joinRequest)
-    // console.log ('}}}}allowJoiningGuard', await this.chatCrud.getMemeberShip(
-    //   user_id,
-    //   channel_id,
-    // ))
+    console.log ('++++allowJoiningGuard', channel_id)
+    console.log ('++++allowJoiningGuard', user_id)
+    console.log ('++++allowJoiningGuard', await this.chatCrud.getMemeberShip(
+      user_id,
+      channel_id,
+    ))
+
     return await this.chatCrud.getMemeberShip(
       user_id,
       channel_id,
@@ -215,9 +215,10 @@ export class allowJoinGuard implements CanActivate {
   async allowJoining(user_id: string, joinRequest: channelReqDto): Promise<boolean> {
     const targetedChannel = await this.chatCrud.findChannelById(
       joinRequest.channel_id,
-    );
-    if (!targetedChannel) return false;
-
+      );
+      // console.log('°°°°°°°°°°°°°°°°', targetedChannel.type, ' ' , joinRequest.channeltype)
+    if (!targetedChannel || targetedChannel.type !== joinRequest.type)
+       return false;
     //check if the user wanting to join is already there in  join
     const user_membership = await this.chatCrud.getMemeberShip(
       user_id,
@@ -308,7 +309,7 @@ export class userRoomSubscriptionGuard implements CanActivate {
           (await this.chatCrud.getMemeberShip(
             packet_data.user_id,
             packet_data.channel_id,
-          )) != null
+          )) == null
         );
     }
     return true;

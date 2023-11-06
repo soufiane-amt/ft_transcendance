@@ -72,7 +72,9 @@ import { channel, subscribe } from "diagnostics_channel";
       //   user_id: user_id,
       //   role:'USER'}
       const channel_data =  await this.chatCrud.getChannelData (channel_id);
-      this.server.to(`inbox-${user_id}`).emit('joinChannel', { id:channel_data.id, 
+      console.log (']]]]]]]>>>Join signal : ', channel_data)
+      this.server.to(`inbox-${user_id}`).emit('joinChannel', 
+        {id:channel_data.id, 
         name: channel_data.name, 
         image: channel_data.image, 
         type:channel_data.type
@@ -182,7 +184,7 @@ import { channel, subscribe } from "diagnostics_channel";
     @SubscribeMessage ("resumeChannelUpdates") //A gard must be added to check if the user has the right to request to unmute him
     async handleResumeChannelUpdates (client: any, channel_id:string)
     {
-      console.log ('Resume channel updates : ', channel_id)
+      console.log ('00000000000000000000 : ', channel_id)
       client.join (`channel-${channel_id}`)
     }
 

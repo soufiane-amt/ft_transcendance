@@ -198,24 +198,6 @@ async handleChannelJoinRequest (@Req() request : Request,
                        @Res() response: Response,
                        @Body() channelRequestMembership : {channel_id:string, password:string, type: 'PROTECTED' | 'PRIVATE' | 'PUBLIC' })
 {
-  // console.log('channelRequestMembership', channelRequestMembership)
-  // console.log('channelRequestMembership', channelRequestMembership.channel_id)
-  // const targetedChannel = await this.chatCrud.findChannelById(
-  //   channelRequestMembership.channel_id,
-  // );
-
-  // const user_membership = await this.chatCrud.getMemeberShip(
-  //   request.cookies['user.id'],
-  //   channelRequestMembership.channel_id,
-  // );
-  // console.log('targetedChannel', user_membership)
- 
-  // if (user_membership == null) {
-  //     if ( channelRequestMembership.type == 'PROTECTED' &&
-  //           (!channelRequestMembership.submitedPassword ||
-  //           channelRequestMembership.submitedPassword != targetedChannel.password))
-  //       return response.status(404).send('Channel join request is not valid!');
-  // create a new channel membership
   const channelMembershipData: channelMembershipDto = {
     channel_id: channelRequestMembership.channel_id,
     user_id: request.cookies['user.id'],
@@ -224,9 +206,6 @@ async handleChannelJoinRequest (@Req() request : Request,
 
   await this.chatCrud.joinChannel(channelMembershipData);
   return response.status(200).send('Channel join request is valid!');;
-  // }
-  // return response.status(404).send('Channel join request is not valid!');
-
 }
  
 

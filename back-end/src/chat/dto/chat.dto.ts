@@ -38,7 +38,7 @@ export interface channelMembershipDto {
 
 export interface channelReqDto {
   channel_id: string;
-  channeltype: "PUBLIC" | "PRIVATE" | "PROTECTED"; 
+  type: "PUBLIC" | "PRIVATE" | "PROTECTED"; 
   password: string;
 }
 
