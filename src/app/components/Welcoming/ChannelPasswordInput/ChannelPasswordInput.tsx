@@ -4,6 +4,8 @@ import { useState } from 'react';
 import socket from '../../../socket/socket';
 import { ChannelType } from '../WelcomingPage';
 import { useRouter } from 'next/navigation';
+import { fetchDataFromApi } from '../../shared/customFetch/exmple';
+import axios from 'axios';
 
 
 interface ChannelPasswordInputProps{
@@ -14,18 +16,44 @@ export function ChannelPasswordInput ({handleVisibility,  channelData}: ChannelP
 {
     const router = useRouter();
     const [password, setPassword] = useState<string>('');
+    const [displayJoinFailure, setDisplayJoinFailure] = useState<boolean>(false);
     const ref = useOutsideClick(handleVisibility);
 
     const handlePasswordChange = (e : React.ChangeEvent<HTMLInputElement>) => {
         setPassword(e.target.value);
     }
 
-    const handleJoinClick = () => {
-        // join channel
-        socket.emit('joinSignal', { channel_id: channelData.id, channelType: channelData.type, password: password });
+    const handleJoinClick =async () => {
+        const channelRequestMembership = {
+            channel_id : channelData.id,
+            password: password,
+            type: channelData.type
+        }
+        try
+        {
+
+            // join channel
+            await axios.post('http://localhost:3001/chat/channelJoinRequest', 
+            channelRequestMembership,
+            { withCredentials: true
+              })
+                .then(res => {
+                  if (res.status === 200) {
+                    // Continue with the rest of your createChannel logic
+                    socket.emit('joinSignal', channelData.id);
+                    window.location.href = `/chat/Channels/`;
+                  }
+            })
+        }
+        catch(err)
+        {
+            setDisplayJoinFailure(true);
+        }
+            
+        // socket.emit('joinSignal', { channel_id: channelData.id, channelType: channelData.type, password: password });
         
         //and redirect to channel
-        window.location.href = `/chat/Channels/`;
+        // window.location.href = `/chat/Channels/`;
         
     }
     return (
@@ -44,6 +72,7 @@ export function ChannelPasswordInput ({handleVisibility,  channelData}: ChannelP
                     <button onClick={handleJoinClick}>
                         Join
                     </button>
+                    {displayJoinFailure && <span className={style.channel_password_input__join_failure}>Wrong password</span>}
                 </div>
             </div>
         </div>
