@@ -12,6 +12,7 @@ import { UserCrudService } from 'src/prisma/user-crud.service';
 import { ZodValidationPipe } from '../pipes/zod-validation-pipe';
 import JoinGameDto, { joinGameDto } from '../dto/JoinGame.dto';
 import RequestInvitationGame, { requestInvitationGameDto } from '../dto/RequestInvitationGame.dto';
+import { userRoomSubscriptionGuard } from 'src/chat/guards/chat.guards';
 
 @UseGuards(GatewaysGuard)
 @WebSocketGateway({
@@ -26,8 +27,9 @@ export class GameGateway implements OnGatewayInit<Server>, OnGatewayConnection<C
     server.use(socketIOMiddleware);
   }
 
-  async handleConnection(client: ClientSocket, ...args: any[]) {
+  async handleConnection(client: ClientSocket, ...args: any[]) : Promise<string | void> {
     client.player = await this.gameservice.get_player(client);
+    if (client.player === null) return 'unauthorized user';
   }
 
   handleDisconnect(client: ClientSocket) {
@@ -40,6 +42,7 @@ export class GameGateway implements OnGatewayInit<Server>, OnGatewayConnection<C
   @SubscribeMessage('matchMaking')
   async matchmakingListener(@MessageBody(new ZodValidationPipe(matchMakingDto)) game_settings: MatchMakingDto,@ConnectedSocket() client: ClientSocket): Promise<string> {
     const user_state : Status = await this.userCrudService.getUserStatus(client.userId);
+    if (user_state === null) return 'invalid user';
     if (user_state === Status.IN_GAME) {
       return "You are already in the game";
     }

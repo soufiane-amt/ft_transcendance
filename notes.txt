@@ -4,12 +4,7 @@
 -> check user status with oussama in disconnect for multiple sessions
 note: protect socket getways in backend
 oussama: scroll in oussama dashboard
-
-
-hna + oussma : ingame b sockets
-zac : submit event for close game invitaion in accept for multiple sessions
-zac : change user status to be ingame in starting game
-zac : reset state after ending game , fonts
+oussama : should'nt change the user status in dashboard
 
 
 =================================

@@ -20,6 +20,7 @@ export class GameController {
           id: request.headers.user,
         },
       });
+      if (user === null) return response.status(401).send('Unauthorized user');
       return response.status(200).send(user);
   }
 

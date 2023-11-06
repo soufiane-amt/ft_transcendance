@@ -21,7 +21,7 @@ export class GatewaysGuard implements CanActivate {
       GatewaysGuard.validateJwt(client);
       return true;
     } catch {
-      throw new WsException({ message:'unauthorized client', status: HttpStatus.UNAUTHORIZED  });
+      throw new WsException({ message:'unauthorized client', status: HttpStatus.UNAUTHORIZED });
     }
   }
 
