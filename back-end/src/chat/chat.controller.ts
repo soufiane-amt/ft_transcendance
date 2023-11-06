@@ -2,8 +2,8 @@ import { Controller, Get, Query,Post , Res,Req,  Param, Inject, UseGuards, Body,
 import { DmService } from './services/direct-messaging/dm.service';
 import { Request, Response } from "express"
 import { dmGateway } from './services/direct-messaging/dm.gateway';
-import { FriendShipExistenceGuard, cookieGuard, userRoomSubscriptionGuard } from './guards/chat.guards';
-import { MessageDto, channelDto } from './dto/chat.dto';
+import { FriendShipExistenceGuard, allowJoinGuard, cookieGuard, userCanBeIntegratedInConversation, userRoomSubscriptionGuard } from './guards/chat.guards';
+import { MessageDto, channelDto, channelMembershipDto } from './dto/chat.dto';
 import { Reflector } from '@nestjs/core';
 import { ChatCrudService } from 'src/prisma/chat-crud.service';
 import * as path from 'path';
@@ -12,6 +12,7 @@ import { UserCrudService } from 'src/prisma/user-crud.service';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { v4 as uuidv4 } from 'uuid';
 import { diskStorage } from 'multer';
+import { throwError } from 'rxjs';
 
 
 
@@ -191,9 +192,43 @@ async markMessagesAsRead (@Req() request : Request, @Body() room : {_id:string})
 }
 
 
+@UseGuards(allowJoinGuard)
+@Post("/channelJoinRequest")
+async handleChannelJoinRequest (@Req() request : Request,
+                       @Res() response: Response,
+                       @Body() channelRequestMembership : {channel_id:string, password:string, type: 'PROTECTED' | 'PRIVATE' | 'PUBLIC' })
+{
+  // console.log('channelRequestMembership', channelRequestMembership)
+  // console.log('channelRequestMembership', channelRequestMembership.channel_id)
+  // const targetedChannel = await this.chatCrud.findChannelById(
+  //   channelRequestMembership.channel_id,
+  // );
 
+  // const user_membership = await this.chatCrud.getMemeberShip(
+  //   request.cookies['user.id'],
+  //   channelRequestMembership.channel_id,
+  // );
+  // console.log('targetedChannel', user_membership)
+ 
+  // if (user_membership == null) {
+  //     if ( channelRequestMembership.type == 'PROTECTED' &&
+  //           (!channelRequestMembership.submitedPassword ||
+  //           channelRequestMembership.submitedPassword != targetedChannel.password))
+  //       return response.status(404).send('Channel join request is not valid!');
+  // create a new channel membership
+  const channelMembershipData: channelMembershipDto = {
+    channel_id: channelRequestMembership.channel_id,
+    user_id: request.cookies['user.id'],
+    role: 'USER',
+  };
 
+  await this.chatCrud.joinChannel(channelMembershipData);
+  return response.status(200).send('Channel join request is valid!');;
+  // }
+  // return response.status(404).send('Channel join request is not valid!');
 
+}
+ 
 
   ///////////////////////////////////////////////////////////
   //-                                  -//

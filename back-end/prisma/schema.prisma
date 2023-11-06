@@ -144,7 +144,7 @@ enum Channel_type {
 }
 
 model Channel {
-  id String @id @default(uuid())
+  id String @id @default(uuid()) 
 
   type         Channel_type
   name         String

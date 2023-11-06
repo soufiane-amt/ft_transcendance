@@ -9,7 +9,7 @@ import {  allowJoinGuard, bannedConversationGuard, channelPermission, muteConver
 import { ChatCrudService } from "src/prisma/chat-crud.service";
 import { UserCrudService } from "src/prisma/user-crud.service";
 import * as cookie from 'cookie';
-import { subscribe } from "diagnostics_channel";
+import { channel, subscribe } from "diagnostics_channel";
 
  
 
@@ -65,20 +65,17 @@ import { subscribe } from "diagnostics_channel";
     
     @UseGuards(allowJoinGuard) 
     @SubscribeMessage('joinSignal')
-    async handleJoinChannel (client :Socket, membReq : channelReqDto)//this event is only triggered by the users that will join not the admin that already joined and created channel
+    async handleJoinChannel (client :Socket, channel_id:string)//this event is only triggered by the users that will join not the admin that already joined and created channel
     {
-      console.log ("Passed")
       const user_id = this.extractUserIdFromCookies(client);
-      const channelMembership:channelMembershipDto =  {channel_id: membReq.channel_id,
-        user_id: user_id,
-        role:'USER'}
-      const channel_data = await this.chatCrud.joinChannel (channelMembership)
-      client.join(membReq.channel_id)
-      this.server.to(`inbox-${user_id}`)
-      .emit('joinChannel', {id:channel_data.channel.id, 
-        name: channel_data.channel.name, 
-        image: channel_data.channel.image, 
-        type:channel_data.channel.type
+      // const channelMembership:channelMembershipDto =  {channel_id: membReq.channel_id,
+      //   user_id: user_id,
+      //   role:'USER'}
+      const channel_data =  await this.chatCrud.getChannelData (channel_id);
+      this.server.to(`inbox-${user_id}`).emit('joinChannel', { id:channel_data.id, 
+        name: channel_data.name, 
+        image: channel_data.image, 
+        type:channel_data.type
       })
     }
 

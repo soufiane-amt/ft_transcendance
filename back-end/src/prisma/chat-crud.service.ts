@@ -316,6 +316,7 @@ async retreiveDmInitPanelData(user_id :string) {
   }
 
   async findChannelById(channel_id: string) {
+    console.log('++++channel_id: ', channel_id)
     return await this.prisma.prismaClient.channel.findUnique({
       where: {
         id: channel_id,
@@ -1048,14 +1049,24 @@ async findChannelUserMuteData(user_id: string, channel_id: string) {
   }
 
   async getMemeberShip(user_id: string, channel_id: string) {
-    return await this.prisma.prismaClient.channelMembership.findFirst(
-      {
-        where: {
-          channel_id: channel_id,
-          user_id: user_id,
-        },
+    try{
+      return await this.prisma.prismaClient.channelMembership.findUnique(
+        {
+          where: {
+          channel_id_user_id: {
+            channel_id: channel_id,
+            user_id: user_id,
+          },
+          },
       });
+
     }
+    catch (err)
+    {
+      return null;
+    }
+  }
+  
   async makeOwner(user_id: string, channel_id: string) {
     await this.prisma.prismaClient.channelMembership.update({
       where: {
@@ -1069,8 +1080,21 @@ async findChannelUserMuteData(user_id: string, channel_id: string) {
       },
     });
   }
-  ///
 
+  async getChannelData (channel_id: string)
+  {
+    return await this.prisma.prismaClient.channel.findUnique({
+      where: {
+        id: channel_id,
+      },
+      select: {
+        id:true,
+        name: true,
+        image: true,
+        type: true,
+      },
+    });
+  }
   async checkUserInDm(user_id: string, room_id: string) {
     return await this.prisma.prismaClient.directMessaging.findUnique({
       where: {

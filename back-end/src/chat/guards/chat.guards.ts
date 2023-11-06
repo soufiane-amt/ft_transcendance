@@ -4,6 +4,7 @@ import {
   CanActivate,
   ExecutionContext,
   Injectable,
+  InternalServerErrorException,
   SetMetadata,
 } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
@@ -61,26 +62,6 @@ export class channelPermission implements CanActivate {
     return false;
   }
  
-  // async verifyKickData(
-  //   update: kickSignalDto,
-  //   subscribedRoles: Role[],
-  // ): Promise<boolean> {
-  //   const targetedMember = await this.chatCrud.getMemeberShip(
-  //     update.user_id,
-  //     update.channel_id,
-  //   );
-  //   const memberToAct = await this.chatCrud.getMemeberShip(
-  //     update.kicker_id,
-  //     update.channel_id,
-  //   );
-  //   if (!targetedMember || !memberToAct) return false;
-  //   if (
-  //     subscribedRoles.some((role) => memberToAct.role.includes(role)) &&
-  //     !subscribedRoles.some((role) => targetedMember.role.includes(role))
-  //   )
-  //     return true;
-  //   return false;
-  // }
 
     async verifyMuteBanPermission(
       user_id: string,
@@ -199,23 +180,53 @@ export class channelPermission implements CanActivate {
 export class allowJoinGuard implements CanActivate {
   constructor(private readonly chatCrud: ChatCrudService) {}
 
-  async canActivate(context: ExecutionContext): Promise<boolean> {
-    const joinRequest = context.switchToWs().getData();
-    return this.allowJoining(context, joinRequest);
+  async canActivate(context: ExecutionContext): Promise<boolean> 
+  {
+    let user_id: string;
+    let joinRequest: any;
+    if (context.getType() == 'http')
+    {
+      user_id = context.switchToHttp().getRequest().cookies['user.id'];
+      joinRequest = context.switchToHttp().getRequest().body;
+    }
+    else if (context.getType() == 'ws') {
+      user_id = extractUserIdFromCookies(context.switchToWs().getClient());
+      joinRequest = context.switchToWs().getData();
+      return this.allowJoiningBySocket(user_id, joinRequest);
+    }
+    
+    return this.allowJoining(user_id, joinRequest);
   }
 
-  async allowJoining(context: ExecutionContext, joinRequest: channelReqDto): Promise<boolean> {
+  async allowJoiningBySocket (user_id: string, channel_id: string): Promise<boolean> {
+    // console.log (']]userid', user_id)
+    // console.log (']]joinRequest.channel', joinRequest.channel_id)
+    // console.log (']]joinRequest', joinRequest)
+    // console.log ('}}}}allowJoiningGuard', await this.chatCrud.getMemeberShip(
+    //   user_id,
+    //   channel_id,
+    // ))
+    return await this.chatCrud.getMemeberShip(
+      user_id,
+      channel_id,
+    ) != null;
+  }
+
+  async allowJoining(user_id: string, joinRequest: channelReqDto): Promise<boolean> {
     const targetedChannel = await this.chatCrud.findChannelById(
       joinRequest.channel_id,
     );
     if (!targetedChannel) return false;
-    const user_id = extractUserIdFromCookies(context.switchToWs().getClient());
 
     //check if the user wanting to join is already there in  join
     const user_membership = await this.chatCrud.getMemeberShip(
       user_id,
       joinRequest.channel_id,
     );
+    console.log ('allowJoiningGuard', joinRequest)
+    console.log ('allowJoiningGuard', 
+    (
+      joinRequest.password != targetedChannel.password))
     if (user_membership == null) {
       if ( targetedChannel.type == 'PROTECTED' &&
             (!joinRequest.password ||
@@ -233,6 +244,7 @@ export class cookieGuard implements CanActivate {
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const request = context.switchToHttp().getRequest();
+    
     try {
       return (
         (await this.userCrudService.findUserByID(
@@ -381,6 +393,7 @@ export class userCanBeIntegratedInConversation implements CanActivate {
   constructor(private readonly chatCrud: ChatCrudService) {}
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
+    // throw new InternalServerErrorException('An error occurred while fetching discussion channels.');
     const packet_data = context.switchToWs().getData();
     const user_id = extractUserIdFromCookies(context.switchToWs().getClient());
     if (context.getClass() == channelGateway) {
