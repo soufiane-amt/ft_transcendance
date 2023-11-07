@@ -3,7 +3,7 @@ import { DmService } from './services/direct-messaging/dm.service';
 import { Request, Response } from "express"
 import { dmGateway } from './services/direct-messaging/dm.gateway';
 import { FriendShipExistenceGuard, allowJoinGuard, cookieGuard, userCanBeIntegratedInConversation, userRoomSubscriptionGuard } from './guards/chat.guards';
-import { MessageDto, channelDto, channelMembershipDto } from './dto/chat.dto';
+import { MessageDto, channelDto, channelMembershipDto, dmDto } from './dto/chat.dto';
 import { Reflector } from '@nestjs/core';
 import { ChatCrudService } from 'src/prisma/chat-crud.service';
 import * as path from 'path';
@@ -209,6 +209,7 @@ async handleChannelJoinRequest (@Req() request : Request,
 }
  
 
+
   ///////////////////////////////////////////////////////////
   //-                                  -//
   ///////////////////////////////////////////////////////////
@@ -221,4 +222,21 @@ async handleChannelJoinRequest (@Req() request : Request,
     const dmsToJoin = await this.chatCrud.findAllDmsAvailbleToJoin(request.cookies['user.id'])
     return ({channelsToJoin:channelsToJoin, dmsToJoin:dmsToJoin})
   }
+
+  
+  // /DirectMessaging/CreateDm?username=${userData.username}
+  @Get("/DirectMessaging/CreateDm")
+  async createDmRoom(@Req() request : Request, @Query('username') username:string)
+  {
+    const userToContact = await this.userCrud.findUserByUsername(username);
+    const dmData:dmDto = {
+      user1_id : request.cookies['user.id'],
+      user2_id :  userToContact,
+      status : "ALLOWED"
+    }
+    const dm = await this.chatCrud.createDm(dmData);
+    return dm;
+  }
+
+
 }

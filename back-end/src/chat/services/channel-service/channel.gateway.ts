@@ -75,10 +75,7 @@ import { channel, subscribe } from "diagnostics_channel";
         username: userPublicData.username, 
         avatar: userPublicData.avatar, 
       })
-      // this.server.to(`channel-${channel_id}`).emit('updateUserContact', {id:'',
-      //   username: '', 
-      //   avatar: '', 
-      // })
+      
       this.server.to(`inbox-${user_id}`).emit('joinChannel', 
         {id:channel_data.id, 
         name: channel_data.name, 
