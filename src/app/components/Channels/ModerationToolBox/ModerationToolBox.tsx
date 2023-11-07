@@ -41,7 +41,8 @@ export function ModerationToolBox ({selectedChannel, channelData}:ModerationTool
                             else
                                 userData = {avatar:currentUser.avatar, username:currentUser.username}
                             const userRole = getUserRole (user, channelData)
-                            const cardKey = `${user}-${userRole}`;
+                            const cardKey = `${user}`;
+                            console.log('userData', userData)
 
                              return (userData &&
                                 <UserModerationCard 

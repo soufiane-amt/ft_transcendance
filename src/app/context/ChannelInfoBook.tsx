@@ -54,25 +54,19 @@ export function ChannelBooksProvider({
       name: string, 
         image: string, 
         type:string }) => {
+          console.log("updates", ChannelBooksBook)
           const updatedChannelBooksBook = new Map(ChannelBooksBook);
-
           // Update the copy with the new value
           updatedChannelBooksBook.set(joinSignal.id, {
             name: joinSignal.name,
             avatar: joinSignal.image,
             type: joinSignal.type,
           });
-        
           // Set the state to the updated Map
           setChannelBooksBook(updatedChannelBooksBook);
-              
-          console.log("joinSignal:", joinSignal);
-
           socket.emit("resumeChannelUpdates", joinSignal.id);
-  };
-
+          };
       socket.on("joinChannel", handleJoinChannel);
-  
       return () => {
         socket.off("joinChannel", handleJoinChannel);
       };

@@ -7,6 +7,10 @@ export interface UserInitiativeTalkProps
 }
 
 export function UserInitiativeTalk({ userData }: UserInitiativeTalkProps) {
+    const handleSendHello = () => {
+        
+        window.location.href = '/chat/DirectMessaging';
+    }
     return (
         <div className={style.communication_initiative}>
             <div className={style.communication_initiative__user}>
@@ -14,7 +18,7 @@ export function UserInitiativeTalk({ userData }: UserInitiativeTalkProps) {
                 <span className={style.communication_initiative__user__name}>{userData.username}</span>
             </div>
             <div className={style.communication_initiative__message}>
-                <button>
+                <button onClick={handleSendHello}>
                     <img className={style.communication_initiative__message_icon} src={helloIcon.src} alt="send hello icon" />
                 </button>
             </div>

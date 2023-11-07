@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
 import { fetchDataFromApi } from "../components/shared/customFetch/exmple";
+import socket from "../socket/socket";
 
 /* This interface represents the minimum data needed for a user contact */
 interface UserContactDto {
@@ -41,11 +42,40 @@ export function UserContactsProvider({
           });
         });
       }
-
+      if (Array.isArray(userContactsBook_tmp)) {
+        userContactsBook_tmp?.forEach((user: any) => {
+          map.set(user.id, {
+            username: user.username,
+            avatar: user.avatar,
+          });
+        });
+      }
+      console.log('Initial user contacts book:', map)
       setUserContactsBook(map);
     }
     fetchDataAsync();
   }, []);
+
+  useEffect(() => {
+    const handleUpdateUserContact = (user: {id :string, username :string, avatar:string}) => {
+      console.log ('user contacts book:', userContactsBook)
+      const updatedUserContactsBook = new Map(userContactsBook);
+      // Update the copy with the new value
+      updatedUserContactsBook.set(user.id, {
+        username: user.username,
+        avatar: user.avatar,
+      });
+      // setTimeout(() => {
+        setUserContactsBook(updatedUserContactsBook);
+      // }, 0)
+      // console.log ('Updated user contacts book:', updatedUserContactsBook)
+    };
+    socket.on("updateUserContact", handleUpdateUserContact);
+    return () => {
+      socket.off("updateUserContact", handleUpdateUserContact);
+    };
+  }, [userContactsBook])
+  //get the user contact from the map and update it
 
   const updateUserContact = (key: string, value: UserContactDto) => {
     setUserContactsBook((prevState) => {
@@ -81,6 +111,7 @@ export function useUserContacts() {
 
 export function findUserContacts(user_id: string) {
   const context = useContext(UserContactsContext);
+  console.log ('User contacts: ', context?.userContacts)
   if (!context) {
     throw new Error(
       "useUserContacts must be used within a UserContactsProvider"
