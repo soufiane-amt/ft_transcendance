@@ -4,11 +4,10 @@ import style from "./DiscussionsBar.module.css";
 import { fetchDataFromApi } from "../../shared/customFetch/exmple";
 import DiscussionPanel from "../../shared/DiscussionPanel/DiscussionPanel";
 import { useHandlePanel } from "../../../../../hooks/useHandlePanel";
-import { useRouter } from "next/router";
 import UserActionModalMain from "../UserActionModal/UserActionModal";
 import socket from "../../../socket/socket";
 import { ChannelData } from "../../../interfaces/ChannelData";
-import { useHandleJoinChannel } from "../../../../../hooks/useHandleJoinChannel";
+import { useHandleJoinDm } from "../../../../../hooks/useHandleJoinChannel";
 
 interface DiscussionsBarProps {
   openBarState: 
@@ -77,7 +76,7 @@ export function DiscussionsBar({openBarState,  selectedDiscussionState, currentR
       socket.on('updateChannelData', handleNewChannelUpdate)
     }, [channelData, modalIsVisible])
 
-    // useHandleJoinChannel(selectedDiscussion)
+    useHandleJoinDm(selectedDiscussion)
     
     useHandlePanel(discussionPanels,selectedDiscussionState, setDiscussionRooms)
 
@@ -101,7 +100,6 @@ export function DiscussionsBar({openBarState,  selectedDiscussionState, currentR
       {openBar &&
       <ul className={style.discussion_panel_bar}>
         {discussionPanels.map((panelElement) => {
-          console.log('key', panelElement.id)
           const isSelected = panelElement?.id === selectedDiscussion.id;
           return (  
             <DiscussionPanel

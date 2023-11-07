@@ -2,19 +2,18 @@ import { useEffect } from "react";
 import socket from "../src/app/socket/socket";
 import { discussionPanelSelectType } from "../src/app/interfaces/DiscussionPanel";
 
-export function useHandleJoinChannel (selectedDiscussion: discussionPanelSelectType)
+export function useHandleJoinDm (selectedDiscussion: discussionPanelSelectType)
     {
         useEffect(() => {
-          const handleJoinChannel = (joinSignal: { id: string }) => {
+          const handleJoinDm = (channel_id: string ) => {
             
-            console.log("joinSignal:", joinSignal);
-            socket.emit("resumeChannelUpdates", joinSignal.id);
+            socket.emit("joinDm", channel_id);
         };
       
-            socket.on("joinChannel", handleJoinChannel);
+            socket.on("broadacastJoinSignal", handleJoinDm);
         
             return () => {
-              socket.off("joinChannel", handleJoinChannel);
+              socket.off("broadacastJoinSignal", handleJoinDm);
             };
           }, [selectedDiscussion]);
         

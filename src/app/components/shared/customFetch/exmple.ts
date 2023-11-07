@@ -5,12 +5,6 @@ export const fetchDataFromApi = async (url: string) => {
   .get(url, {
     withCredentials: true,
   })
-  .then(({ data }) => {
-    console.log (data)
-
-    return (data);
-  })
-  .catch(() => console.log("err"));
 
 };
 
