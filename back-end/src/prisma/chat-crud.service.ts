@@ -735,18 +735,20 @@ async retreiveDmInitPanelData(user_id :string) {
 
   async changeChannelType(
     channel_id: string,
-    new_type: "PUBLIC" | "PROTECTED" | "PRIVATE",
-    new_pass: string
+    type: "PUBLIC" | "PROTECTED" | "PRIVATE",
+    password: string
   ) {
-     console.log ('Updates :',new_type, ' ' , await this.prisma.prismaClient.channel.update({
+    console.log( 'channel_id:', channel_id, ' type:', type, ' password:', password )
+     return await this.prisma.prismaClient.channel.update({
       where: 
-      { id: channel_id 
+      { 
+        id: channel_id 
       },
       data: {
-        type: new_type,
-        password: new_pass,
+        type: type,
+        password: password,
       },
-    }));
+    });
   }
 
   async changeChannelName(channel_id: string, new_name: string) {

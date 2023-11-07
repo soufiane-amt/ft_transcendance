@@ -58,7 +58,7 @@ import { channel, subscribe } from "diagnostics_channel";
     async changeChannelType (client :Socket, updateType : UpdateChannelDto)
     {
       console.log ('Update type : ', updateType)
-      await this.chatCrud.changeChannelType (updateType.channel_id, updateType.type, updateType.new_password)
+      await this.chatCrud.changeChannelType (updateType.channel_id, updateType.type, updateType.password)
     }
 
 
@@ -68,17 +68,24 @@ import { channel, subscribe } from "diagnostics_channel";
     async handleJoinChannel (client :Socket, channel_id:string)//this event is only triggered by the users that will join not the admin that already joined and created channel
     {
       const user_id = this.extractUserIdFromCookies(client);
-      // const channelMembership:channelMembershipDto =  {channel_id: membReq.channel_id,
-      //   user_id: user_id,
-      //   role:'USER'}
       const channel_data =  await this.chatCrud.getChannelData (channel_id);
-      console.log (']]]]]]]>>>Join signal : ', channel_data)
+      const userPublicData =  await this.userCrud.findUserSessionDataByID(user_id);
+
+      this.server.to(`channel-${channel_id}`).emit('updateUserContact', {id:userPublicData.id,
+        username: userPublicData.username, 
+        avatar: userPublicData.avatar, 
+      })
+      // this.server.to(`channel-${channel_id}`).emit('updateUserContact', {id:'',
+      //   username: '', 
+      //   avatar: '', 
+      // })
       this.server.to(`inbox-${user_id}`).emit('joinChannel', 
         {id:channel_data.id, 
         name: channel_data.name, 
         image: channel_data.image, 
         type:channel_data.type
       })
+      this.broadcastChannelChanges(channel_id)
     }
 
 
@@ -263,6 +270,7 @@ import { channel, subscribe } from "diagnostics_channel";
         channelBans: await this.chatCrud.retieveBlockedChannelUsers(channel_id),
         channelMutes: await this.chatCrud.retieveMutedChannelUsers(channel_id),
       }
+      console.log ('======Channel new data : ', channelNewData.channelUsers)
       this.server.to(`channel-${channel_id}`).emit('updateChannelData', channel_id, channelNewData)
     }
 

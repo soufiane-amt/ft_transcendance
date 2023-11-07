@@ -4,7 +4,7 @@ import { channelDto } from './chat.dto';
 export interface UpdateChannelDto  {
   channel_id :string
   type: "PUBLIC" | "PRIVATE" | "PROTECTED";
-  new_password?: string;
+  password?: string;
 }
 
 export interface UpdateUserMemberShip extends channelMembershipDto

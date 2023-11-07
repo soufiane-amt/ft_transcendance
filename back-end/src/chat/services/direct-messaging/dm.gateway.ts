@@ -28,9 +28,6 @@ export class dmGateway implements OnGatewayConnection, OnGatewayDisconnect {
     private readonly chatCrud: ChatCrudService
   ) {}
 
-  //When the user connects to websocket it will be passed the id of the user
-  //to use it to create an inbox of notifications and new dm's to be initiated
- 
   async handleConnection(client: Socket, ...args: any[]) {
     const userIdCookie = this.extractUserIdFromCookies(client);
     console.log ('An attempt to connect: ', userIdCookie)
@@ -56,7 +53,23 @@ export class dmGateway implements OnGatewayConnection, OnGatewayDisconnect {
     const parsedCookies = cookie.parse(headers.cookie || "");
     return parsedCookies["user.id"];
   }
+
+
+  //Check if the user is allowed to join the room
+  //is he blocker and the room exists
+  @SubscribeMessage("joinDm")
+  async handleJoinChannel(client: Socket, dm_id:string) 
+  {
+    client.join("dm-" + dm_id);
+  }
   
+  @SubscribeMessage("broadacastJoinSignal")
+  async handleJoinSignal(client: Socket, dm_id:string) 
+  {
+    const userIdCookie = this.extractUserIdFromCookies(client);
+    this.server.to(`inbox-${userIdCookie}`).emit("dmIsJoined", dm_id);
+  }
+
   @UseGuards (userRoomSubscriptionGuard) 
   @UseGuards(bannedConversationGuard)
   @SubscribeMessage("sendMsg")
