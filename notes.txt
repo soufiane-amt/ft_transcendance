@@ -1,7 +1,7 @@
 
 
 //TODO: erros  
-oussmaa + soufyane : protect socket getways in backend
+oussmaa + soufyane : protect socket getways in backend + use client
 oussama: scroll in oussama dashboard
 abdellah + oussama : file upload not image but has extention of image , sharp, jimp
 
@@ -10,7 +10,6 @@ abdellah + oussama : file upload not image but has extention of image , sharp, j
 abdellah:waiting in game
 abdellah:win , lose
 abdellah:scoreboardstyling
-abdellah:protect backendendpoints
 
 
 
