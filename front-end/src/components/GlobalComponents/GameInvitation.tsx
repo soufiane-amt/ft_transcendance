@@ -52,7 +52,7 @@ function GameInvitation({ ...props }) {
     }
     getUserData(props.data.invitor_id, setInvitor);
     getUserData(props.data.invitee_id, setInvitee);
-  }, [jwtToken]);
+  }, [jwtToken, props.data]);
 
   return (
     <div className="fixed inset-0 flex items-center justify-center z-[4]">
