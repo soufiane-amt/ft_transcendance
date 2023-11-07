@@ -4,6 +4,7 @@ import { Button } from "antd";
 import { Press_Start_2P } from "next/font/google";
 import { Space_Mono } from "next/font/google";
 import { motion } from "framer-motion";
+import { useRouter } from "next/navigation";
 
 const mono = Space_Mono({
   preload: false,
@@ -19,6 +20,8 @@ const pixelfont = Press_Start_2P({
 });
 
 function GameResult(props: any) {
+  const router = useRouter();
+
   return (
     <div className="fixed inset-0 flex items-center justify-center z-[40] w-[100vw] h-[100vh] overflow-hidden text-indigo-100 ">
       <div className="absolute bg-black w-full h-full opacity-50 z-[4]"></div>
@@ -46,10 +49,26 @@ function GameResult(props: any) {
           {props.result === "win" ? "YOU WIN!" : "YOU LOSE!"}
         </h3>
         <div className="flex flex-col md:flex-row items-center justify-evenly min-h-[40px] w-1/2 gap-3">
-          <Button className="mt-5" size="large" type="primary" danger>
+          <Button
+            className="mt-5"
+            size="large"
+            type="primary"
+            danger
+            onClick={() => {
+              // router.push("/game");
+              window.location.reload();
+            }}
+          >
             Try Again
           </Button>
-          <Button className="mt-5" size="large" type="primary">
+          <Button
+            className="mt-5"
+            size="large"
+            type="primary"
+            onClick={() => {
+              router.push("/dashboard");
+            }}
+          >
             Back Home
           </Button>
         </div>
