@@ -68,7 +68,6 @@ function GameSettingsModel({ ...props }) {
       props.setSettings(false);
       context.SetGameLandingPageBool(false);
       context.SetGameDashboardBool(true);
-      props.setSettings(false);
     } else if (
       context.GameSettings.GameMode === "Invite" &&
       context.GameSettings.GameTheme != "" &&
