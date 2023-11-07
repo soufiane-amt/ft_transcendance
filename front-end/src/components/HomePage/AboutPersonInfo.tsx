@@ -1,3 +1,4 @@
+"use client";
 import { Space_Mono } from "next/font/google";
 import Image from "next/image";
 import Link from "next/link";

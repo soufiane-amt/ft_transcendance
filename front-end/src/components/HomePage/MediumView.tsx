@@ -1,3 +1,5 @@
+"use client";
+
 import { Press_Start_2P } from "next/font/google";
 import HomePageIntraLoginButton from "./HomePageIntraLoginButton";
 import { Space_Mono } from "next/font/google";

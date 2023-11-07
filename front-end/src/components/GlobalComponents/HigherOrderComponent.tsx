@@ -4,7 +4,7 @@ import { useRouter } from "next/navigation";
 import Cookies from "js-cookie";
 import axios from "axios";
 import Loading from "./Loading";
-import '../../styles/HigherOrderComponent.css'
+import "../../styles/HigherOrderComponent.css";
 
 const withAuth = (WrappedComponent: any) => {
   const WithAuth = (props: any) => {
@@ -31,8 +31,8 @@ const withAuth = (WrappedComponent: any) => {
           });
           setTimeout(() => setLoadingData(false), 2000);
         } catch (error) {
-          Router.replace("/");
           console.clear();
+          Router.replace("/");
         }
       }
       getUserData();

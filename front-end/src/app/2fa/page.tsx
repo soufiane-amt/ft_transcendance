@@ -41,7 +41,6 @@ const Home = () => {
           },
         }
       );
-      console.log(response.data);
       if (response.status === 201) {
         Cookies.remove("twofa_token");
         Cookies.set("access_token", response.data.accessToken);
@@ -50,7 +49,7 @@ const Home = () => {
     } catch (err) {
       setError("** Invalid Code **");
       setTimeout(() => setError(""), 1000);
-      // console.clear();
+      console.clear();
     }
   }
 

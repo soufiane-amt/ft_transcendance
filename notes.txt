@@ -10,7 +10,7 @@ abdellah + oussama : file upload not image but has extention of image , sharp, j
 abdellah:waiting in game
 abdellah:win , lose
 abdellah:scoreboardstyling
-abdellah:'use client', protect backendendpoints
+abdellah:protect backendendpoints
 
 
 

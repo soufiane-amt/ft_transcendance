@@ -1,3 +1,4 @@
+"use client";
 import "../../styles/TailwindRef.css";
 import Lottie from "react-lottie-player";
 import codeAnimation from "../../../public/QrAnimation.json";

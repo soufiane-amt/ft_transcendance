@@ -1,3 +1,4 @@
+"use client";
 import { Kanit } from "next/font/google";
 
 const quotefont = Kanit({
