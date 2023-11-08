@@ -55,18 +55,19 @@
     width: 90%;
 }
 
-.type_setter input {
+/* .type_setter input {
     position: absolute;
     left: 5%;
     width: 90%;
     color: rgb(241, 226, 226);
     text-indent: 20px;
-}
+} */
 
 .user_input_fields{
     margin: 0 auto;
     display: block; /* Ensures the margin:auto works correctly */
 
+    padding-inline: 20px;
     width: 400px;
     background-color: #8280BD;
     border: 0;
@@ -76,7 +77,14 @@
     font-size: large;
 }
 
-  
+.password_warning_message
+{
+    color: red;
+    font-size: small;
+    margin-top: 10px;
+
+}
+
 @media (max-width:650px) 
 {
     .channel_setting button{
@@ -93,5 +101,10 @@
         height: 125px;
         width: 125px;
         margin-bottom: 0;
+    }
+    .user_input_fields{
+        width:250px;
+        height: 30px;
+        font-size: medium;
     }
 }

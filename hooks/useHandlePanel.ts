@@ -90,14 +90,29 @@ export function useHandlePanel(discussionPanels: DiscussionDto[],selectedDiscuss
             selectDiscussion(selectedPanelDefault);
         }
 
+        const handleLeavingChannel = (room_id: string ) => {
+          const updatedRooms = [...discussionPanels];
+          const indexToModify = updatedRooms.findIndex(
+            (item) => item.id === room_id
+          )
+          if (indexToModify !== -1) {
+            updatedRooms.splice(indexToModify, 1);
+            setDiscussionRooms(updatedRooms);
+          }
+          if (selectedDiscussion.id === room_id)
+            selectDiscussion(selectedPanelDefault);
+        }
+
         socket.on("newMessage", handleNewMessage);
         socket.on("setRoomAsRead", handleReadStatusTrack);
         socket.on("kickOutNotification", handleGettingKicked);
+        socket.on("LeaveOutNotification", handleLeavingChannel);
 
         return () => {
           socket.off("newMessage", handleNewMessage);
           socket.off("setRoomAsRead", handleReadStatusTrack);
           socket.off("kickOutNotification", handleGettingKicked);
+          socket.off("LeaveOutNotification", handleLeavingChannel);
 
         };
       }, [discussionPanels]);

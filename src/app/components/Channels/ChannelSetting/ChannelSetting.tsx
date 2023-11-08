@@ -4,31 +4,46 @@ import style from "./ChannelSetting.module.css";
 import { findChannelBook } from "../../../context/ChannelInfoBook";
 import socket from "../../../socket/socket";
 
-const data = {
-  src: "/images/avatar2.png",
-  channelName: "Channel Name",
-  type:'PUBLIC'
-};
+const MaxPasswordLength = 50;
+const MinPasswordLength = 8;
 
+// const handlePasswordChange = (e :React.ChangeEvent<HTMLInputElement>) => {
+//   const inputText = e.target.value;
+//   if ( inputText.length <= MaxPasswordLength &&
+//       inputText[inputText.length - 1] !== ' ') {
+//       setPassword(inputText);
+//   }
+// };
 
 interface TypeSetterProps{
   selectedOptionState : {
     selectedOption : string | undefined,
     setSelectedOption : React.Dispatch<React.SetStateAction<string | undefined>>;
   }
-  setNewPassword : React.Dispatch<React.SetStateAction<string>>;
+  // setNewPassword : React.Dispatch<React.SetStateAction<string>>;
+  passwordState : {
+    password : string,
+    setNewPassword : React.Dispatch<React.SetStateAction<string>>;
+  }
 }
-function TypeSetter({selectedOptionState, setNewPassword}:TypeSetterProps) {
+function TypeSetter({selectedOptionState, passwordState}:TypeSetterProps) {
 
+  const {password, setNewPassword} = passwordState;
   const {selectedOption, setSelectedOption} = selectedOptionState;
   
   const handleSelection = (event: any) => {
     setSelectedOption(event.target.value);
   };
-  const handlePasswordTyping = (event: any) => {
-    setNewPassword(event.target.value);
-  };
-  return (
+  const handlePasswordChange = (e :React.ChangeEvent<HTMLInputElement>) => {
+  const inputText = e.target.value;
+  if ( inputText.length <= MaxPasswordLength &&
+      inputText[inputText.length - 1] !== ' ') {
+        setNewPassword(inputText);
+  }
+};
+
+
+return (
     <div className={`${style.type_setter} `}>
       <div>
         <label>New Channel type : </label>
@@ -44,14 +59,22 @@ function TypeSetter({selectedOptionState, setNewPassword}:TypeSetterProps) {
         </select>
       </div>
       {selectedOption === "PROTECTED" && (
-        <div>
+        <div >
           <label>New Channel Password:</label>
+          
           <input
             className={style.user_input_fields}
             placeholder="New Password"
             type="password"
-            onChange={handlePasswordTyping}
-          />
+            onChange={handlePasswordChange}
+            />
+          {
+          password && password.length < MinPasswordLength &&
+            <h3 className={style.password_warning_message}>
+              Your password must be at least {MinPasswordLength} characters long!
+            </h3>
+          
+          }
         </div>
       )}
     </div>
@@ -65,11 +88,15 @@ interface ChannelSettingProps{
 export function ChannelSetting({channel_id}:ChannelSettingProps) {
   const currentChannel = findChannelBook(channel_id)
   const [selectedOption, setSelectedOption] = useState(currentChannel?.type); // State to track selected option
-  const [settedPassword, setNewPassword] = useState(''); // State to track selected option
+  const [password, setNewPassword] = useState(''); // State to track selected option
 
 
   const handleConfirmClick = () => {
-    socket.emit("updateChannelType", {channel_id, type:selectedOption, password:settedPassword});
+    if (selectedOption === "PROTECTED" && password.length < MinPasswordLength) {
+      alert(`Your password must be at least ${MinPasswordLength} characters long!`);
+      return;
+    }
+    socket.emit("updateChannelType", {channel_id, type:selectedOption, password:password});
     window.location.reload();
 
   }
@@ -82,7 +109,7 @@ export function ChannelSetting({channel_id}:ChannelSettingProps) {
               <h2>{currentChannel.name}</h2>
             </div>
           </div>
-          <TypeSetter  selectedOptionState={{selectedOption, setSelectedOption}} setNewPassword={setNewPassword}/>
+          <TypeSetter  selectedOptionState={{selectedOption, setSelectedOption}} passwordState={{password, setNewPassword}}/>
           <button onClick={handleConfirmClick}>CONFIRM</button>
         </div>
 
