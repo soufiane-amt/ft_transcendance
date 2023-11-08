@@ -159,6 +159,21 @@ export class ChatCrudService {
     });
   }
 
+async findDmPartnerId(dm_id: string, user_id: string) {
+  const dm = await this.prisma.prismaClient.directMessaging.findUnique({
+    where: {
+      id: dm_id,
+    },
+    select: {
+      user1_id: true,
+      user2_id: true,
+    },
+  });
+  if (!dm) return undefined;
+  return dm.user1_id == user_id ? dm.user2_id : dm.user1_id;
+} 
+
+
 async retreiveDmInitPanelData(user_id :string) {
   const dmUsersIds = await this.prisma.prismaClient.directMessaging.findMany({
     where: {

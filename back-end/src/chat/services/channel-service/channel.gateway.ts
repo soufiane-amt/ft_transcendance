@@ -246,9 +246,9 @@ import { channel, subscribe } from "diagnostics_channel";
     }  
  
 
-    // @UseGuards(bannedConversationGuard)
-    // @UseGuards(muteConversationGuard)
-    // @UseGuards (userRoomSubscriptionGuard)  
+    @UseGuards(bannedConversationGuard)
+    @UseGuards(muteConversationGuard)
+    @UseGuards (userRoomSubscriptionGuard)  
     @SubscribeMessage ("sendMsg")
     async handleSendMesChannels(client: any,  message:MessageDto ) 
     {

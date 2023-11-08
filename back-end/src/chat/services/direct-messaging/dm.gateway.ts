@@ -45,8 +45,6 @@ export class dmGateway implements OnGatewayConnection, OnGatewayDisconnect {
   }
 
   handleDisconnect(client: Socket) {
-    //   // This method is triggered when a user disconnects from the WebSocket server
-    //   console.log(`User disconnected: ID=${client.id}`);
   }
   private extractUserIdFromCookies(client:Socket) {
     const headers = client.handshake.headers;
@@ -60,14 +58,29 @@ export class dmGateway implements OnGatewayConnection, OnGatewayDisconnect {
   @SubscribeMessage("joinDm")
   async handleJoinChannel(client: Socket, dm_id:string) 
   {
+    console.log('--->dm_id', dm_id)
     client.join("dm-" + dm_id);
   }
   
   @SubscribeMessage("broadacastJoinSignal")
-  async handleJoinSignal(client: Socket, dm_id:string) 
+  async handleJoinSignal(client: Socket, joinSignal : {dm_id:string, userToContact:string}) 
   {
+    console.log('joinSignal: ', joinSignal)
     const userIdCookie = this.extractUserIdFromCookies(client);
-    this.server.to(`inbox-${userIdCookie}`).emit("dmIsJoined", dm_id);
+    const userToContactPublicData =  await this.userCrud.findUserSessionDataByID(joinSignal.userToContact);
+    const currentUserPublicData =  await this.userCrud.findUserSessionDataByID(userIdCookie);
+
+    this.server.to(`inbox-${userIdCookie}`).emit('updateUserContact', {id:userToContactPublicData.id,
+      username: userToContactPublicData.username, 
+      avatar: userToContactPublicData.avatar, 
+    })
+    this.server.to(`inbox-${joinSignal.userToContact}`).emit('updateUserContact', {id:currentUserPublicData.id,
+      username: currentUserPublicData.username, 
+      avatar: currentUserPublicData.avatar, 
+    })
+
+    this.server.to(`inbox-${userIdCookie}`).emit("dmIsJoined", joinSignal.dm_id);
+    this.server.to(`inbox-${joinSignal.userToContact}`).emit("dmIsJoined", joinSignal.dm_id);
   }
 
   @UseGuards (userRoomSubscriptionGuard) 

@@ -1,6 +1,6 @@
 import { Controller, Get, Query,Post , Res,Req,  Param, Inject, UseGuards, Body, BadRequestException, ExecutionContext, CallHandler, SetMetadata, Put, InternalServerErrorException, UseInterceptors, UploadedFile } from '@nestjs/common';
 import { DmService } from './services/direct-messaging/dm.service';
-import { Request, Response } from "express"
+import { Request, Response, response } from "express"
 import { dmGateway } from './services/direct-messaging/dm.gateway';
 import { FriendShipExistenceGuard, allowJoinGuard, cookieGuard, userCanBeIntegratedInConversation, userRoomSubscriptionGuard } from './guards/chat.guards';
 import { MessageDto, channelDto, channelMembershipDto, dmDto } from './dto/chat.dto';
@@ -224,9 +224,10 @@ async handleChannelJoinRequest (@Req() request : Request,
   }
 
   
-  // /DirectMessaging/CreateDm?username=${userData.username}
-  @Get("/DirectMessaging/CreateDm")
-  async createDmRoom(@Req() request : Request, @Query('username') username:string)
+  @Get("/DirectMessaging/CreateDm/:username")
+  async createDmRoom(@Req() request : Request, 
+                @Res() response : Response,
+              @Param('username') username:string)
   {
     const userToContact = await this.userCrud.findUserByUsername(username);
     const dmData:dmDto = {
@@ -235,8 +236,16 @@ async handleChannelJoinRequest (@Req() request : Request,
       status : "ALLOWED"
     }
     const dm = await this.chatCrud.createDm(dmData);
-    return dm;
+    return response.status(200).send({dm_id: dm, userToContact: userToContact});
+
   }
 
+
+  @Get("/DirectMessaging/getPartner/:dm_id")
+  async getPartner(@Req() request : Request, @Param('dm_id') dm_id:string)
+  {
+    const partner = await this.chatCrud.findDmPartnerId(dm_id, request.cookies['user.id']);
+    return partner;
+  }
 
 }

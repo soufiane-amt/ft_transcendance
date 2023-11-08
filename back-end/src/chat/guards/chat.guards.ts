@@ -292,7 +292,7 @@ export class userRoomSubscriptionGuard implements CanActivate {
         const userIsSubscribed = await this.chatCrud.isUserInRoom(user_id, room_id);
         return userIsSubscribed.isInDMTable || userIsSubscribed.isInMembershipTable;
       }
-      if (context.getHandler().name == 'markMessagesAsRead')
+      if (context.getHandler().name == 'markMessagesAsRead') 
       {
         var room_id = request.params.room.id;
         const userIsSubscribed = await this.chatCrud.isUserInRoom(user_id, room_id);
@@ -300,6 +300,7 @@ export class userRoomSubscriptionGuard implements CanActivate {
       }
     } else if (context.getType() == 'ws') {
       const packet_data = context.switchToWs().getData();
+      console.log('}}}packet_data: fiirst arival:', packet_data)
       const user_id = extractUserIdFromCookies(context.switchToWs().getClient());
       if (context.getClass() == dmGateway)
         if (this.verfiyDirectMessagingSubscription(context, packet_data, user_id))
@@ -312,18 +313,20 @@ export class userRoomSubscriptionGuard implements CanActivate {
           )) == null
         );
     }
-    return true;
+    return true; 
   }
 
   async verfiyDirectMessagingSubscription(context:ExecutionContext , packet_data:any , user_id: string) {
-    console.log('packet_data: ', packet_data)
     if (context.getHandler().name == 'handleSendMesDm')
+    {
+      console.log('}}}}packet_data: ', packet_data)
         return (
         (await this.chatCrud.checkUserInDm(
             user_id,
             packet_data.dm_id,
           )) != null
         );
+  }
     else if (context.getHandler().name == 'handleMarkMsgAsRead')
         return (
           (await this.chatCrud.checkUserInDm(
