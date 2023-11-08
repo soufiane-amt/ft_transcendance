@@ -4,8 +4,9 @@
     position: sticky;
     bottom: 0;
     width: 100%;
-    background-color: var(--chat_field_back_color);
-    border-top: 0.1px solid black;
+    /* background-color: var(--chat_field_back_color); */
+    background-color: rgb(72, 119, 211);
+    border-top: 4.1px solid black;
     z-index: 1;
     border-radius: 15px;
 }
@@ -20,6 +21,7 @@
     background-color: var(--chat_text_box_back_color); 
     font-size: 21px;
     border-radius: 15px;
+    border: solid black 5px;
     
     width: 100%;
     height: 45px;

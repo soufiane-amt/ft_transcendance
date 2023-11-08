@@ -2,6 +2,8 @@ import { useEffect } from "react";
 import { DiscussionDto, MinMessageDto, discussionPanelSelectType } from "../src/app/interfaces/DiscussionPanel";
 import socket from "../src/app/socket/socket";
 import { selectedPanelDefault } from "../src/app/components/Channels/ChannelsMain";
+import { useSessionUser } from "../src/app/context/SessionUserContext";
+import { fetchDataFromApi } from "../src/app/components/shared/customFetch/exmple";
 
 export function useHandlePanel(discussionPanels: DiscussionDto[],selectedDiscussionState : {
   selectedDiscussion : discussionPanelSelectType,
@@ -9,6 +11,7 @@ export function useHandlePanel(discussionPanels: DiscussionDto[],selectedDiscuss
 } ,setDiscussionRooms:React.Dispatch<React.SetStateAction<DiscussionDto[]>>) 
 {
   const {selectedDiscussion, selectDiscussion} = selectedDiscussionState;
+  const currentUserId = useSessionUser().id;
     useEffect(() => {
         const handleNewMessage = async (newMessage: messageDto) => {
           console.log ('I got a new message!')
@@ -39,21 +42,23 @@ export function useHandlePanel(discussionPanels: DiscussionDto[],selectedDiscuss
               content: newMessage.content,
               createdAt: newMessage.createdAt,
             };
+            const partner_id = await fetchDataFromApi("http://localhost:3001/chat/DirectMessaging/getPartner/"+messageRoomId)
             var newDiscussionPanel: DiscussionDto  = updatedRooms[0]
              newDiscussionPanel = {
               id : messageRoomId !== undefined ? messageRoomId:'',
               last_message: messageContent,
               unread_messages : 1,
-              partner_id: undefined
+              partner_id: currentUserId === newMessage.user_id ? partner_id : newMessage.user_id,
             } 
              setDiscussionRooms(() => [newDiscussionPanel, ...discussionPanels]);
 
           }
                       
           //wait untill discussion panel is updated
-          setTimeout(() => {
-            socket.emit("MarkMsgRead", { _id: messageRoomId });
-          }, 1000);
+          if (selectedDiscussion.id === messageRoomId)
+            setTimeout(() => {
+              socket.emit("MarkMsgRead", { _id: messageRoomId });
+            }, 1000);
         
         };
 

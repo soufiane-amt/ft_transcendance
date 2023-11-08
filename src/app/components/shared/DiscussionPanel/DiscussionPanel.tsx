@@ -7,19 +7,33 @@ import { findUserContacts } from "../../../context/UsersContactBookContext";
 import socket from "../../../socket/socket";
 import clsx from "clsx";
 import { findChannelBook } from "../../../context/ChannelInfoBook";
+import { useSessionUser } from "../../../context/SessionUserContext";
 
 const findDiscussions = (
+  currentRoute : "Direct_messaging" | "Channels",
   partner_id: string | undefined,
   discussion_id: string //This id is either the id of channel or the id of the user to dm
 ) => {
-  if (partner_id !== undefined) {
-    const discussion_data = findUserContacts(partner_id);
-    if (!discussion_data) return undefined;
-    return {
-      name: discussion_data.username,
-      avatar: discussion_data.avatar,
-    };
-  } else {
+  if (currentRoute === "Direct_messaging") {
+      if (partner_id !== undefined) {
+        const discussion_data = findUserContacts(partner_id);
+        console.log('discussion_data:', partner_id)
+        if (!discussion_data) return undefined;
+        return {
+          name: discussion_data.username,
+          avatar: discussion_data.avatar,
+          };
+        }
+        else{
+          const discussion_data = useSessionUser();
+          if (!discussion_data) return undefined;
+          return {
+            name: discussion_data.username,
+            avatar: discussion_data.avatar,
+          };
+        } 
+    }
+  else {
     const discussion_data = findChannelBook(discussion_id);
     if (!discussion_data) return undefined;
     return {
@@ -47,6 +61,7 @@ interface DiscussionPanelProps {
   DiscussionPanel: DiscussionDto;
   isSelected: boolean;
   showUserActionModal: () => void;
+  currentRoute :"Direct_messaging" | "Channels";
 }
 
 function DiscussionPanel({
@@ -54,6 +69,8 @@ function DiscussionPanel({
   DiscussionPanel,
   isSelected,
   showUserActionModal,
+  currentRoute,
+  
 }: DiscussionPanelProps) {
   const panelThemeClass = clsx({
     [style.discussion_panel_default_colors]: isSelected === false,
@@ -67,7 +84,8 @@ function DiscussionPanel({
     socket.emit("MarkMsgRead", { _id: DiscussionPanel.id });
   };
 
-  const panel = findDiscussions(DiscussionPanel.partner_id, DiscussionPanel.id);
+  console.log('>>DiscussionPanel', DiscussionPanel)
+  const panel = findDiscussions(currentRoute,DiscussionPanel.partner_id, DiscussionPanel.id);
   return (
     <>
       {panel && (

@@ -10,8 +10,6 @@ import { useHandleBan, useHandleUnBan } from "../../../../../hooks/useHandleBan"
 import { useMuteContext } from "../../../context/MuteContext";
 import { useHandleMute, useHandleUnMute } from "../../../../../hooks/useHandleMute";
 import { useHandleChattingDisable } from "../../../../../hooks/useHandleChattingDisable";
-import { useHandleJoinChannel } from "../../../../../hooks/useHandleJoinChannel";
-
 
 const isMessageValid = (message:string) => { return message.trim() !== '';}
 

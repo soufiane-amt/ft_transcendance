@@ -3,6 +3,7 @@ import helloIcon from '../../../../../public/images/icons/CreateChannel/hello.pn
 import axios from 'axios';
 import socket from '../../../socket/socket';
 import { fetchDataFromApi } from '../../shared/customFetch/exmple';
+import { useSessionUser } from '../../../context/SessionUserContext';
 
 export interface UserInitiativeTalkProps
 {
@@ -13,21 +14,20 @@ export function UserInitiativeTalk({ userData }: UserInitiativeTalkProps) {
     const handleSendHello = async () => {
         try
         {
-            const dm_id = await fetchDataFromApi(`/DirectMessaging/CreateDm?username=${userData.username}`)             
+            await fetchDataFromApi(`http://localhost:3001/chat/DirectMessaging/CreateDm/${userData.username}`)             
                 .then(res => {
-                  if (res.status === 200) {
-                    socket.emit('broadacastJoinSignal', dm_id);
-                    window.location.href = `/chat/Channels/`;
+                  if (res) {
+                    socket.emit('broadacastJoinSignal', {dm_id : res.dm_id, userToContact:res.userToContact});
+                    window.location.href = `/chat/DirectMessaging`;
                   }
             })
         }
         catch(err)
         {
             window.location.reload();
-            alert('Channel joining has failed!');
+            alert('Private messaging joining has failed!');
         }
 
-        window.location.href = '/chat/DirectMessaging';
     }
     return (
         <div className={style.communication_initiative}>

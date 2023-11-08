@@ -4,6 +4,7 @@ import style from './ChannelJoin.module.css';
 import socket from '../../../socket/socket';
 import { ChannelType } from '../WelcomingPage';
 import axios from 'axios';
+import { useSessionUser } from '../../../context/SessionUserContext';
 
 export interface ChannelJoinProps
 {
@@ -31,6 +32,7 @@ export function ChannelJoin({ channelData }: ChannelJoinProps) {
                     .then(res => {
                       if (res.status === 200) {
                         socket.emit('joinSignal', channelData.id);
+                      
                         window.location.href = `/chat/Channels/`;
                       }
                 })

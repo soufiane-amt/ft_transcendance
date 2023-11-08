@@ -68,7 +68,7 @@ export function UserContactsProvider({
       // setTimeout(() => {
         setUserContactsBook(updatedUserContactsBook);
       // }, 0)
-      // console.log ('Updated user contacts book:', updatedUserContactsBook)
+      console.log ('Updated user contacts book:', updatedUserContactsBook)
     };
     socket.on("updateUserContact", handleUpdateUserContact);
     return () => {
@@ -111,7 +111,7 @@ export function useUserContacts() {
 
 export function findUserContacts(user_id: string) {
   const context = useContext(UserContactsContext);
-  console.log ('User contacts: ', context?.userContacts)
+  console.log ('User contacts: ', context?.userContacts, ' ', user_id)
   if (!context) {
     throw new Error(
       "useUserContacts must be used within a UserContactsProvider"

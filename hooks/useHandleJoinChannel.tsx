@@ -5,15 +5,16 @@ import { discussionPanelSelectType } from "../src/app/interfaces/DiscussionPanel
 export function useHandleJoinDm (selectedDiscussion: discussionPanelSelectType)
     {
         useEffect(() => {
-          const handleJoinDm = (channel_id: string ) => {
+          const handleJoinDm = (dm_id: string ) => {
             
-            socket.emit("joinDm", channel_id);
+            console.log("joinDm", dm_id);
+            socket.emit("joinDm", dm_id);
         };
       
-            socket.on("broadacastJoinSignal", handleJoinDm);
+            socket.on("dmIsJoined", handleJoinDm);
         
             return () => {
-              socket.off("broadacastJoinSignal", handleJoinDm);
+              socket.off("dmIsJoined", handleJoinDm);
             };
           }, [selectedDiscussion]);
         

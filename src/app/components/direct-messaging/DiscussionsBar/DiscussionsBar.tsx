@@ -38,7 +38,7 @@ export function DiscussionsBar({openBarState,  selectedDiscussionState, currentR
           );
           console.log('fetchedData:',fetchedData)
         if (currentRoute === "Direct_messaging")
-          setDiscussionRooms(()=>fetchedData);
+          setDiscussionRooms(fetchedData);
         else 
           {
             console.log ('room_data: ', fetchedData)
@@ -99,7 +99,7 @@ export function DiscussionsBar({openBarState,  selectedDiscussionState, currentR
       <>
       {openBar &&
       <ul className={style.discussion_panel_bar}>
-        {discussionPanels.map((panelElement) => {
+        {discussionPanels?.map((panelElement) => {
           const isSelected = panelElement?.id === selectedDiscussion.id;
           return (  
             <DiscussionPanel
@@ -108,6 +108,7 @@ export function DiscussionsBar({openBarState,  selectedDiscussionState, currentR
               DiscussionPanel={panelElement}
               isSelected={isSelected}
               showUserActionModal={displayActionModal}
+              currentRoute={currentRoute}
             />
           );
         })}
