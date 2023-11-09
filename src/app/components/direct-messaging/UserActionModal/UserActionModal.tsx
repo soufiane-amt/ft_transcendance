@@ -88,7 +88,7 @@ function UserActionModal({
   const userContact = findUserContacts(targetedUserId);
   const userIsBanned = findBannedRoomContext(targetedDiscussion);
   const ref = useOutsideClick(handleVisibility);
-
+  
   if (!userContact) return <div>User action modal not found!</div>;
 
   return (
@@ -105,14 +105,18 @@ function UserActionModal({
       </div>
       <div className={style.interaction_buttons}>
         <ActionButton targetId={targetedUserId} buttonData={playButton} />
-        <ActionButton
-          targetId={targetedUserId}
-          buttonData={
-            userIsBanned != null && userIsBanned.blocker_id === userSession.id
-              ? unBanButton
-              : banButton
-          }
-        />
+        {
+          (!userIsBanned || userIsBanned.blocker_id === userSession.id) && 
+          <ActionButton
+            targetId={targetedUserId}
+            buttonData={
+              userIsBanned != null && userIsBanned.blocker_id === userSession.id
+                ? unBanButton
+                : banButton
+            }
+          />
+
+        }
       </div>
     </div>
   );

@@ -65,7 +65,7 @@ function ChatTextBox({
     <div className={`${style.message_bar} `}>
       {isChatTextBoxDisabled ? (
         <div className={style.banned_message}>
-          You can't message this person anymore.
+          You can't use this room for now.
         </div>
       ) : (
         <>

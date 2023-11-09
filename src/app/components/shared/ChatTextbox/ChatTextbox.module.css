@@ -6,9 +6,11 @@
     width: 100%;
     /* background-color: var(--chat_field_back_color); */
     background-color: rgb(72, 119, 211);
-    border-top: 4.1px solid black;
+    border-top: 0.1px solid black;
     z-index: 1;
     border-radius: 15px;
+    box-shadow: 0px 5px 5px 12px rgb(104, 104, 108);
+
 }
 
 .message_input_bar{
