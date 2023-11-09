@@ -43,6 +43,7 @@ function DirectMesgMain() {
           <ChattingField
             selectDiscussionState={selectState}
           />
+          <button className={style.open_bar_btn} onClick={handleOpenBar}>P</button>
         </div>
 
       </BanProvider>

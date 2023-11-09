@@ -96,9 +96,9 @@ export function DiscussionsBar({openBarState,  selectedDiscussionState, currentR
        
     const displayActionModal = () => setModalAsVisible(true);
     return (
-      <>
+      <div className={style.discussion_panel_bar}>
       {openBar &&
-      <ul className={style.discussion_panel_bar}>
+      <ul >
         {discussionPanels?.map((panelElement) => {
           const isSelected = panelElement?.id === selectedDiscussion.id;
           return (  
@@ -135,9 +135,7 @@ export function DiscussionsBar({openBarState,  selectedDiscussionState, currentR
                 openBar === true ? '<' : '>'
                 }
             </button> 
-          {/* </div> */}
-          
-          </>
+          </div>
           );
         }
  

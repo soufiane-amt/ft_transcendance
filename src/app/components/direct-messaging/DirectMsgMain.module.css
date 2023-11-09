@@ -3,3 +3,9 @@
     display: flex;
   }
   
+.open_bar_btn{
+  position: absolute;
+  left: calc(30%);
+  z-index: 10000;
+  align-self: center;
+}

@@ -1,8 +1,11 @@
+
 .discussion_panel_bar {
+  position: relative;
     width: 30%; 
     height: 100vh;
     overflow-y: auto;
     background-color: var(--discussion_panel_back_color);
+  z-index: 10000;
   }
   
   /* ////////// */
@@ -33,8 +36,8 @@
   .discussions_bar_swither
   {   
     position: absolute;
-    z-index: 100;
-    left: 23%;
+    z-index: 1000;
+    left: 100%;
 
     align-self: center;
     width: 20px;
