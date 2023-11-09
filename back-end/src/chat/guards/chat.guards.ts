@@ -384,14 +384,20 @@ export class bannedConversationGuard implements CanActivate {
         dm_data = await this.chatCrud.findDmById(packet_data.dm_id);
       return dm_data?.status === 'ALLOWED';
     } else {
+      let channel_id ;
+      if (context.getHandler().name === 'handleResumeChannelUpdates')
+        channel_id = packet_data;
+      else if (context.getHandler().name === 'handleSendMesChannels')
+        channel_id = packet_data.channel_id
       const memeberShip = await this.chatCrud.getMemeberShip(
         user_id,
-        packet_data.channel_id
+        channel_id
       );
       return memeberShip?.is_banned === false;
     }
   }
 }
+
 
 @Injectable()
 export class muteConversationGuard implements CanActivate {
@@ -433,5 +439,26 @@ export class userCanBeIntegratedInConversation implements CanActivate {
     }
   }
 }
+@Injectable()
+export class LeaveChannelGuard implements CanActivate {
+constructor(private readonly chatCrud: ChatCrudService) {}
+
+async canActivate(context: ExecutionContext): Promise<boolean> {
+  const channel_id = context.switchToWs().getData();
+  const user_id = extractUserIdFromCookies(context.switchToWs().getClient());
+  if (context.getClass() == channelGateway) {
+    const memeberShip = await this.chatCrud.getMemeberShip(
+      user_id,
+      channel_id
+    );
+    const OwnersNumber = await this.chatCrud.findOwnersCount(channel_id);
+    const membersCount = await this.chatCrud.findMembersCount(channel_id);
+    if (memeberShip?.role == 'OWNER' && OwnersNumber == 1 && membersCount > 1)
+      return false;
+    return true;
+  }
+  }
+}
+
 import { channelGateway } from '../services/channel-service/channel.gateway';import { Socket } from 'socket.io';
 

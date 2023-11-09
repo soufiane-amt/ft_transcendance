@@ -917,14 +917,17 @@ async findChannelUserMuteData(user_id: string, channel_id: string) {
     });
   }
 
+  async findMembersCount (channel_id: string)
+  {
+    return await this.prisma.prismaClient.channelMembership.count(
+      {
+        where: {
+          channel_id: channel_id,
+        },
+      })
+  }
   async leaveChannel(user_id: string, channel_id: string) {
-    try {
-      const memberCount = await this.prisma.prismaClient.channelMembership.count(
-        {
-          where: {
-            channel_id: channel_id,
-          },
-        })
+      const memberCount = await this.findMembersCount(channel_id);
 
       await this.prisma.prismaClient.channelMembership.delete({
         where: {
@@ -941,12 +944,17 @@ async findChannelUserMuteData(user_id: string, channel_id: string) {
           return true;
         }
         return false;
-    }
-    catch (err)
-    {
-    }  
   }
 
+
+  async findOwnersCount(channel_id: string) {
+    return await this.prisma.prismaClient.channelMembership.count({
+      where: {
+        channel_id: channel_id,
+        role: "OWNER",
+      },
+    });
+  }
   //this method espacially was created in case all the members of a channel left
   async deleteChannel(channel_id: string) {
       await this.prisma.prismaClient.channel.delete({

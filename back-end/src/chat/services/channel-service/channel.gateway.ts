@@ -5,7 +5,7 @@ import { Roles } from "src/chat/decorators/chat.decorator";
 import { MessageDto, UserBanMuteSignalDto, banManageSignalDto, channelCreateDto, channelDto, channelMembershipDto, channelReqDto, kickSignalDto, setOwnerSignalDto } from "src/chat/dto/chat.dto";
 import { UpdateChannelDto, UpdateUserMemberShip, UserRoleSignal } from "src/chat/dto/update-chat.dto";
 import { Role } from "src/chat/enum/role.enum";
-import {  allowJoinGuard, bannedConversationGuard, channelPermission, muteConversationGuard, userRoomSubscriptionGuard } from "src/chat/guards/chat.guards";
+import {  LeaveChannelGuard, allowJoinGuard, bannedConversationGuard, channelPermission, muteConversationGuard, userRoomSubscriptionGuard } from "src/chat/guards/chat.guards";
 import { ChatCrudService } from "src/prisma/chat-crud.service";
 import { UserCrudService } from "src/prisma/user-crud.service";
 import * as cookie from 'cookie';
@@ -164,7 +164,7 @@ import { channel, subscribe } from "diagnostics_channel";
       client.leave (`channel-${channel_id}`)
     }
 
-    // @UseGuards(bannedConversationGuard)
+    @UseGuards(bannedConversationGuard)
     @UseGuards(muteConversationGuard)
     @UseGuards (userRoomSubscriptionGuard)  
     @SubscribeMessage ("resumeChannelUpdates") //A gard must be added to check if the user has the right to request to unmute him
@@ -172,6 +172,7 @@ import { channel, subscribe } from "diagnostics_channel";
     {
       console.log ('4')
       client.join (`channel-${channel_id}`)
+      this.broadcastChannelChanges(channel_id)
     }
 
 
@@ -207,6 +208,7 @@ import { channel, subscribe } from "diagnostics_channel";
     }
 
 
+    @UseGuards(LeaveChannelGuard)
     @SubscribeMessage ("leaveChannel")
     async handleChannelLeave(client: any,  channel_id : string  ) 
     { 
@@ -218,6 +220,7 @@ import { channel, subscribe } from "diagnostics_channel";
         this.broadcastChannelChanges(channel_id)
     }
 
+  
     @Roles (Role.OWNER)
     @UseGuards(channelPermission)
     @SubscribeMessage ("setOwner")
