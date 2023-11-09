@@ -18,6 +18,7 @@ export class channelsService {
       const user = ban.user; // You need to define how to retrieve the user
 
       // Broadcast the expiration event to the user on the channel
+      console.log("Unban User ...")
       this.channelGateway.broadcastExpiration(channel, user, 'BAN');
     }
     }

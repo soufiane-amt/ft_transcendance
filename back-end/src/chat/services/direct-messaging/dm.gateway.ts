@@ -30,11 +30,9 @@ export class dmGateway implements OnGatewayConnection, OnGatewayDisconnect {
 
   async handleConnection(client: Socket, ...args: any[]) {
     const userIdCookie = this.extractUserIdFromCookies(client);
-    console.log ('An attempt to connect: ', userIdCookie)
     if (!userIdCookie) return;
     if ((await this.userCrud.findUserByID(userIdCookie)) == null)
       throw new WsException("User not existing");
-    console.log(`user ${userIdCookie} connected\n`);
     const inbox_id = "inbox-".concat(userIdCookie);
     client.join(inbox_id);
     (await this.chatCrud.retrieveUserDmChannels(userIdCookie)).forEach(
@@ -55,17 +53,17 @@ export class dmGateway implements OnGatewayConnection, OnGatewayDisconnect {
 
   //Check if the user is allowed to join the room
   //is he blocker and the room exists
+  @UseGuards (userRoomSubscriptionGuard) 
+  @UseGuards(bannedConversationGuard)
   @SubscribeMessage("joinDm")
-  async handleJoinChannel(client: Socket, dm_id:string) 
+  async handleJoinDm(client: Socket, dm_id:string) 
   {
-    console.log('--->dm_id', dm_id)
     client.join("dm-" + dm_id);
   }
   
   @SubscribeMessage("broadacastJoinSignal")
   async handleJoinSignal(client: Socket, joinSignal : {dm_id:string, userToContact:string}) 
   {
-    console.log('joinSignal: ', joinSignal)
     const userIdCookie = this.extractUserIdFromCookies(client);
     const userToContactPublicData =  await this.userCrud.findUserSessionDataByID(joinSignal.userToContact);
     const currentUserPublicData =  await this.userCrud.findUserSessionDataByID(userIdCookie);
@@ -96,12 +94,12 @@ export class dmGateway implements OnGatewayConnection, OnGatewayDisconnect {
   @SubscribeMessage("MarkMsgRead")
   async handleMarkMsgAsRead(client: Socket, room: { _id: string }) {
     const userIdCookie = this.extractUserIdFromCookies(client);
-    console.log("Mark as read signal came, ", userIdCookie, ",", room._id);
 
     await this.chatCrud.markRoomMessagesAsRead(userIdCookie, room._id); //mark the messages that unsent by this user as read
     this.server.to(`inbox-${userIdCookie}`).emit("setRoomAsRead", room);
   } 
 
+  
   @UseGuards(userRoomSubscriptionGuard)
   @SubscribeMessage("dmModeration")
   async handleDmBan(
@@ -114,7 +112,9 @@ export class dmGateway implements OnGatewayConnection, OnGatewayDisconnect {
       userIdCookie,
       banSignal.targetedUserId
     );
-
+    console.log("banSignal.type == BAN && await this.chatCrud.dmIsBanned(dm.id)", banSignal.type == "BAN" && await this.chatCrud.dmIsBanned(dm.id))
+    if (banSignal.type == "BAN" && await this.chatCrud.dmIsBanned(dm.id))
+      return;
     if (banSignal.type == "BAN") {
       await this.chatCrud.blockAUserWithDm(banSignal.targetedUserId, dm.id);
       this.server
@@ -127,4 +127,5 @@ export class dmGateway implements OnGatewayConnection, OnGatewayDisconnect {
         .emit("userUnBanned", { room_id: dm.id, agent_id: userIdCookie });
     }
   }
+
 }

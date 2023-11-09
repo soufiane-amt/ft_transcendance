@@ -331,7 +331,6 @@ async retreiveDmInitPanelData(user_id :string) {
   }
 
   async findChannelById(channel_id: string) {
-    console.log('++++channel_id: ', channel_id)
     return await this.prisma.prismaClient.channel.findUnique({
       where: {
         id: channel_id,
@@ -415,7 +414,6 @@ async retreiveDmInitPanelData(user_id :string) {
         }
       }
     )
-    console.log('notJoinedChannels: ', notJoinedChannels)
     return notJoinedChannels
   }
 
@@ -460,7 +458,6 @@ async retreiveDmInitPanelData(user_id :string) {
     const notDmedUsersIds = friendsIds.filter((item) => {
       return !conatactedUsers.includes(item);
     });
-    console.log ('notDmedUsersIds: ', notDmedUsersIds)
     return await this.prisma.prismaClient.user.findMany(
       {
         where:{
@@ -522,7 +519,6 @@ async retreiveDmInitPanelData(user_id :string) {
       const msg = messages.filter((message) => {
         return message.createdAt > channelJoiningTime;
       });
-      console.log ('msg: ', msg)
       return msg;
     } catch {
       throw new NotFoundException(`Channel with ID ${room_id} not found.`);
@@ -598,8 +594,6 @@ async retreiveDmInitPanelData(user_id :string) {
       });
   
       if (!channelMembership) {
-        console.log ("-->", user_id)
-        console.log ("-->", room_id)
         throw new Error("User is not a member of the channel");
       }
   
@@ -753,7 +747,8 @@ async retreiveDmInitPanelData(user_id :string) {
     type: "PUBLIC" | "PROTECTED" | "PRIVATE",
     password: string
   ) {
-    console.log( 'channel_id:', channel_id, ' type:', type, ' password:', password )
+    if (type === "PROTECTED" && password.length < 8)
+      return null;
      return await this.prisma.prismaClient.channel.update({
       where: 
       { 
@@ -780,8 +775,6 @@ async retreiveDmInitPanelData(user_id :string) {
   async blockAUserWithinGroup(blockSignal: { user_id: string; channel_id: string; banDuration: number }) {
     const banExpiresAt = new Date(new Date().getTime() + blockSignal.banDuration);
     
-    console.log ('new Date====',new Date())
-    console.log ('blockAUserWithinGroup',banExpiresAt)
     await this.prisma.prismaClient.channelMembership.update({
       where: {
         channel_id_user_id: {
@@ -878,6 +871,18 @@ async findChannelUserMuteData(user_id: string, channel_id: string) {
 
 
   //
+  async dmIsBanned (dm_id: string){
+    return await this.prisma.prismaClient.directMessaging.findUnique({
+      where :{
+        id: dm_id,
+        status: "BANNED",
+      },
+      select:{
+        status:true, 
+        blocker_id: true 
+      }
+    })
+  }
 
   async blockAUserWithDm(agentId: string, dm_id: string) {
     return await this.prisma.prismaClient.directMessaging.update({
@@ -914,6 +919,13 @@ async findChannelUserMuteData(user_id: string, channel_id: string) {
 
   async leaveChannel(user_id: string, channel_id: string) {
     try {
+      const memberCount = await this.prisma.prismaClient.channelMembership.count(
+        {
+          where: {
+            channel_id: channel_id,
+          },
+        })
+
       await this.prisma.prismaClient.channelMembership.delete({
         where: {
           channel_id_user_id: {
@@ -922,12 +934,8 @@ async findChannelUserMuteData(user_id: string, channel_id: string) {
           },
         },
       });
-      if (!await this.prisma.prismaClient.channelMembership.count(
+      if (memberCount === 1)
         {
-          where: {
-            channel_id: channel_id,
-          },
-        })){
 
           await this.deleteChannel(channel_id);
           return true;
@@ -936,25 +944,16 @@ async findChannelUserMuteData(user_id: string, channel_id: string) {
     }
     catch (err)
     {
-      console.log ('error in leave channel: the channel possibilites already deleted. ')
     }  
   }
 
   //this method espacially was created in case all the members of a channel left
   async deleteChannel(channel_id: string) {
-    try {
-      await this.prisma.prismaClient.directMessaging.delete({
-        where: {
-          id: channel_id,
-        },
-      });
-    } catch (error) {
       await this.prisma.prismaClient.channel.delete({
         where: {
           id: channel_id,
         },
       });
-    }
   }
 
   async createMessage(data: MessageDto) {
@@ -1018,7 +1017,6 @@ async findChannelUserMuteData(user_id: string, channel_id: string) {
   
   
   async findChannelOwner(channel_id: string) {
-    console.log ('>>>>channel_id: ', channel_id)
     const owner =  await this.prisma.prismaClient.channelMembership.findFirst(
       {
         where: {

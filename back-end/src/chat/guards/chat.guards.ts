@@ -199,12 +199,6 @@ export class allowJoinGuard implements CanActivate {
   }
 
   async allowJoiningBySocket (user_id: string, channel_id: string): Promise<boolean> {
-    console.log ('++++allowJoiningGuard', channel_id)
-    console.log ('++++allowJoiningGuard', user_id)
-    console.log ('++++allowJoiningGuard', await this.chatCrud.getMemeberShip(
-      user_id,
-      channel_id,
-    ))
 
     return await this.chatCrud.getMemeberShip(
       user_id,
@@ -303,23 +297,37 @@ export class userRoomSubscriptionGuard implements CanActivate {
       console.log('}}}packet_data: fiirst arival:', packet_data)
       const user_id = extractUserIdFromCookies(context.switchToWs().getClient());
       if (context.getClass() == dmGateway)
-        if (this.verfiyDirectMessagingSubscription(context, packet_data, user_id))
+        if (await this.verfiyDirectMessagingSubscription(context, packet_data, user_id))
           return true;
-      if (context.getClass() == channelGateway)
+      else if (context.getClass() == channelGateway)
+      {
+        let channel_id ;
+        if (context.getHandler().name === 'handleResumeChannelUpdates')
+          channel_id = packet_data;
+        else if (context.getHandler().name === 'handleSendMesChannels')
+          channel_id = packet_data.channel_id
+        
+        console.log('channelGateway ',(await this.chatCrud.getMemeberShip(
+          user_id,
+          channel_id,
+        )) !== null)
         return (
           (await this.chatCrud.getMemeberShip(
-            packet_data.user_id,
-            packet_data.channel_id,
-          )) == null
+            user_id,
+            channel_id,
+          )) !== null
         );
+ 
+      }
     }
+    console.log('2')
+
     return true; 
   }
 
   async verfiyDirectMessagingSubscription(context:ExecutionContext , packet_data:any , user_id: string) {
     if (context.getHandler().name == 'handleSendMesDm')
     {
-      console.log('}}}}packet_data: ', packet_data)
         return (
         (await this.chatCrud.checkUserInDm(
             user_id,
@@ -348,6 +356,15 @@ export class userRoomSubscriptionGuard implements CanActivate {
         )) != null
         );
       }
+      else if (context.getHandler().name == 'handleJoinDm')
+      {
+        return (
+          (await this.chatCrud.checkUserInDm(
+              user_id,
+              packet_data,
+            )) != null
+          );  
+      }
   }
 }
 
@@ -362,15 +379,16 @@ export class bannedConversationGuard implements CanActivate {
     const packet_data = context.switchToWs().getData();
     const user_id = extractUserIdFromCookies(context.switchToWs().getClient());
     if (context.getClass() == dmGateway) {
-      console.log('----------Entered------------')
-      const dm_data = await this.chatCrud.findDmById(packet_data.dm_id);
-        return dm_data?.status == 'ALLOWED';
+      let dm_data;
+      if (context.getHandler().name  === "handleSendMesDm")
+        dm_data = await this.chatCrud.findDmById(packet_data.dm_id);
+      return dm_data?.status === 'ALLOWED';
     } else {
       const memeberShip = await this.chatCrud.getMemeberShip(
         user_id,
         packet_data.channel_id
       );
-      return memeberShip?.is_banned == false;
+      return memeberShip?.is_banned === false;
     }
   }
 }
@@ -383,9 +401,15 @@ export class muteConversationGuard implements CanActivate {
     const packet_data = context.switchToWs().getData();
     const user_id = extractUserIdFromCookies(context.switchToWs().getClient());
     if (context.getClass() == channelGateway) {
+
+      let channel_id;
+      if (context.getHandler().name === 'handleSendMesChannels')
+        channel_id = packet_data.channel_id;
+      else if (context.getHandler().name === 'handleResumeChannelUpdates')
+        channel_id = packet_data;
       const memeberShip = await this.chatCrud.getMemeberShip(
         user_id,
-        packet_data.channel_id
+        channel_id
       );
       return memeberShip?.is_muted == false;
     }
@@ -410,5 +434,4 @@ export class userCanBeIntegratedInConversation implements CanActivate {
   }
 }
 import { channelGateway } from '../services/channel-service/channel.gateway';import { Socket } from 'socket.io';
-import { User } from '@prisma/client';
 

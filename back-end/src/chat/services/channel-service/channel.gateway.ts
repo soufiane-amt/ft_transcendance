@@ -42,22 +42,11 @@ import { channel, subscribe } from "diagnostics_channel";
       }
     
 
-    //check if the user exists
-    //check if the user has permissions 
-    // @Roles(Role.OWNER, Role.ADMIN)
-    // @UseGuards(channelPermission)
-    // @SubscribeMessage ('updateChannelPic')
-    // async changeChannelPhoto (client :Socket, updatePic : UpdateChannelDto)
-    // {
-    //     await this.chatCrud.changeChannelPhoto (updatePic.channel_id, updatePic.image)
-    // }
-
     @Roles (Role.OWNER)
     @UseGuards(channelPermission)
     @SubscribeMessage('updateChannelType')
     async changeChannelType (client :Socket, updateType : UpdateChannelDto)
     {
-      console.log ('Update type : ', updateType)
       await this.chatCrud.changeChannelType (updateType.channel_id, updateType.type, updateType.password)
     }
 
@@ -86,13 +75,6 @@ import { channel, subscribe } from "diagnostics_channel";
     }
 
 
-    // //User Moderation :
-    // //Kicking or banning a user can only be done by the owner or admin 
-    // //the admin cannot ban/kick the owner or an other admin 
-    // //the user cannot ban or kick other memebers
-
-    // @UseGuards(allowJoinGuard) 
-    // @Roles (Role.OWNER, Role.ADMIN)
     
     async broadcastExpiration(channel_id: string, user_id: string, type: 'BAN' | 'MUTE') {
       if (type === "BAN") {
@@ -131,10 +113,11 @@ import { channel, subscribe } from "diagnostics_channel";
     }  
  
     
+    @Roles (Role.OWNER, Role.ADMIN)
+    @UseGuards(channelPermission)  
     @SubscribeMessage ("channelUserUnBan")
     async handleChannelUnBan( client :Socket, unbanSignal:UserBanMuteSignalDto ) 
     {
-      console.log ('Unban signal : ', unbanSignal)
       const targeted_user_id = await this.userCrud.findUserByUsername(unbanSignal.target_username)
       await this.chatCrud.unblockAUserWithinGroup(targeted_user_id, unbanSignal.channel_id)
       this.broadcastChannelChanges(unbanSignal.channel_id)
@@ -145,7 +128,6 @@ import { channel, subscribe } from "diagnostics_channel";
     @SubscribeMessage ("channelUserMute")
     async handleChannelMute(client: any,  muteSignal:UserBanMuteSignalDto ) 
     {
-      console.log ('Channel mute is received : ', muteSignal)
       const targeted_user_id = await this.userCrud.findUserByUsername(muteSignal.target_username)
       const  minutesToMilliseconds = (minutes: number) => {
         return minutes * 60 * 1000; 
@@ -164,10 +146,11 @@ import { channel, subscribe } from "diagnostics_channel";
         this.broadcastChannelChanges(muteData.channel_id)
     }  
 
+    @Roles (Role.OWNER, Role.ADMIN)
+    @UseGuards(channelPermission)  
     @SubscribeMessage ("channelUserUnMute")
     async handleChannelUnMute( client :Socket, unmuteSignal:UserBanMuteSignalDto ) 
     {
-      console.log ('unmute signal : ', unmuteSignal)
       const targeted_user_id = await this.userCrud.findUserByUsername(unmuteSignal.target_username)
       await this.chatCrud.unmuteAUserWithinGroup(targeted_user_id, unmuteSignal.channel_id)
       this.broadcastChannelChanges(unmuteSignal.channel_id)
@@ -178,17 +161,16 @@ import { channel, subscribe } from "diagnostics_channel";
     @SubscribeMessage ("suspendChannelUpdates")
     async handleSuspendChannelUpdates (client: any, channel_id:string)
     {
-      console.log ('Suspend channel updates : ', channel_id)
       client.leave (`channel-${channel_id}`)
     }
 
     // @UseGuards(bannedConversationGuard)
-    // @UseGuards(muteConversationGuard)
+    @UseGuards(muteConversationGuard)
     @UseGuards (userRoomSubscriptionGuard)  
     @SubscribeMessage ("resumeChannelUpdates") //A gard must be added to check if the user has the right to request to unmute him
     async handleResumeChannelUpdates (client: any, channel_id:string)
     {
-      console.log ('00000000000000000000 : ', channel_id)
+      console.log ('4')
       client.join (`channel-${channel_id}`)
     }
 
@@ -231,6 +213,7 @@ import { channel, subscribe } from "diagnostics_channel";
       const user_id =  this.extractUserIdFromCookies(client);
       client.leave (`channel-${channel_id}`)                              //Deleting the user from the websocket room
       const delete_channel = await this.chatCrud.leaveChannel (user_id, channel_id) //deleting the membership of the client in DB
+      this.server.to(`inbox-${user_id}`).emit('LeaveOutNotification', channel_id)
       if (!delete_channel) //if the user was the owner of the channel  
         this.broadcastChannelChanges(channel_id)
     }
@@ -240,7 +223,6 @@ import { channel, subscribe } from "diagnostics_channel";
     @SubscribeMessage ("setOwner")
     async handleGradeUserTOwner(client: any,  setOwnerSignal : setOwnerSignalDto  ) 
     {
-      console.log ('++++++ Set owner signal : ', setOwnerSignal)
       const targeted_user_id = await this.userCrud.findUserByUsername(setOwnerSignal.targeted_username)
       await this.chatCrud.makeOwner (targeted_user_id, setOwnerSignal.channel_id) 
     }  
@@ -252,7 +234,6 @@ import { channel, subscribe } from "diagnostics_channel";
     @SubscribeMessage ("sendMsg")
     async handleSendMesChannels(client: any,  message:MessageDto ) 
     {
-      console.log ('I got a new message!')
       message.dm_id = null;
       const messageToBrodcast = await this.chatCrud.createMessage(message)
       this.server.to(`channel-${message.channel_id}`).emit('newMessage', messageToBrodcast)
@@ -267,7 +248,6 @@ import { channel, subscribe } from "diagnostics_channel";
         channelBans: await this.chatCrud.retieveBlockedChannelUsers(channel_id),
         channelMutes: await this.chatCrud.retieveMutedChannelUsers(channel_id),
       }
-      console.log ('======Channel new data : ', channelNewData.channelUsers)
       this.server.to(`channel-${channel_id}`).emit('updateChannelData', channel_id, channelNewData)
     }
 
@@ -301,28 +281,7 @@ import { channel, subscribe } from "diagnostics_channel";
             type:channel_data.type
           })
       } 
-      // this.server.to(`inbox-${userIdCookie}`).emit('joinChannel', {room_id:channel_id} )
-      // client.('channel-' + channel_id)
-    }
 
-    //This method takes the image sent by the front end and store in the upload folder and database
-    // @SubscribeMessage('uploadImage')
-    // private handleUploadImage(channel_id :string, channel_image: {content : string | ArrayBuffer | null, extension: string}) {
-    //     if (channel_image.content) {
-    //       // Extract the Base64-encoded content from the data URL
-    //       const base64Data = channel_image.content.toString();
-    //       console.log('Base64 data : ', base64Data)
-    //       // Create the image path
-    //       const imagePath = `upload/${channel_id}.${channel_image.extension}`;
-      
-    //       // Write the image to the file without specifying the encoding as 'base64'
-    //       const fs = require('fs');
-    //       fs.writeFile(imagePath, base64Data, (err: any) => {
-    //         if (err) {
-    //           console.log(err);
-    //         }
-    //       });
-    //     }
-    //   }
+    }
   
 }
