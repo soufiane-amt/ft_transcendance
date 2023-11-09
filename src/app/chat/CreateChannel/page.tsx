@@ -8,7 +8,7 @@ export default function CreateChannelPage() {
   
     return (
         <div className={style.initial_arranging}>
-            <ChatLeftBar/>
+            <ChatLeftBar activateShrinkMode={false}/>
             <CreateChannel/>
         </div>
       )

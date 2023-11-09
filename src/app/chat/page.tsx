@@ -11,7 +11,7 @@ export default function page() {
   
   return (
       <div className={style.initial_arranging}>
-        <ChatLeftBar/>
+        <ChatLeftBar activateShrinkMode={false}/>
         <WelcomingPage/>
       </div>
     )

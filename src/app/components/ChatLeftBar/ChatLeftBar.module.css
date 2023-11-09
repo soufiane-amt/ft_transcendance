@@ -31,6 +31,12 @@
     text-align: center;
 }
 
+/* Shrinking Mode */
+.chat_left_bar__side_bar_shrink_mode{
+    width: 3vw;
+    background-color: #24234F;
+
+}
 
 @media (max-width:650px) 
 {

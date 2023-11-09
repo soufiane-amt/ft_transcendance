@@ -25,6 +25,13 @@
     color: #a276bf;
 }
 
+
+
+/* Shrinking mode */
+.side_bar_item__name_shrink_mode{
+    display: none;
+}
+
 @media (max-width:650px) 
 {
     .side_bar_item__name{

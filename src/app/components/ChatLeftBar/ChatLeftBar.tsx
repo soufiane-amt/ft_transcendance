@@ -6,27 +6,37 @@ import channelsIcon from '../../../../public/images/icons/left-bar/channel-icon.
 import dmIcon from '../../../../public/images/icons/left-bar/dm-icon.png';
 import createChannelIcon from '../../../../public/images/icons/left-bar/chat-bubble-icon.png';
 import chatSpaceIcon from '../../../../public/images/icons/left-bar/chat-space.png';
+import clsx from "clsx";
 
 
 interface ChatSpaceProps{
     handleNavigation: () => void,
+    activateShrinkMode: boolean
 }
-function  ChatSpace ({handleNavigation}: ChatSpaceProps)
+function  ChatSpace ({handleNavigation, activateShrinkMode}: ChatSpaceProps)
 {
     return (
         <div className={style.chat_space} onClick={handleNavigation}>
             <div className={style.chat_space__icon}>
                 <img src={chatSpaceIcon.src} alt="icon " />
             </div>
-            <div className={style.chat_space__name}>
-                Chat Space
-            </div>
+            {
+                activateShrinkMode === false &&
+                <div className={style.chat_space__name}>
+                    Chat Space
+                </div>
+            }
         </div>
     )
 }
 
 
-export function ChatLeftBar() {
+export function ChatLeftBar({activateShrinkMode}: {activateShrinkMode:boolean}) {
+    const leftBarClass = clsx({
+        [style.chat_left_bar__side_bar]: activateShrinkMode === false,
+        [style.chat_left_bar__side_bar_shrink_mode]: activateShrinkMode === true,
+      });
+    
     const navigateToCreateChannel = () => {
         window.location.href = '/chat/CreateChannel';
     }
@@ -43,14 +53,14 @@ export function ChatLeftBar() {
         window.location.href = '/chat/';
     }
     return (
-            <div className={style.chat_left_bar__side_bar}>
+            <div className={leftBarClass}>
                 <div>
-                    <ChatSpace handleNavigation={navigateToMainChat}/>
+                    <ChatSpace handleNavigation={navigateToMainChat} activateShrinkMode={activateShrinkMode}/>
                 </div>
                 <div>
-                    <SideBarItem handleNavigation={navigateToCreateChannel} data={{icon: createChannelIcon.src, name: 'Create Channel'}}/>
-                    <SideBarItem handleNavigation={navigateToChannels} data={{icon:channelsIcon.src , name: 'Channel'}}/>
-                    <SideBarItem handleNavigation={navigateToDm} data={{icon: dmIcon.src, name: 'Direct Messaging'}}/>
+                    <SideBarItem handleNavigation={navigateToCreateChannel} data={{icon: createChannelIcon.src, name: 'Create Channel'}} activateShrinkMode={activateShrinkMode}/>
+                    <SideBarItem handleNavigation={navigateToChannels} data={{icon:channelsIcon.src , name: 'Channel'}} activateShrinkMode={activateShrinkMode}/>
+                    <SideBarItem handleNavigation={navigateToDm} data={{icon: dmIcon.src, name: 'Direct Messaging'}} activateShrinkMode={activateShrinkMode}/>
                 </div>
             </div>
     )

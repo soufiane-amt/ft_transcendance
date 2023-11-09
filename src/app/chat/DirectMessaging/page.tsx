@@ -1,18 +1,18 @@
 'use client'
-import { useRouter } from "next/router";
+import { ChatLeftBar } from "../../components/ChatLeftBar/ChatLeftBar";
 import DirectMesgMain from "../../components/direct-messaging/DirectMsgMain";
 import { SessionUserProvider } from "../../context/SessionUserContext";
-import { SocketProvider } from "../../context/tmSocket";
-import socket from "../../socket/socket";
+import style from '../page.module.css';
 
 
 export default function Dm() {
   
   return (
-    <>
       <SessionUserProvider >
-          <DirectMesgMain/>
+        <div className={style.initial_arranging}>
+            <ChatLeftBar activateShrinkMode={true}/>
+            <DirectMesgMain/>
+        </div>
       </SessionUserProvider>
-    </>
     )
 }
