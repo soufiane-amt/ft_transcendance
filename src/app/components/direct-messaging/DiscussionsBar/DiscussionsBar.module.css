@@ -35,23 +35,18 @@
     flex-direction: column;
     justify-content: center;
     background-color: var(--chat_field_back_color);
-    /* width: 100%;
-    height: 50px;
-    /* color: var(--discussion_panel_element_color);
-    font-size: larger;
-    font-weight: bolder;
-    padding: 0 10px; */ 
   }
+
   .discussions_bar_swither
   {
     width: 20px;
     height: 50px;
     background-color: rgba(38, 91, 249, 0.242);
-    border: 0;
     cursor: pointer;
     font-size: larger;
     font-weight: bolder;
     font-family: "Cooper Black", serif;
+    border: 0;
     color: white;
     border-bottom-right-radius: 7px;
     border-top-right-radius: 7px;
