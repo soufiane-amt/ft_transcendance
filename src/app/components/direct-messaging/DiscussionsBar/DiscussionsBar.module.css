@@ -5,9 +5,30 @@
     background-color: var(--discussion_panel_back_color);
   }
   
-  .discussion_panel_bar::-webkit-scrollbar {
+  /* ////////// */
+  /* .discussion_panel_bar::-webkit-scrollbar {
     width: 0; /* Adjust the width as needed */
+  /* }  */
+  .discussion_panel_bar::-webkit-scrollbar {
+    width: 15px;
   }
+  
+  /* Track */
+  .discussion_panel_bar::-webkit-scrollbar-track {
+    background: #b1b7ec;
+  }
+  
+  /* Handle */
+  .discussion_panel_bar::-webkit-scrollbar-thumb {
+    background: #0b1869;
+    border-radius: 30px;
+  }
+  
+  /* Handle on hover */
+  .discussion_panel_bar::-webkit-scrollbar-thumb:hover {
+    background: #030136;
+  }
+  /* /////////////////: */
 
   .discussions_bar_swither
   {

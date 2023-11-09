@@ -7,10 +7,26 @@
     overflow: auto;
     background-color: #efecff;
   }
-  
+  /* ////////// */
   .chat_field::-webkit-scrollbar {
-    width: 0em; 
+    width: 10px;
   }
+  
+  /* Track */
+  .chat_field::-webkit-scrollbar-track {
+    background: #ecb1b1;
+  }
+  
+  /* Handle */
+  .chat_field::-webkit-scrollbar-thumb {
+    background: #8495f3;
+  }
+  
+  /* Handle on hover */
+  .chat_field::-webkit-scrollbar-thumb:hover {
+    background: #555;
+  }
+  /* /////////////////: */
   
   .messages_history {
     position: relative;

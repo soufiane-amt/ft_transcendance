@@ -5,7 +5,6 @@ import style from "./ChannelActionModal.module.css";
 import { useOutsideClick } from "../../../../../hooks/useOutsideClick";
 import { useSessionUser } from "../../../context/SessionUserContext";
 import { LeaveChannel } from "../../shared/LeaveChannel/LeaveChannel";
-import { findUserContacts } from "../../../context/UsersContactBookContext";
 import { ChannelData } from "../../../interfaces/ChannelData";
 
 
