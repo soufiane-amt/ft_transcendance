@@ -1,4 +1,4 @@
-'user client'
+import React from 'react';
 import style from './SideBarItem.module.css';
 
 interface SideBarItemProps{
@@ -16,7 +16,7 @@ function SideBarItem ({handleNavigation, data}: SideBarItemProps) {
                 {data.name}
             </div>
         </div>
-    )
+    );
 }
 
-export  default SideBarItem;
+export default SideBarItem;

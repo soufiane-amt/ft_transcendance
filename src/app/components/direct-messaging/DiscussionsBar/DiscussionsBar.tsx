@@ -127,9 +127,15 @@ export function DiscussionsBar({openBarState,  selectedDiscussionState, currentR
               ActionContext={currentRoute}
               />)}
           </ul>}
-          <div className={style.discussion_panel_bar_botton}>
-            <button className={style.discussions_bar_swither} onClick={handleOpenBar}>{openBar === true ? '<' : '>'}</button> 
-          </div>
+          {/* <div className={style.discussion_panel_bar_botton}> */}
+            <button className={`${style.discussions_bar_swither} 
+              ${!openBar ? style.discussions_bar_swither_close : ''}`} 
+                 onClick={handleOpenBar}>
+              {
+                openBar === true ? '<' : '>'
+                }
+            </button> 
+          {/* </div> */}
           
           </>
           );

@@ -1,5 +1,5 @@
 .discussion_panel_bar {
-    width: 40vw; 
+    width: 30%; 
     height: 100vh;
     overflow-y: auto;
     background-color: var(--discussion_panel_back_color);
@@ -30,15 +30,13 @@
   }
   /* /////////////////: */
 
-  .discussion_panel_bar_botton{
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    background-color: var(--chat_field_back_color);
-  }
-
   .discussions_bar_swither
-  {
+  {   
+    position: absolute;
+    z-index: 100;
+    left: 23%;
+
+    align-self: center;
     width: 20px;
     height: 50px;
     background-color: rgba(38, 91, 249, 0.242);
@@ -58,10 +56,27 @@
     background-color: rgb(123, 123, 255);
   }
 
+  .discussions_bar_swither_close{
+    left: 0%;
+  }
+
   @media (max-width:650px) 
   {
     .discussion_panel_bar {
       width: 300vw;
+    }
+    .discussions_bar_swither
+    {   
+      left: 75%;
+    }
+    .discussions_bar_swither
+    {
+      width: 15px;
+      height: 40px;  
+      font-size: medium;
+    }
+    .discussions_bar_swither_close{
+      left: 0%;
     }
   
   }

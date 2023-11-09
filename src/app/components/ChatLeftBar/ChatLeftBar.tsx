@@ -1,3 +1,5 @@
+'use client';
+
 import SideBarItem from "./SideBarItem/SideBarItem";
 import style from './ChatLeftBar.module.css';
 import channelsIcon from '../../../../public/images/icons/left-bar/channel-icon.png';
@@ -6,22 +8,22 @@ import createChannelIcon from '../../../../public/images/icons/left-bar/chat-bub
 import chatSpaceIcon from '../../../../public/images/icons/left-bar/chat-space.png';
 
 
-// interface ChatSpaceProps{
-//     handleNavigation: () => void,
-// }
-// function  ChatSpace ({handleNavigation}: ChatSpaceProps)
-// {
-//     return (
-//         <div className={style.chat_space} onClick={handleNavigation}>
-//             <div className={style.chat_space__icon}>
-//                 <img src={chatSpaceIcon.src} alt="icon " />
-//             </div>
-//             <div className={style.chat_space__name}>
-//                 Chat Space
-//             </div>
-//         </div>
-//     )
-// }
+interface ChatSpaceProps{
+    handleNavigation: () => void,
+}
+function  ChatSpace ({handleNavigation}: ChatSpaceProps)
+{
+    return (
+        <div className={style.chat_space} onClick={handleNavigation}>
+            <div className={style.chat_space__icon}>
+                <img src={chatSpaceIcon.src} alt="icon " />
+            </div>
+            <div className={style.chat_space__name}>
+                Chat Space
+            </div>
+        </div>
+    )
+}
 
 
 export function ChatLeftBar() {
@@ -34,7 +36,7 @@ export function ChatLeftBar() {
     }
 
     const navigateToDm = () => {
-        window.location.href = '/chat/DirecMessaging';
+        window.location.href = '/chat/DirectMessaging';
     }
 
     const navigateToMainChat = () => {
@@ -43,12 +45,12 @@ export function ChatLeftBar() {
     return (
             <div className={style.chat_left_bar__side_bar}>
                 <div>
-                    {/* <ChatSpace handleNavigation={navigateToMainChat}/> */}
+                    <ChatSpace handleNavigation={navigateToMainChat}/>
                 </div>
                 <div>
-                    {/* <SideBarItem handleNavigation={navigateToCreateChannel} data={{icon: createChannelIcon.src, name: 'Channel'}}/> */}
-                    {/* <SideBarItem handleNavigation={navigateToChannels} props={{icon: channelsIcon.src, name: 'Create Channel'}}/>
-                    <SideBarItem handleNavigation={navigateToDm} props={{icon: dmIcon.src, name: 'Direct Messaging'}}/> */}
+                    <SideBarItem handleNavigation={navigateToCreateChannel} data={{icon: createChannelIcon.src, name: 'Create Channel'}}/>
+                    <SideBarItem handleNavigation={navigateToChannels} data={{icon:channelsIcon.src , name: 'Channel'}}/>
+                    <SideBarItem handleNavigation={navigateToDm} data={{icon: dmIcon.src, name: 'Direct Messaging'}}/>
                 </div>
             </div>
     )

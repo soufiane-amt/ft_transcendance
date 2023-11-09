@@ -2,7 +2,7 @@
     display: flex; /*The next 3 lines added after a serious problem with making messageBox sticky at the bottom*/
     flex-direction:column;
     justify-content: space-between;
-    width: 100vw; 
+    width: 100%; 
     height: 100vh; /*to enable chat field scrolling */
     overflow: auto;
     background-color: var(--chat_field_back_color);
