@@ -22,7 +22,7 @@ export default class Game {
     mapType: string;
 
     constructor(gameId: string, leftPlayerSokcet: Socket, rightPlayerSocket: Socket, speed: string, server: Server, gameRoom: string, mapType: string) {
-        this.roundsScores = [5, 4, 3];
+        this.roundsScores = [7, 5, 3];
         this.leftPlayerSocket = leftPlayerSokcet;
         this.rightPlayerSocket = rightPlayerSocket;
         this.speed = speed;

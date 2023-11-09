@@ -1,6 +1,6 @@
 import { OnGatewayInit, SubscribeMessage, WebSocketGateway,OnGatewayConnection, WsResponse, MessageBody, ConnectedSocket, WebSocketServer } from '@nestjs/websockets';
 import { Server, Socket } from 'socket.io';
-import socketIOMiddleware from '../gateways.middleware';
+import socketIOMiddleware, { wsmiddleware } from '../gateways.middleware';
 import { UseGuards, UsePipes } from '@nestjs/common';
 import { GatewaysGuard } from '../guards/gateways.guard';
 import { GameService } from '../game.service';
@@ -19,17 +19,13 @@ import { userRoomSubscriptionGuard } from 'src/chat/guards/chat.guards';
                     namespace : 'Game',
                     origin : process.env.FRONT_SERV
                   })
-export class GameGateway implements OnGatewayInit<Server>, OnGatewayConnection<ClientSocket> {
+export class GameGateway implements OnGatewayInit<Server> {
   constructor(private readonly gameservice: GameService, private readonly userCrudService: UserCrudService) {}
   @WebSocketServer() private server: Server;
 
-  afterInit(server: Server) {
-    server.use(socketIOMiddleware);
-  }
-
-  async handleConnection(client: ClientSocket, ...args: any[]) : Promise<string | void> {
-    client.player = await this.gameservice.get_player(client);
-    if (client.player === null) return 'unauthorized user';
+  async afterInit(server: Server) {
+    const wsmiddleware: wsmiddleware = await socketIOMiddleware(this.gameservice);
+    server.use(wsmiddleware);
   }
 
   handleDisconnect(client: ClientSocket) {
@@ -71,5 +67,10 @@ export class GameGateway implements OnGatewayInit<Server>, OnGatewayConnection<C
   @SubscribeMessage('requestInvitationGame')
   handlerequest_for_invitation_game(@MessageBody(new ZodValidationPipe(requestInvitationGameDto)) requestInvitationGameDto: RequestInvitationGame, @ConnectedSocket() client : ClientSocket) {
     this.gameservice.handleInvitationGame(requestInvitationGameDto, client);
+  }
+
+  @SubscribeMessage('get_user_id')
+  handleget_user_id(@ConnectedSocket() client: ClientSocket) : string {
+    return client.userId;  
   }
 }

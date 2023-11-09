@@ -1,11 +1,11 @@
 "use client"
 
 import { Socket } from "socket.io-client";
-import Scene from "../interfaces/Scene";
+import Scene from "../../interfaces/Scene";
 import Player from "./Player";
 import Puck from "./Puck";
-import MapType from "../types/MapType";
 import newSocket from "@/components/GlobalComponents/Socket/socket";
+import MapType from "../../types/MapType";
 
 export default class Game {
     User: Player;

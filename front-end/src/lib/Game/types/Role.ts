@@ -1,3 +1,3 @@
-type Role = 'User' | 'Opponent';
+type Role = 'User' | 'Opponent' | 'Computer';
 
 export default Role;

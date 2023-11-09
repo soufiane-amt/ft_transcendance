@@ -1,8 +1,8 @@
 "use client"
 import { Socket } from "socket.io-client";
-import Boundaries from "../interfaces/Boundaries";
-import Scene from "../interfaces/Scene";
-import Role from "../types/Role";
+import Boundaries from "../../interfaces/Boundaries";
+import Scene from "../../interfaces/Scene";
+import Role from "../../types/Role";
 
 export default class Player {
     x : number;

@@ -9,7 +9,7 @@ function MatchMakingLoadingComponent(props: any) {
 
   const handleCancel = (props: any) => {
     props.setIsMatchMakingLoading(false);
-    const payload: any = { role: gameContext.GameSettings.Roll };
+    const payload: any = { role: props.role };
     gameContext.gameSocket.emit("leave MatchMakingSystem", payload);
   };
 

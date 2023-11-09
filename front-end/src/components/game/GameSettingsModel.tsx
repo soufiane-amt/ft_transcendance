@@ -113,6 +113,7 @@ function GameSettingsModel({ ...props }) {
           } else {
             props.setIsMatchMakingLoading(true);
             props.setSettings(false);
+            props.setRole(context.GameSettings.Roll);
           }
         }
       );

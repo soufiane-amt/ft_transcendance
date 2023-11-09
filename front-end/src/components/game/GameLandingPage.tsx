@@ -33,6 +33,7 @@ function GameLandingPage() {
   const [Timer, setTimer]: any = useState(0);
   const [isMatchMaking, setMatchMaking] = useState(false);
   const [isMatchMakingLoading, setIsMatchMakingLoading] = useState(false);
+  const [role, setRole] = useState<string>('');
   const context: any = useContext(GameContext);
 
   useEffect(() => {
@@ -153,6 +154,7 @@ function GameLandingPage() {
       )}
       {settings === true && (
         <GameSettingsModel
+          setRole={setRole}
           setSettings={setSettings}
           isMatchMaking={isMatchMaking}
           setIsMatchMakingLoading={setIsMatchMakingLoading}
@@ -161,7 +163,7 @@ function GameLandingPage() {
         />
       )}
       {isMatchMakingLoading && (
-        <MatchMakingLoadingComponent
+        <MatchMakingLoadingComponent role={role}
           setIsMatchMakingLoading={setIsMatchMakingLoading}
         />
       )}
