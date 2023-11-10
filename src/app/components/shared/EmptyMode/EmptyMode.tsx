@@ -9,15 +9,15 @@ function EmptyDiscussionMode({currentRoute}: {currentRoute: string}) {
     let joinButton;
     if (currentRoute === "Channels")
     {
-      errorMesg = "You currently aren't a member of any channel. <br />";
+      errorMesg = "You currently aren't a member of any channel.";
       correctionRequest = "Please create or join a channel to start chatting";
       joinButton = "Join a channel";
     }
     else
     {
-      errorMesg = "You have no discussion to show. <br />";
+      errorMesg = "You have no discussion to show.";
       correctionRequest = "Send messages to your friends to start chatting";
-      joinButton = "Send a discussion";
+      joinButton = "Start a discussion";
 
     }
     const navigateToCreateChannel = () => {
@@ -34,11 +34,12 @@ function EmptyDiscussionMode({currentRoute}: {currentRoute: string}) {
         <img src={SadBubbleIcon.src} />
 
         <p className={style.discussion_empty_mode__text}>
-          You currently aren't a member of any channel. <br />
+          {errorMesg} 
+          <br />
         </p>
         <div className={style.discussion_empty_mode_navigation}>
           <label className={style.discussion_empty_mode__label}>
-            Please create or join a channel to start chatting
+            {correctionRequest}
           </label>
           <div className={style.discussion_empty_mode_nav_buttons}>
             {
@@ -50,7 +51,8 @@ function EmptyDiscussionMode({currentRoute}: {currentRoute: string}) {
             }
             <button className={style.discussion_empty_mode__button}
                 onClick={navigateToMainChat}>
-                Join a channel
+                   {joinButton}
+
             </button>
           </div>
         </div>

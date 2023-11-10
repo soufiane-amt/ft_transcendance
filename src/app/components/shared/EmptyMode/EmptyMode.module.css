@@ -25,16 +25,32 @@
   .discussion_empty_mode__button{
     width: 150px;
     height: 50px;
-    border-radius: 10px;
+    border-radius: 20px;
     border: 0;
     font-size: 17px;
-    font-family: fantasy;
+    font-weight: bolder;
     color: white;
     cursor: pointer;
     background: rgb(121, 15, 154);
+    
+  }
   
-}
-
 .discussion_empty_mode__button:hover{
     background: rgb(52, 5, 66);
+  }
+
+
+  @media (max-width:650px) 
+  {
+    .discussion_empty_mode img{
+      width: 50%;
+    }
+    .discussion_empty_mode__label{
+      font-size: 12px;
+    }
+    .discussion_empty_mode__button{
+      width: 100px;
+      height: 20px;
+      font-size: 10px;
+    }  
 }

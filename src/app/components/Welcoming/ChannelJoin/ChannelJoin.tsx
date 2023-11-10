@@ -54,14 +54,21 @@ export function ChannelJoin({ channelData }: ChannelJoinProps) {
         <>
             <div className={style.channel_join}>
                 <div className={style.channel_join__user}>
-                <img className={style.channel_join__user__avatar} src={channelData.image} alt="avatar" />
-                <span className={style.channel_join__user__name}>{channelData.name}</span>
-            </div>
-            <div className={style.channel_join__message}>
-                <button onClick={handleClickJoin}>
-                    Join
-                </button>
-            </div>
+                    <img className={style.channel_join__user__avatar} src={channelData.image} alt="avatar" />
+                    <span className={style.channel_join__user__name}>{channelData.name}</span>
+                </div>
+
+                <div className={style.channel_join_type}>
+                    <span >
+                    {channelData.type}
+                    </span>
+                </div>
+
+                <div className={style.channel_join__message}>
+                    <button onClick={handleClickJoin}>
+                        Join
+                    </button>
+                </div>
             </div>
             {
                 showPasswordInput &&

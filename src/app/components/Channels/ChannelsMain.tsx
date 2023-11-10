@@ -69,7 +69,7 @@ function ChannelsMain() {
 
                 </div>
                 )}
-                {discussionIsEmpty && <EmptyDiscussionMode />}
+                {discussionIsEmpty && <EmptyDiscussionMode currentRoute={"Channels"} />}
               </MuteProvider>
             </BanProvider>
         </ChannelBooksProvider>

@@ -28,6 +28,10 @@
     color: aquamarine;
 }
 
+.channel_join_type span{
+    font-weight: bold;
+    color: greenyellow;
+}
 .channel_join__message{
     background-color: #6361A2;
     border: none;
@@ -53,4 +57,11 @@
 .channel_join__message_icon{
     width: 100%;
     height: 100%;
+}
+
+@media (max-width:650px) 
+{
+    .channel_join_type{
+        display: none;
+    }
 }
