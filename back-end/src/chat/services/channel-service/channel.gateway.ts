@@ -256,12 +256,7 @@ import { channel, subscribe } from "diagnostics_channel";
 
 
     
-// export interface channelDto {
-//   type: "PUBLIC" | "PRIVATE" | "PROTECTED";
-//   name: string;
-//   image: string;
-//   password?: string;
-// }
+    
     @SubscribeMessage ("createChannel")
     async handleCreateChannel (client :Socket, channelData : channelCreateDto)
     {
