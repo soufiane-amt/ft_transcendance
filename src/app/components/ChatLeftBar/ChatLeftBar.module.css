@@ -3,10 +3,10 @@
     flex-direction: column;
     background-color: #24234F;
     width: 18vw;
+    height: 100vh;
     position: sticky;
     top: 0;
     left: 0;
-    height: 100vh;
 }
 
 .chat_space:hover{cursor: pointer;}
@@ -33,7 +33,11 @@
 
 /* Shrinking Mode */
 .chat_left_bar__side_bar_shrink_mode{
-    width: 3vw;
+    height: 100vh;
+    width: 60px;
+    position: sticky;
+    top: 0;
+    left: 0;
     background-color: #24234F;
 
 }
@@ -41,7 +45,7 @@
 @media (max-width:650px) 
 {
     .chat_left_bar__side_bar{
-        width: 16vw;
+        width: 60px;
     }
     .chat_space__name{
         display: none;

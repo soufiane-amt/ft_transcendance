@@ -5,6 +5,7 @@ import ChatTextBox from "../../shared/ChatTextbox/ChatTextbox";
 import style from "./ChattingField.module.css";
 import Message from "../../shared/Message/Message";
 import { selectedPanelDefault } from "../DirectMsgMain";
+import clsx from "clsx";
 
 
 function MessagesHistory({ messages }: { messages: messageDto[] }) {
@@ -35,16 +36,17 @@ function MessagesHistory({ messages }: { messages: messageDto[] }) {
 
   
   interface ChattingFieldPops {
+    openBar: boolean,
     selectDiscussionState: {
       selectedDiscussion : discussionPanelSelectType,
       selectDiscussion : (e: discussionPanelSelectType) => void
   
     }
   }
-  export function ChattingField({ selectDiscussionState }: ChattingFieldPops) {
+  export function ChattingField({openBar, selectDiscussionState }: ChattingFieldPops) {
     const { selectedDiscussion, selectDiscussion } = selectDiscussionState;
     const [messagesHistory, setMessageHistory] = useState<messageDto[]>([]);
-  
+
     useEffect(() => {
       async function fetchDataAsync() {
         const messagesHistory_tmp = await fetchDataFromApi(
@@ -56,7 +58,7 @@ function MessagesHistory({ messages }: { messages: messageDto[] }) {
     }, [selectedDiscussion]);
   
     return (
-      <div className={style.chat_field}>
+      <div className={`${style.chat_field} ${!openBar ? style.chat_field_close : ''}`}>
         <MessagesHistory messages={messagesHistory} />
   
         <ChatTextBox

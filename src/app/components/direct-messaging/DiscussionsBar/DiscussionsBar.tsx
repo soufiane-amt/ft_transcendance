@@ -10,12 +10,6 @@ import { ChannelData } from "../../../interfaces/ChannelData";
 import { useHandleJoinDm } from "../../../../../hooks/useHandleJoinChannel";
 
 interface DiscussionsBarProps {
-  openBarState: 
-  {
-    openBar : boolean, 
-    handleOpenBar :() => void, 
-  }
-  ,
     selectedDiscussionState:{
       selectedDiscussion : discussionPanelSelectType,
       selectDiscussion : (e: discussionPanelSelectType) => void
@@ -24,12 +18,11 @@ interface DiscussionsBarProps {
 }
   
 
-export function DiscussionsBar({openBarState,  selectedDiscussionState, currentRoute }: DiscussionsBarProps) {
+export function DiscussionsBar({ selectedDiscussionState, currentRoute }: DiscussionsBarProps) {
     const [discussionPanels, setDiscussionRooms] = useState<DiscussionDto[]>([]);
     const [modalIsVisible, setModalAsVisible] = useState<boolean>(false);
     const {selectedDiscussion, selectDiscussion} = selectedDiscussionState;
     const [channelData, setChannelData] = useState< Map<string, ChannelData>>(new Map());
-    const {openBar, handleOpenBar} = openBarState;
 
     useEffect(() => {
       async function fetchDataAsync() {
@@ -97,7 +90,6 @@ export function DiscussionsBar({openBarState,  selectedDiscussionState, currentR
     const displayActionModal = () => setModalAsVisible(true);
     return (
       <div className={style.discussion_panel_bar}>
-      {openBar &&
       <ul >
         {discussionPanels?.map((panelElement) => {
           const isSelected = panelElement?.id === selectedDiscussion.id;
@@ -126,15 +118,7 @@ export function DiscussionsBar({openBarState,  selectedDiscussionState, currentR
               modalState={[modalIsVisible, setModalAsVisible]}
               ActionContext={currentRoute}
               />)}
-          </ul>}
-          {/* <div className={style.discussion_panel_bar_botton}> */}
-            <button className={`${style.discussions_bar_swither} 
-              ${!openBar ? style.discussions_bar_swither_close : ''}`} 
-                 onClick={handleOpenBar}>
-              {
-                openBar === true ? '<' : '>'
-                }
-            </button> 
+          </ul>
           </div>
           );
         }

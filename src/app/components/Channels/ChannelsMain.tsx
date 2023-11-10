@@ -39,18 +39,26 @@ function ChannelsMain() {
           <BanProvider currentRoute="Channels">
               <MuteProvider currentRoute="Channels">
                 <div className={style.channel_main}>
+                {
+                  openBar && (
+
                       <DiscussionsBar
-                        openBarState={{openBar, handleOpenBar}}
                         selectedDiscussionState={selectState}
                         currentRoute={"Channels"}
-                        />
-                  {
-                     (
-                    <ChattingField
-                      selectDiscussionState={selectState}
-                    />)
+                        />)
+                }
+                <ChattingField
+                  openBar={openBar}
+                  selectDiscussionState={selectState}
+                />
+                <button className={`${style.discussions_bar_swither} 
+                      ${!openBar ? style.discussions_bar_swither_close : ''}`} 
+                         onClick={handleOpenBar}>
+                      {
+                        openBar === true ? '<' : '>'
+                      }
+                </button> 
 
-                  }
                 </div>
               </MuteProvider>
             </BanProvider>

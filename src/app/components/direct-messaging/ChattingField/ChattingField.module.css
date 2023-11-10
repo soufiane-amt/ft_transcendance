@@ -2,11 +2,17 @@
     display: flex; /*The next 3 lines added after a serious problem with making messageBox sticky at the bottom*/
     flex-direction:column;
     justify-content: space-between;
+
     width: 70%; 
     height: 100vh; /*to enable chat field scrolling */
     overflow: auto;
     background-color: var(--chat_field_back_color);
   }
+
+  .chat_field_close {
+    width: 100%; 
+  }
+
   /* ////////// */
   .chat_field::-webkit-scrollbar {
     width: 10px;
@@ -38,6 +44,13 @@
   @media (max-width:650px) 
   {
     .chat_field {
-      width: 100vw;
+      width: 5%; 
+      display: none;
     }
+    
+  .chat_field_close {
+    width: 100%; 
+    display: flex;
+  }
+
   }

@@ -35,15 +35,26 @@ function DirectMesgMain() {
     <UserContactsProvider currentRoute="direct_messaging">
       <BanProvider currentRoute="direct_messaging">
         <div className={style.direct_msg_main}>
-          <DiscussionsBar
-            openBarState={{openBar, handleOpenBar}}
-            selectedDiscussionState={selectState}
-            currentRoute={"Direct_messaging"}
-          />
+          {
+            openBar && (
+              <DiscussionsBar
+                selectedDiscussionState={selectState}
+                currentRoute={"Direct_messaging"}
+              />
+            )
+          }
           <ChattingField
+            openBar={openBar}
             selectDiscussionState={selectState}
           />
-          <button className={style.open_bar_btn} onClick={handleOpenBar}>P</button>
+            
+          <button className={`${style.discussions_bar_swither} 
+              ${!openBar ? style.discussions_bar_swither_close : ''}`} 
+                 onClick={handleOpenBar}>
+              {
+                openBar === true ? '<' : '>'
+              }
+          </button> 
         </div>
 
       </BanProvider>
