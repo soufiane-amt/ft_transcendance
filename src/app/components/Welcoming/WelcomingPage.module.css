@@ -1,6 +1,7 @@
 .welcoming_page{
     background-color: #7270A8;
     width: 84vw;
+    height: 100vh;
 }
 
 .user_initiative_talks,  .channel_joins  {
@@ -27,9 +28,24 @@
     border-bottom: 3px solid rgb(209, 189, 228);
 }
 
+
+.welcoming_page__init_bubble{
+    background-color: #7270A8;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    font-size: 17px;
+    margin-top: 5%;
+}
 @media (max-width:650px) 
 {
+    .welcoming_page{
+        width: calc(100vw - 60px);
+    }
     .welcoming_page_talks__title{
         font-size: x-small;
+    }
+    .welcoming_page__init_bubble{
+        font-size: 12px;
     }
 }

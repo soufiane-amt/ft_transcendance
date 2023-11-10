@@ -9,6 +9,8 @@ import { ChannelBooksProvider } from "../../context/ChannelInfoBook";
 import { DiscussionsBar } from "../direct-messaging/DiscussionsBar/DiscussionsBar";
 import { ChattingField } from "../direct-messaging/ChattingField/ChattingField";
 import { MuteProvider } from "../../context/MuteContext";
+import EmptyDiscussionMode from "../shared/EmptyMode/EmptyMode";
+
 
 /*stopPropagation is used here to prevent the click event to take way up to the parent it got limited right here */
 export const selectedPanelDefault: discussionPanelSelectType = {
@@ -17,11 +19,15 @@ export const selectedPanelDefault: discussionPanelSelectType = {
 };
 
 
+
 function ChannelsMain() {
   const [selectedDiscussion, setSelectedDiscussion] =
-    useState<discussionPanelSelectType>(selectedPanelDefault);
-    
-    const selectDiscussion = (e : discussionPanelSelectType) => {
+        useState<discussionPanelSelectType>(selectedPanelDefault);
+  const [discussionIsEmpty, setDiscussionIsEmpty] = useState<boolean>(false);
+
+  
+  
+  const selectDiscussion = (e : discussionPanelSelectType) => {
       setSelectedDiscussion(e);
     };
 
@@ -38,6 +44,7 @@ function ChannelsMain() {
         <ChannelBooksProvider>
           <BanProvider currentRoute="Channels">
               <MuteProvider currentRoute="Channels">
+                { !discussionIsEmpty && (
                 <div className={style.channel_main}>
                 {
                   openBar && (
@@ -45,6 +52,7 @@ function ChannelsMain() {
                       <DiscussionsBar
                         selectedDiscussionState={selectState}
                         currentRoute={"Channels"}
+                        discussionIsEmptyState={{ discussionIsEmpty, setDiscussionIsEmpty }}
                         />)
                 }
                 <ChattingField
@@ -60,6 +68,8 @@ function ChannelsMain() {
                 </button> 
 
                 </div>
+                )}
+                {discussionIsEmpty && <EmptyDiscussionMode />}
               </MuteProvider>
             </BanProvider>
         </ChannelBooksProvider>

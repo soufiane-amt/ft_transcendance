@@ -14,15 +14,20 @@ interface DiscussionsBarProps {
       selectedDiscussion : discussionPanelSelectType,
       selectDiscussion : (e: discussionPanelSelectType) => void
   },
-  currentRoute :"Direct_messaging" | "Channels"
+  currentRoute :"Direct_messaging" | "Channels",
+  discussionIsEmptyState:{
+    discussionIsEmpty: boolean,
+    setDiscussionIsEmpty: React.Dispatch<React.SetStateAction<boolean>>
+  }
 }
   
 
-export function DiscussionsBar({ selectedDiscussionState, currentRoute }: DiscussionsBarProps) {
+export function DiscussionsBar({ selectedDiscussionState, currentRoute, discussionIsEmptyState }: DiscussionsBarProps) {
     const [discussionPanels, setDiscussionRooms] = useState<DiscussionDto[]>([]);
     const [modalIsVisible, setModalAsVisible] = useState<boolean>(false);
     const {selectedDiscussion, selectDiscussion} = selectedDiscussionState;
     const [channelData, setChannelData] = useState< Map<string, ChannelData>>(new Map());
+    const {discussionIsEmpty, setDiscussionIsEmpty} = discussionIsEmptyState;
 
     useEffect(() => {
       async function fetchDataAsync() {
@@ -30,8 +35,11 @@ export function DiscussionsBar({ selectedDiscussionState, currentRoute }: Discus
           `http://localhost:3001/chat/${currentRoute}/discussionsBar`
           );
           console.log('fetchedData:',fetchedData)
+        if (fetchedData.length === 0) setDiscussionIsEmpty(true);
         if (currentRoute === "Direct_messaging")
+        {
           setDiscussionRooms(fetchedData);
+        }
         else 
           {
             console.log ('room_data: ', fetchedData)

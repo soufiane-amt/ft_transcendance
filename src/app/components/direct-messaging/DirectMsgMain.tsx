@@ -7,6 +7,7 @@ import { UserContactsProvider } from "../../context/UsersContactBookContext";
 import { BanProvider } from "../../context/BanContext";
 import { DiscussionsBar } from "./DiscussionsBar/DiscussionsBar";
 import { ChattingField } from "./ChattingField/ChattingField";
+import EmptyDiscussionMode from "../shared/EmptyMode/EmptyMode";
 
 /*stopPropagation is used here to prevent the click event to take way up to the parent it got limited right here */
 export const selectedPanelDefault: discussionPanelSelectType = {
@@ -22,6 +23,8 @@ function DirectMesgMain() {
     const selectDiscussion = (e : discussionPanelSelectType) => {
       setSelectedDiscussion(e);
     };
+    const [discussionIsEmpty, setDiscussionIsEmpty] = useState<boolean>(false);
+
     const [openBar, setOpenBar] = useState(true);
     const handleOpenBar = () => {
       setOpenBar(!openBar);
@@ -34,12 +37,16 @@ function DirectMesgMain() {
     return (
     <UserContactsProvider currentRoute="direct_messaging">
       <BanProvider currentRoute="direct_messaging">
+        { !discussionIsEmpty && (
+        
         <div className={style.direct_msg_main}>
           {
             openBar && (
               <DiscussionsBar
                 selectedDiscussionState={selectState}
                 currentRoute={"Direct_messaging"}
+                discussionIsEmptyState={{ discussionIsEmpty, setDiscussionIsEmpty }}
+
               />
             )
           }
@@ -55,7 +62,8 @@ function DirectMesgMain() {
                 openBar === true ? '<' : '>'
               }
           </button> 
-        </div>
+        </div>)}
+        {discussionIsEmpty && <EmptyDiscussionMode currentRoute={"Direct_messaging"}/>}
 
       </BanProvider>
     </UserContactsProvider>
