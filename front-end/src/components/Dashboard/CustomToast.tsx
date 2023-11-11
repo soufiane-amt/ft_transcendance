@@ -1,5 +1,4 @@
-// components/CustomToast.tsx
-
+'use client';
 import React from 'react';
 import 'react-toastify/dist/ReactToastify.css';
 import ToastCss from './module/CustomToast.module.css';

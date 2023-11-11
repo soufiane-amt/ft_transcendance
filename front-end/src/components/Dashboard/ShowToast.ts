@@ -1,4 +1,4 @@
-// utils/toast.js
+'use client';
 import { toast } from 'react-toastify';
 
 export const showToast = (message : string, options : string) => {

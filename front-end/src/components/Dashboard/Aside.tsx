@@ -1,3 +1,4 @@
+'use client';
 import React, {useEffect, useState} from "react";
 import Cookies from "js-cookie";
 import { useRouter } from "next/navigation";
@@ -63,6 +64,7 @@ const Aside: React.FC<AsideProps> = ({onSelectSection}) =>
     return (
         <>
         <aside>
+            <div className="all-divs">
             <div className="myaside">
                 <div className="myaside1">
                 <img src="../new-moon.png" alt="Photo" width={10} height={10} />
@@ -138,6 +140,7 @@ const Aside: React.FC<AsideProps> = ({onSelectSection}) =>
                     <button>Chat Space</button>
                     </div>
                 )}
+            </div>
             </div>
         </aside>
         </>

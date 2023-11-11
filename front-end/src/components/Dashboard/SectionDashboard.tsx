@@ -1,10 +1,9 @@
-import React, {useState} from "react"
-import {FaSearch} from 'react-icons/fa'
+'use client';
+import React from "react"
 import HomePage from "./HomePage"
 import Statictic from "./Statictic"
 import History from "./History"
 import Friends from "./Friends"
-import AddUser from "./Adduser"
 
 interface SectionProps {
   selectSelection: string;

@@ -1,3 +1,4 @@
+'use client';
 import { faClock, faUserPlus } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, {useState, useEffect} from "react";
@@ -24,10 +25,16 @@ function NavBar()
     const [searchQuery, setsearchQuery] = useState('');
     const [notificationrequest, setnotificationrequest] = useState(false);
     const [clickedUsers, setClickedUsers] = useState<string[]>([]);
+    const [getmsg, setgetmsg] = useState(0);
     const [tablenotification, settablenotification] = useState<{id_notif: string, id: string; user2Username: string; user2Avatar: string; type: string}[]>([]);
     const JwtToken = Cookies.get("access_token");
     let count = 0;
     const router = useRouter();
+
+    function handlemsg()
+    {
+        setgetmsg(0);
+    }
 
     function handleclickButtom(user_id: string, username: string)
     {
@@ -63,8 +70,8 @@ function NavBar()
               return response.json();
           })
           .then((data) => setUsers(data))
-          .catch((error) => {
-            console.error('Error:', error);
+          .catch(() => {
+            console.clear();
           });
       }
     }, [user, JwtToken]);
@@ -120,22 +127,7 @@ function NavBar()
 
     const handlelogout = async (e : any) =>
     {
-        try
-        {
-            fetch('http://localhost:3001/api/Dashboard/logout', {
-              method: 'POST',
-              headers: {
-                'authorization' : `Bearer ${JwtToken}`,
-              }
-            }).then((response) => {
-                console.log(response);
-            });
-        }
-        catch (error)
-        {
-            console.clear();
-        }
-        Cookies.remove('access_token', { path: '/' });
+        Cookies.remove('access_token');
     }
 
     useEffect(() => {
@@ -158,8 +150,8 @@ function NavBar()
                 return response.json();
             })
             .then((data) => setuserFriend(data))
-            .catch((error) => {
-                console.error('Error:', error);
+            .catch(() => {
+                console.clear();
             });
     }, [JwtToken, userFriend]);
 
@@ -178,7 +170,7 @@ function NavBar()
         })
         .then((data) => settablenotification(data))
         .catch((error) => {
-          console.error('Error fetching data:', error);
+          console.clear();
         })
     }, [JwtToken]);
 
@@ -271,8 +263,10 @@ function NavBar()
             <div className={NavBarCSS.nav_left}>
                 <div className={NavBarCSS.nav_icon}>
                 <div className={NavBarCSS.notification_msg}>
-                    <span>2</span>
-                    <img src="../chatroom.png" alt="Photo" width={20} height={20} />
+                    {getmsg != 0 && (
+                        <span>{getmsg}</span>
+                    )}
+                    <img src="../chatroom.png" alt="Photo" width={20} height={20} onClick={handlemsg} />
                 </div>
                 <img src="../bell.png" alt="Photo" width={20} height={20} onClick={handlenotifaction} />
                 {notificationrequest && (<div className={NavBarCSS.notification_request}><span></span></div>)}

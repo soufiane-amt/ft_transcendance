@@ -1,3 +1,4 @@
+'use client';
 import React, { useEffect, useState } from "react";
 import ReactCountryFlag from "react-country-flag";
 import GetCountryCode from "./GetCountryCode";
@@ -179,7 +180,7 @@ function Section()
               if (gameInformation)
               {
                 Tab.map((friend) => {
-                  if (friend.ladder_level > gameInformation?.ladder_level)
+                  if (friend.ladder_level >= gameInformation?.ladder_level)
                     Rank++;
                })
               }

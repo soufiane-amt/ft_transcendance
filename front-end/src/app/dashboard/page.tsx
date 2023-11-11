@@ -9,10 +9,12 @@ import 'react-toastify/dist/ReactToastify.css';
 
 function Dashboard() {
   return (
+    <div className="mybody">
     <Structure>
       <ToastContainer  position="top-center"></ToastContainer>
       <DisplayComponent></DisplayComponent>
     </Structure>
+    </div>
   );
   
 }

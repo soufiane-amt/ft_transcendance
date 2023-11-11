@@ -7,7 +7,7 @@
     justify-content: space-between;
     height: 91px;
     position: sticky;
-    z-index: 2;
+    z-index: 3;
 }
 
 .nav_search
@@ -52,7 +52,6 @@
     left: 20%;
     display: flex;
     align-items: center;
-    background: rgba(53, 53, 117, 0.4);
     border-radius: 9px;
     width: 14%;
 }

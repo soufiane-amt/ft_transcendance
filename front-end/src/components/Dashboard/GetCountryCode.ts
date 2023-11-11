@@ -1,4 +1,4 @@
-// utils/countryCodeConverter.js
+'use client';
 
 import countryList from 'country-list';
 

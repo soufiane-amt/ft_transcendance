@@ -173,28 +173,6 @@ export class DashboardController {
     }
   }
 
-  @Post('Dashboard/logout')
-  @UseGuards(JwtAuthGuard)
-  async Section(@Req() request, @Res() response: any)
-  {
-    if (request)
-    {
-      const authorizationHeader = request.headers.authorization;
-      if (!authorizationHeader) {
-        return response.status(401).send({ error: 'Authorization header is missing' });
-      }
-      const tokenParts = authorizationHeader.split(' ');
-      if (tokenParts.length !== 2 || tokenParts[0] !== 'Bearer') {
-        return response.status(401).send({ error: 'Invalid authorization header format' });
-      }
-    // 
-      const JwtToken: string = tokenParts[1];
-    // 
-      const payload: any = this.authservice.extractPayload(JwtToken);
-
-      await this.user.changeVisibily(payload.userId, "OFFLINE");
-    }
-  }
   @Get('Dashboard/notification')
   @UseGuards(JwtAuthGuard)
   async sendnotification(@Req() request, @Res() response: any)

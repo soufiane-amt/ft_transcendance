@@ -55,7 +55,6 @@ export class WebSocketGatewayClass
           this.clients.forEach((value: string, key: string) => {
             if (value === UserRoom) counter++;
           });
-
           if (counter === 1) {
             await this.user.changeVisibily(user_Id, 'OFFLINE');
             //       this.server.to(targetClientRoom).emit('offline', payload.userId);
@@ -72,8 +71,8 @@ export class WebSocketGatewayClass
             this.server.to(targetClientRoom).emit('offline', users);
           }
         });
+        this.clients.delete(client.id);
       }
-      this.clients.delete(client.id);
     }
   }
 
@@ -86,18 +85,21 @@ export class WebSocketGatewayClass
     const JwtToken: string = tokenParts[1];
 
     const payload: any = this.authservice.extractPayload(JwtToken);
-    try {
-      await this.user.createNotification(
-        notificationData.user_id,
-        payload.userId,
-        notificationData.type,
-      );
-      const getnotificationtable = await this.user.findUserByID(payload.userId);
-      this.server
-        .to(targetClientRoom)
-        .emit('notification', getnotificationtable);
-    } catch (error) {
-      console.error('Error creating notification:', error);
+    if (payload)
+    {
+      try {
+        await this.user.createNotification(
+          notificationData.user_id,
+          payload.userId,
+          notificationData.type,
+        );
+        const getnotificationtable = await this.user.findUserByID(payload.userId);
+        this.server
+          .to(targetClientRoom)
+          .emit('notification', getnotificationtable);
+      } catch (error) {
+        console.error('Error creating notification:', error);
+      }
     }
   }
 

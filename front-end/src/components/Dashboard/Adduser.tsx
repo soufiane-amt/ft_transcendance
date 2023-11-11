@@ -1,8 +1,8 @@
+'use client';
 import React, {useEffect, useState} from "react";
 import {FaSearch} from 'react-icons/fa';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUserPlus, faClock } from '@fortawesome/free-solid-svg-icons';
-import { Socket, io } from "socket.io-client";
 import Cookies from "js-cookie";
 import { showToast } from "./ShowToast";
 import newSocket from "../GlobalComponents/Socket/socket";
@@ -16,7 +16,6 @@ function AddUser()
 
     function handleclickButtom(user_id: string, username: string)
     {
-        console.log('Im here : ' + user_id + ' socket : ' + newSocket);
         if (user_id && newSocket)
         {
             const notificationData = {
