@@ -63,7 +63,11 @@ function DirectMesgMain() {
               }
           </button> 
         </div>)}
-        {discussionIsEmpty && <EmptyDiscussionMode currentRoute={"Direct_messaging"}/>}
+        {discussionIsEmpty && <EmptyDiscussionMode
+              selectedDiscussion={selectedDiscussion}
+               currentRoute={"Direct_messaging"}
+               setDiscussionIsEmpty={setDiscussionIsEmpty}
+               />}
 
       </BanProvider>
     </UserContactsProvider>

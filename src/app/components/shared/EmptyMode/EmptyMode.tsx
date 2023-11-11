@@ -1,12 +1,36 @@
+import { useEffect } from 'react';
 import SadBubbleIcon from  '../../../../../public/images/icons/sad.png'
 import style from "./EmptyMode.module.css";
+import socket from '../../../socket/socket';
+import { discussionPanelSelectType } from '../../../interfaces/DiscussionPanel';
+import { useHandleJoinDm } from '../../../../../hooks/useHandleJoinChannel';
 
 
-function EmptyDiscussionMode({currentRoute}: {currentRoute: string}) {
+interface EmptyDiscussionModeProps {
+  selectedDiscussion:discussionPanelSelectType,
+  currentRoute :"Direct_messaging" | "Channels",
+  setDiscussionIsEmpty: React.Dispatch<React.SetStateAction<boolean>>
+}
+function EmptyDiscussionMode({selectedDiscussion, currentRoute, setDiscussionIsEmpty}: EmptyDiscussionModeProps) {
 
     let errorMesg;
     let correctionRequest;
     let joinButton;
+    
+    console.log('EmptyDiscussionMode ')
+    useHandleJoinDm(selectedDiscussion)
+    useEffect(()=>{
+      const handleShowBar = ()=>{
+        console.log("new message");
+
+        setDiscussionIsEmpty(false);
+      }
+      socket.on("newMessage", handleShowBar);
+      return () => {
+        socket.off("newMessage", handleShowBar);
+      };
+    }, [selectedDiscussion]);
+
     if (currentRoute === "Channels")
     {
       errorMesg = "You currently aren't a member of any channel.";

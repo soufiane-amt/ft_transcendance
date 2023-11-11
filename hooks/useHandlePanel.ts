@@ -5,10 +5,14 @@ import { selectedPanelDefault } from "../src/app/components/Channels/ChannelsMai
 import { useSessionUser } from "../src/app/context/SessionUserContext";
 import { fetchDataFromApi } from "../src/app/components/shared/customFetch/exmple";
 
-export function useHandlePanel(discussionPanels: DiscussionDto[],selectedDiscussionState : {
+export function useHandlePanel(
+  discussionPanels: DiscussionDto[],selectedDiscussionState : {
   selectedDiscussion : discussionPanelSelectType,
   selectDiscussion : (e: discussionPanelSelectType) => void
-} ,setDiscussionRooms:React.Dispatch<React.SetStateAction<DiscussionDto[]>>) 
+  } ,
+  setDiscussionRooms:React.Dispatch<React.SetStateAction<DiscussionDto[]>>,
+  setDiscussionIsEmpty:React.Dispatch<React.SetStateAction<boolean>>
+  ) 
 {
   const {selectedDiscussion, selectDiscussion} = selectedDiscussionState;
   const currentUserId = useSessionUser().id;
@@ -51,8 +55,7 @@ export function useHandlePanel(discussionPanels: DiscussionDto[],selectedDiscuss
               partner_id: currentUserId === newMessage.user_id ? partner_id : newMessage.user_id,
             } 
              setDiscussionRooms(() => [newDiscussionPanel, ...discussionPanels]);
-
-          }
+            }
                       
           //wait untill discussion panel is updated
           if (selectedDiscussion.id === messageRoomId)

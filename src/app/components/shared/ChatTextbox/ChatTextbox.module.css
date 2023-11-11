@@ -48,6 +48,13 @@
     fill: var(--send_icon_on_hover_color);
 }
 
+.banned_message{
+    color: red;
+    font-size: 20px;
+    font-weight: bold;
+    text-align: center;
+    margin: 0px 0px 10px 0px;
+}
 @media (max-width:650px) 
 {
     .message_bar {

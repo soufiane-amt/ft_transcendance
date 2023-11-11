@@ -79,7 +79,8 @@ export function DiscussionsBar({ selectedDiscussionState, currentRoute, discussi
 
     useHandleJoinDm(selectedDiscussion)
     
-    useHandlePanel(discussionPanels,selectedDiscussionState, setDiscussionRooms)
+  
+    useHandlePanel(discussionPanels,selectedDiscussionState, setDiscussionRooms, setDiscussionIsEmpty)
 
 
     const handlePanelClick = async (panelData: DiscussionDto) => {
