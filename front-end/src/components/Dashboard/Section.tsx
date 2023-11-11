@@ -21,12 +21,12 @@ function Section() {
   const [countryCode, setcountryCode] = useState("");
   const [image, setImage] = useState("backgroundrandom.jpg");
   const JwtToken = Cookies.get("access_token");
+  const [rank, setrank] = useState(1);
 
   const flagStyle = {
     width: "100%",
     height: "100%",
   };
-  let Rank = 1;
 
   const sendData = async (background: File, myfile: string) => {
     try {
@@ -170,9 +170,11 @@ function Section() {
         if (data) {
           const Tab: any[] = data;
           if (gameInformation) {
+            let Rank = 1;
             Tab.map((friend) => {
               if (friend.ladder_level >= gameInformation?.ladder_level) Rank++;
             });
+            setrank(Rank);
           }
         } else {
           throw new Error("Received empty or invalid JSON data");
@@ -181,7 +183,7 @@ function Section() {
       .catch((error) => {
         console.error("Error:", error);
       });
-  }, []);
+  }, [gameInformation, rank]);
   if (gameInformation?.wins || gameInformation?.losses)
     total = gameInformation?.wins + gameInformation?.losses;
 
@@ -246,7 +248,7 @@ function Section() {
           <hr id="section-line"></hr>
           <div className="identification-information rank">
             <h3>Rank</h3>
-            <p>{Rank}</p>
+            <p>{rank}</p>
           </div>
         </div>
       </div>

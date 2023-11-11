@@ -112,24 +112,19 @@ svg.svg-inline--fa.fa-shield-halved {
   overflow: hidden;
 }
 
-.all-divs {
-  background: #24234f;
-  position: absolute;
-  /* top: 0; */
-  /* height: 100%; */
-  width: 100%;
-  height: 100rem;
-}
-
 aside {
-  position: relative;
+  position: absolute;
   width: 19%;
   border-top: 1px solid rgba(255, 255, 255, 0.3);
   height: calc(100% - 91px);
-  /* background-color: #24234F; */
-  /* height: 100%; */
+  background-color: #24234f;
+  height: fit-content;
+  overflow: visible;
 }
 
+.elementscontainer {
+  min-height: calc(100vh - 91px);
+}
 .parent-section-background {
   width: 1px;
   position: absolute;
@@ -143,6 +138,7 @@ aside {
   padding: 5px;
   width: 100%;
   margin-top: 15px;
+  position: relative;
 }
 
 .myaside1,
@@ -448,6 +444,7 @@ aside {
   height: 35vh;
   padding-top: 18px;
   overflow-y: auto;
+  min-height: fit-content;
 }
 
 .home-page-counting {
@@ -675,15 +672,18 @@ aside {
 }
 
 #crown-score {
-  position: absolute;
-  margin-left: 110px;
+  position: relative;
+  margin-left: 0px;
   margin-bottom: 8px;
 }
 
 #crown-score-friend {
-  position: absolute;
-  margin-right: 142px;
+  position: relative;
   margin-top: 3px;
+}
+
+.score-friend.handle {
+  margin-left: 84px;
 }
 
 .information-user div img,
