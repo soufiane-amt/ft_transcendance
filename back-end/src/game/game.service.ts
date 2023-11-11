@@ -19,6 +19,7 @@ import GameScore from 'src/prisma/interfaces/GameScore.interface';
 import GameInfo from './interfaces/GameInfo';
 import RequestInvitationGameDto from './dto/RequestInvitationGame.dto';
 import { User } from '@prisma/client';
+import { join } from 'path';
 
 @Injectable()
 export class GameService {
@@ -253,7 +254,11 @@ export class GameService {
     server.to(inviteeRoom).emit('GameInvitation', gameInvitationDto);
   }
 
-  async sendGameInvitationResponse(gameInvitationResponseDto: GameInvitationResponseDto, server: Server, inviteeSocket: Socket): Promise<string> {
+  async sendGameInvitationResponse(
+    gameInvitationResponseDto: GameInvitationResponseDto,
+    server: Server,
+    inviteeSocket: Socket,
+  ): Promise<string> {
     const invitationRoom: string = `inv-${gameInvitationResponseDto.invitor_id}`;
     if (!server.of('/').adapter.rooms.has(invitationRoom)) {
       const payload: string = 'the invitor is offline';
@@ -266,13 +271,17 @@ export class GameService {
         player2_id: gameInvitationResponseDto.invitee_id,
       };
       const game_id = (await this.gameCrudService.createGame(players)).game_id;
-      const invitor : User | null = (await this.userCrudService.findUserByID(gameInvitationResponseDto.invitor_id))
+      const invitor: User | null = await this.userCrudService.findUserByID(
+        gameInvitationResponseDto.invitor_id,
+      );
       if (invitor === null) return 'unauthorized user';
       const invitorUsername: string = invitor.username;
-      const invitee: User | null = (await this.userCrudService.findUserByID(gameInvitationResponseDto.invitee_id));
+      const invitee: User | null = await this.userCrudService.findUserByID(
+        gameInvitationResponseDto.invitee_id,
+      );
       if (invitee === null) return 'unauthorized user';
       const inviteeUsername: string = invitee.username;
-      const gameInfo : GameInfo = {
+      const gameInfo: GameInfo = {
         game_id,
         player1_id: gameInvitationResponseDto.invitor_id,
         player1_username: invitorUsername,
@@ -296,7 +305,11 @@ export class GameService {
     server.of('/').adapter.rooms.delete(invitationRoom);
   }
 
-  async joinGame(joinGame: JoinGameDto, client: ClientSocket, server: Server) : Promise<void> {
+  async joinGame(
+    joinGame: JoinGameDto,
+    client: ClientSocket,
+    server: Server,
+  ): Promise<void> {
     const game = this.pandingGames.get(joinGame.game_id);
     if (game === undefined) {
       this.pandingGames.set(joinGame.game_id, client);
@@ -306,7 +319,17 @@ export class GameService {
       client.join(gameRoom);
       firstPlayer.join(gameRoom);
       this.pandingGames.delete(joinGame.game_id);
-      await this.startGame(client, firstPlayer, gameRoom, joinGame, server);
+      const player1_socket: ClientSocket =
+        client.player.id === joinGame.player1_id ? client : firstPlayer;
+      const player2_socket: ClientSocket =
+        client.player.id === joinGame.player1_id ? firstPlayer : client;
+      await this.startGame(
+        player1_socket,
+        player2_socket,
+        gameRoom,
+        joinGame,
+        server,
+      );
     }
   }
 
@@ -380,8 +403,13 @@ export class GameService {
     await this.userCrudService.changeVisibily(player2_id, 'ONLINE');
   }
 
-  handleInvitationGame(requestInvitationGameDto : RequestInvitationGameDto, client: ClientSocket) : void{
-    const gameInfo: GameInfo = this.invitationGamesInfo.get(requestInvitationGameDto.game_id);
+  handleInvitationGame(
+    requestInvitationGameDto: RequestInvitationGameDto,
+    client: ClientSocket,
+  ): void {
+    const gameInfo: GameInfo = this.invitationGamesInfo.get(
+      requestInvitationGameDto.game_id,
+    );
     if (gameInfo !== undefined) {
       const side: string =
         client.player.id === gameInfo.player1_id ? 'left' : 'right';

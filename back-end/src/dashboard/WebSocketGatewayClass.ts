@@ -25,9 +25,10 @@ import GameInvitationResponseDto, {
 import { Status } from '@prisma/client';
 import ClientSocket from 'src/game/interfaces/clientSocket.interface';
 import { GatewaysGuard } from 'src/game/guards/gateways.guard';
+import socketIOMiddleware, { wsmiddleware } from 'src/game/gateways.middleware';
 @WebSocketGateway({ cors: true, origins: 'http://localhost:3000' })
 @Injectable()
-// @UseGuards(JwtAuthGuard)
+@UseGuards(GatewaysGuard)
 export class WebSocketGatewayClass
   implements OnGatewayConnection, OnGatewayDisconnect
 {
@@ -39,6 +40,11 @@ export class WebSocketGatewayClass
     private readonly gameService: GameService,
   ) {}
   private clients: Map<string, string> = new Map();
+
+  async afterInit(server: Server) {
+    const wsmidware: wsmiddleware = await socketIOMiddleware(this.gameService);
+    server.use(wsmidware);
+  }
 
   async handleConnection(client: Socket) {
     const token: any = client.handshake.query.token;
