@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import style from "./CheckBoxList.module.css";
 import socket from '../../../socket/socket';
 
@@ -11,9 +11,15 @@ interface CheckboxListProps {
 function CheckboxList({selectedDiscussion, confirmSelection, options }: CheckboxListProps) {
   const [selectedOption, setSelectedOption] = useState('');
 
+  useEffect(() => {
+    setSelectedOption(options?.[0] || '');
+  }
+  , [options])
   const handleSelect = () => {
     socket.emit('setOwner', {targeted_username: selectedOption, channel_id: selectedDiscussion})
-    confirmSelection()
+    setTimeout(() => {
+      confirmSelection()
+    }, 1000);
   }
   const handleOptionChange = (event: any) => {
     setSelectedOption(event.target.value);
