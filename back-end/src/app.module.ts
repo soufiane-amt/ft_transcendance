@@ -9,7 +9,14 @@ import { GameModule } from './game/game.module';
 
 @Module({
   // do not forgot to import prisma module here
-  imports: [AuthModule, PrismaModule, ConfigModule.forRoot(), DashboardModule, TwoFactorAuthModule, GameModule],
+  imports: [
+    AuthModule,
+    PrismaModule,
+    ConfigModule.forRoot(),
+    DashboardModule,
+    TwoFactorAuthModule,
+    GameModule,
+  ],
   controllers: [],
   providers: [],
 })
@@ -18,4 +25,3 @@ export class AppModule {
     consumer.apply(cookieParser()).forRoutes('*');
   }
 }
-

@@ -10,11 +10,15 @@ import { JwtService } from '@nestjs/jwt';
 import { GameModule } from 'src/game/game.module';
 
 @Module({
-    imports: [PrismaModule, MulterModule.register({
-        dest: './uploads',
-      }), AuthModule, GameModule],
-      controllers: [UploadController, DashboardController],
-      providers: [WebSocketGatewayClass, AuthService, JwtService],
-
+  imports: [
+    PrismaModule,
+    MulterModule.register({
+      dest: './uploads',
+    }),
+    AuthModule,
+    GameModule,
+  ],
+  controllers: [UploadController, DashboardController],
+  providers: [WebSocketGatewayClass, AuthService, JwtService],
 })
 export class DashboardModule {}

@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 // utils/toast.js
+=======
+'use client';
+>>>>>>> origin/handleRank_branch
 import { toast } from 'react-toastify';
 
 export const showToast = (message : string, options : string) => {

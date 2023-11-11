@@ -13,6 +13,7 @@ import { Injectable, UseGuards } from '@nestjs/common';
 import { UserCrudService } from 'src/prisma/user-crud.service';
 import { AuthService } from 'src/auth/auth.service';
 import { PrismaService } from 'src/prisma/prisma.service';
+
 import GameInvitationDto, {
   gameInvitationDto,
 } from 'src/game/dto/GameInvitation.dto';
@@ -24,7 +25,6 @@ import GameInvitationResponseDto, {
 import { Status } from '@prisma/client';
 import ClientSocket from 'src/game/interfaces/clientSocket.interface';
 import { GatewaysGuard } from 'src/game/guards/gateways.guard';
-
 @WebSocketGateway({ cors: true, origins: 'http://localhost:3000' })
 @Injectable()
 // @UseGuards(JwtAuthGuard)
@@ -70,7 +70,6 @@ export class WebSocketGatewayClass
           this.clients.forEach((value: string, key: string) => {
             if (value === UserRoom) counter++;
           });
-
           if (counter === 1) {
             await this.user.changeVisibily(user_Id, 'OFFLINE');
             //       this.server.to(targetClientRoom).emit('offline', payload.userId);
@@ -87,8 +86,8 @@ export class WebSocketGatewayClass
             this.server.to(targetClientRoom).emit('offline', users);
           }
         });
+        this.clients.delete(client.id);
       }
-      this.clients.delete(client.id);
     }
   }
 
@@ -101,18 +100,22 @@ export class WebSocketGatewayClass
     const JwtToken: string = tokenParts[1];
 
     const payload: any = this.authservice.extractPayload(JwtToken);
-    try {
-      await this.user.createNotification(
-        notificationData.user_id,
-        payload.userId,
-        notificationData.type,
-      );
-      const getnotificationtable = await this.user.findUserByID(payload.userId);
-      this.server
-        .to(targetClientRoom)
-        .emit('notification', getnotificationtable);
-    } catch (error) {
-      console.error('Error creating notification:', error);
+    if (payload) {
+      try {
+        await this.user.createNotification(
+          notificationData.user_id,
+          payload.userId,
+          notificationData.type,
+        );
+        const getnotificationtable = await this.user.findUserByID(
+          payload.userId,
+        );
+        this.server
+          .to(targetClientRoom)
+          .emit('notification', getnotificationtable);
+      } catch (error) {
+        console.error('Error creating notification:', error);
+      }
     }
   }
 
@@ -191,8 +194,6 @@ export class WebSocketGatewayClass
             const targetClientRoom = `room_${userId}`;
             //     // console.log('target : ', targetClientRoom);
             await this.user.changeVisibily(payload.userId, 'IN_GAME');
-            //       // const user = await this.user.findUserByID(userId);
-            //       // console.log('users : ', user);
             const usersId: any[] = await this.user.findFriendsList(userId);
             // console.log("users ID : ", usersId);
             const users: any[] = [];
@@ -207,12 +208,12 @@ export class WebSocketGatewayClass
             const myuser = await this.user.findUserByID(payload.userId);
             this.server.emit('changestatus', myuser);
           }
-          // const user = await this.service.prismaClient.user.findUnique({
-          //   where: {
-          //     id: payload.userId,
-          //   },
-          // });
-          else if (notificationData.status != 'INGAME') {
+          const user = await this.service.prismaClient.user.findUnique({
+            where: {
+              id: payload.userId,
+            },
+          });
+          if (notificationData.status != 'INGAME') {
             const targetClientRoom = `room_${userId}`;
             //     // console.log('target : ', targetClientRoom);
             await this.user.changeVisibily(payload.userId, 'ONLINE');

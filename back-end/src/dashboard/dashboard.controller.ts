@@ -210,30 +210,6 @@ export class DashboardController {
     }
   }
 
-  @Post('Dashboard/logout')
-  @UseGuards(JwtAuthGuard)
-  async Section(@Req() request, @Res() response: any) {
-    if (request) {
-      const authorizationHeader = request.headers.authorization;
-      if (!authorizationHeader) {
-        return response
-          .status(401)
-          .send({ error: 'Authorization header is missing' });
-      }
-      const tokenParts = authorizationHeader.split(' ');
-      if (tokenParts.length !== 2 || tokenParts[0] !== 'Bearer') {
-        return response
-          .status(401)
-          .send({ error: 'Invalid authorization header format' });
-      }
-      //
-      const JwtToken: string = tokenParts[1];
-      //
-      const payload: any = this.authservice.extractPayload(JwtToken);
-
-      await this.user.changeVisibily(payload.userId, 'OFFLINE');
-    }
-  }
   @Get('Dashboard/notification')
   @UseGuards(JwtAuthGuard)
   async sendnotification(@Req() request, @Res() response: any) {
@@ -257,6 +233,42 @@ export class DashboardController {
       const notificationtable =
         await this.user.getUserNotificationsWithUser2Data(payload.userId);
       return response.status(200).send(notificationtable);
+    } catch (error) {
+      // Handle any errors that occur during the process
+      console.error('Error:', error);
+      return response.status(500).send({ error: 'Internal Server Error' });
+    }
+  }
+
+  @Get('Dashboard/RankUsers')
+  @UseGuards(JwtAuthGuard)
+  async RankUsers(@Req() request, @Res() response: any) {
+    const authorizationHeader = request.headers.authorization;
+    if (!authorizationHeader) {
+      return response
+        .status(401)
+        .send({ error: 'Authorization header is missing' });
+    }
+    const tokenParts = authorizationHeader.split(' ');
+    if (tokenParts.length !== 2 || tokenParts[0] !== 'Bearer') {
+      return response
+        .status(401)
+        .send({ error: 'Invalid authorization header format' });
+    }
+
+    const JwtToken: string = tokenParts[1];
+
+    try {
+      const payload: any = this.authservice.extractPayload(JwtToken);
+      const Users = await this.user.findAllUsers(payload.userId);
+      const levelsFriends: any[] = [];
+      await Promise.all(
+        Users.map(async (user) => {
+          const Data = await this.user.getUserStats(user.id);
+          levelsFriends.push(Data);
+        }),
+      );
+      return response.status(200).send(levelsFriends);
     } catch (error) {
       // Handle any errors that occur during the process
       console.error('Error:', error);

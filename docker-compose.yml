@@ -14,6 +14,7 @@ services:
 
 networks:
   pingpong:
-    driver: bridge
+    driver:
+      bridge
 
       # - /home/abdellah/projects/ft_transcendance/data-base/pg-data:/var/lib/postgresql/data

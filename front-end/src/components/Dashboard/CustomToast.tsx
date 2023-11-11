@@ -1,8 +1,8 @@
 // components/CustomToast.tsx
 
-import React from 'react';
-import 'react-toastify/dist/ReactToastify.css';
-import ToastCss from './module/CustomToast.module.css';
+import React from "react";
+import "react-toastify/dist/ReactToastify.css";
+import ToastCss from "./module/CustomToast.module.css";
 
 interface CustomToastProps {
   id: number;
@@ -18,7 +18,7 @@ interface CustomToastProps {
 
 const CustomToast: React.FC<CustomToastProps> = ({ id, obj, onClose }) => {
   const containerClassName = `max-w-md w-full bg-white shadow-lg rounded-lg pointer-events-auto flex ring-1 ring-black ring-opacity-5 ${
-    id ? 'animate-enter' : 'animate-leave'
+    id ? "animate-enter" : "animate-leave"
   }`;
 
   return (
@@ -38,9 +38,9 @@ const CustomToast: React.FC<CustomToastProps> = ({ id, obj, onClose }) => {
               {obj.user2Username}
             </p>
             {obj.type === "FRIENDSHIP_REQUEST" && (
-                <p className="mt-1 text-sm text-gray-500">
+              <p className="mt-1 text-sm text-gray-500">
                 send you Friend Notification
-                </p>
+              </p>
             )}
           </div>
         </div>

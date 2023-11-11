@@ -84,7 +84,7 @@ export default function Game() {
           gameSocket,
           newSocket,
           gameDataInfo,
-          setgameDataInfo
+          setgameDataInfo,
         }}
       >
         {GameLandingPageBool === true && GameDashboardBool === false && (

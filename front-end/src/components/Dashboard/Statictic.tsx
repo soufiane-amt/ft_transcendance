@@ -1,3 +1,4 @@
+"use client";
 import React, { useEffect, useState } from "react";
 import {
   LineChart,
@@ -19,7 +20,7 @@ interface Data {
 
 function Statictic() {
   const [statistic, setstatistic] = useState<
-    { result: string; createdAt: string }[]
+    { result: string; date: string }[]
   >([]);
   let data: Data[] = [];
   const JwtToken = Cookies.get("access_token");
@@ -64,9 +65,9 @@ function Statictic() {
   }, [JwtToken]);
   data = statistic.map((statistic) => {
     const result = statistic.result.split("-");
-    const date = statistic.createdAt.split("-");
+    const date = statistic.date.split("-");
     return {
-      date: `${date[0]}-${date[1]}-${date[2].slice(0, 2)}`,
+      date: `${date[0]}-${date[1]}-${date[2]}`,
       win: result[0] > result[1] ? 1 : 0,
       lose: result[0] < result[1] ? 1 : 0,
     };
