@@ -25,7 +25,30 @@ export function ModerationToolBox ({selectedChannel, channelData}:ModerationTool
     const currentUser = useSessionUser()
     const currentUserIsModerator:string = getUserRole (currentUser.id, channelData) 
 
-    return (
+    const sortedChannelUsers = channelData?.channelUsers.sort((a: string, b: string) => {
+        // Compare user roles
+        const roleOrder: { [key: string]: number } = {
+            Owner: 1,
+            Admin: 2,
+            Member: 3,
+        };
+
+        // Compare user roles first
+        const roleComparison = roleOrder[getUserRole(a, channelData)] - roleOrder[getUserRole(b, channelData)];
+
+        // If roles are the same, compare usernames alphabetically
+        if (roleComparison === 0) {
+            const aUserData = findUserContacts(a);
+            const bUserData = findUserContacts(b);
+            if (aUserData && bUserData) {
+                return aUserData.username.localeCompare(bUserData.username);
+            }
+        }
+
+        return roleComparison;
+    });
+      
+          return (
         <>
         {channelData && 
         <div className={style.moderation_tool_box}>
@@ -34,15 +57,15 @@ export function ModerationToolBox ({selectedChannel, channelData}:ModerationTool
 
                     <div className={style.users_cards}>
                     {
-                        channelData?.channelUsers.map((user)=>{
+                        sortedChannelUsers?.map((user, index)=>{
                             let userData;
                             if (user !==  currentUser.id)
                                 userData = findUserContacts(user)
                             else
                                 userData = {avatar:currentUser.avatar, username:currentUser.username}
                             const userRole = getUserRole (user, channelData)
-                            const cardKey = `${user}`;
-                            console.log('userData', userData)
+                            const cardKey = `${index}_${user}`;
+                            console.log('cardKey', cardKey)
 
                              return (userData &&
                                 <UserModerationCard 
@@ -59,14 +82,6 @@ export function ModerationToolBox ({selectedChannel, channelData}:ModerationTool
                         })
 
                     }
-                    </div>
-                    <div className={style.user_addition}>
-                        {currentUserIsModerator !== 'Member' &&( 
-                            <>
-                                <input placeholder="Enter a username"></input>
-                                <button>Add User</button>
-                            </>
-                        )}
                     </div>
                 </div>
         </div>
