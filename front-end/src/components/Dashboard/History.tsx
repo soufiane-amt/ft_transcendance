@@ -1,11 +1,10 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import Cookies from "js-cookie";
+import GameStatistics from "./interfaces/GameStatistics";
 
 function History() {
-  const [FriendHistory, setFriendHistory] = useState<
-    { player_1_id: string; player_2_id: string; result: string }[]
-  >([]);
+  const [FriendHistory, setFriendHistory] = useState<GameStatistics[] | []>([]);
   const JwtToken = Cookies.get("access_token");
 
   useEffect(() => {
@@ -28,15 +27,15 @@ function History() {
   return (
     <>
       <div className="informationaboutuser">
-        {FriendHistory.map((history) => {
+        {FriendHistory.map((history: GameStatistics) => {
           const [score_1, score_2] = history.result.split("-");
-          const compositeKey = `${history.player_1_id}-${history.player_2_id}-${score_1}-${score_2}`;
+          const compositeKey = history.gameId;
           return (
             <div className="container-user friend" key={compositeKey}>
               <div className="information-user">
                 <div>
-                  <img src="user.jpg" alt="photo"></img>
-                  <p>{history.player_1_id}</p>
+                  <img src={history.user_avatar} alt="photo"></img>
+                  <p>{history.user_username}</p>
                 </div>
                 {score_1 > score_2 && (
                   <img
@@ -65,8 +64,8 @@ function History() {
                   ></img>
                 )}
                 <div>
-                  <img src="images.png" alt="photo"></img>
-                  <p>{history.player_2_id}</p>
+                  <img src={history.opponent_avatar} alt="photo"></img>
+                  <p>{history.opponent_username}</p>
                 </div>
               </div>
             </div>

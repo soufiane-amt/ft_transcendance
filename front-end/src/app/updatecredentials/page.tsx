@@ -88,7 +88,7 @@ const Home = () => {
   return (
     <div className="bg-gradient-to-br from-[#2003b0] via-[#0D0149] to-[#2003b0] min-w-[100vw] h-[100vh]  flex  items-center p-[5%] overflow-scroll flex-col">
       <motion.form
-        className=" card-shadow w-[80vw]  h-[70vh] min-h-[600px] max-w-[600px] bg-[#ccc4f7] rounded-xl flex justify-evenly items-center text-[#0D0149] flex-col  my-auto p-[3%]"
+        className=" card-shadow w-[80vw]  h-[70vh] min-h-[600px] max-h-[800px] max-w-[600px] bg-[#ccc4f7] rounded-xl flex justify-evenly items-center text-[#0D0149] flex-col  my-auto p-[3%]"
         onSubmit={HandleSubmit}
         initial={{
           opacity: 0,

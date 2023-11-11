@@ -11,6 +11,7 @@ import {
   ResponsiveContainer,
 } from "recharts";
 import Cookies from "js-cookie";
+import GameStatistics from "./interfaces/GameStatistics";
 
 interface Data {
   date: string;
@@ -19,9 +20,7 @@ interface Data {
 }
 
 function Statictic() {
-  const [statistic, setstatistic] = useState<
-    { result: string; date: string }[]
-  >([]);
+  const [statistic, setstatistic] = useState<GameStatistics[] | []>([]);
   let data: Data[] = [];
   const JwtToken = Cookies.get("access_token");
 
@@ -58,16 +57,18 @@ function Statictic() {
         if (!response.ok) throw new Error("Network response was not ok");
         return response.json();
       })
-      .then((data) => setstatistic(data))
+      .then((data: any) => {
+        setstatistic(data);
+      })
       .catch((error) => {
         console.error("Error fetching data:", error);
       });
   }, [JwtToken]);
-  data = statistic.map((statistic) => {
+  data = statistic.map((statistic: GameStatistics) => {
     const result = statistic.result.split("-");
-    const date = statistic.date.split("-");
+    const date = statistic.createdAt.split("-");
     return {
-      date: `${date[0]}-${date[1]}-${date[2]}`,
+      date: `${date[0]}-${date[1]}-${date[2].slice(0, 2)}`,
       win: result[0] > result[1] ? 1 : 0,
       lose: result[0] < result[1] ? 1 : 0,
     };

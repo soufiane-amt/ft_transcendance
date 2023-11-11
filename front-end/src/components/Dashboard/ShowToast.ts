@@ -1,11 +1,7 @@
-<<<<<<< HEAD
-// utils/toast.js
-=======
-'use client';
->>>>>>> origin/handleRank_branch
-import { toast } from 'react-toastify';
+"use client";
+import { toast } from "react-toastify";
 
-export const showToast = (message : string, options : string) => {
+export const showToast = (message: string, options: string) => {
   const saveSettings = async () => {
     // Simulating an asynchronous save operation
     return new Promise<void>((resolve, reject) => {
@@ -19,23 +15,14 @@ export const showToast = (message : string, options : string) => {
       }, 2000);
     });
   };
-    if (options === 'success')
-    {
-        toast.success(message);
-    }
-    else if (options === 'error')
-    {
-        toast.error(message);
-    }
-    else if (options === 'add')
-    {
-      const promise: Promise<void> | (() => Promise<void>) = () => saveSettings();
-      toast.promise(
-        promise, 
-        {
-          success: message
-        }
-      )
-    }
-
-  };
+  if (options === "success") {
+    toast.success(message);
+  } else if (options === "error") {
+    toast.error(message);
+  } else if (options === "add") {
+    const promise: Promise<void> | (() => Promise<void>) = () => saveSettings();
+    toast.promise(promise, {
+      success: message,
+    });
+  }
+};
