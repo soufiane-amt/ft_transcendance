@@ -51,19 +51,19 @@ export class dmGateway implements OnGatewayConnection, OnGatewayDisconnect {
   }
 
 
-  //Check if the user is allowed to join the room
-  //is he blocker and the room exists
   @UseGuards (userRoomSubscriptionGuard) 
   @UseGuards(bannedConversationGuard)
   @SubscribeMessage("joinDm")
   async handleJoinDm(client: Socket, dm_id:string) 
   {
+    console.log ('Join request')
     client.join("dm-" + dm_id);
   }
   
   @SubscribeMessage("broadacastJoinSignal")
   async handleJoinSignal(client: Socket, joinSignal : {dm_id:string, userToContact:string}) 
   {
+    console.log("broadacastJoinSignal is called!")
     const userIdCookie = this.extractUserIdFromCookies(client);
     const userToContactPublicData =  await this.userCrud.findUserSessionDataByID(joinSignal.userToContact);
     const currentUserPublicData =  await this.userCrud.findUserSessionDataByID(userIdCookie);
@@ -85,6 +85,7 @@ export class dmGateway implements OnGatewayConnection, OnGatewayDisconnect {
   @UseGuards(bannedConversationGuard)
   @SubscribeMessage("sendMsg")
   async handleSendMesDm(client: Socket, message: MessageDto) {
+    console.log ('sendMsg: ', message)
     message.channel_id = null;
     const messageToBrodcast = await this.chatCrud.createMessage(message);
     this.server.to(`dm-${message.dm_id}`).emit("newMessage", messageToBrodcast);

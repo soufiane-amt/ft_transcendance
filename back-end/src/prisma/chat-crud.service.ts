@@ -6,6 +6,7 @@ import {
   channelMembershipDto,
   dmDto,
 } from "src/chat/dto/chat.dto";
+import * as bcrypt from 'bcryptjs';
 
 @Injectable()
 export class ChatCrudService {
@@ -73,6 +74,18 @@ export class ChatCrudService {
       })
     );
     return partnerContactData;
+  }
+
+   async comparePasswords(password: string, hashedPassword: string): Promise<boolean> {
+    try {
+      // Compare the password and the hashed password
+      const isMatch = await bcrypt.compare(password, hashedPassword);
+    
+      return isMatch;
+    } catch (error) {
+      // Handle any errors here
+      throw new Error('Password comparison failed');
+    }
   }
 
   async retrieveUserChannelsBook (user_id: string)
@@ -957,12 +970,18 @@ async findChannelUserMuteData(user_id: string, channel_id: string) {
   }
   //this method espacially was created in case all the members of a channel left
   async deleteChannel(channel_id: string) {
-      await this.prisma.prismaClient.channel.delete({
-        where: {
-          id: channel_id,
-        },
-      });
-  }
+    await this.prisma.prismaClient.message.deleteMany({
+      where: {
+        channel_id: channel_id,
+      },
+    });
+
+    await this.prisma.prismaClient.channel.delete({
+      where: {
+        id: channel_id,
+      },
+    });
+}
 
   async createMessage(data: MessageDto) {
     return await this.prisma.prismaClient.message.create({ data });

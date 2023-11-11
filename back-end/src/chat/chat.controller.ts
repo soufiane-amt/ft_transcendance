@@ -1,9 +1,9 @@
-import { Controller, Get, Query,Post , Res,Req,  Param, Inject, UseGuards, Body, BadRequestException, ExecutionContext, CallHandler, SetMetadata, Put, InternalServerErrorException, UseInterceptors, UploadedFile } from '@nestjs/common';
+import { Controller, Get,Post , Res,Req,  Param, Inject, UseGuards, Body, Put, InternalServerErrorException, UseInterceptors, UploadedFile } from '@nestjs/common';
 import { DmService } from './services/direct-messaging/dm.service';
 import { Request, Response, response } from "express"
 import { dmGateway } from './services/direct-messaging/dm.gateway';
-import { FriendShipExistenceGuard, allowJoinGuard, cookieGuard, userCanBeIntegratedInConversation, userRoomSubscriptionGuard } from './guards/chat.guards';
-import { MessageDto, channelDto, channelMembershipDto, dmDto } from './dto/chat.dto';
+import {  allowJoinGuard } from './guards/chat.guards';
+import { channelMembershipDto, dmDto } from './dto/chat.dto';
 import { Reflector } from '@nestjs/core';
 import { ChatCrudService } from 'src/prisma/chat-crud.service';
 import * as path from 'path';
@@ -11,8 +11,6 @@ import * as fs from 'fs';
 import { UserCrudService } from 'src/prisma/user-crud.service';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { v4 as uuidv4 } from 'uuid';
-import { diskStorage } from 'multer';
-import { throwError } from 'rxjs';
 
 
 
@@ -51,7 +49,7 @@ async findAllDiscussionPartners (@Req() request : Request)
 
   // I wait for all promises to resolve
   const discussions = await Promise.all(unreadMessagesPromises);
-
+  console.log('=======discussions: ', discussions)
   return discussions;
 }
 

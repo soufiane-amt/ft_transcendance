@@ -23,7 +23,7 @@ import * as cookie from "cookie";
 
 
 function extractUserIdFromCookies(client:Socket) {
-  const headers = client.handshake.headers;
+const headers = client.handshake.headers;
   const parsedCookies = cookie.parse(headers.cookie || "");
   return parsedCookies["user.id"];
 }
@@ -210,22 +210,19 @@ export class allowJoinGuard implements CanActivate {
     const targetedChannel = await this.chatCrud.findChannelById(
       joinRequest.channel_id,
       );
-      // console.log('°°°°°°°°°°°°°°°°', targetedChannel.type, ' ' , joinRequest.channeltype)
-    if (!targetedChannel || targetedChannel.type !== joinRequest.type)
+
+      if (!targetedChannel || targetedChannel.type !== joinRequest.type)
        return false;
     //check if the user wanting to join is already there in  join
     const user_membership = await this.chatCrud.getMemeberShip(
       user_id,
       joinRequest.channel_id,
     );
-    console.log ('allowJoiningGuard', joinRequest)
-    console.log ('allowJoiningGuard', 
-    (
-      joinRequest.password != targetedChannel.password))
     if (user_membership == null) {
       if ( targetedChannel.type == 'PROTECTED' &&
             (!joinRequest.password ||
-              joinRequest.password != targetedChannel.password))
+              !await this.chatCrud.comparePasswords(joinRequest.password, targetedChannel.password)))
+              // joinRequest.password != targetedChannel.password))
         return false;
       return true;
     }
@@ -278,6 +275,7 @@ export class userRoomSubscriptionGuard implements CanActivate {
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
     if (context.getType() == 'http') {
+
       const request = context.switchToHttp().getRequest();
       const user_id = request.cookies['user.id'];
       if (context.getHandler().name == 'findRoomMessages')
@@ -293,8 +291,8 @@ export class userRoomSubscriptionGuard implements CanActivate {
         return userIsSubscribed.isInDMTable || userIsSubscribed.isInMembershipTable;
       }
     } else if (context.getType() == 'ws') {
+
       const packet_data = context.switchToWs().getData();
-      console.log('}}}packet_data: fiirst arival:', packet_data)
       const user_id = extractUserIdFromCookies(context.switchToWs().getClient());
       if (context.getClass() == dmGateway)
         if (await this.verfiyDirectMessagingSubscription(context, packet_data, user_id))
@@ -320,12 +318,13 @@ export class userRoomSubscriptionGuard implements CanActivate {
  
       }
     }
-    console.log('2')
+    console.log('9')
 
     return true; 
   }
 
   async verfiyDirectMessagingSubscription(context:ExecutionContext , packet_data:any , user_id: string) {
+    console.log('verfiyDirectMessagingSubscription', context.getHandler().name)
     if (context.getHandler().name == 'handleSendMesDm')
     {
         return (
@@ -358,6 +357,10 @@ export class userRoomSubscriptionGuard implements CanActivate {
       }
       else if (context.getHandler().name == 'handleJoinDm')
       {
+        console.log('$$$$$$$handleJoinDm', (await this.chatCrud.checkUserInDm(
+          user_id,
+          packet_data,
+        )))
         return (
           (await this.chatCrud.checkUserInDm(
               user_id,
@@ -380,6 +383,8 @@ export class bannedConversationGuard implements CanActivate {
     const user_id = extractUserIdFromCookies(context.switchToWs().getClient());
     if (context.getClass() == dmGateway) {
       let dm_data;
+      if (context.getHandler().name  === "handleJoinDm")
+        dm_data = await this.chatCrud.findDmById(packet_data);
       if (context.getHandler().name  === "handleSendMesDm")
         dm_data = await this.chatCrud.findDmById(packet_data.dm_id);
       return dm_data?.status === 'ALLOWED';
@@ -437,7 +442,7 @@ export class userCanBeIntegratedInConversation implements CanActivate {
       );
       return memeberShip?.is_muted == false;
     }
-  }
+  } 
 }
 @Injectable()
 export class LeaveChannelGuard implements CanActivate {
@@ -451,8 +456,11 @@ async canActivate(context: ExecutionContext): Promise<boolean> {
       user_id,
       channel_id
     );
+
     const OwnersNumber = await this.chatCrud.findOwnersCount(channel_id);
+
     const membersCount = await this.chatCrud.findMembersCount(channel_id);
+
     if (memeberShip?.role == 'OWNER' && OwnersNumber == 1 && membersCount > 1)
       return false;
     return true;

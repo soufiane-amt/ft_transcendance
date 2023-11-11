@@ -9,7 +9,7 @@ import {  LeaveChannelGuard, allowJoinGuard, bannedConversationGuard, channelPer
 import { ChatCrudService } from "src/prisma/chat-crud.service";
 import { UserCrudService } from "src/prisma/user-crud.service";
 import * as cookie from 'cookie';
-import { channel, subscribe } from "diagnostics_channel";
+import * as bcrypt from 'bcryptjs';
 
  
 
@@ -40,7 +40,23 @@ import { channel, subscribe } from "diagnostics_channel";
         const parsedCookies = cookie.parse(headers.cookie || "");
         return parsedCookies["user.id"];
       }
-    
+      
+      private async hashPassword(password: string): Promise<string> {
+        try {
+          // Generate a salt (a random string) to make the hash unique
+          const salt = await bcrypt.genSalt(10);
+        
+          // Hash the password with the generated salt
+          const hashedPassword = await bcrypt.hash(password, salt);
+        
+          return hashedPassword;
+        } catch (error) {
+          // Handle any errors here
+          throw new Error('Password hashing failed');
+        }
+      }
+  
+  
 
     @Roles (Role.OWNER)
     @UseGuards(channelPermission)
@@ -102,7 +118,7 @@ import { channel, subscribe } from "diagnostics_channel";
       const banData = {
           user_id :targeted_user_id,
           channel_id : banSignal.channel_id,
-          banDuration : minutesToMilliseconds(banSignal.actionDuration)/6
+          banDuration : minutesToMilliseconds(banSignal.actionDuration)
         }
       await this.chatCrud.blockAUserWithinGroup(banData)
         this.server
@@ -226,6 +242,7 @@ import { channel, subscribe } from "diagnostics_channel";
     @SubscribeMessage ("setOwner")
     async handleGradeUserTOwner(client: any,  setOwnerSignal : setOwnerSignalDto  ) 
     {
+      console.log ('.........setOwner')
       const targeted_user_id = await this.userCrud.findUserByUsername(setOwnerSignal.targeted_username)
       await this.chatCrud.makeOwner (targeted_user_id, setOwnerSignal.channel_id) 
     }  
@@ -266,7 +283,7 @@ import { channel, subscribe } from "diagnostics_channel";
       const channel_data :channelDto = {
         name : channelData.channelName,
         type : channelData.channelType,
-        password : channelData.password,
+        password : await this.hashPassword(channelData.password),
         image : `http://localhost:3001/chat/image/${channelData.imageSrc}`
       };
  
