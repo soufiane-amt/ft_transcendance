@@ -19,41 +19,40 @@ function GameDashboard() {
   const [Round, setRound] = useState<number>(1);
   const [result, setresult] = useState("");
 
-
   useEffect(() => {
-    if (gameContext.GameSettings.GameMode === 'Practice') {
+    if (gameContext.GameSettings.GameMode === "Practice") {
       setTimeout(() => {
         setIsGameStarted(true);
       }, 2500);
     }
-  }, [])
+  }, []);
 
   useEffect(() => {
     const JwtToken: string | undefined = Cookies.get("access_token");
     if (isGameStarted === true) {
       const payload: any = {
-        status: 'INGAME',
-        token: `bearer ${JwtToken}`
-      }
-      newSocket.emit('status', payload);
+        status: "INGAME",
+        token: `bearer ${JwtToken}`,
+      };
+      newSocket.emit("status", payload);
     } else if (isGameFinished === true) {
       const payload: any = {
-        status: '',
-        token: `bearer ${JwtToken}`
-      }
-      newSocket.emit('status', payload);
-      if (gameContext.GameSettings.GameMode === 'Practice')  {
+        status: "",
+        token: `bearer ${JwtToken}`,
+      };
+      newSocket.emit("status", payload);
+      if (gameContext.GameSettings.GameMode === "Practice") {
         gameContext.setGameSettings({
           GameMode: "",
           GameTheme: "",
           GameSpeed: "",
           Oponent: null,
           Roll: null,
-        })
+        });
       }
     }
-  }, [isGameStarted, isGameFinished])
-  
+  }, [isGameStarted, isGameFinished]);
+
   useEffect(() => {
     gameContext.gameSocket.on("game_started", () => {
       setIsGameStarted(true);
@@ -62,12 +61,12 @@ function GameDashboard() {
         gameContext.setgameDataInfo(null);
       }, 2500);
     });
-  
+
     gameContext.gameSocket.on("game_finished", (result: string) => {
       setIsGameStarted(false);
       setIsGameFinished(true);
       setresult(result);
-    })
+    });
   }, []);
 
   useEffect(() => {
@@ -88,9 +87,24 @@ function GameDashboard() {
   return (
     <div className="content-height flex flex-col flex-no-wrap justify-around bg-[#0D0149]">
       {!isGameStarted && !isGameFinished && <GameWaiting />}
-      {isGameStarted && <ScoreBoardComponent Round={Round} UserScore={UserScore} ComputerScore={ComputerScore}></ScoreBoardComponent>}
-      {isGameStarted && <GameSceneComponent setIsGameStarted={setIsGameStarted} setIsGameFinished={setIsGameFinished} setresult={setresult} setRound={setRound} setUserScore={setUserScore} setComputerScore={setComputerScore} ></GameSceneComponent>}
-      {isGameFinished && <div> {result} </div>}
+      {isGameStarted && (
+        <ScoreBoardComponent
+          Round={Round}
+          UserScore={UserScore}
+          ComputerScore={ComputerScore}
+        ></ScoreBoardComponent>
+      )}
+      {isGameStarted && (
+        <GameSceneComponent
+          setIsGameStarted={setIsGameStarted}
+          setIsGameFinished={setIsGameFinished}
+          setresult={setresult}
+          setRound={setRound}
+          setUserScore={setUserScore}
+          setComputerScore={setComputerScore}
+        ></GameSceneComponent>
+      )}
+      {isGameFinished && <GameResult result={result} />}
     </div>
   );
 }

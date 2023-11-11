@@ -23,7 +23,7 @@ function GameResult(props: any) {
   const router = useRouter();
 
   return (
-    <div className="fixed inset-0 flex items-center justify-center z-[40] w-[100vw] h-[100vh] overflow-hidden text-indigo-100 ">
+    <div className="fixed inset-0 flex items-center justify-center z-[4] w-[100vw] h-[100vh] overflow-hidden text-indigo-100 ">
       <div className="absolute bg-black w-full h-full opacity-50 z-[4]"></div>
       {/* <div className="h-full w-full bg-indigo-100 absolute flex items-center  justify-center gap-12 flex-col flex-wrap z-40 top-0 overflow-hidden"> */}
       <motion.div
