@@ -34,8 +34,7 @@ export function LeaveChannel({selectedDiscussion, userGrade, channelUsers }: Lea
             <div >
              {showDropDownList && 
               <>
-                <h3>You can't leave the channel until you select your successor to be the channel Owner:</h3>
-            
+                <h3>You can&apos;t leave the channel until you select your successor to be the channel Owner:</h3>
                 <CheckboxList
                 selectedDiscussion={selectedDiscussion}
                 confirmSelection={handleSendingLeavingSignal}

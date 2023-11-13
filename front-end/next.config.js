@@ -1,6 +1,4 @@
 /** @type {import('next').NextConfig} */
-<<<<<<< HEAD
-const nextConfig = {}
 
 // next.config.js
 module.exports = {
@@ -26,7 +24,6 @@ module.exports = {
   
   };
   
-=======
 const nextConfig = {
   images: {
     domains: [
@@ -36,4 +33,3 @@ const nextConfig = {
     ],
   },
 };
->>>>>>> origin/game_dashboard

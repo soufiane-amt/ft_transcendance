@@ -1,26 +1,6 @@
 {
   "compilerOptions": {
     "target": "es5",
-<<<<<<< HEAD
-    "lib": [
-      "dom",
-      "dom.iterable",
-      "esnext"
-    ],
-    "allowJs": true,
-    "skipLibCheck": true,
-    "esModuleInterop": true,
-    "allowSyntheticDefaultImports": true,
-    "strict": true,
-    "forceConsistentCasingInFileNames": true,
-    "module": "esnext",
-    "moduleResolution": "node",
-    "resolveJsonModule": true,
-    "isolatedModules": true,
-    "noEmit": true,
-    "incremental": true,
-    "jsx": "preserve",
-=======
     "lib": ["dom", "dom.iterable", "esnext"],
     "allowJs": true,
     "skipLibCheck": true,
@@ -33,34 +13,21 @@
     "isolatedModules": true,
     "jsx": "preserve",
     "incremental": true,
->>>>>>> origin/game_dashboard
     "plugins": [
       {
         "name": "next"
       }
-<<<<<<< HEAD
-    ]
-=======
     ],
     "paths": {
       "@/*": ["./src/*"]
     }
->>>>>>> origin/game_dashboard
   },
   "include": [
     "next-env.d.ts",
     "**/*.ts",
     "**/*.tsx",
-<<<<<<< HEAD
-    ".next/types/**/*.ts"
-  ],
-  "exclude": [
-    "node_modules"
-  ]
-=======
     ".next/types/**/*.ts",
     "src/app/updatecredentials/page.tsx"
   ],
   "exclude": ["node_modules"]
->>>>>>> origin/game_dashboard
 }

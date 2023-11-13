@@ -55,7 +55,7 @@ function EmptyDiscussionMode({selectedDiscussion, currentRoute, setDiscussionIsE
     return (
       <div className={style.discussion_empty_mode}>
         <h2 className={style.discussion_empty_mode__title}>No discussions available</h2>
-        <img src={SadBubbleIcon.src} />
+        <img src={SadBubbleIcon.src} alt="sad message bubble" />
 
         <p className={style.discussion_empty_mode__text}>
           {errorMesg} 
