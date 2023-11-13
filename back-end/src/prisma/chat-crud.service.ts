@@ -1150,7 +1150,7 @@ async findChannelUserMuteData(user_id: string, channel_id: string) {
   //Authorizations ro see dm or channel
   async  isUserInRoom(userId: string, roomId: string) {
     // Check if the user exists in the DM table
-    const dmExists = await this.prisma.directMessaging.findFirst({
+    const dmExists = await this.prisma.prismaClient.directMessaging.findFirst({
       where: {
         OR: [
           {
@@ -1166,7 +1166,7 @@ async findChannelUserMuteData(user_id: string, channel_id: string) {
     });
   
     // Check if the user exists in the ChannelMembership table
-    const membershipExists = await this.prisma.channelMembership.findFirst({
+    const membershipExists = await this.prisma.prismaClient.channelMembership.findFirst({
       where: {
         channel_id: roomId,
         user_id: userId,

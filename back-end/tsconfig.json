@@ -7,7 +7,6 @@
     "experimentalDecorators": true,
     "allowSyntheticDefaultImports": true,
     "target": "ES2021",
-    "lib": ["es6"],
     "sourceMap": true,
     "outDir": "./dist",
     "baseUrl": "./",
@@ -17,10 +16,6 @@
     "noImplicitAny": false,
     "strictBindCallApply": false,
     "forceConsistentCasingInFileNames": false,
-    "noFallthroughCasesInSwitch": false,
-
-  }
-}
     "noFallthroughCasesInSwitch": false
   }
 }

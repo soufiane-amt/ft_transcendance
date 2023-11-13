@@ -1,7 +1,7 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { PrismaService } from './prisma.service';
 import { userDto } from 'src/chat/dto/user.dto';
-import { NotificationType } from '@prisma/client';
+import { NotificationType, Status } from '@prisma/client';
 
 interface notificationType {
 
