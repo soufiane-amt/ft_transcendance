@@ -26,6 +26,18 @@ function ScoreBoardComponent(props: any) {
   const JwtToken: any = Cookies.get("access_token");
 
   useEffect(() => {
+    if (props.gameState !== null) {
+      setPlayer1_avatar(props.gameState.player1_avatar);
+      setPlayer2_avatar(props.gameState.player2_avatar);
+      setPlayer1_username(props.gameState.player1_username);
+      setPlayer2_username(props.gameState.player2_username);
+      setPlayer1_score(props.gameState.player1_score);
+      setPlayer2_score(props.gameState.player2_score);
+      setNextRound(props.gameState.round);
+    }
+  }, [props.gameState]);
+
+  useEffect(() => {
     if (gameContext.GameSettings.GameMode === "Practice") {
       if (round !== props.Round) {
         setNextRound(props.Round);

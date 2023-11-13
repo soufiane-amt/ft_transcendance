@@ -8,11 +8,15 @@ import newSocket from "@/components/GlobalComponents/Socket/socket";
 import GameInvitation from "@/components/GlobalComponents/GameInvitation";
 import { useRouter } from "next/navigation";
 import Cookies from "js-cookie";
+import JoinLeavingGameData from "@/components/game/interfaces/JoinLeavingGameData";
+import JoinLeavingGameComponent from "@/components/game/JoingLeavingGameComponent";
 
 const Structure = ({ children }: { children: React.ReactNode }) => {
   const [GameInvitationBool, setGameInvitationBool] = useState(false);
   const [GameReqData, setGameReqData] = useState();
+  const [leavingGameData, setLeavingGameData] = useState<JoinLeavingGameData | null>(null);
   const [Timer, setTimer]: any = useState(0);
+  const [IsJoinLeavingGame, setIsJoinLeavingGame] = useState<boolean>(false);
   const router = useRouter();
 
   useEffect(() => {
@@ -32,7 +36,12 @@ const Structure = ({ children }: { children: React.ReactNode }) => {
     newSocket.on("redirect_to_invitation_game", (game_id: string) => {
       router.push(`/game?id=${game_id}`);
     });
-  });
+    newSocket.on('joining_leaving_game', (payload: JoinLeavingGameData) => {
+      setIsJoinLeavingGame(true);
+      setLeavingGameData(payload);
+      setTimer(20);
+    });
+  }, []);
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -40,7 +49,12 @@ const Structure = ({ children }: { children: React.ReactNode }) => {
         setTimer(Timer - 1);
       } else {
         clearInterval(interval);
-        setGameInvitationBool(false);
+        if (GameInvitationBool === true) {
+          setGameInvitationBool(false);
+        }
+        if (IsJoinLeavingGame === true) {
+          setIsJoinLeavingGame(false);
+        }
       }
     }, 1000);
 
@@ -73,6 +87,11 @@ const Structure = ({ children }: { children: React.ReactNode }) => {
           Timer={Timer}
         />
       )}
+      {IsJoinLeavingGame && <JoinLeavingGameComponent
+          data={leavingGameData}
+          State={setIsJoinLeavingGame}
+          Timer={Timer}
+        />}
     </main>
   );
 };

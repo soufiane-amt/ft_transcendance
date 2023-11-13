@@ -21,6 +21,52 @@ function GameSceneComponent(props: any) {
     let gameIsStarted: boolean = true;
 
     useEffect(() => {
+        if (props.gameData !== null) {
+            const gameSocket: Socket = gameContext.gameSocket;
+            gameSocket.on('game_paused', () => {
+                gameIsStarted = false;
+            });
+            gameSocket.on('game_continued', () => {
+                gameIsStarted = true;
+            });
+            const userSide: string = props.gameData.side;
+            const mapType: MapType = props.gameData.mapType.toLowerCase() as MapType;
+            var game: Game | null = new Game(userSide, gameSocket, mapType);
+            userSide === 'left' ? game.User.upadatepos(props.gameData.leftplayerPos) : game.User.upadatepos(props.gameData.rightplayerPos);
+            userSide === 'left' ? game.Opponent.upadatepos(props.gameData.rightplayerPos) : game.Opponent.upadatepos(props.gameData.leftplayerPos);
+            var handleResize: EventListener = (e: Event) => game?.resize();
+            var handleClick: (event: KeyboardEvent) => void = (e: KeyboardEvent) => {
+                if (e.key === ' ') {
+                    const payload: any = {
+                        side: game?.User.side
+                    }
+                    game?.socket.emit('stop_game', payload);
+                }
+            }
+            window.addEventListener('resize', handleResize);
+            window.addEventListener('keypress', handleClick);
+            const FRAME_PER_SECOND: number = 60 / 1000;
+            let startTime: DOMHighResTimeStamp | undefined = undefined;
+            var animationId: number;
+            const frameRequestCall = (timestamp: DOMHighResTimeStamp) => {
+                if (startTime === undefined) {
+                    startTime = timestamp;
+                }
+                if (gameIsStarted === true && (timestamp - startTime) >= FRAME_PER_SECOND) {
+                    game?.render();
+                }
+                animationId = requestAnimationFrame(frameRequestCall);
+            }
+            requestAnimationFrame(frameRequestCall);
+        }
+        return () => {
+            if (props.gameData !== null) {
+                cleanUp(handleClick, handleResize, animationId); game = null;
+            }
+        }
+    }, [props.gameData])
+
+    useEffect(() => {
         if (gameContext.GameSettings.GameMode === 'Practice') {
             const mapType: MapType = gameContext.GameSettings.GameTheme.toLowerCase();
             const speed: Speed = gameContext.GameSettings.GameSpeed.toLowerCase();

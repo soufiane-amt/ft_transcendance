@@ -19,6 +19,7 @@ import GameScore from 'src/prisma/interfaces/GameScore.interface';
 import GameInfo from './interfaces/GameInfo';
 import RequestInvitationGameDto from './dto/RequestInvitationGame.dto';
 import { User } from '@prisma/client';
+import GameServer from './interfaces/GameServer.interface';
 
 @Injectable()
 export class GameService {
@@ -27,6 +28,7 @@ export class GameService {
   private pandingGames: Map<string, ClientSocket> = new Map();
   private invitationGamesInfo: Map<string, GameInfo> = new Map();
   private invitationGames: Map<string, string[]> = new Map();
+  private leavingGames: Map<string, Game> = new Map();
 
   constructor(
     private readonly userCrudService: UserCrudService,
@@ -296,7 +298,7 @@ export class GameService {
     server.of('/').adapter.rooms.delete(invitationRoom);
   }
 
-  async joinGame(joinGame: JoinGameDto, client: ClientSocket, server: Server) : Promise<void> {
+  async joinGame(joinGame: JoinGameDto, client: ClientSocket, server: GameServer) : Promise<void> {
     const game = this.pandingGames.get(joinGame.game_id);
     if (game === undefined) {
       this.pandingGames.set(joinGame.game_id, client);
@@ -315,16 +317,16 @@ export class GameService {
     player2Socket: ClientSocket,
     gameRoom: string,
     joinGame: JoinGameDto,
-    server: Server,
+    server: GameServer,
   ): Promise<void> {
-    const leftPlayerSocket: Socket =
+    const leftPlayerSocket: ClientSocket =
       player1Socket.player.id === joinGame.player1_id
-        ? player1Socket.player.socket
-        : player2Socket.player.socket;
-    const rightPlayerSocket: Socket =
+        ? player1Socket
+        : player2Socket;
+    const rightPlayerSocket: ClientSocket =
       player1Socket.player.id === joinGame.player2_id
-        ? player1Socket.player.socket
-        : player2Socket.player.socket;
+        ? player1Socket
+        : player2Socket;
     const speed: string = joinGame.speed.toLowerCase();
     const gameId: string = joinGame.game_id;
     const mapType: string = joinGame.mapType.toLowerCase();
@@ -342,7 +344,36 @@ export class GameService {
       if (game.status === 'started') {
         game.play();
       }
+      if (game.status === 'paused' && game.missingUser !== '') {
+        const missingUserId: string = game.missingUser === 'left' ? game.leftPlayerSocket.userId : game.rightPlayerSocket.userId;
+        if (this.leavingGames.has(missingUserId) === true)
+          return ;
+        this.leavingGames.set(missingUserId, game);
+        setTimeout(() => {
+          const game: Game | undefined = this.leavingGames.get(missingUserId);
+          if (game !== undefined) {
+            game.leftPlayer.winningRounds = game.missingUser === 'left' ? 0 : 3;
+            game.rightPlayer.winningRounds = game.missingUser === 'right' ? 0 : 3;
+            const winnerSocket: Socket = game.missingUser === 'right' ? game.leftPlayerSocket : game.rightPlayerSocket;
+            const result: string = 'win';
+            winnerSocket.emit('game_finished', result);
+            game.status = 'finished';
+            this.leavingGames.delete(missingUserId);
+          }
+        }, 60000);
+        const missingUserSessions: string = `room_${missingUserId}`;
+        const payload: any = {
+          player1_id: game.leftPlayerSocket.userId,
+          player2_id: game.rightPlayerSocket.userId
+        }
+        server.mainServer.to(missingUserSessions).emit('joining_leaving_game', payload);
+      }
       if (game.status === 'finished') {
+        if (this.leavingGames.has(game.leftPlayerSocket.userId) === true) {
+          this.leavingGames.delete(game.leftPlayerSocket.userId);
+        } else if (this.leavingGames.has(game.rightPlayerSocket.userId) === true) {
+          this.leavingGames.delete(game.rightPlayerSocket.userId);
+        }
         const gameScore: GameScore = {
           player1_score: game.leftPlayer.winningRounds,
           player2_score: game.rightPlayer.winningRounds,
@@ -400,5 +431,47 @@ export class GameService {
         this.invitationGamesInfo.delete(requestInvitationGameDto.game_id);
       }
     }
+  }
+
+  async handleJoinLeavingGames(client: ClientSocket) : Promise<string> {
+    const game: Game | undefined = this.leavingGames.get(client.userId);
+    if (game === undefined) {
+        return "the game isn't available";
+      }
+      const side: string = game.missingUser;
+      this.leavingGames.delete(client.userId);
+      game.missingUser = '';
+      const leftPlayer : User | null = await this.userCrudService.findUserByID(game.leftPlayerSocket.userId);
+      const rightPlayer : User | null = await this.userCrudService.findUserByID(game.rightPlayerSocket.userId);
+      if (leftPlayer === null)
+        return 'internal server error';
+      if (rightPlayer === null)
+        return 'internal server error';
+      const player1_score: number = game.leftPlayer.score;
+      const player2_score: number = game.rightPlayer.score;
+      const round: number = game.round + 1;
+      const mapType: string = game.mapType;
+      const payload = {
+        player1_username: leftPlayer.username,
+        player2_username: rightPlayer.username,
+        player1_avatar: leftPlayer.avatar,
+        player2_avatar: rightPlayer.avatar,
+        player1_score,
+        player2_score,
+        round,
+        mapType,
+        side,
+        leftplayerPos: game.leftPlayer.boundaries.top,
+        rightplayerPos: game.rightPlayer.boundaries.top
+      }
+      setTimeout(() => {
+        client.emit('leaving_game_data', payload);
+        game.rejoinTheGame(client, side);
+      }, 600);
+      return "you've been join the game successfully";
+    }
+
+  playerHasLeavingGame(userid: string) : Game | undefined {
+    return this.leavingGames.get(userid);
   }
 }
