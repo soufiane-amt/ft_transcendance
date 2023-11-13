@@ -1,0 +1,2 @@
+-- AlterTable
+ALTER TABLE "ChannelMembership" ADD COLUMN     "last_visit" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP;
