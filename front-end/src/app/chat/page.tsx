@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 'use client'
 
 import { ChatLeftBar } from '../../components/Chat/ChatLeftBar/ChatLeftBar'
@@ -17,3 +18,14 @@ export default function page() {
     )
 }
 
+=======
+import Structure from "../Structure";
+
+export default function Dashboard() {
+  return (
+    <Structure>
+      <h1>chat</h1>
+    </Structure>
+  );
+}
+>>>>>>> origin/game_dashboard

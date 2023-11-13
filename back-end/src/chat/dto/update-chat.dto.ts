@@ -1,5 +1,4 @@
 import { channelMembershipDto } from './chat.dto';
-import { channelDto } from './chat.dto';
 
 export interface UpdateChannelDto  {
   channel_id :string

@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaClient } from '@prisma/client';
 
+<<<<<<< HEAD
 
 @Injectable()
 export class PrismaService 
@@ -19,4 +20,16 @@ export class PrismaService
         return this.prisma;
       }
 
+=======
+@Injectable()
+export class PrismaService {
+  private readonly prisma: PrismaClient;
+
+  constructor() {
+    this.prisma = new PrismaClient();
+  }
+  get prismaClient(): PrismaClient {
+    return this.prisma;
+  }
+>>>>>>> origin/game_dashboard
 }

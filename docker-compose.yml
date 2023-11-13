@@ -8,12 +8,24 @@ services:
       - pingpong
     env_file:
       - .env
+<<<<<<< HEAD
     volumes:
       - /Users/samajat/Desktop/ft_transcendence/back-chat/data-base/pg-data:/var/lib/postgresql/data
+=======
+    # volumes:
+    #   - /Users/abellakr/goinfre/ft_transcendance/data-base/pg-data:/var/lib/postgresql/data
+>>>>>>> origin/game_dashboard
     restart: on-failure
 
 networks:
   pingpong:
+<<<<<<< HEAD
     driver: bridge
 
 # /Users/abellakr/goinfre/ft_transcendance/data-base
+=======
+    driver:
+      bridge
+
+      # - /home/abdellah/projects/ft_transcendance/data-base/pg-data:/var/lib/postgresql/data
+>>>>>>> origin/game_dashboard

@@ -1,4 +1,5 @@
 /** @type {import('next').NextConfig} */
+<<<<<<< HEAD
 const nextConfig = {}
 
 // next.config.js
@@ -25,3 +26,14 @@ module.exports = {
   
   };
   
+=======
+const nextConfig = {
+  images: {
+    domains: [
+      process.env.NEXT_PUBLIC_BACKEND_SERV,
+      "cdn.intra.42.fr",
+      process.env.NEXT_PUBLIC_DOMAIN,
+    ],
+  },
+};
+>>>>>>> origin/game_dashboard

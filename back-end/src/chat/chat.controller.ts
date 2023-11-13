@@ -30,7 +30,7 @@ export class ChatController
 
 @Get('/image/:image_path')
 async getUserImage(@Param('image_path') image_path: string, @Res() res: Response) {
-  const imagePath =  path.join(__dirname, '..', `../upload/${image_path}`); // Go up two directories to reach the workspace root
+  const imagePath =  path.join(__dirname, '..', `../uploads/${image_path}`); // Go up two directories to reach the workspace root
   if (!fs.existsSync(imagePath)) {
     return res.status(404).send('Image not found');
   }
@@ -166,7 +166,7 @@ async findAllChannelsInContact (@Req() request : Request)
    }
    file.filename = uuidv4() + file.originalname;
  
-   const filePath = path.join(__dirname, '..', '../upload/', file.filename);
+   const filePath = path.join(__dirname, '..', '../uploads/', file.filename);
  
    // Save the file to the server
    fs.writeFileSync(filePath, file.buffer);

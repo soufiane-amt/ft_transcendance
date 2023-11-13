@@ -27,11 +27,21 @@ lerna-debug.log*
 .settings/
 *.sublime-workspace
 
+<<<<<<< HEAD
 *.png
 *.jpeg
+=======
+>>>>>>> origin/game_dashboard
 # IDE - VSCode
 .vscode/*
 !.vscode/settings.json
 !.vscode/tasks.json
 !.vscode/launch.json
+<<<<<<< HEAD
 !.vscode/extensions.json%
+=======
+!.vscode/extensions.json
+
+prisma/migrations
+nest-cli/
+>>>>>>> origin/game_dashboard

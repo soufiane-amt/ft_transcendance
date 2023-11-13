@@ -1,4 +1,7 @@
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> origin/game_dashboard
 # See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
 
 # dependencies
@@ -18,12 +21,17 @@
 
 # misc
 .DS_Store
+<<<<<<< HEAD
 .env*
+=======
+*.pem
+>>>>>>> origin/game_dashboard
 
 # debug
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+<<<<<<< HEAD
 =======
 # compiled output
 /dist
@@ -61,3 +69,15 @@ lerna-debug.log*
 !.vscode/launch.json
 !.vscode/extensions.json
 >>>>>>> origin/chat-back_end
+=======
+
+# local env files
+.env*.local
+
+# vercel
+.vercel
+
+# typescript
+*.tsbuildinfo
+next-env.d.ts
+>>>>>>> origin/game_dashboard
