@@ -40,6 +40,19 @@ export default function Game() {
   const [gameSocket, setGameSocket] = useState<null | Socket>(null);
 
   useEffect(() => {
+    const joining_leaving_game: boolean = usesearchParams.get('join_leaving_game') !== null;
+    if (gameSocket !== null && joining_leaving_game === true) {
+        gameSocket.emit('join_leaving_game', (response: string) => {
+          if (response === "you've been join the game successfully") {
+            SetGameDashboardBool(true);
+            SetGameLandingPageBool(false);
+          }
+        })
+        router.replace('/game');
+    }
+  })
+
+  useEffect(() => {
     const socket: Socket = io(`${process.env.NEXT_PUBLIC_BACKEND_SERV}/Game`, {
       query: {
         token: `$bearer ${jwtToken}`,

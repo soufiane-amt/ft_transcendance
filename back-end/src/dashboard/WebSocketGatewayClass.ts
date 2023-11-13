@@ -8,6 +8,7 @@ import {
   ConnectedSocket,
   MessageBody,
   WsResponse,
+  OnGatewayInit,
 } from '@nestjs/websockets';
 import { Injectable, UseGuards } from '@nestjs/common';
 import { UserCrudService } from 'src/prisma/user-crud.service';
@@ -25,12 +26,13 @@ import GameInvitationResponseDto, {
 import { Status } from '@prisma/client';
 import ClientSocket from 'src/game/interfaces/clientSocket.interface';
 import { GatewaysGuard } from 'src/game/guards/gateways.guard';
+import Game from 'src/game/Game/classes/Game';
 import socketIOMiddleware, { wsmiddleware } from 'src/game/gateways.middleware';
 @WebSocketGateway({ cors: true, origins: 'http://localhost:3000' })
 @Injectable()
 @UseGuards(GatewaysGuard)
 export class WebSocketGatewayClass
-  implements OnGatewayConnection, OnGatewayDisconnect
+  implements OnGatewayConnection, OnGatewayDisconnect, OnGatewayInit
 {
   @WebSocketServer() server: Server;
   constructor(
@@ -38,12 +40,16 @@ export class WebSocketGatewayClass
     private readonly authservice: AuthService,
     private readonly service: PrismaService,
     private readonly gameService: GameService,
-  ) {}
+  ) {
+  }
+
   private clients: Map<string, string> = new Map();
 
   async afterInit(server: Server) {
     const wsmidware: wsmiddleware = await socketIOMiddleware(this.gameService);
     server.use(wsmidware);
+    const gameNs: any = server.of('/Game');
+    gameNs.mainServer = server.of('/');
   }
 
   async handleConnection(client: Socket) {
@@ -59,10 +65,17 @@ export class WebSocketGatewayClass
         this.clients.set(client.id, clientRoom);
         const gameInvRoom: string = `gameInv-${payload.userId}`;
         client.join(gameInvRoom);
-      }
+        const game: Game | undefined = this.gameService.playerHasLeavingGame(payload.userId);
+        if (game !== undefined) {
+          const payload: any = {
+            player1_id: game.leftPlayerSocket.userId,
+            player2_id: game.rightPlayerSocket.userId
+          }
+          setTimeout(() => client.emit('joining_leaving_game', payload), 2500);
+        }
     }
   }
-
+}
   async handleDisconnect(client: Socket) {
     const UserRoom = this.clients.get(client.id);
     if (UserRoom) {

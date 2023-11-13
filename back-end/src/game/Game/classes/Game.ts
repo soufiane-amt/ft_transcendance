@@ -3,12 +3,14 @@ import Player from "./Player";
 import Scene from "../interfaces/Scene";
 import Status from "../interfaces/Status";
 import Puck from "./Puck";
+import ClientSocket from "src/game/interfaces/clientSocket.interface";
+import GameServer from "src/game/interfaces/GameServer.interface";
 
 export default class Game {
     scene: Scene;
     roundsScores: number[];
-    leftPlayerSocket: Socket;
-    rightPlayerSocket: Socket;
+    leftPlayerSocket: ClientSocket;
+    rightPlayerSocket: ClientSocket;
     leftPlayer: Player;
     rightPlayer: Player;
     puck: Puck;
@@ -16,12 +18,13 @@ export default class Game {
     status: Status;
     speed: string;
     round: number;
-    server: Server;
+    server: GameServer;
     pausedSide: string | undefined;
     gameId: string;
     mapType: string;
+    missingUser: string;
 
-    constructor(gameId: string, leftPlayerSokcet: Socket, rightPlayerSocket: Socket, speed: string, server: Server, gameRoom: string, mapType: string) {
+    constructor(gameId: string, leftPlayerSokcet: ClientSocket, rightPlayerSocket: ClientSocket, speed: string, server: GameServer, gameRoom: string, mapType: string) {
         this.roundsScores = [7, 5, 3];
         this.leftPlayerSocket = leftPlayerSokcet;
         this.rightPlayerSocket = rightPlayerSocket;
@@ -43,6 +46,7 @@ export default class Game {
         this.gameId = gameId;
         this.pausedSide = undefined;
         this.mapType = mapType;
+        this.missingUser = '';
         this.setup();
     }
 
@@ -91,7 +95,29 @@ export default class Game {
             centerY: this.puck.centerY,
             direction
         }
-        this.server.to(this.room).emit('move_puck', payload);
+        const leftPlayerSocketId: string = this.leftPlayerSocket.id;
+        const rightPlayerSocketId: string = this.rightPlayerSocket.id;
+        this.server.timeout(15000).to(this.room).emit('move_puck', payload, (err, responses) => {
+            if (err && this.status !== 'paused') {
+                if (responses.length) {
+                    if (responses.at(0) === 'right' && leftPlayerSocketId !== this.leftPlayerSocket.id) return ;
+                    if (responses.at(0) === 'left' && rightPlayerSocketId !== this.rightPlayerSocket.id) return ;
+                    this.leftPlayer.winningRounds = responses.at(0) === 'left' ? 3 : 0;
+                    this.rightPlayer.winningRounds = responses.at(0) === 'right' ? 3 : 0;
+                    const leftPlayerResult: string = responses.at(0) === 'left' ? 'win' : 'lose';
+                    this.leftPlayerSocket.emit('game_finished', leftPlayerResult);
+                    const rightPlayerResult: string = responses.at(0) === 'right' ? 'win' : 'lose';
+                    this.rightPlayerSocket.emit('game_finished', rightPlayerResult);
+                    this.status = 'finished';
+                } else if (responses.length === 0) {
+                    this.leftPlayer.winningRounds = 0;
+                    this.rightPlayer.winningRounds = 0;
+                    this.leftPlayerSocket.emit('game_finished', 'null');
+                    this.rightPlayerSocket.emit('game_finished', 'null');
+                    this.status = 'finished';
+                }
+            }
+        });
     }
 
     checkGoal() {
@@ -104,16 +130,28 @@ export default class Game {
         this.leftPlayerSocket.on('stop_game', (payload: any) => { this.handlePausingGame(payload) });
         this.rightPlayerSocket.on('stop_game', (payload: any) => { this.handlePausingGame(payload) });
         this.rightPlayerSocket.on('disconnect', () => {
-            const payload: string = 'win';
-            this.leftPlayerSocket.emit('game_finished', payload);
-            this.leftPlayer.winningRounds = 3;
-            this.status = 'finished';
+            if (this.missingUser !== '') {
+                this.missingUser = '';
+                this.leftPlayer.winningRounds = 0;
+                this.rightPlayer.winningRounds = 0;
+                this.status = 'finished';
+                return ;
+            }
+            this.missingUser = 'right';
+            this.leftPlayerSocket.emit('paused_game');
+            this.status = 'paused';
         })
         this.leftPlayerSocket.on('disconnect', () => {
-            const payload: string = 'win';
-            this.rightPlayerSocket.emit('game_finished', payload);
-            this.rightPlayer.winningRounds = 3;
-            this.status = 'finished';
+            if (this.missingUser !== '') {
+                this.missingUser = '';
+                this.leftPlayer.winningRounds = 0;
+                this.rightPlayer.winningRounds = 0;
+                this.status = 'finished';
+                return ;
+            }
+            this.missingUser = 'left';
+            this.rightPlayerSocket.emit('paused_game');
+            this.status = 'paused';
         })
         this.leftPlayerSocket.on('move_paddle', (payload: any) => {
             if (this.status === 'started') {
@@ -141,5 +179,37 @@ export default class Game {
             this.status = 'started';
             this.server.to(this.room).emit('game_continued');
         }
+    }
+
+    rejoinTheGame(client: ClientSocket, side: string) {
+        client.join(this.room);
+        client.on('stop_game', (payload: any) => { this.handlePausingGame(payload) });
+        client.on('disconnect', () => {
+            if (this.missingUser !== '') {
+                this.missingUser = '';
+                this.leftPlayer.winningRounds = 0;
+                this.rightPlayer.winningRounds = 0;
+                this.status = 'finished';
+                return ;
+            }
+            this.missingUser = side;
+            side === 'right' ? this.leftPlayerSocket.emit('paused_game') : this.rightPlayerSocket.emit('paused_game');
+            this.status = 'paused';
+        })
+        client.on('move_paddle', (payload: any) => {
+            if (this.status === 'started') {
+                const pos: number = payload.pos;
+                side === 'right' ? this.rightPlayer.move(pos) : this.leftPlayer.move(pos);
+                this.server.to(this.room).emit('move_paddle', payload);
+            }
+        });
+        if (side === 'left') {
+            this.leftPlayerSocket = client;
+        } else {
+            this.rightPlayerSocket = client;
+        }
+        this.pausedSide = '';
+        this.status = 'started';
+        side === 'left' ? this.rightPlayerSocket.emit('game_continued') : this.leftPlayerSocket.emit('game_continued');
     }
 }

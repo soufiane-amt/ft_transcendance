@@ -27,16 +27,14 @@ import { userRoomSubscriptionGuard } from 'src/chat/guards/chat.guards';
 
 @UseGuards(GatewaysGuard)
 @WebSocketGateway({
-  namespace: 'Game',
-  origin: process.env.FRONT_SERV,
-})
-export class GameGateway implements OnGatewayInit<Server> {
-  constructor(
-    private readonly gameservice: GameService,
-    private readonly userCrudService: UserCrudService,
-  ) {}
-  @WebSocketServer() private server: Server;
+                    namespace : 'Game',
+                    origin : process.env.FRONT_SERV
+                  })
+export class GameGateway implements OnGatewayInit<Server>{
+  constructor(private readonly gameservice: GameService, private readonly userCrudService: UserCrudService) {}
+  
 
+  @WebSocketServer() private server: any;
   async afterInit(server: Server) {
     const wsmidware: wsmiddleware = await socketIOMiddleware(this.gameservice);
     server.use(wsmidware);
@@ -106,5 +104,10 @@ export class GameGateway implements OnGatewayInit<Server> {
   @SubscribeMessage('get_user_id')
   handleget_user_id(@ConnectedSocket() client: ClientSocket): string {
     return client.userId;
+  }
+  
+  @SubscribeMessage('join_leaving_game')
+  async handlejoinLeavinggames(@ConnectedSocket() client: ClientSocket) : Promise<string> {
+    return await this.gameservice.handleJoinLeavingGames(client);
   }
 }

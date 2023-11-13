@@ -131,8 +131,9 @@ export default class Game {
             player.upadatepos(newPos);
         })
 
-        this.socket.on('move_puck', (payload: any) => {
+        this.socket.on('move_puck', (payload: any, cb) => {
             this.puck.move(payload);
+            cb(this.User.side);
         })
         this.canvas.addEventListener('mousemove', (e) => {
             const newPosition: number = (e.offsetY / this.canvas.height);
