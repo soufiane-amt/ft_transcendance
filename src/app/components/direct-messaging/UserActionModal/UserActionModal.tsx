@@ -100,7 +100,8 @@ function UserActionModal({
       }}
     >
       <div className={style.action_targeted_user}>
-        <Avatar src={userContact.avatar} avatarToRight={false} />
+        {/* <Avatar src={userContact.avatar} avatarToRight={false} /> */}
+        <img src={userContact.avatar}/>
         <h1>{userContact.username}</h1>
       </div>
       <div className={style.interaction_buttons}>

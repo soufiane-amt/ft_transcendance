@@ -25,6 +25,7 @@
 
   margin-top: calc(var(--avatar_size) / 2);
   position: relative;
+  
 }
 
 /*This class serves a styling for the bubble tail triangle*/
@@ -44,6 +45,8 @@
 
 .message_bubble___sent_style {
   background-color: var(--message_sent_bubble_color);
+  background: linear-gradient(0deg, #432ea5 45%, #7763d0  100%);
+
   color: white;
 }
 
@@ -62,6 +65,8 @@
 
 .message_bubble___received_style {
   background-color: var(--message_received_bubble_color);
+  background: linear-gradient(0deg,var(--message_received_bubble_color) 45%, rgb(221, 221, 230)  100%);
+
   color: rgb(0, 0, 0);
 }
 

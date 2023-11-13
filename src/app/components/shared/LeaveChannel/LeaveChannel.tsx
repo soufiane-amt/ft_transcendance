@@ -31,9 +31,10 @@ export function LeaveChannel({selectedDiscussion, userGrade, channelUsers }: Lea
       <button onClick={handleClickLeave}>Leave Channel</button>
       {userGrade === 'Owner' && ( channelUsers?.length !== 1) && (
         <>
-            <h3>You can't leave the channel until you select your successor to be the channel Owner:</h3>
             <div >
              {showDropDownList && 
+             <>
+              <h3>You can't leave the channel until you select your successor to be the channel Owner:</h3>
               <CheckboxList
                 selectedDiscussion={selectedDiscussion}
                 confirmSelection={handleSendingLeavingSignal}
@@ -41,6 +42,7 @@ export function LeaveChannel({selectedDiscussion, userGrade, channelUsers }: Lea
                   ?.map((user_id) => findUserContacts(user_id)?.username)
                   .filter(Boolean)} // Filter out any undefined usernames
               />
+             </>
             }
           </div>
         </>

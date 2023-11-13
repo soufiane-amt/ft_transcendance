@@ -19,13 +19,13 @@
 
 
   /*sent message bubble color*/
-  --message_sent_bubble_color:#776DA8;
+  --message_sent_bubble_color:#432ea5;
   /*received message bubble color*/
-  --message_received_bubble_color:rgb(212, 212, 235);
+  --message_received_bubble_color:rgb(197, 197, 212);
 
 
     /*Discussion Panel*/
-    --discussion_panel_back_color: #5C5B8B;
+    --discussion_panel_back_color: rgb(18, 18, 178);
     --discussion_panel_element_color: white;
 
     /*Discussion Panel*//*under selection*/

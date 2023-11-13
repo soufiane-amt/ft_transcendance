@@ -1,5 +1,5 @@
 .discussion_empty_mode{
-    width: 100%;
+    width: 100vw;
     height: 100vh;
     display: flex;
     flex-direction: column;
@@ -31,7 +31,9 @@
     font-weight: bolder;
     color: white;
     cursor: pointer;
-    background: rgb(121, 15, 154);
+    background: rgb(189, 32, 237);
+    box-shadow: 10px 10px 15px -3px rgba(0, 0, 0, 0.5);
+    font-family: Georgia, 'Times New Roman', Times, serif;
     
   }
   
@@ -50,7 +52,11 @@
     }
     .discussion_empty_mode__button{
       width: 100px;
-      height: 20px;
+      height: 40px;
       font-size: 10px;
     }  
+    .discussion_empty_mode__text{
+      font-size: 10px;
+    }
 }
+
