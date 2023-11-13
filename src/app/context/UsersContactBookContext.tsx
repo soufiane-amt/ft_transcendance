@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
-import { fetchDataFromApi } from "../components/shared/customFetch/exmple";
+import { fetchDataFromApi } from "../../components/Chat/CustomFetch/fetchDataFromApi";
 import socket from "../socket/socket";
 
 /* This interface represents the minimum data needed for a user contact */

@@ -1,7 +1,7 @@
 'use client'
 
-import { ChatLeftBar } from '../components/ChatLeftBar/ChatLeftBar'
-import { WelcomingPage } from '../components/Welcoming/WelcomingPage'
+import { ChatLeftBar } from '../../components/Chat/ChatLeftBar/ChatLeftBar'
+import { WelcomingPage } from '../../components/Chat/Welcoming/WelcomingPage'
 import { SessionUserProvider } from '../context/SessionUserContext';
 import style from './page.module.css';
 

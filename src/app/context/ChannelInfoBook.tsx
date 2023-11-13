@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
-import { fetchDataFromApi } from "../components/shared/customFetch/exmple";
+import { fetchDataFromApi } from "../../components/Chat/CustomFetch/fetchDataFromApi";
 import { channel } from "diagnostics_channel";
 import socket from "../socket/socket";
 

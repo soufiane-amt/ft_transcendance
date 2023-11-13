@@ -5,7 +5,7 @@ import {
   ReactNode,
   useEffect,
 } from "react";
-import { fetchDataFromApi } from "../components/shared/customFetch/exmple";
+import { fetchDataFromApi } from "../../components/Chat/CustomFetch/fetchDataFromApi";
 //  the shape of the user data
 interface UserContactDto {
   id: string;

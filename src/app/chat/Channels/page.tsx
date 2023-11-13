@@ -1,7 +1,7 @@
 'use client'
 
-import ChannelsMain from "../../components/Channels/ChannelsMain"
-import { ChatLeftBar } from "../../components/ChatLeftBar/ChatLeftBar"
+import ChannelsMain from "../../../components/Chat/Channels/ChannelsMain"
+import { ChatLeftBar } from "../../../components/Chat/ChatLeftBar/ChatLeftBar"
 import { SessionUserProvider } from "../../context/SessionUserContext"
 import style from '../page.module.css';
 

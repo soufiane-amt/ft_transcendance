@@ -1,5 +1,5 @@
 import { createContext, useContext, useState, ReactNode, useEffect } from 'react';
-import { fetchDataFromApi } from '../components/shared/customFetch/exmple';
+import { fetchDataFromApi } from '../../components/Chat/CustomFetch/fetchDataFromApi';
 
 // Define the Ban type
 interface Ban {

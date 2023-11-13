@@ -1,5 +1,5 @@
-import { ChatLeftBar } from "../../components/ChatLeftBar/ChatLeftBar";
-import { CreateChannel } from "../../components/CreateChannel/CreateChannel";
+import { ChatLeftBar } from "../../../components/Chat/ChatLeftBar/ChatLeftBar";
+import { CreateChannel } from "../../../components/Chat/CreateChannel/CreateChannel";
 import style from '../page.module.css';
 
 

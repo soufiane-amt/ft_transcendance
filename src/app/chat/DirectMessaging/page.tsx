@@ -1,6 +1,6 @@
 'use client'
-import { ChatLeftBar } from "../../components/ChatLeftBar/ChatLeftBar";
-import DirectMesgMain from "../../components/direct-messaging/DirectMsgMain";
+import { ChatLeftBar } from "../../../components/Chat/ChatLeftBar/ChatLeftBar";
+import DirectMesgMain from "../../../components/Chat/direct-messaging/DirectMsgMain";
 import { SessionUserProvider } from "../../context/SessionUserContext";
 import style from '../page.module.css';
 
