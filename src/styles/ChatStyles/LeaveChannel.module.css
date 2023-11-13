@@ -1,10 +1,13 @@
-.channel_quitting_section button{
-    position: relative;
-    bottom: 10px ;
+.channel_quitting_section{
+    margin-top: 5%;
+}
 
+.channel_quitting_section button{
     width: 200px;
     height: 50px;
     padding-block: 10px;
+    transition: all 0.3s ease-in-out;
+
     background-color: #b7b6e3;
     border: 0;
     border-radius: 50px;

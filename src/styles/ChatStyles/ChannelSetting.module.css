@@ -24,6 +24,7 @@
 
     width: 200px;
     height: 80px;
+    transition: all 0.3s ease-in-out;
     background-color: #5C5B8B;
     border: 0;
     border-radius: 50px;
@@ -62,7 +63,7 @@
 
     padding-inline: 20px;
     width: 400px;
-    background-color: #8280BD;
+    background-color: #4c46ec;
     border: 0;
     height: 40px;
     border-radius: 20px;

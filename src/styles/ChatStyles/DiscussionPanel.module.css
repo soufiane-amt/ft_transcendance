@@ -22,6 +22,7 @@
 }
 
 .discussion_panel_selection_colors {
+    transition: all 0.2s ease-in-out;
     background-color: var(--discussion_panel_selection_color);
     color: var(--discussion_panel_element_selection_color);
 }
@@ -54,6 +55,9 @@
     text-overflow: ellipsis;
 }
 
+.panel_last_message__unread_state{
+    font-weight: bolder;
+}
 
 .panel_last_part{
     position: absolute;

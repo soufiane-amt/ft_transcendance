@@ -20,6 +20,7 @@
   
     font-size: large;
     font-weight: bold;
+    font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
   }
   
   .tab_active{
@@ -29,6 +30,7 @@
     border-top: 2px solid black;
     border-top-right-radius: 5px;
     border-top-left-radius: 5px;
+    background-color: rgb(183, 183, 200);
   }
   
   .lol {

@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { discussionPanelSelectType } from "../src/app/interfaces/DiscussionPanel";
-import socket from "../src/app/socket/socket";
+import socket from "../app/socket/socket";
 import { IMuteContext } from "../src/app/context/MuteContext";
 
 

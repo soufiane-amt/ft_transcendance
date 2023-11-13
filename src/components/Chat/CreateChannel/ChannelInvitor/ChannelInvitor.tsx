@@ -89,7 +89,7 @@ export function ChannelInvitor({userCondidates, onConfirm, handleVisibility}: Ch
                 </ul>
             </div>
             <div className={style.user_invitor_modal_confirm}>
-                <button  onClick={handleConfirm}>Confirm and Create Channel</button>
+                <button  onClick={handleConfirm}>Confirm and Create</button>
             </div>
         </div>
         </div>

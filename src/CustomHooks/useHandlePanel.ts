@@ -1,9 +1,9 @@
 import { useEffect } from "react";
-import { DiscussionDto, MinMessageDto, discussionPanelSelectType } from "../src/app/interfaces/DiscussionPanel";
-import socket from "../src/app/socket/socket";
-import { selectedPanelDefault } from "../src/components/Channels/ChannelsMain";
-import { useSessionUser } from "../src/app/context/SessionUserContext";
-import { fetchDataFromApi } from "../src/components/shared/customFetch/exmple";
+import { DiscussionDto, MinMessageDto, discussionPanelSelectType } from "../components/Chat/interfaces/DiscussionPanel";
+import socket from "../app/socket/socket";
+import { selectedPanelDefault } from "../components/Chat/Channels/ChannelsMain";
+import { useSessionUser } from '../app/context/SessionUserContext';
+import { fetchDataFromApi } from "../components/Chat/CustomFetch/fetchDataFromApi";
 
 export function useHandlePanel(
   discussionPanels: DiscussionDto[],selectedDiscussionState : {

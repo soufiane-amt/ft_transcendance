@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { discussionPanelSelectType } from "../src/app/interfaces/DiscussionPanel";
 import { IBanContext } from "../src/app/context/BanContext";
-import socket from "../src/app/socket/socket";
+import socket from "../app/socket/socket";
 
 
 export function useHandleBan (BanContext:IBanContext, selectedDiscussion : discussionPanelSelectType, 

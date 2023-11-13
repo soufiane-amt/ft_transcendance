@@ -48,12 +48,20 @@ const badgeCount = (n: number) => {
   return n > unseenMassagesEdge ? unseenMassagesEdge + "+" : n;
 };
 
+
+interface PaneLastMessageProps{
+  last_message_content: string | undefined;
+  messageIsUnread : boolean;
+}
+
 function PaneLastMessage({
   last_message_content,
-}: {
-  last_message_content: string | undefined;
-}) {
-  return <p className={style.panel_last_message}>{last_message_content}</p>;
+  messageIsUnread,
+}: PaneLastMessageProps) {
+  return (<p className={`${style.panel_last_message} 
+             ${messageIsUnread ? style.panel_last_message__unread_state : ''}`}>
+          {last_message_content}
+        </p>);
 }
 
 interface DiscussionPanelProps {
@@ -99,6 +107,7 @@ function DiscussionPanel({
             <h3>{panel.name}</h3>
             <PaneLastMessage
               last_message_content={DiscussionPanel.last_message?.content}
+              messageIsUnread={DiscussionPanel.unread_messages > 0}
             />
           </div>
           <div className={style.panel_last_part}>

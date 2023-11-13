@@ -7,13 +7,6 @@ import socket from "../../../../app/socket/socket";
 const MaxPasswordLength = 50;
 const MinPasswordLength = 8;
 
-// const handlePasswordChange = (e :React.ChangeEvent<HTMLInputElement>) => {
-//   const inputText = e.target.value;
-//   if ( inputText.length <= MaxPasswordLength &&
-//       inputText[inputText.length - 1] !== ' ') {
-//       setPassword(inputText);
-//   }
-// };
 
 interface TypeSetterProps{
   selectedOptionState : {

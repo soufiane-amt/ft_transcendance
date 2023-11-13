@@ -3,7 +3,7 @@ import { useEffect, useRef, useState } from 'react';
 import style from '../../../styles/ChatStyles/CreateChannel.module.css';
 import UploadChannelIcon from '../../../../public/chatIcons/icons/CreateChannel/UploadChannelIcon.jpg'
 import { ChannelInvitor } from './ChannelInvitor/ChannelInvitor';
-import socket from '../../../app/socket/socket';
+import socket from '../../.../app/socket/socket';
 import { fetchDataFromApi } from '../CustomFetch/fetchDataFromApi';
 import axios from 'axios';
 

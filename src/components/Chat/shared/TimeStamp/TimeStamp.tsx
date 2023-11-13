@@ -1,6 +1,5 @@
 import { formatDateAndTime } from '../../../../app/utils/dateUtils';
-import style from '../../../styles/ChatStyles/TimeStamp.module.css'
-
+import style from '../../../../styles/ChatStyles/TimeStamp.module.css'
 
 function TimeStamp({ time }:{time: string }) {
 

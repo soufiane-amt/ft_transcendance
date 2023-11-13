@@ -45,6 +45,8 @@
 .message_bubble___sent_style {
   background-color: var(--message_sent_bubble_color);
   color: white;
+  background: linear-gradient(0deg, #432ea5 45%, #7763d0  100%);
+
 }
 
 /* |received message styling| */
@@ -63,6 +65,7 @@
 .message_bubble___received_style {
   background-color: var(--message_received_bubble_color);
   color: rgb(0, 0, 0);
+  background: linear-gradient(0deg,var(--message_received_bubble_color) 45%, rgb(221, 221, 230)  100%);
 }
 
 /*|UserName|*/

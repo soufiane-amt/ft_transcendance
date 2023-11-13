@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { discussionPanelSelectType, selectDiscStateType } from "../src/app/interfaces/DiscussionPanel";
+import { discussionPanelSelectType, selectDiscStateType } from "../components/Chat/interfaces/DiscussionPanel";
 
 export function useHandleChattingDisable (BanContext:any, MuteContext:any, selectedDiscussion: discussionPanelSelectType, 
   disableChatTextBox : React.Dispatch<React.SetStateAction<boolean | undefined>>)
