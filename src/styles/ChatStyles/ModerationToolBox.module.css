@@ -1,86 +1,88 @@
 .moderation_tool_box {
-    height: 800px;
-    width: 500px;
+  height: 800px;
+  width: 500px;
 
-  }
+}
 
 .user_moderation_part{
-    display: flex;
-    flex-direction: column; 
-    justify-content: space-between;
-    height: 85%;
+  display: flex;
+  flex-direction: column; 
+  justify-content: space-between;
+  height: 85%;
 }
 
 .moderation_tool_box h2 {
-    width: 9em ;
-    font-weight: bolder;
-    margin-left: 25px;
-    border-bottom: 1px solid rgb(188, 185, 185);
+  width: 9em ;
+  font-weight: bolder;
+  margin-left: 25px;
+  font-family:cursive;
+  /* letter-spacing: 1px; */
+  border-bottom: 1px solid rgb(188, 185, 185);
 }
 
 
 .users_cards{
-    overflow: scroll;
+  overflow: scroll;
 
 }
 .users_cards::-webkit-scrollbar {
-    width: 0em; 
-  }
+  width: 0em; 
+}
 
 .user_addition{
-    display: flex;
-    justify-content:space-around;
-    /* margin-bottom: 50px; */
+  display: flex;
+  justify-content:space-around;
+  /* margin-bottom: 50px; */
 
 }
 
 .user_addition input
 {   
-    width: 70%;
-    height: 40px;
-    border: 0;
-    background-color: #D0D0DB;
-    border-radius: 20px;
-    padding-inline: 10px;
-    font-size:large;
+  width: 70%;
+  height: 40px;
+  border: 0;
+  background-color: #D0D0DB;
+  border-radius: 20px;
+  padding-inline: 10px;
+  font-size:large;
 }
 
 .user_addition button
 {   
-    border-radius: 20px;
-    border: 0;
-    width: 20%;
-    color: white;
-    font-size: large;
-    font-weight: bold;
-    background-color: #B3A4FA;
-    cursor: pointer;
+  border-radius: 20px;
+  border: 0;
+  width: 20%;
+  color: white;
+  font-size: large;
+  font-weight: bold;
+  background-color: #B3A4FA;
+  cursor: pointer;
 }
 
 
 
 @media (max-width:650px) 
 {
-  .moderation_tool_box
-  {
-    height: 550px;
-    width: 300px;
+.moderation_tool_box
+{
+  height: 550px;
+  width: 300px;
 
-  }
-  .moderation_tool_box h2 {
-    font-size: medium ;
-  }
-  .tab {
-    font-size: medium;
-  }
-  .user_moderation_part{
-    height: 70%;
-    
-  }
-  .user_addition input
-  {   
-    /* width: 50%; */
-    height: 30px;
-  }
+}
+.moderation_tool_box h2 {
+  font-size: medium ;
+}
+.tab {
+  font-size: medium;
+}
+.user_moderation_part{
+  height: 70%;
+  
+}
+.user_addition input
+{   
+  /* width: 50%; */
+  height: 30px;
+}
 
 }
