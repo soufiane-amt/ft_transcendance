@@ -514,7 +514,7 @@ export class GameService {
     setTimeout(() => {
       client.emit('leaving_game_data', payload);
       game.rejoinTheGame(client, side);
-    }, 800);
+    }, 2500);
     return "you've been join the game successfully";
   }
 
