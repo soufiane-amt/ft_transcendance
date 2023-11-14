@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import socket from "../app/socket/socket";
-import { discussionPanelSelectType } from "../src/app/interfaces/DiscussionPanel";
+import { discussionPanelSelectType } from "../components/Chat/interfaces/DiscussionPanel";
 
 export function useHandleNewMsg(messagesHistoryState: any, selectedDiscussion:discussionPanelSelectType) {
 
