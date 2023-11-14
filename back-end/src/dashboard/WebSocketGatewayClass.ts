@@ -28,6 +28,7 @@ import ClientSocket from 'src/game/interfaces/clientSocket.interface';
 import { GatewaysGuard } from 'src/game/guards/gateways.guard';
 import Game from 'src/game/Game/classes/Game';
 import socketIOMiddleware, { wsmiddleware } from 'src/game/gateways.middleware';
+import JoiningLeavingGameResponseDto, { joiningLeavingGameResponseDto } from 'src/game/dto/JoiningLeavingGameResponse.dto';
 @WebSocketGateway({ cors: true, origins: 'http://localhost:3000' })
 @Injectable()
 @UseGuards(GatewaysGuard)
@@ -67,11 +68,16 @@ export class WebSocketGatewayClass
         client.join(gameInvRoom);
         const game: Game | undefined = this.gameService.playerHasLeavingGame(payload.userId);
         if (game !== undefined) {
-          const payload: any = {
-            player1_id: game.leftPlayerSocket.userId,
-            player2_id: game.rightPlayerSocket.userId
-          }
-          setTimeout(() => client.emit('joining_leaving_game', payload), 2500);
+          setTimeout(() => {
+            const duration: number = 58000;
+            const remainingTime: number = (duration - Number((Date.now() - game.stopedAt.getTime())));
+            const payload: any = {
+              player1_id: game.leftPlayerSocket.userId,
+              player2_id: game.rightPlayerSocket.userId,
+              remainingTime
+            }
+            client.emit('joining_leaving_game', payload);
+          }, 2500)
         }
     }
   }
@@ -294,5 +300,10 @@ export class WebSocketGatewayClass
     } catch {
       return 'invalid token';
     }
+  }
+
+  @SubscribeMessage('joining_leaving_game_response')
+  handleJoiningLeavingGameResponse(@MessageBody(new ZodValidationPipe(joiningLeavingGameResponseDto)) joiningLeavingGameResponseDto: JoiningLeavingGameResponseDto, @ConnectedSocket() client : ClientSocket) : string {
+    return this.gameService.joining_leaving_game_response(client, joiningLeavingGameResponseDto);
   }
 }

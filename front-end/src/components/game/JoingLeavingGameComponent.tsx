@@ -28,7 +28,16 @@ function JoinLeavingGameComponent({ ...props }) {
   const router = useRouter();
 
   const HandleSubmit = () => {
-    router.push('/game?join_leaving_game=true');
+    const payload: any = {
+      response: 'accepted'
+    };
+    newSocket.emit('joining_leaving_game_response', payload, (response: string) => {
+      if (response === 'You\'ve been catch the game successfully') {
+        router.push('/game?joining_leaving_game=true');
+      } else {
+        props.state(false);
+      }
+    })
   };
 
   useEffect(() => {
@@ -116,6 +125,12 @@ function JoinLeavingGameComponent({ ...props }) {
             onClick={(ev) => {
               ev.preventDefault();
               props.State(false);
+              const payload : any = {
+                response: 'declined'
+              }
+              newSocket.emit('joining_leaving_game_response', payload, () => {
+                props.state(false);
+              });
             }}
             className={`${mono.className} font-semibold hover:opacity-50 hover:cursor-pointer`}
           >

@@ -20,6 +20,11 @@ const Structure = ({ children }: { children: React.ReactNode }) => {
   const router = useRouter();
 
   useEffect(() => {
+
+    newSocket.on('close_leaving_game_notification_model', () => {
+      setTimer(0);
+      setIsJoinLeavingGame(false);
+    })
     newSocket.on("GameInvitation", (data) => {
       if (data) {
         setGameReqData(data);
@@ -39,7 +44,8 @@ const Structure = ({ children }: { children: React.ReactNode }) => {
     newSocket.on('joining_leaving_game', (payload: JoinLeavingGameData) => {
       setIsJoinLeavingGame(true);
       setLeavingGameData(payload);
-      setTimer(20);
+      const remainingTime: number = Math.floor(payload.remainingTime / 1000);
+      setTimer(remainingTime);
     });
   }, []);
 

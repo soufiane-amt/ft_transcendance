@@ -21,6 +21,7 @@ import RequestInvitationGameDto from './dto/RequestInvitationGame.dto';
 import { User } from '@prisma/client';
 import GameServer from './interfaces/GameServer.interface';
 import { join } from 'path';
+import JoiningLeavingGameResponseDto from './dto/JoiningLeavingGameResponse.dto';
 
 @Injectable()
 export class GameService {
@@ -381,9 +382,12 @@ export class GameService {
           }
         }, 60000);
         const missingUserSessions: string = `room_${missingUserId}`;
+        const duration: number = 58000;
+        const remainingTime: number = (duration - Number(Date.now() - game.stopedAt.getTime()));
         const payload: any = {
           player1_id: game.leftPlayerSocket.userId,
-          player2_id: game.rightPlayerSocket.userId
+          player2_id: game.rightPlayerSocket.userId,
+          remainingTime
         }
         server.mainServer.to(missingUserSessions).emit('joining_leaving_game', payload);
       }
@@ -497,5 +501,27 @@ export class GameService {
 
   playerHasLeavingGame(userid: string) : Game | undefined {
     return this.leavingGames.get(userid);
+  }
+
+  joining_leaving_game_response(client: ClientSocket ,joiningLeavingGameResponseDto: JoiningLeavingGameResponseDto) : string {
+    const game : Game | undefined = this.leavingGames.get(client.userId);
+    const missingUserSessions: string = `room_${client.userId}`;
+    if (joiningLeavingGameResponseDto.response === 'accepted') {
+      game.server.mainServer.to(missingUserSessions).emit('close_leaving_game_notification_model');
+      if (game === undefined) {
+        return 'you couldn\'t catch the game';
+      } else {
+        return 'You\'ve been catch the game successfully';
+      }
+    }
+    else if (joiningLeavingGameResponseDto.response === 'declined') {
+      this.leavingGames.delete(client.userId);
+      game.leftPlayer.winningRounds = game.leftPlayerSocket.userId === client.userId ? 0 : 3;
+      game.rightPlayer.winningRounds = game.rightPlayerSocket.userId === client.userId ? 0 : 3;
+      const result: string = 'win';
+      client.userId === game.leftPlayerSocket.userId ? game.rightPlayerSocket.emit('game_finished', result) : game.leftPlayerSocket.emit('game_finished', result);
+      game.status = 'finished';
+      game.server.mainServer.to(missingUserSessions).emit('close_leaving_game_notification_model');
+    }
   }
 }

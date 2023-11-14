@@ -23,6 +23,7 @@ export default class Game {
     gameId: string;
     mapType: string;
     missingUser: string;
+    stopedAt: Date | null;
 
     constructor(gameId: string, leftPlayerSokcet: ClientSocket, rightPlayerSocket: ClientSocket, speed: string, server: GameServer, gameRoom: string, mapType: string) {
         this.roundsScores = [7, 5, 3];
@@ -31,6 +32,7 @@ export default class Game {
         this.speed = speed;
         this.room = gameRoom;
         this.status = 'started';
+        this.stopedAt = null;
         this.round = 0;
         this.scene = {} as Scene;
         this.scene.top = 0;
@@ -138,6 +140,7 @@ export default class Game {
                 return ;
             }
             this.missingUser = 'right';
+            this.stopedAt = new Date();
             this.leftPlayerSocket.emit('paused_game');
             this.status = 'paused';
         })
@@ -149,6 +152,7 @@ export default class Game {
                 this.status = 'finished';
                 return ;
             }
+            this.stopedAt = new Date();
             this.missingUser = 'left';
             this.rightPlayerSocket.emit('paused_game');
             this.status = 'paused';
@@ -192,6 +196,7 @@ export default class Game {
                 this.status = 'finished';
                 return ;
             }
+            this.stopedAt = new Date();
             this.missingUser = side;
             side === 'right' ? this.leftPlayerSocket.emit('paused_game') : this.rightPlayerSocket.emit('paused_game');
             this.status = 'paused';
@@ -208,6 +213,7 @@ export default class Game {
         } else {
             this.rightPlayerSocket = client;
         }
+        this.stopedAt = null;
         this.pausedSide = '';
         this.status = 'started';
         side === 'left' ? this.rightPlayerSocket.emit('game_continued') : this.leftPlayerSocket.emit('game_continued');

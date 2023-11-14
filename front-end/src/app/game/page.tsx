@@ -40,7 +40,7 @@ export default function Game() {
   const [gameSocket, setGameSocket] = useState<null | Socket>(null);
 
   useEffect(() => {
-    const joining_leaving_game: boolean = usesearchParams.get('join_leaving_game') !== null;
+    const joining_leaving_game: boolean = usesearchParams.get('joining_leaving_game') !== null;
     if (gameSocket !== null && joining_leaving_game === true) {
         gameSocket.emit('join_leaving_game', (response: string) => {
           if (response === "you've been join the game successfully") {
