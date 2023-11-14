@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import style from "../../../../styles/ChatStyles/LeaveChannel.module.css";
 import CheckboxList from "../CheckBoxList/CheckBoxList";
-import { findUserContacts } from "../../../../app/context/UsersContactBookContext";
+import { useFindUserContacts, useUserContacts } from "../../../../app/context/UsersContactBookContext";
 import socket from "../../../../app/socket/socket";
 
 interface LeaveChannelProps {
@@ -12,6 +12,7 @@ interface LeaveChannelProps {
 
 export function LeaveChannel({selectedDiscussion, userGrade, channelUsers }: LeaveChannelProps) {
   const [showDropDownList, setShowDropDownList] = useState(false);
+  const userData = useUserContacts();
 
   const handleSendingLeavingSignal = () => {
     socket.emit('leaveChannel', selectedDiscussion)
@@ -39,7 +40,7 @@ export function LeaveChannel({selectedDiscussion, userGrade, channelUsers }: Lea
                 selectedDiscussion={selectedDiscussion}
                 confirmSelection={handleSendingLeavingSignal}
                 options={channelUsers
-                  ?.map((user_id) => findUserContacts(user_id)?.username)
+                  ?.map((user_id) => userData.get(user_id)?.username)
                   .filter(Boolean)} // Filter out any undefined usernames
               />
             </>

@@ -5,7 +5,7 @@ import { useSessionUser } from "../../../../app/context/SessionUserContext";
 import { RadioOptions } from "../../shared/RadioOptions/RadioOptions";
 import { ConfirmationDialog } from "../../shared/ConfirmationDialog/ConfirmationDialog";
 import socket from "../../../../app/socket/socket";
-import { findBannedRoomContext } from "../../../../app/context/BanContext";
+import { Ban, useFindBannedRoomContext } from "../../../../app/context/BanContext";
 
 const data = {
   src: "/chatIcons/avatar.png",
@@ -172,13 +172,14 @@ function renderModerationActions(
   selectedChannel: string,
   targetedUser: MemberType,
   currentUser: any,
-  sessionUserModeratType: string
+  sessionUserModeratType: string,
+  bannedRooms: Ban | undefined
 ) {
   const actions: ReactNode[] = [];
   const actionData = {targeted_user: targetedUser.username, channel_id: selectedChannel};
   if (currentUser.username === targetedUser.username) return actions;
   const userKey = `user_${targetedUser.username}_${selectedChannel}`;
-  if (sessionUserModeratType !== 'Member' && findBannedRoomContext(selectedChannel) == null) {
+  if (sessionUserModeratType !== 'Member' && bannedRooms == null) {
     if (sessionUserModeratType === 'Owner')
     {
       if (targetedUser.role ===  'Admin')
@@ -231,6 +232,7 @@ export function UserModerationCard({
   targetedUser,
 }: UserModerationCardProps) {
   const currentUser = useSessionUser();
+  const bannedRooms = useFindBannedRoomContext(selectedChannel)
 
   return (
     <div className={style.moderation_card}>
@@ -242,7 +244,7 @@ export function UserModerationCard({
         </div>
       </div>
       <div className={style.action_buttons}>
-        {renderModerationActions(selectedChannel, targetedUser, currentUser, currentUserIsModerator)}
+        {renderModerationActions(selectedChannel, targetedUser, currentUser, currentUserIsModerator, bannedRooms)}
       </div>
     </div>
   );

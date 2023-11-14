@@ -103,7 +103,7 @@ export function useChannelBooks() {
   return context.ChannelBooks;
 }
 
-export function findChannelBook(channel_id: string) {
+export function useFindChannelBook(channel_id: string) {
   const context = useContext(ChannelBooksContext);
   if (!context) {
     throw new Error(

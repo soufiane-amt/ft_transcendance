@@ -39,11 +39,11 @@ function ChatTextBox({
   useHandleNewMsg(messagesHistoryState, selectedDiscussion)
   useHandleBan(BanContext, selectedDiscussion, disableChatTextBox)
   useHandleUnBan(BanContext, selectedDiscussion, disableChatTextBox)
-  if (MuteContext)
-  {
-    useHandleMute(MuteContext, selectedDiscussion, disableChatTextBox)
-    useHandleUnMute(MuteContext, selectedDiscussion, disableChatTextBox)
-  }
+  
+  //ELINT Change happened here 
+  useHandleMute(MuteContext, selectedDiscussion, disableChatTextBox)
+  useHandleUnMute(MuteContext, selectedDiscussion, disableChatTextBox)
+  
   useHandleChattingDisable(BanContext, MuteContext, selectedDiscussion, disableChatTextBox)
   const handleSendMessage = () => {
     if (isMessageValid(newMessageContent) === false)
@@ -65,7 +65,7 @@ function ChatTextBox({
     <div className={`${style.message_bar} `}>
       {isChatTextBoxDisabled ? (
         <div className={style.banned_message}>
-          You can't use this room for now.
+            You can&rsquo;t use this room for now.
         </div>
       ) : (
         <>

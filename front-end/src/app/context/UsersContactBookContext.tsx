@@ -109,14 +109,16 @@ export function useUserContacts() {
   return context.userContacts;
 }
 
-export function findUserContacts(user_id: string) {
+export function useFindUserContacts(user_id: string | undefined): UserContactDto | undefined {
   const context = useContext(UserContactsContext);
   console.log ('User contacts: ', context?.userContacts, ' ', user_id)
   if (!context) {
     throw new Error(
       "useUserContacts must be used within a UserContactsProvider"
-    );
-  }
+      );
+    }
+    if (!user_id) 
+      return undefined
   return context.userContacts.get(user_id);
 }
 

@@ -32,7 +32,7 @@ export function useMuteContext(): IMuteContext | undefined{
 }
 
 
-export function findMuteRoomContext(room_id: string) {
+export function useFindMuteRoomContext(room_id: string) {
   const MuteRooms = useMuteContext()?.MuteRooms || []; // Provide a default empty array if MuteRooms is undefined.
   const room = MuteRooms.find((Mute) => Mute.room_id === room_id);
   return room;

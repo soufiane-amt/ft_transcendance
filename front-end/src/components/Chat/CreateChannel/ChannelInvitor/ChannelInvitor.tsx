@@ -15,7 +15,7 @@ function UserItemCard ({userCardData, extraStyle, handleUserClick}:UserItemProps
     return (
         <li key={userCardData.username} className={`${style.user_card_item} ${extraStyle}`}
             onClick={handleUserClick}>
-            <img src={userCardData.avatar}/>
+            <img src={userCardData.avatar} alt='user card'/>
             <span>{userCardData.username}</span>
         </li>
     )
@@ -82,7 +82,9 @@ export function ChannelInvitor({userCondidates, onConfirm, handleVisibility}: Ch
             <div className={style.user_invitor_modal_selection}>
                 <ul>
                 {searchedUsers.map((user) => (
-                        <UserItemCard userCardData={{username:user, avatar: userCondidates.get(user)}} 
+                        <UserItemCard 
+                                key={user}
+                                userCardData={{username:user, avatar: userCondidates.get(user)}} 
                                 extraStyle={checkUserInvited(user) ? style.selected : ''}
                                 handleUserClick={() => handleClickUser(user)}/>
                 ))}

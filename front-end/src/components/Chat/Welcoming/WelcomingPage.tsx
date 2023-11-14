@@ -36,7 +36,7 @@ export function WelcomingPage() {
       <div className={style.user_initiative_talks}>
         <h5 className={style.welcoming_page_talks__title}>Start a conversation:</h5>
         {dataToDisplay?.dmsToJoin.map((user: { username: string; avatar: string }) => {
-          return <UserInitiativeTalk userData={{ username: user.username, avatar: user.avatar }} />;
+          return <UserInitiativeTalk key={user.username} userData={{ username: user.username, avatar: user.avatar }} />;
         })}
       </div>
     );
@@ -49,7 +49,7 @@ export function WelcomingPage() {
         <h5 className={style.welcoming_page_talks__title}>Join a rooom:</h5>
         {
              dataToDisplay?.channelsToJoin.map((channel:ChannelType) => {
-              return <ChannelJoin channelData={channel}/>
+              return <ChannelJoin key={channel.id} channelData={channel}/>
             })
         }
     </div>)

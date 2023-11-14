@@ -2,7 +2,7 @@ import { createContext, useContext, useState, ReactNode, useEffect } from 'react
 import { fetchDataFromApi } from '../../components/Chat/CustomFetch/fetchDataFromApi';
 
 // Define the Ban type
-interface Ban {
+export interface Ban {
   room_id: string;
   blocker_id : string;
 }
@@ -33,7 +33,7 @@ export function useBanContext(): IBanContext {
 }
 
 
-export function findBannedRoomContext(room_id: string) {
+export function useFindBannedRoomContext(room_id: string) {
   const bannedRooms = useBanContext().bannedRooms || []; // Provide a default empty array if bannedRooms is undefined.
   const room = bannedRooms.find((ban) => ban.room_id === room_id);
   return room;

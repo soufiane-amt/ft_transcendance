@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import Avatar from "../../shared/Avatar/Avatar";
 import style from "../../../../styles/ChatStyles/ChannelSetting.module.css";
-import { findChannelBook } from "../../../../app/context/ChannelInfoBook";
+import { useFindChannelBook } from "../../../../app/context/ChannelInfoBook";
 import socket from "../../../../app/socket/socket";
 
 const MaxPasswordLength = 50;
@@ -79,7 +79,7 @@ interface ChannelSettingProps{
   channel_id:string, 
 }
 export function ChannelSetting({channel_id}:ChannelSettingProps) {
-  const currentChannel = findChannelBook(channel_id)
+  const currentChannel = useFindChannelBook(channel_id)
   const [selectedOption, setSelectedOption] = useState(currentChannel?.type); // State to track selected option
   const [password, setNewPassword] = useState(''); // State to track selected option
 
@@ -97,7 +97,9 @@ export function ChannelSetting({channel_id}:ChannelSettingProps) {
       currentChannel && (
         <div className={`${style.channel_setting} ${style.display_as_block}`}>
           <div>
-            <img className={style.channel_setting__img} src={currentChannel.avatar} />
+            <img  className={style.channel_setting__img} 
+                  src={currentChannel.avatar} 
+                  alt="channel setting image"/>
             <div>
               <h2>{currentChannel.name}</h2>
             </div>

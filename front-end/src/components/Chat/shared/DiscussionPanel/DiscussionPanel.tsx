@@ -3,21 +3,23 @@ import style from "../../../../styles/ChatStyles/DiscussionPanel.module.css"; //
 import { DiscussionDto } from "../../interfaces/DiscussionPanel";
 import Avatar from "../Avatar/Avatar";
 import TimeStamp from "../TimeStamp/TimeStamp";
-import { findUserContacts } from "../../../../app/context/UsersContactBookContext";
+import { useFindUserContacts } from "../../../../app/context/UsersContactBookContext";
 import socket from "../../../../app/socket/socket";
 import clsx from "clsx";
-import { findChannelBook } from "../../../../app/context/ChannelInfoBook";
-import { useSessionUser } from "../../../../app/context/SessionUserContext";
+import { useFindChannelBook } from "../../../../app/context/ChannelInfoBook";
+import { UserContactDto, useSessionUser } from "../../../../app/context/SessionUserContext";
 
 const findDiscussions = (
   currentRoute : "Direct_messaging" | "Channels",
   partner_id: string | undefined,
-  discussion_id: string //This id is either the id of channel or the id of the user to dm
+  userContacts: UserContactDto |undefined ,
+  discussion_id: string, //This id is either the id of channel or the id of the user to dm
+  sessionUserData: UserContactDto,
 ) => {
+  // useFindUserContacts(partner_id)
   if (currentRoute === "Direct_messaging") {
       if (partner_id !== undefined) {
-        const discussion_data = findUserContacts(partner_id);
-        console.log('discussion_data:', partner_id)
+        const discussion_data = userContacts;
         if (!discussion_data) return undefined;
         return {
           name: discussion_data.username,
@@ -25,7 +27,7 @@ const findDiscussions = (
           };
         }
         else{
-          const discussion_data = useSessionUser();
+          const discussion_data = sessionUserData;
           if (!discussion_data) return undefined;
           return {
             name: discussion_data.username,
@@ -34,7 +36,7 @@ const findDiscussions = (
         } 
     }
   else {
-    const discussion_data = findChannelBook(discussion_id);
+    const discussion_data = useFindChannelBook(discussion_id);
     if (!discussion_data) return undefined;
     return {
       name: discussion_data.name,
@@ -80,6 +82,9 @@ function DiscussionPanel({
   currentRoute,
   
 }: DiscussionPanelProps) {
+  const sessionUser = useSessionUser();
+  const sessionUserContacts: UserContactDto |undefined =  useFindUserContacts(DiscussionPanel.partner_id);
+
   const panelThemeClass = clsx({
     [style.discussion_panel_default_colors]: isSelected === false,
     [style.discussion_panel_selection_colors]: isSelected === true,
@@ -92,8 +97,11 @@ function DiscussionPanel({
     socket.emit("MarkMsgRead", { _id: DiscussionPanel.id });
   };
 
-  console.log('>>DiscussionPanel', DiscussionPanel)
-  const panel = findDiscussions(currentRoute,DiscussionPanel.partner_id, DiscussionPanel.id);
+  const panel = findDiscussions(currentRoute,
+            DiscussionPanel.partner_id,
+             sessionUserContacts,
+             DiscussionPanel.id,
+              sessionUser);
   return (
     <>
       {panel && (

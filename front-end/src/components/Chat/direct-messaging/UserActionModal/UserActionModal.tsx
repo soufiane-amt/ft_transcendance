@@ -3,11 +3,11 @@ import style from "../../../../styles/ChatStyles/UserActionModal.module.css";
 import Avatar from "../../shared/Avatar/Avatar";
 import React, { useContext, useEffect, useRef, useState } from "react";
 import { DiscussionDto } from "../../interfaces/DiscussionPanel";
-import { findUserContacts } from "../../../../app/context/UsersContactBookContext";
+import { useFindUserContacts } from "../../../../app/context/UsersContactBookContext";
 import { useSessionUser } from "../../../../app/context/SessionUserContext";
 import socket from "../../../../app/socket/socket";
 import {
-  findBannedRoomContext,
+  useFindBannedRoomContext,
   useBanContext,
 } from "../../../../app/context/BanContext";
 import { useOutsideClick } from "../../../../CustomHooks/useOutsideClick";
@@ -67,9 +67,9 @@ function ActionButton({ targetId, buttonData }: ActionButtonProps) {
     <button
       className={style.action_button}
       style={{ backgroundColor: buttonData.backgroundColor }}
-      onClick={handleButtonClick}
-    >
-      <img src={buttonData.icon}></img>
+        onClick={handleButtonClick}
+      >
+        <img src={buttonData.icon} alt="" />
       {buttonData.title}
     </button>
   );
@@ -85,8 +85,8 @@ function UserActionModal({
   targetedDiscussion: string;
 }) {
   const userSession = useSessionUser();
-  const userContact = findUserContacts(targetedUserId);
-  const userIsBanned = findBannedRoomContext(targetedDiscussion);
+  const userContact = useFindUserContacts(targetedUserId);
+  const userIsBanned = useFindBannedRoomContext(targetedDiscussion);
   const ref = useOutsideClick(handleVisibility);
   
   if (!userContact) return <div>User action modal not found!</div>;
@@ -101,7 +101,7 @@ function UserActionModal({
     >
       <div className={style.action_targeted_user}>
         {/* <Avatar src={userContact.avatar} avatarToRight={false} /> */}
-        <img src={userContact.avatar}/>
+        <img src={userContact.avatar} alt="avatar"/>
         <h1>{userContact.username}</h1>
       </div>
       <div className={style.interaction_buttons}>

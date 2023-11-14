@@ -1,23 +1,24 @@
 import { useEffect } from "react";
-import { discussionPanelSelectType } from "../src/app/interfaces/DiscussionPanel";
+import { discussionPanelSelectType } from "../components/Chat/interfaces/DiscussionPanel";
 import socket from "../app/socket/socket";
-import { IMuteContext } from "../src/app/context/MuteContext";
+import { IMuteContext } from "../app/context/MuteContext";
 
 
-export function useHandleMute (MuteContext:IMuteContext, selectedDiscussion : discussionPanelSelectType, 
+export function useHandleMute (MuteContext:IMuteContext | undefined, selectedDiscussion : discussionPanelSelectType, 
             disableChatTextBox : React.Dispatch<React.SetStateAction<boolean | undefined>>)
 {
-
-    useEffect(() => {
-        const handleUserMuted = (MuteSignal: { room_id: string}) => {
-
-          if (MuteSignal.room_id === selectedDiscussion.id) {
-            disableChatTextBox(true); 
-          }
-          MuteContext.MuteUser(MuteSignal.room_id)
-        };
-
-        socket.on("userMuted", handleUserMuted);
+  
+  useEffect(() => {
+    const handleUserMuted = (MuteSignal: { room_id: string}) => {
+      
+      if (!MuteContext) return;
+      if (MuteSignal.room_id === selectedDiscussion.id) {
+        disableChatTextBox(true); 
+      }
+      MuteContext?.MuteUser(MuteSignal.room_id)
+    };
+    
+          socket.on("userMuted", handleUserMuted);
 
         return () => {
           socket.off("userMuted", handleUserMuted);
@@ -26,10 +27,11 @@ export function useHandleMute (MuteContext:IMuteContext, selectedDiscussion : di
     }
 
     
-export function useHandleUnMute (MuteContext:IMuteContext, selectedDiscussion : discussionPanelSelectType, 
+export function useHandleUnMute (MuteContext:IMuteContext | undefined, selectedDiscussion : discussionPanelSelectType, 
     disableChatTextBox : React.Dispatch<React.SetStateAction<boolean | undefined>>)
     {
         useEffect(() => {
+          if (!MuteContext) return;
             const handleUserUnMuted = (MuteSignal: { room_id: string }) => {
               if (MuteSignal.room_id === selectedDiscussion.id) {
                 disableChatTextBox(false); // Set the isMuted state to true when Muted

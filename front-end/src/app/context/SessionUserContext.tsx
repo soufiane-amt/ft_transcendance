@@ -7,7 +7,7 @@ import {
 } from "react";
 import { fetchDataFromApi } from "../../components/Chat/CustomFetch/fetchDataFromApi";
 //  the shape of the user data
-interface UserContactDto {
+export interface UserContactDto {
   id: string;
   username: string;
   avatar: string;
@@ -57,7 +57,7 @@ export function SessionUserProvider({ children }: SessionUserProviderProps) {
 }
 
 // Custom hook to use the context
-export function useSessionUser() {
+export function useSessionUser() :UserContactDto {
   const context = useContext(SessionUserContext);
   if (!context) {
     throw new Error("useSessionUser must be used within a SessionUserProvider");

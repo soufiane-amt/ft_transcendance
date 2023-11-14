@@ -1,5 +1,5 @@
 import { useSessionUser } from "../../../../app/context/SessionUserContext"
-import { findUserContacts } from "../../../../app/context/UsersContactBookContext"
+import { useFindUserContacts } from "../../../../app/context/UsersContactBookContext"
 import { ChannelData } from "../../interfaces/ChannelData"
 import { UserModerationCard } from "../UserModerationCard/UserModerationCard"
 import style from "../../../../styles/ChatStyles/ModerationToolBox.module.css"
@@ -34,15 +34,15 @@ export function ModerationToolBox ({selectedChannel, channelData}:ModerationTool
         };
 
         // Compare user roles first
+        const aUserData = useFindUserContacts(a);
+        const bUserData = useFindUserContacts(b);
+        const aUsername = aUserData?.username ?? '';
+        const bUsername = bUserData?.username ?? '';
         const roleComparison = roleOrder[getUserRole(a, channelData)] - roleOrder[getUserRole(b, channelData)];
 
         // If roles are the same, compare usernames alphabetically
         if (roleComparison === 0) {
-            const aUserData = findUserContacts(a);
-            const bUserData = findUserContacts(b);
-            if (aUserData && bUserData) {
-                return aUserData.username.localeCompare(bUserData.username);
-            }
+            return aUsername.localeCompare(bUsername);
         }
 
         return roleComparison;
@@ -60,7 +60,7 @@ export function ModerationToolBox ({selectedChannel, channelData}:ModerationTool
                         sortedChannelUsers?.map((user, index)=>{
                             let userData;
                             if (user !==  currentUser.id)
-                                userData = findUserContacts(user)
+                                userData = useFindUserContacts(user)
                             else
                                 userData = {avatar:currentUser.avatar, username:currentUser.username}
                             const userRole = getUserRole (user, channelData)
