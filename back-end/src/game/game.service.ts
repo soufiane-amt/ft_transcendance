@@ -1,27 +1,24 @@
 import { Injectable } from '@nestjs/common';
+import { User } from '@prisma/client';
+import { Server, Socket } from 'socket.io';
+import { GameCrudService } from 'src/prisma/game-crud.service';
+import CreateGame from 'src/prisma/interfaces/CreateGame.interface';
+import GameScore from 'src/prisma/interfaces/GameScore.interface';
 import { UserCrudService } from 'src/prisma/user-crud.service';
+import Game from './Game/classes/Game';
+import GameInvitationDto from './dto/GameInvitation.dto';
+import GameInvitationResponseDto from './dto/GameInvitationResponse.dto';
+import JoinGameDto from './dto/JoinGame.dto';
+import JoiningLeavingGameResponseDto from './dto/JoiningLeavingGameResponse.dto';
 import MatchMakingDto from './dto/MatchMaking.dto';
+import RequestInvitationGameDto from './dto/RequestInvitationGame.dto';
+import GameInfo from './interfaces/GameInfo';
+import GameServer from './interfaces/GameServer.interface';
+import GameSettings from './interfaces/GameSettings.interface';
 import ClientSocket from './interfaces/clientSocket.interface';
 import GuestPlayer from './interfaces/guestPlayer.interface';
 import HostPlayer from './interfaces/hostPlayers.interface';
 import { Player } from './interfaces/player.interface';
-import GameSettings from './interfaces/GameSettings.interface';
-import { GameCrudService } from 'src/prisma/game-crud.service';
-import CreateGame from 'src/prisma/interfaces/CreateGame.interface';
-import GameInvitationDto from './dto/GameInvitation.dto';
-import { Server, Socket } from 'socket.io';
-import { gameInvitationResponseDto } from './dto/GameInvitationResponse.dto';
-import GameInvitationResponseDto from './dto/GameInvitationResponse.dto';
-import JoinGameDto from './dto/JoinGame.dto';
-import { GameGateway } from './gateway/game.gateway';
-import Game from './Game/classes/Game';
-import GameScore from 'src/prisma/interfaces/GameScore.interface';
-import GameInfo from './interfaces/GameInfo';
-import RequestInvitationGameDto from './dto/RequestInvitationGame.dto';
-import { User } from '@prisma/client';
-import GameServer from './interfaces/GameServer.interface';
-import { join } from 'path';
-import JoiningLeavingGameResponseDto from './dto/JoiningLeavingGameResponse.dto';
 
 @Injectable()
 export class GameService {
@@ -308,7 +305,11 @@ export class GameService {
     server.of('/').adapter.rooms.delete(invitationRoom);
   }
 
-  async joinGame(joinGame: JoinGameDto, client: ClientSocket, server: GameServer) : Promise<void> {
+  async joinGame(
+    joinGame: JoinGameDto,
+    client: ClientSocket,
+    server: GameServer,
+  ): Promise<void> {
     const game = this.pandingGames.get(joinGame.game_id);
     if (game === undefined) {
       this.pandingGames.set(joinGame.game_id, client);
@@ -365,36 +366,49 @@ export class GameService {
         game.play();
       }
       if (game.status === 'paused' && game.missingUser !== '') {
-        const missingUserId: string = game.missingUser === 'left' ? game.leftPlayerSocket.userId : game.rightPlayerSocket.userId;
-        if (this.leavingGames.has(missingUserId) === true)
-          return ;
+        const missingUserId: string =
+          game.missingUser === 'left'
+            ? game.leftPlayerSocket.userId
+            : game.rightPlayerSocket.userId;
+        if (this.leavingGames.has(missingUserId) === true) return;
         this.leavingGames.set(missingUserId, game);
+        const stopedAt: Date = game.stopedAt;
         setTimeout(() => {
           const game: Game | undefined = this.leavingGames.get(missingUserId);
-          if (game !== undefined) {
+          if (game !== undefined && stopedAt == game.stopedAt) {
             game.leftPlayer.winningRounds = game.missingUser === 'left' ? 0 : 3;
-            game.rightPlayer.winningRounds = game.missingUser === 'right' ? 0 : 3;
-            const winnerSocket: Socket = game.missingUser === 'right' ? game.leftPlayerSocket : game.rightPlayerSocket;
+            game.rightPlayer.winningRounds =
+              game.missingUser === 'right' ? 0 : 3;
+            const winnerSocket: Socket =
+              game.missingUser === 'right'
+                ? game.leftPlayerSocket
+                : game.rightPlayerSocket;
             const result: string = 'win';
             winnerSocket.emit('game_finished', result);
             game.status = 'finished';
             this.leavingGames.delete(missingUserId);
+            game.stopedAt = null;
           }
         }, 60000);
         const missingUserSessions: string = `room_${missingUserId}`;
         const duration: number = 58000;
-        const remainingTime: number = (duration - Number(Date.now() - game.stopedAt.getTime()));
+        const remainingTime: number =
+          duration - Number(Date.now() - game.stopedAt.getTime());
         const payload: any = {
           player1_id: game.leftPlayerSocket.userId,
           player2_id: game.rightPlayerSocket.userId,
-          remainingTime
-        }
-        server.mainServer.to(missingUserSessions).emit('joining_leaving_game', payload);
+          remainingTime,
+        };
+        server.mainServer
+          .to(missingUserSessions)
+          .emit('joining_leaving_game', payload);
       }
       if (game.status === 'finished') {
         if (this.leavingGames.has(game.leftPlayerSocket.userId) === true) {
           this.leavingGames.delete(game.leftPlayerSocket.userId);
-        } else if (this.leavingGames.has(game.rightPlayerSocket.userId) === true) {
+        } else if (
+          this.leavingGames.has(game.rightPlayerSocket.userId) === true
+        ) {
           this.leavingGames.delete(game.rightPlayerSocket.userId);
         }
         const gameScore: GameScore = {
@@ -461,67 +475,79 @@ export class GameService {
     }
   }
 
-  async handleJoinLeavingGames(client: ClientSocket) : Promise<string> {
+  async handleJoinLeavingGames(client: ClientSocket): Promise<string> {
     const game: Game | undefined = this.leavingGames.get(client.userId);
     if (game === undefined) {
-        return "the game isn't available";
-      }
-      const side: string = game.missingUser;
-      this.leavingGames.delete(client.userId);
-      game.missingUser = '';
-      const leftPlayer : User | null = await this.userCrudService.findUserByID(game.leftPlayerSocket.userId);
-      const rightPlayer : User | null = await this.userCrudService.findUserByID(game.rightPlayerSocket.userId);
-      if (leftPlayer === null)
-        return 'internal server error';
-      if (rightPlayer === null)
-        return 'internal server error';
-      const player1_score: number = game.leftPlayer.score;
-      const player2_score: number = game.rightPlayer.score;
-      const round: number = game.round + 1;
-      const mapType: string = game.mapType;
-      const payload = {
-        player1_username: leftPlayer.username,
-        player2_username: rightPlayer.username,
-        player1_avatar: leftPlayer.avatar,
-        player2_avatar: rightPlayer.avatar,
-        player1_score,
-        player2_score,
-        round,
-        mapType,
-        side,
-        leftplayerPos: game.leftPlayer.boundaries.top,
-        rightplayerPos: game.rightPlayer.boundaries.top
-      }
-      setTimeout(() => {
-        client.emit('leaving_game_data', payload);
-        game.rejoinTheGame(client, side);
-      }, 600);
-      return "you've been join the game successfully";
+      return "the game isn't available";
     }
+    const side: string = game.missingUser;
+    this.leavingGames.delete(client.userId);
+    game.stopedAt = null;
+    game.missingUser = '';
+    const leftPlayer: User | null = await this.userCrudService.findUserByID(
+      game.leftPlayerSocket.userId,
+    );
+    const rightPlayer: User | null = await this.userCrudService.findUserByID(
+      game.rightPlayerSocket.userId,
+    );
+    if (leftPlayer === null) return 'internal server error';
+    if (rightPlayer === null) return 'internal server error';
+    const player1_score: number = game.leftPlayer.score;
+    const player2_score: number = game.rightPlayer.score;
+    const round: number = game.round + 1;
+    const mapType: string = game.mapType;
+    const payload = {
+      player1_username: leftPlayer.username,
+      player2_username: rightPlayer.username,
+      player1_avatar: leftPlayer.avatar,
+      player2_avatar: rightPlayer.avatar,
+      player1_score,
+      player2_score,
+      round,
+      mapType,
+      side,
+      leftplayerPos: game.leftPlayer.boundaries.top,
+      rightplayerPos: game.rightPlayer.boundaries.top,
+    };
+    setTimeout(() => {
+      client.emit('leaving_game_data', payload);
+      game.rejoinTheGame(client, side);
+    }, 800);
+    return "you've been join the game successfully";
+  }
 
-  playerHasLeavingGame(userid: string) : Game | undefined {
+  playerHasLeavingGame(userid: string): Game | undefined {
     return this.leavingGames.get(userid);
   }
 
-  joining_leaving_game_response(client: ClientSocket ,joiningLeavingGameResponseDto: JoiningLeavingGameResponseDto) : string {
-    const game : Game | undefined = this.leavingGames.get(client.userId);
+  joining_leaving_game_response(
+    client: ClientSocket,
+    joiningLeavingGameResponseDto: JoiningLeavingGameResponseDto,
+  ): string {
+    const game: Game | undefined = this.leavingGames.get(client.userId);
+    if (game === undefined) return 'the game is not available';
     const missingUserSessions: string = `room_${client.userId}`;
+    game.server.mainServer
+      .to(missingUserSessions)
+      .emit('close_leaving_game_notification_model');
     if (joiningLeavingGameResponseDto.response === 'accepted') {
-      game.server.mainServer.to(missingUserSessions).emit('close_leaving_game_notification_model');
       if (game === undefined) {
-        return 'you couldn\'t catch the game';
+        return "you couldn't catch the game";
       } else {
-        return 'You\'ve been catch the game successfully';
+        return "You've been catch the game successfully";
       }
-    }
-    else if (joiningLeavingGameResponseDto.response === 'declined') {
+    } else if (joiningLeavingGameResponseDto.response === 'declined') {
       this.leavingGames.delete(client.userId);
-      game.leftPlayer.winningRounds = game.leftPlayerSocket.userId === client.userId ? 0 : 3;
-      game.rightPlayer.winningRounds = game.rightPlayerSocket.userId === client.userId ? 0 : 3;
+      game.stopedAt = null;
+      game.leftPlayer.winningRounds =
+        game.leftPlayerSocket.userId === client.userId ? 0 : 3;
+      game.rightPlayer.winningRounds =
+        game.rightPlayerSocket.userId === client.userId ? 0 : 3;
       const result: string = 'win';
-      client.userId === game.leftPlayerSocket.userId ? game.rightPlayerSocket.emit('game_finished', result) : game.leftPlayerSocket.emit('game_finished', result);
+      client.userId === game.leftPlayerSocket.userId
+        ? game.rightPlayerSocket.emit('game_finished', result)
+        : game.leftPlayerSocket.emit('game_finished', result);
       game.status = 'finished';
-      game.server.mainServer.to(missingUserSessions).emit('close_leaving_game_notification_model');
     }
   }
 }

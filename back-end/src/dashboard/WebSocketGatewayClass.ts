@@ -69,14 +69,16 @@ export class WebSocketGatewayClass
         const game: Game | undefined = this.gameService.playerHasLeavingGame(payload.userId);
         if (game !== undefined) {
           setTimeout(() => {
-            const duration: number = 58000;
-            const remainingTime: number = (duration - Number((Date.now() - game.stopedAt.getTime())));
-            const payload: any = {
-              player1_id: game.leftPlayerSocket.userId,
-              player2_id: game.rightPlayerSocket.userId,
-              remainingTime
+            if (game.status === 'paused' && game.stopedAt !== null) {
+                const duration: number = 58000;
+                const remainingTime: number = (duration - Number((Date.now() - game.stopedAt.getTime())));
+                const payload: any = {
+                player1_id: game.leftPlayerSocket.userId,
+                player2_id: game.rightPlayerSocket.userId,
+                remainingTime
+              }
+              client.emit('joining_leaving_game', payload);
             }
-            client.emit('joining_leaving_game', payload);
           }, 2500)
         }
     }

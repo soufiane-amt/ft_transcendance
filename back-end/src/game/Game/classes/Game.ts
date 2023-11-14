@@ -213,7 +213,6 @@ export default class Game {
         } else {
             this.rightPlayerSocket = client;
         }
-        this.stopedAt = null;
         this.pausedSide = '';
         this.status = 'started';
         side === 'left' ? this.rightPlayerSocket.emit('game_continued') : this.leftPlayerSocket.emit('game_continued');

@@ -35,7 +35,7 @@ function JoinLeavingGameComponent({ ...props }) {
       if (response === 'You\'ve been catch the game successfully') {
         router.push('/game?joining_leaving_game=true');
       } else {
-        props.state(false);
+        props.State(false);
       }
     })
   };
@@ -129,7 +129,7 @@ function JoinLeavingGameComponent({ ...props }) {
                 response: 'declined'
               }
               newSocket.emit('joining_leaving_game_response', payload, () => {
-                props.state(false);
+                props.State(false);
               });
             }}
             className={`${mono.className} font-semibold hover:opacity-50 hover:cursor-pointer`}
