@@ -1,5 +1,5 @@
 import { useSessionUser } from "../../../../app/context/SessionUserContext"
-import { useFindUserContacts } from "../../../../app/context/UsersContactBookContext"
+import { useUserContacts } from "../../../../app/context/UsersContactBookContext"
 import { ChannelData } from "../../interfaces/ChannelData"
 import { UserModerationCard } from "../UserModerationCard/UserModerationCard"
 import style from "../../../../styles/ChatStyles/ModerationToolBox.module.css"
@@ -23,6 +23,7 @@ interface ModerationToolBoxProps{
 export function ModerationToolBox ({selectedChannel, channelData}:ModerationToolBoxProps)
 {
     const currentUser = useSessionUser()
+    const userContacts = useUserContacts();
     const currentUserIsModerator:string = getUserRole (currentUser.id, channelData) 
 
     const sortedChannelUsers = channelData?.channelUsers.sort((a: string, b: string) => {
@@ -34,15 +35,15 @@ export function ModerationToolBox ({selectedChannel, channelData}:ModerationTool
         };
 
         // Compare user roles first
-        const aUserData = useFindUserContacts(a);
-        const bUserData = useFindUserContacts(b);
-        const aUsername = aUserData?.username ?? '';
-        const bUsername = bUserData?.username ?? '';
         const roleComparison = roleOrder[getUserRole(a, channelData)] - roleOrder[getUserRole(b, channelData)];
 
         // If roles are the same, compare usernames alphabetically
         if (roleComparison === 0) {
-            return aUsername.localeCompare(bUsername);
+            const aUserData = userContacts.get(a);
+            const bUserData = userContacts.get(b);
+            if (aUserData && bUserData) {
+                return aUserData.username.localeCompare(bUserData.username);
+            }
         }
 
         return roleComparison;
@@ -60,7 +61,7 @@ export function ModerationToolBox ({selectedChannel, channelData}:ModerationTool
                         sortedChannelUsers?.map((user, index)=>{
                             let userData;
                             if (user !==  currentUser.id)
-                                userData = useFindUserContacts(user)
+                                userData = userContacts.get(user)
                             else
                                 userData = {avatar:currentUser.avatar, username:currentUser.username}
                             const userRole = getUserRole (user, channelData)

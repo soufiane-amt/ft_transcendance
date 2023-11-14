@@ -3,17 +3,17 @@ import style from "../../../../styles/ChatStyles/DiscussionPanel.module.css"; //
 import { DiscussionDto } from "../../interfaces/DiscussionPanel";
 import Avatar from "../Avatar/Avatar";
 import TimeStamp from "../TimeStamp/TimeStamp";
-import { useFindUserContacts } from "../../../../app/context/UsersContactBookContext";
+import { UserContactDataDto, useFindUserContacts } from "../../../../app/context/UsersContactBookContext";
 import socket from "../../../../app/socket/socket";
 import clsx from "clsx";
-import { useFindChannelBook } from "../../../../app/context/ChannelInfoBook";
-import { UserContactDto, useSessionUser } from "../../../../app/context/SessionUserContext";
+import { ChannelBookDto, useFindChannelBook } from "../../../../app/context/ChannelInfoBook";
+import {UserContactDto, useSessionUser } from "../../../../app/context/SessionUserContext";
 
 const findDiscussions = (
   currentRoute : "Direct_messaging" | "Channels",
   partner_id: string | undefined,
-  userContacts: UserContactDto |undefined ,
-  discussion_id: string, //This id is either the id of channel or the id of the user to dm
+  userContacts: UserContactDataDto |undefined ,
+  discussionData : ChannelBookDto | undefined,
   sessionUserData: UserContactDto,
 ) => {
   // useFindUserContacts(partner_id)
@@ -36,7 +36,7 @@ const findDiscussions = (
         } 
     }
   else {
-    const discussion_data = useFindChannelBook(discussion_id);
+    const discussion_data = discussionData;
     if (!discussion_data) return undefined;
     return {
       name: discussion_data.name,
@@ -83,7 +83,8 @@ function DiscussionPanel({
   
 }: DiscussionPanelProps) {
   const sessionUser = useSessionUser();
-  const sessionUserContacts: UserContactDto |undefined =  useFindUserContacts(DiscussionPanel.partner_id);
+  const channelBook = useFindChannelBook(DiscussionPanel.id)
+  const sessionUserContacts =  useFindUserContacts(DiscussionPanel.partner_id);
 
   const panelThemeClass = clsx({
     [style.discussion_panel_default_colors]: isSelected === false,
@@ -100,7 +101,7 @@ function DiscussionPanel({
   const panel = findDiscussions(currentRoute,
             DiscussionPanel.partner_id,
              sessionUserContacts,
-             DiscussionPanel.id,
+             channelBook,
               sessionUser);
   return (
     <>

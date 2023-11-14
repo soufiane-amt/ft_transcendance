@@ -3,7 +3,7 @@ import { fetchDataFromApi } from "../../components/Chat/CustomFetch/fetchDataFro
 import socket from "../socket/socket";
 
 /* This interface represents the minimum data needed for a user contact */
-interface UserContactDto {
+export interface UserContactDataDto {
   username: string;
   avatar: string;
   status?: "ONLINE" | "OFFLINE";
@@ -12,8 +12,8 @@ interface UserContactDto {
 // The key value will represent the user_id
 const UserContactsContext = createContext<
   | {
-      userContacts: Map<string, UserContactDto>;
-      updateUserContact: (key: string, value: UserContactDto) => void;
+      userContacts: Map<string, UserContactDataDto>;
+      updateUserContact: (key: string, value: UserContactDataDto) => void;
     }
   | undefined
 >(undefined);
@@ -25,7 +25,7 @@ export function UserContactsProvider({
   {currentRoute: string , children: React.ReactNode}
 ) {
   const [userContactsBook, setUserContactsBook] = useState<
-    Map<string, UserContactDto>
+    Map<string, UserContactDataDto>
   >(new Map());
 
   useEffect(() => {
@@ -77,7 +77,7 @@ export function UserContactsProvider({
   }, [userContactsBook])
   //get the user contact from the map and update it
 
-  const updateUserContact = (key: string, value: UserContactDto) => {
+  const updateUserContact = (key: string, value: UserContactDataDto) => {
     setUserContactsBook((prevState) => {
       const newState = new Map(prevState);
       newState.set(key, value);
@@ -109,7 +109,7 @@ export function useUserContacts() {
   return context.userContacts;
 }
 
-export function useFindUserContacts(user_id: string | undefined): UserContactDto | undefined {
+export function useFindUserContacts(user_id: string | undefined){
   const context = useContext(UserContactsContext);
   console.log ('User contacts: ', context?.userContacts, ' ', user_id)
   if (!context) {

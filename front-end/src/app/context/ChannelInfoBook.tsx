@@ -4,7 +4,7 @@ import { channel } from "diagnostics_channel";
 import socket from "../socket/socket";
 
 /* This interface represents the minimum data needed for a user contact */
-interface ChannelBookDto {
+export interface ChannelBookDto {
   name: string;
   avatar: string;
   type: string;
@@ -106,9 +106,7 @@ export function useChannelBooks() {
 export function useFindChannelBook(channel_id: string) {
   const context = useContext(ChannelBooksContext);
   if (!context) {
-    throw new Error(
-      "useChannelBooks must be used within a ChannelBooksProvider"
-    );
+    return undefined;
   }
   return context.ChannelBooks.get(channel_id);
 }
