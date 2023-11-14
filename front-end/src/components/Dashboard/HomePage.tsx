@@ -67,7 +67,6 @@ function HomePage() {
 
     newSocket.on("friend", (friends) => {
       try {
-        console.log("Received friend event with data:", friends);
         if (friends) {
           setuserFriend(friends);
         }
