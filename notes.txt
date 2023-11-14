@@ -8,5 +8,3 @@ abdellah + oussama : file upload not image but has extention of image , sharp, j
 
 =========================
 abdellah:scoreboardstyling
-no connection in browser set pause game or stop game
-zac:check subject and correction for game pause or disconnect
