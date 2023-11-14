@@ -391,17 +391,19 @@ export class GameService {
           }
         }, 60000);
         const missingUserSessions: string = `room_${missingUserId}`;
-        const duration: number = 58000;
-        const remainingTime: number =
-          duration - Number(Date.now() - game.stopedAt.getTime());
-        const payload: any = {
-          player1_id: game.leftPlayerSocket.userId,
-          player2_id: game.rightPlayerSocket.userId,
-          remainingTime,
-        };
-        server.mainServer
-          .to(missingUserSessions)
-          .emit('joining_leaving_game', payload);
+        setTimeout(() => {
+          const duration: number = 58000;
+          const remainingTime: number =
+            duration - Number(Date.now() - game.stopedAt.getTime());
+          const payload: any = {
+            player1_id: game.leftPlayerSocket.userId,
+            player2_id: game.rightPlayerSocket.userId,
+            remainingTime,
+          };
+          server.mainServer
+            .to(missingUserSessions)
+            .emit('joining_leaving_game', payload);
+        }, 2500);
       }
       if (game.status === 'finished') {
         if (this.leavingGames.has(game.leftPlayerSocket.userId) === true) {
