@@ -4,8 +4,8 @@ import { useState } from 'react';
 import socket from '../../../../app/socket/socket';
 import { ChannelType } from '../WelcomingPage';
 import { useRouter } from 'next/navigation';
-import { fetchDataFromApi } from '../../CustomFetch/fetchDataFromApi';
 import axios from 'axios';
+import Cookies from "js-cookie";
 
 
 interface ChannelPasswordInputProps{
@@ -18,6 +18,7 @@ export function ChannelPasswordInput ({handleVisibility,  channelData}: ChannelP
     const [password, setPassword] = useState<string>('');
     const [displayJoinFailure, setDisplayJoinFailure] = useState<boolean>(false);
     const ref = useOutsideClick(handleVisibility);
+    const jwtToken =  Cookies.get("access_token");
 
     const handlePasswordChange = (e : React.ChangeEvent<HTMLInputElement>) => {
         setPassword(e.target.value);
@@ -35,7 +36,11 @@ export function ChannelPasswordInput ({handleVisibility,  channelData}: ChannelP
             // join channel
             await axios.post('http://localhost:3001/chat/channelJoinRequest', 
             channelRequestMembership,
-            { withCredentials: true
+            { 
+                headers: {
+                    Authorization: `Bearer ${jwtToken}`,
+                    'Content-Type': 'multipart/form-data',
+                  },
               })
                 .then(res => {
                   if (res.status === 200) {

@@ -4,7 +4,7 @@ import style from '../../../../styles/ChatStyles/ChannelJoin.module.css';
 import socket from '../../../../app/socket/socket';
 import { ChannelType } from '../WelcomingPage';
 import axios from 'axios';
-import { useSessionUser } from '../../../../app/context/SessionUserContext';
+import Cookies from "js-cookie";
 
 export interface ChannelJoinProps
 {
@@ -13,6 +13,8 @@ export interface ChannelJoinProps
 
 export function ChannelJoin({ channelData }: ChannelJoinProps) {
     const [showPasswordInput, setShowPasswordInput] = useState(false);
+    const jwtToken =  Cookies.get("access_token");
+    
     const handleClickJoin = async () => {
         const channelRequestMembership = {
             channel_id : channelData.id,
@@ -27,7 +29,12 @@ export function ChannelJoin({ channelData }: ChannelJoinProps) {
                 // join channel
                 await axios.post('http://localhost:3001/chat/channelJoinRequest', 
                 channelRequestMembership,
-                { withCredentials: true
+                { 
+                    headers: {
+                        Authorization: `Bearer ${jwtToken}`,
+                        'Content-Type': 'multipart/form-data',
+                      },
+          
                   })
                     .then(res => {
                       if (res.status === 200) {

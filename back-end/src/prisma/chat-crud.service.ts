@@ -446,7 +446,7 @@ async retreiveDmInitPanelData(user_id :string) {
         select:{
           user1_id:true,
           user2_id:true,
-        }
+        } 
       }
     )
     const conatactedUsers = joinedDm.map((item) => {
@@ -461,7 +461,7 @@ async retreiveDmInitPanelData(user_id :string) {
         user1_id: true,
         user2_id: true,
       },
-    }); 
+    });
 
     const friendsIds = friends.map((item) => {
       return item.user1_id == user_id ? item.user2_id : item.user1_id;
@@ -485,8 +485,7 @@ async retreiveDmInitPanelData(user_id :string) {
       }
     )
   }
-
-  async findAllJoinedChannels(user_id: string) {
+    async findAllJoinedChannels(user_id: string) {
     //check also if the user is banned from the channel
     return await this.prisma.prismaClient.channelMembership.findMany({
       where: {

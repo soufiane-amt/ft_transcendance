@@ -25,6 +25,7 @@ import RequestInvitationGame, {
 } from '../dto/RequestInvitationGame.dto';
 import { userRoomSubscriptionGuard } from 'src/chat/guards/chat.guards';
 
+
 @UseGuards(GatewaysGuard)
 @WebSocketGateway({
   namespace: 'Game',

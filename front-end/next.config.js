@@ -19,7 +19,7 @@ module.exports = {
     },
 
     images: {
-      domains: ['localhost'], // Add any other domains as needed
+      domains: ['localhost', 'cdn.intra.42.fr'], // Add any other domains as needed
     },
   
   };

@@ -6,6 +6,7 @@ import { ChannelInvitor } from './ChannelInvitor/ChannelInvitor';
 import socket from '../../../app/socket/socket';
 import { fetchDataFromApi } from '../CustomFetch/fetchDataFromApi';
 import axios from 'axios';
+import Cookies from "js-cookie";
 
 
 const MaxChannelNameLength = 15;
@@ -20,15 +21,16 @@ export function CreateChannel() {
     const [password, setPassword] = useState<string>('');
     const [channelType, setChannelType] = useState("PUBLIC");
     const [displayChannelInvitor, setDisplayChannelInvitor] = useState <boolean> (false)
-    // const [selectedImage, setSelectedImage] = useState<{content : string | ArrayBuffer | null, extension: string}>({content :  UploadChannelIcon.src,
-    //                                      extension :'jpg'});
-    const [image, setImage] = useState<FormData | null>(null);
 
-        
-        
+    const [image, setImage] = useState<FormData | null>(null);
+    const jwtToken =  Cookies.get("access_token");
+    
+    
+    
     const [condidateUsers, setUserCondidates] = useState<Map<string, string>>(new Map<string, string>()); // [username, avatar
     useEffect(() => {
-      async function fetchDataAsync() {
+        console.log('--------------------')
+        async function fetchDataAsync() {
         const messagesHistory_tmp = await fetchDataFromApi(
           `http://localhost:3001/chat/memberCondidatesOfChannelCreation`
         );
@@ -60,6 +62,7 @@ export function CreateChannel() {
         }
         const response = await axios.post('http://localhost:3001/chat/upload', image,{
             headers: {
+              Authorization: `Bearer ${jwtToken}`,
               'Content-Type': 'multipart/form-data',
             },
           })

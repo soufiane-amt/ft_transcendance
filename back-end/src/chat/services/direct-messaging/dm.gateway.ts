@@ -17,6 +17,9 @@ import { UseGuards } from "@nestjs/common";
 import { UserCrudService } from "src/prisma/user-crud.service";
 import { ChatCrudService } from "src/prisma/chat-crud.service";
 import * as cookie from "cookie";
+import socketIOMiddleware, { wsmiddleware } from "src/game/gateways.middleware";
+import { GameService } from "src/game/game.service";
+
 
 @WebSocketGateway({ namespace: "chat", cors: "*" })
 export class dmGateway implements OnGatewayConnection, OnGatewayDisconnect {
@@ -25,11 +28,17 @@ export class dmGateway implements OnGatewayConnection, OnGatewayDisconnect {
 
   constructor(
     private readonly userCrud: UserCrudService,
+    private readonly gameservice: GameService,
     private readonly chatCrud: ChatCrudService
   ) {}
 
-  async handleConnection(client: Socket, ...args: any[]) {
-    const userIdCookie = this.extractUserIdFromCookies(client);
+  async afterInit(server: Server) {
+    const wsmidware: wsmiddleware = await socketIOMiddleware(this.gameservice);
+    server.use(wsmidware);
+  }
+
+  async handleConnection(client: any, ...args: any[]) {
+    const userIdCookie = client.userId;
     if (!userIdCookie) return;
     if ((await this.userCrud.findUserByID(userIdCookie)) == null)
       throw new WsException("User not existing");
@@ -42,7 +51,7 @@ export class dmGateway implements OnGatewayConnection, OnGatewayDisconnect {
     ); 
   }
 
-  handleDisconnect(client: Socket) {
+  handleDisconnect(client: any) {
   }
   private extractUserIdFromCookies(client:Socket) {
     const headers = client.handshake.headers;
@@ -54,17 +63,17 @@ export class dmGateway implements OnGatewayConnection, OnGatewayDisconnect {
   @UseGuards (userRoomSubscriptionGuard) 
   @UseGuards(bannedConversationGuard)
   @SubscribeMessage("joinDm")
-  async handleJoinDm(client: Socket, dm_id:string) 
+  async handleJoinDm(client: any, dm_id:string) 
   {
     console.log ('Join request')
     client.join("dm-" + dm_id);
   }
   
   @SubscribeMessage("broadacastJoinSignal")
-  async handleJoinSignal(client: Socket, joinSignal : {dm_id:string, userToContact:string}) 
+  async handleJoinSignal(client: any, joinSignal : {dm_id:string, userToContact:string}) 
   {
     console.log("broadacastJoinSignal is called!")
-    const userIdCookie = this.extractUserIdFromCookies(client);
+    const userIdCookie = client.userId;
     const userToContactPublicData =  await this.userCrud.findUserSessionDataByID(joinSignal.userToContact);
     const currentUserPublicData =  await this.userCrud.findUserSessionDataByID(userIdCookie);
 
@@ -84,7 +93,7 @@ export class dmGateway implements OnGatewayConnection, OnGatewayDisconnect {
   @UseGuards (userRoomSubscriptionGuard) 
   @UseGuards(bannedConversationGuard)
   @SubscribeMessage("sendMsg")
-  async handleSendMesDm(client: Socket, message: MessageDto) {
+  async handleSendMesDm(client: any, message: MessageDto) {
     console.log ('sendMsg: ', message)
     message.channel_id = null;
     const messageToBrodcast = await this.chatCrud.createMessage(message);
@@ -93,8 +102,8 @@ export class dmGateway implements OnGatewayConnection, OnGatewayDisconnect {
 
   @UseGuards (userRoomSubscriptionGuard)
   @SubscribeMessage("MarkMsgRead")
-  async handleMarkMsgAsRead(client: Socket, room: { _id: string }) {
-    const userIdCookie = this.extractUserIdFromCookies(client);
+  async handleMarkMsgAsRead(client: any, room: { _id: string }) {
+    const userIdCookie = client.userId;
 
     await this.chatCrud.markRoomMessagesAsRead(userIdCookie, room._id); //mark the messages that unsent by this user as read
     this.server.to(`inbox-${userIdCookie}`).emit("setRoomAsRead", room);
@@ -104,10 +113,10 @@ export class dmGateway implements OnGatewayConnection, OnGatewayDisconnect {
   @UseGuards(userRoomSubscriptionGuard)
   @SubscribeMessage("dmModeration")
   async handleDmBan(
-    client: Socket,
+    client: any,
     banSignal: { targetedUserId: string; type: string }
   ) {
-    const userIdCookie = this.extractUserIdFromCookies(client);
+    const userIdCookie = client.userId;
 
     const dm = await this.chatCrud.findDmByUsers(
       userIdCookie,

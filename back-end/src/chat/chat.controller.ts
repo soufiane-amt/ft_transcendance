@@ -11,6 +11,8 @@ import * as fs from 'fs';
 import { UserCrudService } from 'src/prisma/user-crud.service';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { v4 as uuidv4 } from 'uuid';
+import { AuthService } from 'src/auth/auth.service';
+import { JwtAuthGuard } from 'src/auth/guards/jwt-aut.guard';
 
 
 
@@ -20,7 +22,7 @@ import { v4 as uuidv4 } from 'uuid';
 export class ChatController
 {
 
-  constructor (private readonly dmService :DmService, 
+  constructor (  private readonly authservice: AuthService,
                     private readonly chatCrud : ChatCrudService,
                     private readonly userCrud : UserCrudService,
 
@@ -28,6 +30,15 @@ export class ChatController
                     private readonly reflector: Reflector){}
 
 
+  private currentUserId(request : Request) {
+
+  const JwtToken: string = request.headers.authorization.split(' ')[1];
+  const payload: any = this.authservice.extractPayload(JwtToken);
+
+  return payload.userId;
+} 
+
+@UseGuards(JwtAuthGuard)
 @Get('/image/:image_path')
 async getUserImage(@Param('image_path') image_path: string, @Res() res: Response) {
   const imagePath =  path.join(__dirname, '..', `../uploads/${image_path}`); // Go up two directories to reach the workspace root
@@ -36,32 +47,42 @@ async getUserImage(@Param('image_path') image_path: string, @Res() res: Response
   }
   res.sendFile(imagePath);
 }
+// const JwtToken: string = request.headers.authorization.split(' ')[1];
   
-
+// const payload: any = this.authservice.extractPayload(JwtToken);
+// const user = await this.service.prismaClient.user.findUnique({
+//   where: {
+//     email: payload.email,
+//   },
+// });
+@UseGuards(JwtAuthGuard)
 @Get ("/Direct_messaging/discussionsBar")
 async findAllDiscussionPartners (@Req() request : Request)
 {
-  const dms = await this.chatCrud.retreiveDmInitPanelData(request.cookies['user.id']);
+  const currentUserId = this.currentUserId(request);
+
+  const dms = await this.chatCrud.retreiveDmInitPanelData(currentUserId);
   const unreadMessagesPromises = dms.map(async (dmElement) => {
-    const unreadMessages = await this.chatCrud.getUnreadDmMessagesNumber(request.cookies['user.id'], dmElement.id);//get the number of messages unread and unsent by this user
+    const unreadMessages = await this.chatCrud.getUnreadDmMessagesNumber(currentUserId, dmElement.id);//get the number of messages unread and unsent by this user
     return { ...dmElement, unread_messages: unreadMessages };
   });
 
   // I wait for all promises to resolve
   const discussions = await Promise.all(unreadMessagesPromises);
-  console.log('=======discussions: ', discussions)
   return discussions;
 }
 
-
+@UseGuards(JwtAuthGuard)
 @Get ("/Channels/discussionsBar")
 async findAllDiscussionChannels (@Req() request : Request)
 {
   try {
-  const channels = await this.chatCrud.retreiveChannelPanelsData(request.cookies['user.id']);
+    const currentUserId = this.currentUserId(request);
+  
+  const channels = await this.chatCrud.retreiveChannelPanelsData(currentUserId);
 
   const unreadMessagesPromises = channels.map(async (chElement) => {
-    const unreadMessages = await this.chatCrud.getUnreadChannelMessagesNumber(request.cookies['user.id'], chElement.id);//get the number of messages unread and unsent by this user
+    const unreadMessages = await this.chatCrud.getUnreadChannelMessagesNumber(currentUserId, chElement.id);//get the number of messages unread and unsent by this user
     const channelOwner = await this.chatCrud.findChannelOwner(chElement.id)
     const channelUsers = await this.chatCrud.findChannelUsers(chElement.id)
     const channelAdmins = await this.chatCrud.findChannelAdmins(chElement.id)
@@ -89,75 +110,87 @@ async findAllDiscussionChannels (@Req() request : Request)
 
 }
 
-
+@UseGuards(JwtAuthGuard)
 @Get ("/direct_messaging/userContactsBook")
 async findAllUsersInContact (@Req() request : Request)
 {
-  const users = await this.chatCrud.retrieveUserContactBook (request.cookies["user.id"])
+  const currentUserId = this.currentUserId(request);
+
+  const users = await this.chatCrud.retrieveUserContactBook (currentUserId)
   
   return (users)
 }
-
+@UseGuards(JwtAuthGuard)
 @Get ("/channels/userContactsBook")
 async findAllUsersWithCommonChannels (@Req() request : Request)
 {
-  const users = await this.chatCrud.findUsersInCommonChannels (request.cookies["user.id"])
+  const currentUserId = this.currentUserId(request);
+  const users = await this.chatCrud.findUsersInCommonChannels (currentUserId)
   return (users)
 }
-
+@UseGuards(JwtAuthGuard)
 @Get ("/Channels/channelsInfoBook")
 async findAllChannelsInContact (@Req() request : Request)
 {
-  const users = await this.chatCrud.retrieveUserChannelsBook (request.cookies["user.id"])
+  const currentUserId = this.currentUserId(request);
+  const users = await this.chatCrud.retrieveUserChannelsBook (currentUserId)
   return (users)
 }
-
+@UseGuards(JwtAuthGuard)
   @Get (":roomid/messages")
   async findRoomMessages (@Req() request : Request, @Param("roomid") roomid:string)
   {
-    return await this.chatCrud.retrieveRoomMessages(request.cookies["user.id"], roomid);
-  }
+    const currentUserId = this.currentUserId(request);
 
+    return await this.chatCrud.retrieveRoomMessages(currentUserId, roomid);
+  }
+@UseGuards(JwtAuthGuard)
   @Get ("/direct_messaging/bannedRooms")
   async findBannedRoomsDm (@Req() request : Request)
   {
-    const bannedRooms = await this.chatCrud.findBannedDmRooms(request.cookies["user.id"])
+    const currentUserId = this.currentUserId(request);
+
+    const bannedRooms = await this.chatCrud.findBannedDmRooms(currentUserId)
     const bannedRoomsData = bannedRooms.map( (item)=>{
         return ({room_id : item.id, blocker_id: item.blocker_id})
     })
     return bannedRoomsData;
   } 
-
+@UseGuards(JwtAuthGuard)
   @Get ("/Channels/bannedRooms")
   async findBannedRoomsChannels (@Req() request : Request)
   {
+    const currentUserId = this.currentUserId(request);
 
-    const bannedRooms = await this.chatCrud.findBannedChannelsRooms(request.cookies["user.id"])
+    const bannedRooms = await this.chatCrud.findBannedChannelsRooms(currentUserId)
     const bannedRoomsData = bannedRooms.map( (item)=>{
         return ({room_id : item.channel_id, blocker_id: ''})
     })
     return bannedRoomsData;
   }
 
-
+@UseGuards(JwtAuthGuard)
  @Get ("/Channels/MuteRooms")
  async findMutenedRoomsChannels (@Req() request : Request)
  {
+    const currentUserId = this.currentUserId(request);
 
-   const mutedRooms = await this.chatCrud.findMutedChannelsRooms(request.cookies["user.id"])
+   const mutedRooms = await this.chatCrud.findMutedChannelsRooms(currentUserId)
    const mutedRoomsData = mutedRooms.map( (item)=>{
        return ({room_id : item.channel_id})
    })
    return mutedRoomsData;
  }
-
+@UseGuards(JwtAuthGuard)
  @Get("/userData")
  async getUserData (@Req() request : Request)
  {
-   return (this.userCrud.findUserSessionDataByID(request.cookies["user.id"]))
+    const currentUserId = this.currentUserId(request);
+
+   return (this.userCrud.findUserSessionDataByID(currentUserId))
  }
 
-
+ @UseGuards(JwtAuthGuard)
  @Post('upload')
  @UseInterceptors(FileInterceptor('file'))
  uploadFile(@UploadedFile() file) {
@@ -174,31 +207,29 @@ async findAllChannelsInContact (@Req() request : Request)
    return { message: 'File uploaded and saved on the server', imageSrc: file.filename };
  }
  
-
+@UseGuards(JwtAuthGuard)
  @Get("/memberCondidatesOfChannelCreation")
  async getFriends (@Req() request : Request)
  {
-   return (await this.userCrud.findFriendsUsernameAvatar(request.cookies["user.id"]))
+
+  const currentUserId = this.currentUserId(request);
+
+   return (await this.userCrud.findFriendsUsernameAvatar(currentUserId))
  }
 
  
-@Put("/messages/markAsRead")
-async markMessagesAsRead (@Req() request : Request, @Body() room : {_id:string})
-{
 
-  await this.chatCrud.markRoomMessagesAsRead(request.cookies['user.id'], room._id) //mark the messages that unsent by this user as read
-}
-
-
-@UseGuards(allowJoinGuard)
+ @UseGuards(JwtAuthGuard)@UseGuards(allowJoinGuard)
 @Post("/channelJoinRequest")
 async handleChannelJoinRequest (@Req() request : Request,
                        @Res() response: Response,
                        @Body() channelRequestMembership : {channel_id:string, password:string, type: 'PROTECTED' | 'PRIVATE' | 'PUBLIC' })
 {
+  const currentUserId = this.currentUserId(request);
+
   const channelMembershipData: channelMembershipDto = {
     channel_id: channelRequestMembership.channel_id,
-    user_id: request.cookies['user.id'],
+    user_id: currentUserId,
     role: 'USER',
   };
 
@@ -212,24 +243,27 @@ async handleChannelJoinRequest (@Req() request : Request,
   //-                                  -//
   ///////////////////////////////////////////////////////////
 
-
+@UseGuards(JwtAuthGuard)
   @Get("/channels_users_inits")
   async findUserAndChannelToJoin(@Req() request : Request)
   {
-    const channelsToJoin = await this.chatCrud.findAllChannelsAvailbleToJoin(request.cookies['user.id'])
-    const dmsToJoin = await this.chatCrud.findAllDmsAvailbleToJoin(request.cookies['user.id'])
+    const currentUserId = this.currentUserId(request);  
+    const channelsToJoin = await this.chatCrud.findAllChannelsAvailbleToJoin(currentUserId)
+    const dmsToJoin = await this.chatCrud.findAllDmsAvailbleToJoin(currentUserId)
     return ({channelsToJoin:channelsToJoin, dmsToJoin:dmsToJoin})
   }
 
-  
+  @UseGuards(JwtAuthGuard)
   @Get("/DirectMessaging/CreateDm/:username")
   async createDmRoom(@Req() request : Request, 
                 @Res() response : Response,
               @Param('username') username:string)
   {
+    const currentUserId = this.currentUserId(request);
+
     const userToContact = await this.userCrud.findUserByUsername(username);
     const dmData:dmDto = {
-      user1_id : request.cookies['user.id'],
+      user1_id : currentUserId,
       user2_id :  userToContact,
       status : "ALLOWED"
     }
@@ -238,11 +272,13 @@ async handleChannelJoinRequest (@Req() request : Request,
 
   }
 
-
+@UseGuards(JwtAuthGuard)
   @Get("/DirectMessaging/getPartner/:dm_id")
   async getPartner(@Req() request : Request, @Param('dm_id') dm_id:string)
   {
-    const partner = await this.chatCrud.findDmPartnerId(dm_id, request.cookies['user.id']);
+    const currentUserId = this.currentUserId(request);
+
+    const partner = await this.chatCrud.findDmPartnerId(dm_id, currentUserId);
     return partner;
   }
 

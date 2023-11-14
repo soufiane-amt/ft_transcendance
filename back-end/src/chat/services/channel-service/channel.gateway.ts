@@ -1,5 +1,5 @@
 import { UseGuards } from "@nestjs/common";
-import { OnGatewayConnection, SubscribeMessage, WebSocketGateway, WebSocketServer, WsException } from "@nestjs/websockets";
+import { ConnectedSocket, OnGatewayConnection, SubscribeMessage, WebSocketGateway, WebSocketServer, WsException } from "@nestjs/websockets";
 import { Server, Socket } from "socket.io";
 import { Roles } from "src/chat/decorators/chat.decorator";
 import { MessageDto, UserBanMuteSignalDto, banManageSignalDto, channelCreateDto, channelDto, channelMembershipDto, channelReqDto, kickSignalDto, setOwnerSignalDto } from "src/chat/dto/chat.dto";
@@ -10,9 +10,13 @@ import { ChatCrudService } from "src/prisma/chat-crud.service";
 import { UserCrudService } from "src/prisma/user-crud.service";
 import * as cookie from 'cookie';
 import * as bcrypt from 'bcryptjs';
+import socketIOMiddleware, { wsmiddleware } from "src/game/gateways.middleware";
+import { GatewaysGuard } from "src/game/guards/gateways.guard";
+import { GameService } from "src/game/game.service";
+import ClientSocket from "src/game/interfaces/clientSocket.interface";
 
  
-
+@UseGuards(GatewaysGuard)
 @WebSocketGateway({namespace:"chat", cors: "*" })
 
  export class channelGateway implements OnGatewayConnection
@@ -21,10 +25,18 @@ import * as bcrypt from 'bcryptjs';
     server:Server
 
     constructor (private readonly chatCrud :ChatCrudService,
+          private readonly gameservice: GameService,
          private readonly userCrud :UserCrudService){}
 
+    async afterInit(server: Server) {
+      const wsmidware: wsmiddleware = await socketIOMiddleware(this.gameservice);
+      server.use(wsmidware);
+    }
+      
+      
     async handleConnection(client: any, ...args: any[]) {
-      const userIdCookie = this.extractUserIdFromCookies(client);
+      const userIdCookie = client.userId;
+      console.log ('userIdCookie', userIdCookie)
       if (!userIdCookie)
         return
       if (await this.userCrud.findUserByID(userIdCookie) == null)
@@ -35,11 +47,11 @@ import * as bcrypt from 'bcryptjs';
         });
       }
 
-      private extractUserIdFromCookies(client:Socket) {
-        const headers = client.handshake.headers;
-        const parsedCookies = cookie.parse(headers.cookie || "");
-        return parsedCookies["user.id"];
-      }
+      // private (client:Socket) {
+      //   const headers = client.handshake.headers;
+      //   const parsedCookies = cookie.parse(headers.cookie || "");
+      //   return parsedCookies["user.id"];
+      // }
       
       private async hashPassword(password: string): Promise<string> {
         try {
@@ -70,9 +82,9 @@ import * as bcrypt from 'bcryptjs';
     
     @UseGuards(allowJoinGuard) 
     @SubscribeMessage('joinSignal')
-    async handleJoinChannel (client :Socket, channel_id:string)//this event is only triggered by the users that will join not the admin that already joined and created channel
+    async handleJoinChannel (@ConnectedSocket() client: ClientSocket, channel_id:string)//this event is only triggered by the users that will join not the admin that already joined and created channel
     {
-      const user_id = this.extractUserIdFromCookies(client);
+      const user_id = client.userId;
       const channel_data =  await this.chatCrud.getChannelData (channel_id);
       const userPublicData =  await this.userCrud.findUserSessionDataByID(user_id);
 
@@ -226,9 +238,9 @@ import * as bcrypt from 'bcryptjs';
 
     @UseGuards(LeaveChannelGuard)
     @SubscribeMessage ("leaveChannel")
-    async handleChannelLeave(client: any,  channel_id : string  ) 
+    async handleChannelLeave(@ConnectedSocket() client: ClientSocket,  channel_id : string  ) 
     { 
-      const user_id =  this.extractUserIdFromCookies(client);
+      const user_id =  client.userId;
       client.leave (`channel-${channel_id}`)                              //Deleting the user from the websocket room
       const delete_channel = await this.chatCrud.leaveChannel (user_id, channel_id) //deleting the membership of the client in DB
       this.server.to(`inbox-${user_id}`).emit('LeaveOutNotification', channel_id)
@@ -272,12 +284,13 @@ import * as bcrypt from 'bcryptjs';
     }
 
 
-    
+  
     
     @SubscribeMessage ("createChannel")
-    async handleCreateChannel (client :Socket, channelData : channelCreateDto)
+    async handleCreateChannel ( client: ClientSocket, channelData : channelCreateDto)
     {
-      const userIdCookie = this.extractUserIdFromCookies(client);
+      console.log ('channelData', channelData)
+      const userIdCookie = client.userId;
       if (!userIdCookie)
         return
       const channel_data :channelDto = {
