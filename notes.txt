@@ -1,8 +1,6 @@
 
 
 //TODO: erros  
-oussmaa + soufyane : protect socket getways in backend + use client
-oussama: scroll in oussama dashboard
 abdellah + oussama : file upload not image but has extention of image , sharp, jimp
 
 
