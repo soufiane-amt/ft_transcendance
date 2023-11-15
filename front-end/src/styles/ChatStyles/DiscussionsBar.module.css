@@ -38,13 +38,16 @@
   /* /////////////////: */
 
   .discussion_panel_bar_close {
-    width:  0.1%; 
+    width:  0%; 
   }
 
   @media (max-width:650px) 
   {
     .discussion_panel_bar {
       width: 95%;
+    }
+    .discussion_panel_bar_close {
+      width:  0%; 
     }
   
   }

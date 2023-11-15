@@ -136,6 +136,10 @@
 
 @media (max-width:427px) 
 {   
+    .create_channel h3{
+        font-size: 15px;
+    }
+
     .create_channel__image img {
         width: 80px;
         height: 80px;
