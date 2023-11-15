@@ -84,13 +84,25 @@ export function CreateChannel() {
 
           };
     
-      const handleImageChange = (event:any) => {
-        const formData = new FormData(); 
-        formData.append('file', event.target.files[0], event.target.files[0].name);
-        setImage(formData);    
-    };
-  
-    const handleChannelNameChange = (e :React.ChangeEvent<HTMLInputElement>) => {
+          const handleImageChange = (event: any) => {
+            const selectedFile = event.target.files[0];
+          
+            // Check if a file is selected
+            if (selectedFile) {
+              // Check if the selected file is an image
+              if (selectedFile.type && selectedFile.type.includes('image')) {
+                const formData = new FormData();
+                formData.append('file', selectedFile, selectedFile.name);
+                setImage(formData);
+              } else {
+                // Display a warning or handle the non-image file case
+                alert('Please choose a valid image file.');
+                // Optionally, you can clear the selected file to prevent further processing
+                event.target.value = null;
+              }
+            }
+          };
+              const handleChannelNameChange = (e :React.ChangeEvent<HTMLInputElement>) => {
         const inputText = e.target.value;
         if ( inputText.length <= MaxChannelNameLength &&
             inputText[inputText.length - 1] !== ' ') {
