@@ -166,7 +166,7 @@ import ClientSocket from "src/game/interfaces/clientSocket.interface";
       const muteData = {
           user_id :targeted_user_id,
           channel_id : muteSignal.channel_id,
-          muteDuration : minutesToMilliseconds(muteSignal.actionDuration)/6
+          muteDuration : minutesToMilliseconds(muteSignal.actionDuration)
         }
       await this.chatCrud.muteAUserWithinGroup(muteData)
         this.server
