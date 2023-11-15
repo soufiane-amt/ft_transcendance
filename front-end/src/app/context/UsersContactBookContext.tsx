@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
 import { fetchDataFromApi } from "../../components/Chat/CustomFetch/fetchDataFromApi";
 import socket from "../socket/socket";
+import { useSessionUser } from "./SessionUserContext";
 
 /* This interface represents the minimum data needed for a user contact */
 export interface UserContactDataDto {
@@ -27,6 +28,7 @@ export function UserContactsProvider({
   const [userContactsBook, setUserContactsBook] = useState<
     Map<string, UserContactDataDto>
   >(new Map());
+  const currentUserId = useSessionUser().id
 
   useEffect(() => {
     async function fetchDataAsync() {
@@ -36,6 +38,7 @@ export function UserContactsProvider({
       const map = new Map();
       if (Array.isArray(userContactsBook_tmp)) {
         userContactsBook_tmp?.forEach((user: any) => {
+          if (user.id !== currentUserId)
           map.set(user.id, {
             username: user.username,
             avatar: user.avatar,
@@ -50,7 +53,6 @@ export function UserContactsProvider({
           });
         });
       }
-      console.log('Initial user contacts book:', map)
       setUserContactsBook(map);
     }
     fetchDataAsync();
@@ -58,7 +60,7 @@ export function UserContactsProvider({
 
   useEffect(() => {
     const handleUpdateUserContact = (user: {id :string, username :string, avatar:string}) => {
-      console.log ('user contacts book:', userContactsBook)
+      console.log('updateUserContact', user)
       const updatedUserContactsBook = new Map(userContactsBook);
       // Update the copy with the new value
       updatedUserContactsBook.set(user.id, {
@@ -68,11 +70,12 @@ export function UserContactsProvider({
       // setTimeout(() => {
         setUserContactsBook(updatedUserContactsBook);
       // }, 0)
-      console.log ('Updated user contacts book:', updatedUserContactsBook)
     };
-    socket.on("updateUserContact", handleUpdateUserContact);
+    socket.on("updateUserContactChannelCreate", handleUpdateUserContact);
+    socket.on("updateUserContactChannelCreate", handleUpdateUserContact);
     return () => {
-      socket.off("updateUserContact", handleUpdateUserContact);
+      socket.off("updateUserContactChannelCreate", handleUpdateUserContact);
+      socket.off("updateUserContactChannelCreate", handleUpdateUserContact);
     };
   }, [userContactsBook])
   //get the user contact from the map and update it
@@ -111,7 +114,6 @@ export function useUserContacts() {
 
 export function useFindUserContacts(user_id: string | undefined){
   const context = useContext(UserContactsContext);
-  console.log ('User contacts: ', context?.userContacts, ' ', user_id)
   if (!context) {
     throw new Error(
       "useUserContacts must be used within a UserContactsProvider"

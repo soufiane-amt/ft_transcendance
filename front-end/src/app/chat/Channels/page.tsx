@@ -17,6 +17,5 @@ export default function Channels() {
         <ChannelsMain/>
       </div>
     </SessionUserProvider>
-    // <ConfirmationDialog selectType={"Ban"}/>
     )
 }

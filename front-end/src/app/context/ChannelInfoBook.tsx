@@ -2,6 +2,8 @@ import React, { createContext, useContext, useEffect, useState } from "react";
 import { fetchDataFromApi } from "../../components/Chat/CustomFetch/fetchDataFromApi";
 import { channel } from "diagnostics_channel";
 import socket from "../socket/socket";
+import { useTime } from "framer-motion";
+import { setTimeout } from "timers/promises";
 
 /* This interface represents the minimum data needed for a user contact */
 export interface ChannelBookDto {
@@ -63,7 +65,13 @@ export function ChannelBooksProvider({
           });
           // Set the state to the updated Map
           setChannelBooksBook(updatedChannelBooksBook);
-          socket.emit("resumeChannelUpdates", joinSignal.id);
+          // socket.emit("resumeChannelUpdates", joinSignal.id);
+          // setTimeout( () => {
+            socket.emit("resumeChannelUpdates", joinSignal.id);
+          // }, 1000);
+          // socket.emit("joinSignal", joinSignal.id);
+
+
           };
       socket.on("joinChannel", handleJoinChannel);
       return () => {

@@ -85,6 +85,7 @@ import ClientSocket from "src/game/interfaces/clientSocket.interface";
     async handleJoinChannel ( client : ClientSocket, channel_id:string)//this event is only triggered by the users that will join not the admin that already joined and created channel
     {
       const user_id = client.userId;
+      console.log ('--------Join request//has came', user_id)
       
       const channel_data =  await this.chatCrud.getChannelData (channel_id);
       const userPublicData =  await this.userCrud.findUserSessionDataByID(user_id);
@@ -200,8 +201,17 @@ import ClientSocket from "src/game/interfaces/clientSocket.interface";
     @SubscribeMessage ("resumeChannelUpdates") //A gard must be added to check if the user has the right to request to unmute him
     async handleResumeChannelUpdates (client : ClientSocket, channel_id:string)
     {
-      console.log ('4')
+      const user_id = client.userId;
+      
       client.join (`channel-${channel_id}`)
+      const userPublicData =  await this.userCrud.findUserSessionDataByID(user_id);
+      console.log('---------handleResumeChannelUpdates', userPublicData.username)
+      
+      this.server.to(`channel-${channel_id}`).emit('updateUserContact', {id:userPublicData.id,
+        username: userPublicData.username, 
+        avatar: userPublicData.avatar, 
+      })
+
       this.broadcastChannelChanges(channel_id)
     }
 
@@ -291,8 +301,8 @@ import ClientSocket from "src/game/interfaces/clientSocket.interface";
     async handleCreateChannel ( client : ClientSocket, channelData : channelCreateDto)
     {
       console.log ('channelData', channelData)
-      const userIdCookie = client.userId;
-      if (!userIdCookie)
+      const currentUserId = client.userId;
+      if (!currentUserId)
         return
       const channel_data :channelDto = {
         name : channelData.channelName,
@@ -300,8 +310,10 @@ import ClientSocket from "src/game/interfaces/clientSocket.interface";
         password : await this.hashPassword(channelData.password),
         image : `http://localhost:3001/chat/image/${channelData.imageSrc}`
       };
- 
-      const channel = await this.chatCrud.createChannel (userIdCookie, channel_data,  channelData.invitedUsers)
+      // updateUserContact
+      const users = await this.chatCrud.findUsersInCommonChannels (currentUserId)
+
+      const channel = await this.chatCrud.createChannel (currentUserId, channel_data,  channelData.invitedUsers)
       for (let i = 0; i < channel.memberUsersIds.length; i++) {
         this.server.to(`inbox-${channel.memberUsersIds[i]}`)
           .emit('joinChannel', {id:channel.id, 
@@ -309,6 +321,8 @@ import ClientSocket from "src/game/interfaces/clientSocket.interface";
             image: channel_data.image, 
             type:channel_data.type
           })
+        this.server.to(`inbox-${channel.memberUsersIds[i]}`)
+        .emit('updateUserContact', users)
       } 
 
     }
