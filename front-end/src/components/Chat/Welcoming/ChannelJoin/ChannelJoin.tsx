@@ -21,18 +21,19 @@ export function ChannelJoin({ channelData }: ChannelJoinProps) {
             password: '',
             type: channelData.type
         }
-
+ 
         if (channelData.type === 'PUBLIC') {
             // join channel
             try
             {
                 // join channel
+                console.log('channelRequestMembership', channelRequestMembership);
                 await axios.post('http://localhost:3001/chat/channelJoinRequest', 
                 channelRequestMembership,
                 { 
                     headers: {
                         Authorization: `Bearer ${jwtToken}`,
-                        'Content-Type': 'multipart/form-data',
+                        'Content-Type': 'application/json', // Adjust this if needed
                       },
           
                   })

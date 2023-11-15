@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import Avatar from "../../shared/Avatar/Avatar";
 import style from "../../../../styles/ChatStyles/ChannelSetting.module.css";
 import { useFindChannelBook } from "../../../../app/context/ChannelInfoBook";
 import socket from "../../../../app/socket/socket";

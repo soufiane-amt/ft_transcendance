@@ -19,10 +19,11 @@ import { ChatCrudService } from "src/prisma/chat-crud.service";
 import * as cookie from "cookie";
 import socketIOMiddleware, { wsmiddleware } from "src/game/gateways.middleware";
 import { GameService } from "src/game/game.service";
+import ClientSocket from "src/game/interfaces/clientSocket.interface";
 
 
 @WebSocketGateway({ namespace: "chat", cors: "*" })
-export class dmGateway implements OnGatewayConnection, OnGatewayDisconnect {
+export class dmGateway implements OnGatewayConnection {
   @WebSocketServer()
   server: Server;
 
@@ -37,47 +38,43 @@ export class dmGateway implements OnGatewayConnection, OnGatewayDisconnect {
     server.use(wsmidware);
   }
 
-  async handleConnection(client: any, ...args: any[]) {
-    const userIdCookie = client.userId;
-    if (!userIdCookie) return;
-    if ((await this.userCrud.findUserByID(userIdCookie)) == null)
+  async handleConnection(client : ClientSocket, ...args: any[]) {
+    const currentUserId = client.userId;
+    console.log('currentUserId', currentUserId)
+    if (!currentUserId) return;
+    if ((await this.userCrud.findUserByID(currentUserId)) == null)
       throw new WsException("User not existing");
-    const inbox_id = "inbox-".concat(userIdCookie);
+    const inbox_id = "inbox-".concat(currentUserId);
     client.join(inbox_id);
-    (await this.chatCrud.retrieveUserDmChannels(userIdCookie)).forEach(
+    (await this.chatCrud.retrieveUserDmChannels(currentUserId)).forEach(
       (room) => {
         client.join("dm-" + room.id);
       }
     ); 
   }
 
-  handleDisconnect(client: any) {
-  }
-  private extractUserIdFromCookies(client:Socket) {
-    const headers = client.handshake.headers;
-    const parsedCookies = cookie.parse(headers.cookie || "");
-    return parsedCookies["user.id"];
-  }
-
-
   @UseGuards (userRoomSubscriptionGuard) 
   @UseGuards(bannedConversationGuard)
   @SubscribeMessage("joinDm")
-  async handleJoinDm(client: any, dm_id:string) 
+  async handleJoinDm(client : ClientSocket, dm_id:string) 
   {
     console.log ('Join request')
     client.join("dm-" + dm_id);
   }
   
+
   @SubscribeMessage("broadacastJoinSignal")
-  async handleJoinSignal(client: any, joinSignal : {dm_id:string, userToContact:string}) 
+  async handleJoinSignal(client : ClientSocket, joinSignal : {dm_id:string, userToContact:string}) 
   {
     console.log("broadacastJoinSignal is called!")
-    const userIdCookie = client.userId;
+    const currentUserId = client.userId;
+    //if true throw server error
+    
     const userToContactPublicData =  await this.userCrud.findUserSessionDataByID(joinSignal.userToContact);
-    const currentUserPublicData =  await this.userCrud.findUserSessionDataByID(userIdCookie);
+    const currentUserPublicData =  await this.userCrud.findUserSessionDataByID(currentUserId);
 
-    this.server.to(`inbox-${userIdCookie}`).emit('updateUserContact', {id:userToContactPublicData.id,
+
+    this.server.to(`inbox-${currentUserId}`).emit('updateUserContact', {id:userToContactPublicData.id,
       username: userToContactPublicData.username, 
       avatar: userToContactPublicData.avatar, 
     })
@@ -86,14 +83,14 @@ export class dmGateway implements OnGatewayConnection, OnGatewayDisconnect {
       avatar: currentUserPublicData.avatar, 
     })
 
-    this.server.to(`inbox-${userIdCookie}`).emit("dmIsJoined", joinSignal.dm_id);
+    this.server.to(`inbox-${currentUserId}`).emit("dmIsJoined", joinSignal.dm_id);
     this.server.to(`inbox-${joinSignal.userToContact}`).emit("dmIsJoined", joinSignal.dm_id);
   }
 
   @UseGuards (userRoomSubscriptionGuard) 
   @UseGuards(bannedConversationGuard)
   @SubscribeMessage("sendMsg")
-  async handleSendMesDm(client: any, message: MessageDto) {
+  async handleSendMesDm(client : ClientSocket, message: MessageDto) {
     console.log ('sendMsg: ', message)
     message.channel_id = null;
     const messageToBrodcast = await this.chatCrud.createMessage(message);
@@ -102,24 +99,24 @@ export class dmGateway implements OnGatewayConnection, OnGatewayDisconnect {
 
   @UseGuards (userRoomSubscriptionGuard)
   @SubscribeMessage("MarkMsgRead")
-  async handleMarkMsgAsRead(client: any, room: { _id: string }) {
-    const userIdCookie = client.userId;
+  async handleMarkMsgAsRead(client : ClientSocket, room: { _id: string }) {
+    const currentUserId = client.userId;
 
-    await this.chatCrud.markRoomMessagesAsRead(userIdCookie, room._id); //mark the messages that unsent by this user as read
-    this.server.to(`inbox-${userIdCookie}`).emit("setRoomAsRead", room);
+    await this.chatCrud.markRoomMessagesAsRead(currentUserId, room._id); //mark the messages that unsent by this user as read
+    this.server.to(`inbox-${currentUserId}`).emit("setRoomAsRead", room);
   } 
 
   
   @UseGuards(userRoomSubscriptionGuard)
   @SubscribeMessage("dmModeration")
   async handleDmBan(
-    client: any,
+    client : ClientSocket,
     banSignal: { targetedUserId: string; type: string }
   ) {
-    const userIdCookie = client.userId;
+    const currentUserId = client.userId;
 
     const dm = await this.chatCrud.findDmByUsers(
-      userIdCookie,
+      currentUserId,
       banSignal.targetedUserId
     );
     console.log("banSignal.type == BAN && await this.chatCrud.dmIsBanned(dm.id)", banSignal.type == "BAN" && await this.chatCrud.dmIsBanned(dm.id))
@@ -129,12 +126,12 @@ export class dmGateway implements OnGatewayConnection, OnGatewayDisconnect {
       await this.chatCrud.blockAUserWithDm(banSignal.targetedUserId, dm.id);
       this.server
         .to(`dm-${dm.id}`)
-        .emit("userBanned", { room_id: dm.id, agent_id: userIdCookie, expirationDate: new Date("9999-12-31T23:59:59.999Z") });
+        .emit("userBanned", { room_id: dm.id, agent_id: currentUserId, expirationDate: new Date("9999-12-31T23:59:59.999Z") });
     } else {
       await this.chatCrud.unblockAUserWithDm(banSignal.targetedUserId, dm.id);
       this.server
         .to(`dm-${dm.id}`)
-        .emit("userUnBanned", { room_id: dm.id, agent_id: userIdCookie });
+        .emit("userUnBanned", { room_id: dm.id, agent_id: currentUserId });
     }
   }
 

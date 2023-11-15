@@ -34,7 +34,7 @@ import ClientSocket from "src/game/interfaces/clientSocket.interface";
     }
       
       
-    async handleConnection(client: any, ...args: any[]) {
+    async handleConnection(client : ClientSocket, ...args: any[]) {
       const userIdCookie = client.userId;
       console.log ('userIdCookie', userIdCookie)
       if (!userIdCookie)
@@ -73,7 +73,7 @@ import ClientSocket from "src/game/interfaces/clientSocket.interface";
     @Roles (Role.OWNER)
     @UseGuards(channelPermission)
     @SubscribeMessage('updateChannelType')
-    async changeChannelType (client :Socket, updateType : UpdateChannelDto)
+    async changeChannelType (client :ClientSocket, updateType : UpdateChannelDto)
     {
       await this.chatCrud.changeChannelType (updateType.channel_id, updateType.type, updateType.password)
     }
@@ -82,9 +82,10 @@ import ClientSocket from "src/game/interfaces/clientSocket.interface";
     
     @UseGuards(allowJoinGuard) 
     @SubscribeMessage('joinSignal')
-    async handleJoinChannel (@ConnectedSocket() client: ClientSocket, channel_id:string)//this event is only triggered by the users that will join not the admin that already joined and created channel
+    async handleJoinChannel ( client : ClientSocket, channel_id:string)//this event is only triggered by the users that will join not the admin that already joined and created channel
     {
       const user_id = client.userId;
+      
       const channel_data =  await this.chatCrud.getChannelData (channel_id);
       const userPublicData =  await this.userCrud.findUserSessionDataByID(user_id);
 
@@ -120,12 +121,13 @@ import ClientSocket from "src/game/interfaces/clientSocket.interface";
     @Roles (Role.OWNER, Role.ADMIN)
     @UseGuards(channelPermission)  
     @SubscribeMessage ("channelUserBan")
-    async handleChannelBan(client: any,  banSignal:UserBanMuteSignalDto ) 
+    async handleChannelBan(client : ClientSocket,  banSignal:UserBanMuteSignalDto ) 
     {
       const targeted_user_id = await this.userCrud.findUserByUsername(banSignal.target_username)
       const  minutesToMilliseconds = (minutes: number) => {
         return minutes * 60 * 1000; 
       }
+    
 
       const banData = {
           user_id :targeted_user_id,
@@ -144,7 +146,7 @@ import ClientSocket from "src/game/interfaces/clientSocket.interface";
     @Roles (Role.OWNER, Role.ADMIN)
     @UseGuards(channelPermission)  
     @SubscribeMessage ("channelUserUnBan")
-    async handleChannelUnBan( client :Socket, unbanSignal:UserBanMuteSignalDto ) 
+    async handleChannelUnBan( client :ClientSocket, unbanSignal:UserBanMuteSignalDto ) 
     {
       const targeted_user_id = await this.userCrud.findUserByUsername(unbanSignal.target_username)
       await this.chatCrud.unblockAUserWithinGroup(targeted_user_id, unbanSignal.channel_id)
@@ -154,7 +156,7 @@ import ClientSocket from "src/game/interfaces/clientSocket.interface";
 
 
     @SubscribeMessage ("channelUserMute")
-    async handleChannelMute(client: any,  muteSignal:UserBanMuteSignalDto ) 
+    async handleChannelMute(client : ClientSocket,  muteSignal:UserBanMuteSignalDto ) 
     {
       const targeted_user_id = await this.userCrud.findUserByUsername(muteSignal.target_username)
       const  minutesToMilliseconds = (minutes: number) => {
@@ -177,7 +179,7 @@ import ClientSocket from "src/game/interfaces/clientSocket.interface";
     @Roles (Role.OWNER, Role.ADMIN)
     @UseGuards(channelPermission)  
     @SubscribeMessage ("channelUserUnMute")
-    async handleChannelUnMute( client :Socket, unmuteSignal:UserBanMuteSignalDto ) 
+    async handleChannelUnMute( client :ClientSocket, unmuteSignal:UserBanMuteSignalDto ) 
     {
       const targeted_user_id = await this.userCrud.findUserByUsername(unmuteSignal.target_username)
       await this.chatCrud.unmuteAUserWithinGroup(targeted_user_id, unmuteSignal.channel_id)
@@ -187,7 +189,7 @@ import ClientSocket from "src/game/interfaces/clientSocket.interface";
 
 
     @SubscribeMessage ("suspendChannelUpdates")
-    async handleSuspendChannelUpdates (client: any, channel_id:string)
+    async handleSuspendChannelUpdates (client : ClientSocket, channel_id:string)
     {
       client.leave (`channel-${channel_id}`)
     }
@@ -196,7 +198,7 @@ import ClientSocket from "src/game/interfaces/clientSocket.interface";
     @UseGuards(muteConversationGuard)
     @UseGuards (userRoomSubscriptionGuard)  
     @SubscribeMessage ("resumeChannelUpdates") //A gard must be added to check if the user has the right to request to unmute him
-    async handleResumeChannelUpdates (client: any, channel_id:string)
+    async handleResumeChannelUpdates (client : ClientSocket, channel_id:string)
     {
       console.log ('4')
       client.join (`channel-${channel_id}`)
@@ -207,7 +209,7 @@ import ClientSocket from "src/game/interfaces/clientSocket.interface";
     @Roles (Role.OWNER)
     @UseGuards(channelPermission)
     @SubscribeMessage('upgradeMemberToAdmin')
-    async upgradeUserToAdmin (client :Socket, upgradeSignal : UserRoleSignal)
+    async upgradeUserToAdmin (client :ClientSocket, upgradeSignal : UserRoleSignal)
     {
       const targeted_user_id = await this.userCrud.findUserByUsername(upgradeSignal.targeted_username)
       await this.chatCrud.upgradeToAdmin (targeted_user_id, upgradeSignal.channel_id)
@@ -217,7 +219,7 @@ import ClientSocket from "src/game/interfaces/clientSocket.interface";
     @Roles (Role.OWNER)
     @UseGuards(channelPermission)
     @SubscribeMessage('setAdminToMember')
-    async upgradeAdminToUser (client :Socket, upgradeSignal : UserRoleSignal)
+    async upgradeAdminToUser (client :ClientSocket, upgradeSignal : UserRoleSignal)
     {
       const targeted_user_id = await this.userCrud.findUserByUsername(upgradeSignal.targeted_username)
       await this.chatCrud.setGradeToUser (targeted_user_id, upgradeSignal.channel_id)
@@ -227,7 +229,7 @@ import ClientSocket from "src/game/interfaces/clientSocket.interface";
     @Roles (Role.OWNER, Role.ADMIN)
     @UseGuards(channelPermission)
     @SubscribeMessage ("kickOutUser")
-    async handleChannelKicks(client: any,  kickSignal:kickSignalDto ) 
+    async handleChannelKicks(client : ClientSocket,  kickSignal:kickSignalDto ) 
     { 
       const targeted_user_id = await this.userCrud.findUserByUsername(kickSignal.target_username)
       await this.chatCrud.leaveChannel (targeted_user_id, kickSignal.channel_id) //deleting the membership of the client in DB
@@ -238,7 +240,7 @@ import ClientSocket from "src/game/interfaces/clientSocket.interface";
 
     @UseGuards(LeaveChannelGuard)
     @SubscribeMessage ("leaveChannel")
-    async handleChannelLeave(@ConnectedSocket() client: ClientSocket,  channel_id : string  ) 
+    async handleChannelLeave(client : ClientSocket,  channel_id : string  ) 
     { 
       const user_id =  client.userId;
       client.leave (`channel-${channel_id}`)                              //Deleting the user from the websocket room
@@ -252,9 +254,8 @@ import ClientSocket from "src/game/interfaces/clientSocket.interface";
     @Roles (Role.OWNER)
     @UseGuards(channelPermission)
     @SubscribeMessage ("setOwner")
-    async handleGradeUserTOwner(client: any,  setOwnerSignal : setOwnerSignalDto  ) 
+    async handleGradeUserTOwner(client : ClientSocket,  setOwnerSignal : setOwnerSignalDto  ) 
     {
-      console.log ('.........setOwner')
       const targeted_user_id = await this.userCrud.findUserByUsername(setOwnerSignal.targeted_username)
       await this.chatCrud.makeOwner (targeted_user_id, setOwnerSignal.channel_id) 
     }  
@@ -264,7 +265,7 @@ import ClientSocket from "src/game/interfaces/clientSocket.interface";
     @UseGuards(muteConversationGuard)
     @UseGuards (userRoomSubscriptionGuard)  
     @SubscribeMessage ("sendMsg")
-    async handleSendMesChannels(client: any,  message:MessageDto ) 
+    async handleSendMesChannels(client : ClientSocket,  message:MessageDto ) 
     {
       message.dm_id = null;
       const messageToBrodcast = await this.chatCrud.createMessage(message)
@@ -287,7 +288,7 @@ import ClientSocket from "src/game/interfaces/clientSocket.interface";
   
     
     @SubscribeMessage ("createChannel")
-    async handleCreateChannel ( client: ClientSocket, channelData : channelCreateDto)
+    async handleCreateChannel ( client : ClientSocket, channelData : channelCreateDto)
     {
       console.log ('channelData', channelData)
       const userIdCookie = client.userId;

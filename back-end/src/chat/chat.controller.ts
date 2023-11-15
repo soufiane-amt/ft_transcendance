@@ -38,23 +38,17 @@ export class ChatController
   return payload.userId;
 } 
 
-@UseGuards(JwtAuthGuard)
+// @UseGuards(JwtAuthGuard)
 @Get('/image/:image_path')
 async getUserImage(@Param('image_path') image_path: string, @Res() res: Response) {
+  console.log('image_path: ', image_path)
   const imagePath =  path.join(__dirname, '..', `../uploads/${image_path}`); // Go up two directories to reach the workspace root
   if (!fs.existsSync(imagePath)) {
     return res.status(404).send('Image not found');
   }
   res.sendFile(imagePath);
 }
-// const JwtToken: string = request.headers.authorization.split(' ')[1];
-  
-// const payload: any = this.authservice.extractPayload(JwtToken);
-// const user = await this.service.prismaClient.user.findUnique({
-//   where: {
-//     email: payload.email,
-//   },
-// });
+
 @UseGuards(JwtAuthGuard)
 @Get ("/Direct_messaging/discussionsBar")
 async findAllDiscussionPartners (@Req() request : Request)
@@ -219,12 +213,14 @@ async findAllChannelsInContact (@Req() request : Request)
 
  
 
- @UseGuards(JwtAuthGuard)@UseGuards(allowJoinGuard)
+//  @UseGuards(JwtAuthGuard)
+//  @UseGuards(allowJoinGuard)
 @Post("/channelJoinRequest")
 async handleChannelJoinRequest (@Req() request : Request,
                        @Res() response: Response,
                        @Body() channelRequestMembership : {channel_id:string, password:string, type: 'PROTECTED' | 'PRIVATE' | 'PUBLIC' })
 {
+  console.log('----------------------------------------------', channelRequestMembership) 
   const currentUserId = this.currentUserId(request);
 
   const channelMembershipData: channelMembershipDto = {
@@ -260,8 +256,11 @@ async handleChannelJoinRequest (@Req() request : Request,
               @Param('username') username:string)
   {
     const currentUserId = this.currentUserId(request);
-
     const userToContact = await this.userCrud.findUserByUsername(username);
+    if (await this.chatCrud.findDmByUsers(currentUserId, userToContact))
+    {
+      return response.status(400).send('dm already exists');
+    }
     const dmData:dmDto = {
       user1_id : currentUserId,
       user2_id :  userToContact,

@@ -132,14 +132,34 @@ export class ChatCrudService {
           },
         });
   
-        // Use filter to exclude the user with user_id
-        const selectedUserData = usersInChannel
-          .filter((user) => user.user.id !== user_id)
-          .map((user) => ({
-            id: user.user.id,
-            username: user.user.username,
-            avatar: user.user.avatar,
-          }));
+        const messagesInChannel = await this.prisma.prismaClient.message.findMany({
+          where: {
+            channel_id: channel.channel_id,
+          },
+          include: {
+            user: {
+              select: {
+                id: true,
+                username: true,
+                avatar: true,
+              },
+            },
+          },
+        });
+  
+        // Extract unique users from both lists
+        const allUsers = [...usersInChannel, ...messagesInChannel].map((item) => item.user);
+        const uniqueUsers = Array.from(new Set(allUsers.map((user) => user.id))).map((userId) => {
+          const user = allUsers.find((u) => u.id === userId);
+          return {
+            id: user.id,
+            username: user.username,
+            avatar: user.avatar,
+          };
+        });
+  
+        // Use filter to exclude the current user
+        const selectedUserData = uniqueUsers.filter((user) => user.id !== user_id);
   
         return selectedUserData;
       })
@@ -150,9 +170,59 @@ export class ChatCrudService {
     if (flattenedData.length === 0) {
       return undefined;
     }
+    console.log('====))))))flattenedData: ', flattenedData);
   
     return flattenedData;
   }
+  
+  // async findUsersInCommonChannels(user_id: string) {
+  //   const joinedChannels = await this.prisma.prismaClient.channelMembership.findMany({
+  //     where: {
+  //       user_id: user_id,
+  //     },
+  //     select: {
+  //       channel_id: true,
+  //     },
+  //   });
+  
+  //   const commonUsersData = await Promise.all(
+  //     joinedChannels.map(async (channel) => {
+  //       const usersInChannel = await this.prisma.prismaClient.channelMembership.findMany({
+  //         where: {
+  //           channel_id: channel.channel_id,
+  //         },
+  //         include: {
+  //           user: {
+  //             select: {
+  //               id: true,
+  //               username: true,
+  //               avatar: true,
+  //             },
+  //           },
+  //         },
+  //       });
+  
+  //       // Use filter to exclude the user with user_id
+  //       const selectedUserData = usersInChannel
+  //         .filter((user) => user.user.id !== user_id)
+  //         .map((user) => ({
+  //           id: user.user.id,
+  //           username: user.user.username,
+  //           avatar: user.user.avatar,
+  //         }));
+  
+  //       return selectedUserData;
+  //     })
+  //   );
+  
+  //   const flattenedData = commonUsersData.flat(); // Flatten the nested arrays
+  
+  //   if (flattenedData.length === 0) {
+  //     return undefined;
+  //   }
+  
+  //   return flattenedData;
+  // }
   
 
 

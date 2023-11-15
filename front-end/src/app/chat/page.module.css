@@ -1,3 +1,5 @@
 .initial_arranging{
     display: flex;
+    overflow: hidden;
 }
+

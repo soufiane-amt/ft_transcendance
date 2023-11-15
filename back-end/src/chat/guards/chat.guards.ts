@@ -22,10 +22,8 @@ import { UpdateChannelDto, UserRoleSignal } from '../dto/update-chat.dto';
 import * as cookie from "cookie";
 
 
-function extractUserIdFromCookies(client:Socket) {
-const headers = client.handshake.headers;
-  const parsedCookies = cookie.parse(headers.cookie || "");
-  return parsedCookies["user.id"];
+function extractUserIdFromCookies(client:any) {
+  return client.userId;
 }
 
 @Injectable()
