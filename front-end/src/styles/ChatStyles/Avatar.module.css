@@ -31,3 +31,12 @@
     width: 50px;
   }
 }
+
+@media (max-width :450px) 
+{
+  .avatar__dimentions {
+    height: 30px;
+    width: 30px;
+  }
+
+}

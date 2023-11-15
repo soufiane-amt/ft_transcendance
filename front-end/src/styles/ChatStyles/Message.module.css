@@ -101,3 +101,17 @@
     font-size: small;
   }
 }
+
+@media (max-width:450px) 
+{
+  .message_bubble {
+    font-size: 9px;
+      padding: 13px 23px;
+      width: 70%;
+      margin-top: calc(var(--avatar_size) / 1.5);
+
+  }
+  .message_username__style {
+    font-size: small;
+  }
+}
