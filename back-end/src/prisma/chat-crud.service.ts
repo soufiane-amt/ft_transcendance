@@ -829,6 +829,7 @@ async retreiveDmInitPanelData(user_id :string) {
     type: "PUBLIC" | "PROTECTED" | "PRIVATE",
     password: string
   ) {
+    console.log('new password', password)
     if (type === "PROTECTED" && password.length < 8)
       return null;
      return await this.prisma.prismaClient.channel.update({

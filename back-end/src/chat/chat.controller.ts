@@ -1,5 +1,4 @@
-import { Controller, Get,Post , Res,Req,  Param, Inject, UseGuards, Body, Put, InternalServerErrorException, UseInterceptors, UploadedFile } from '@nestjs/common';
-import { DmService } from './services/direct-messaging/dm.service';
+import { Controller, Get,Post , Res,Req,  Param, Inject, UseGuards, Body, InternalServerErrorException, UseInterceptors, UploadedFile } from '@nestjs/common';
 import { Request, Response, response } from "express"
 import { dmGateway } from './services/direct-messaging/dm.gateway';
 import {  allowJoinGuard } from './guards/chat.guards';
@@ -218,9 +217,11 @@ async findAllChannelsInContact (@Req() request : Request)
 @Post("/channelJoinRequest")
 async handleChannelJoinRequest (@Req() request : Request,
                        @Res() response: Response,
-                       @Body() channelRequestMembership : {channel_id:string, password:string, type: 'PROTECTED' | 'PRIVATE' | 'PUBLIC' })
+                       @Body() channelRequestMembership : {channel_id:string, 
+                                                                password:string, 
+                                                                type: 'PROTECTED' | 'PRIVATE' | 'PUBLIC' })
 {
-  console.log('----------------------------------------------', channelRequestMembership) 
+  console.log('---------------------DKL-------------------------', channelRequestMembership) 
   const currentUserId = this.currentUserId(request);
 
   const channelMembershipData: channelMembershipDto = {

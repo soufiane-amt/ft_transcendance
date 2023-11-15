@@ -4,8 +4,6 @@ import {
   CanActivate,
   ExecutionContext,
   Injectable,
-  InternalServerErrorException,
-  SetMetadata,
 } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { DmService } from '../services/direct-messaging/dm.service';
@@ -13,13 +11,11 @@ import { dmGateway } from '../services/direct-messaging/dm.gateway';
 import { Role } from '../enum/role.enum';
 import {
   UserBanMuteSignalDto,
-  banManageSignalDto,
   channelReqDto,
   kickSignalDto,
   setOwnerSignalDto,
 } from '../dto/chat.dto';
 import { UpdateChannelDto, UserRoleSignal } from '../dto/update-chat.dto';
-import * as cookie from "cookie";
 
 
 function extractUserIdFromCookies(client:any) {
@@ -205,10 +201,16 @@ export class allowJoinGuard implements CanActivate {
   }
 
   async allowJoining(user_id: string, joinRequest: channelReqDto): Promise<boolean> {
+    console.log('>>>>>>>joinRequest: ', joinRequest)
     const targetedChannel = await this.chatCrud.findChannelById(
       joinRequest.channel_id,
       );
-
+      console.log('>>>>>>>: ', 
+      await this.chatCrud.comparePasswords(joinRequest.password, 
+        targetedChannel.password)
+        )
+    console.log('1', joinRequest.password)
+    console.log('2',targetedChannel.password)
       if (!targetedChannel || targetedChannel.type !== joinRequest.type)
        return false;
     //check if the user wanting to join is already there in  join
@@ -216,6 +218,7 @@ export class allowJoinGuard implements CanActivate {
       user_id,
       joinRequest.channel_id,
     );
+
     if (user_membership == null) {
       if ( targetedChannel.type == 'PROTECTED' &&
             (!joinRequest.password ||

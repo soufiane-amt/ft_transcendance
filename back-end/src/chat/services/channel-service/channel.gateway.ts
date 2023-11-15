@@ -8,7 +8,6 @@ import { Role } from "src/chat/enum/role.enum";
 import {  LeaveChannelGuard, allowJoinGuard, bannedConversationGuard, channelPermission, muteConversationGuard, userRoomSubscriptionGuard } from "src/chat/guards/chat.guards";
 import { ChatCrudService } from "src/prisma/chat-crud.service";
 import { UserCrudService } from "src/prisma/user-crud.service";
-import * as cookie from 'cookie';
 import * as bcrypt from 'bcryptjs';
 import socketIOMiddleware, { wsmiddleware } from "src/game/gateways.middleware";
 import { GatewaysGuard } from "src/game/guards/gateways.guard";
@@ -75,7 +74,8 @@ import ClientSocket from "src/game/interfaces/clientSocket.interface";
     @SubscribeMessage('updateChannelType')
     async changeChannelType (client :ClientSocket, updateType : UpdateChannelDto)
     {
-      await this.chatCrud.changeChannelType (updateType.channel_id, updateType.type, updateType.password)
+      const new_password = await this.hashPassword(updateType?.password)
+      await this.chatCrud.changeChannelType (updateType.channel_id, updateType.type, new_password)
     }
 
 
