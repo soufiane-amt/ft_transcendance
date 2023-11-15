@@ -37,6 +37,9 @@
   }
   /* /////////////////: */
 
+  .discussion_panel_bar_close {
+    width:  0.1%; 
+  }
 
   @media (max-width:650px) 
   {

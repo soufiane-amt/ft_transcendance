@@ -47,13 +47,12 @@ function ChannelsMain() {
                 { !discussionIsEmpty && (
                 <div className={style.channel_main}>
                 {
-                  openBar && (
-
                       <DiscussionsBar
+                        openBar={openBar}
                         selectedDiscussionState={selectState}
                         currentRoute={"Channels"}
                         discussionIsEmptyState={{ discussionIsEmpty, setDiscussionIsEmpty }}
-                        />)
+                        />
                 }
                 <ChattingField
                   openBar={openBar}

@@ -10,6 +10,7 @@ import { ChannelData } from "../../interfaces/ChannelData";
 import { useHandleJoinDm } from "../../../../CustomHooks/useHandleJoinChannel";
 
 interface DiscussionsBarProps {
+  openBar: boolean,
     selectedDiscussionState:{
       selectedDiscussion : discussionPanelSelectType,
       selectDiscussion : (e: discussionPanelSelectType) => void
@@ -22,7 +23,7 @@ interface DiscussionsBarProps {
 }
   
 
-export function DiscussionsBar({ selectedDiscussionState, currentRoute, discussionIsEmptyState }: DiscussionsBarProps) {
+export function DiscussionsBar({openBar, selectedDiscussionState, currentRoute, discussionIsEmptyState }: DiscussionsBarProps) {
     const [discussionPanels, setDiscussionRooms] = useState<DiscussionDto[]>([]);
     const [modalIsVisible, setModalAsVisible] = useState<boolean>(false);
     const {selectedDiscussion, selectDiscussion} = selectedDiscussionState;
@@ -98,7 +99,7 @@ export function DiscussionsBar({ selectedDiscussionState, currentRoute, discussi
        
     const displayActionModal = () => setModalAsVisible(true);
     return (
-      <div className={style.discussion_panel_bar}>
+      <div className={`${style.discussion_panel_bar} ${!openBar? style.discussion_panel_bar_close : '' }`}>
       <ul >
         {discussionPanels?.map((panelElement) => {
           const isSelected = panelElement?.id === selectedDiscussion.id;

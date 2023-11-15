@@ -41,14 +41,15 @@ function DirectMesgMain() {
         
         <div className={style.direct_msg_main}>
           {
-            openBar && (
+            // openBar && (
               <DiscussionsBar
+                openBar={openBar}
                 selectedDiscussionState={selectState}
                 currentRoute={"Direct_messaging"}
                 discussionIsEmptyState={{ discussionIsEmpty, setDiscussionIsEmpty }}
 
               />
-            )
+            // )
           }
           <ChattingField
             openBar={openBar}

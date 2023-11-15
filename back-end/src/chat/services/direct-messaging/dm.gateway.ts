@@ -72,7 +72,7 @@ export class dmGateway implements OnGatewayConnection {
     
     const userToContactPublicData =  await this.userCrud.findUserSessionDataByID(joinSignal.userToContact);
     const currentUserPublicData =  await this.userCrud.findUserSessionDataByID(currentUserId);
-
+    
 
     this.server.to(`inbox-${currentUserId}`).emit('updateUserContact', {id:userToContactPublicData.id,
       username: userToContactPublicData.username, 

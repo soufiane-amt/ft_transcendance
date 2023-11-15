@@ -60,7 +60,7 @@ export function CreateChannel() {
           alert(`Your password must be at least ${MinPasswordLength} characters long!`);
           return;
         }
-        const response = await axios.post('http://localhost:3001/chat/upload', image,{
+         await axios.post('http://localhost:3001/chat/upload', image,{
             headers: {
               Authorization: `Bearer ${jwtToken}`,
               'Content-Type': 'multipart/form-data',

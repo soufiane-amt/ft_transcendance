@@ -214,7 +214,7 @@ async findAllChannelsInContact (@Req() request : Request)
  
 
 //  @UseGuards(JwtAuthGuard)
-//  @UseGuards(allowJoinGuard)
+ @UseGuards(allowJoinGuard)
 @Post("/channelJoinRequest")
 async handleChannelJoinRequest (@Req() request : Request,
                        @Res() response: Response,

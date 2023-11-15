@@ -39,8 +39,8 @@ export function ChannelPasswordInput ({handleVisibility,  channelData}: ChannelP
             { 
                 headers: {
                     Authorization: `Bearer ${jwtToken}`,
-                    'Content-Type': 'multipart/form-data',
-                  },
+                    'Content-Type': 'application/json', // Adjust this if needed
+                },
               })
                 .then(res => {
                   if (res.status === 200) {
