@@ -47,6 +47,10 @@ type ActionButtonProps = { targetId: string; buttonData: buttonType };
 function ActionButton({ targetId, buttonData }: ActionButtonProps) {
   const handleButtonClick = () => {
     switch (buttonData.title) {
+      case "Play":
+        // To merge with game
+        break;
+        
       case "Ban":
         socket.emit("dmModeration", {
           targetedUserId: targetId,
@@ -105,7 +109,9 @@ function UserActionModal({
         <h1>{userContact.username}</h1>
       </div>
       <div className={style.interaction_buttons}>
-        <ActionButton targetId={targetedUserId} buttonData={playButton} />
+        {
+          <ActionButton targetId={targetedUserId} buttonData={playButton} />
+        }
         {
           (!userIsBanned || userIsBanned.blocker_id === userSession.id) && 
           <ActionButton

@@ -41,7 +41,6 @@ function DirectMesgMain() {
         
         <div className={style.direct_msg_main}>
           {
-            // openBar && (
               <DiscussionsBar
                 openBar={openBar}
                 selectedDiscussionState={selectState}
@@ -49,7 +48,6 @@ function DirectMesgMain() {
                 discussionIsEmptyState={{ discussionIsEmpty, setDiscussionIsEmpty }}
 
               />
-            // )
           }
           <ChattingField
             openBar={openBar}

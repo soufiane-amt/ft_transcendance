@@ -98,6 +98,7 @@ function ModerationAction({actionData,  actionType }: ModerationActionProps) {
         break;
 
       case ActionType.PLAY:
+        //To merge with game
         break;
 
       case ActionType.SETADMIN:
