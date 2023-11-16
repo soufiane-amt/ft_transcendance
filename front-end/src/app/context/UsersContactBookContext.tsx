@@ -45,14 +45,6 @@ export function UserContactsProvider({
           });
         });
       }
-      if (Array.isArray(userContactsBook_tmp)) {
-        userContactsBook_tmp?.forEach((user: any) => {
-          map.set(user.id, {
-            username: user.username,
-            avatar: user.avatar,
-          });
-        });
-      }
       setUserContactsBook(map);
     }
     fetchDataAsync();
@@ -71,11 +63,27 @@ export function UserContactsProvider({
         setUserContactsBook(updatedUserContactsBook);
       // }, 0)
     };
-    socket.on("updateUserContactChannelCreate", handleUpdateUserContact);
-    socket.on("updateUserContactChannelCreate", handleUpdateUserContact);
+    const handleUpdateContactsChannelCreate = (users:any) => {
+      
+      console.log('updateUserContactChannelCreate', users)
+      const map = new Map(userContactsBook);
+      if (Array.isArray(users)) {
+        users?.forEach((user: any) => {
+          if (user.id !== currentUserId)
+          map.set(user.id, {
+            username: user.username,
+            avatar: user.avatar,
+          });
+        });
+      }
+      setUserContactsBook(map);
+    }
+
+    socket.on("updateUserContact", handleUpdateUserContact);
+    socket.on("updateUserContactChannelCreate", handleUpdateContactsChannelCreate);
     return () => {
-      socket.off("updateUserContactChannelCreate", handleUpdateUserContact);
-      socket.off("updateUserContactChannelCreate", handleUpdateUserContact);
+      socket.off("updateUserContact", handleUpdateUserContact);
+      socket.off("updateUserContactChannelCreate", handleUpdateContactsChannelCreate);
     };
   }, [userContactsBook])
   //get the user contact from the map and update it

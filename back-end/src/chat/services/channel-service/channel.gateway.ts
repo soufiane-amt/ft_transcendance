@@ -201,16 +201,16 @@ import ClientSocket from "src/game/interfaces/clientSocket.interface";
     @SubscribeMessage ("resumeChannelUpdates") //A gard must be added to check if the user has the right to request to unmute him
     async handleResumeChannelUpdates (client : ClientSocket, channel_id:string)
     {
-      const user_id = client.userId;
+      // const user_id = client.userId;
       
       client.join (`channel-${channel_id}`)
-      const userPublicData =  await this.userCrud.findUserSessionDataByID(user_id);
-      console.log('---------handleResumeChannelUpdates', userPublicData.username)
+      // const userPublicData =  await this.userCrud.findUserSessionDataByID(user_id);
+      // console.log('---------handleResumeChannelUpdates', userPublicData.username)
       
-      this.server.to(`channel-${channel_id}`).emit('updateUserContact', {id:userPublicData.id,
-        username: userPublicData.username, 
-        avatar: userPublicData.avatar, 
-      })
+      // this.server.to(`channel-${channel_id}`).emit('updateUserContact', {id:userPublicData.id,
+      //   username: userPublicData.username, 
+      //   avatar: userPublicData.avatar, 
+      // })
 
       this.broadcastChannelChanges(channel_id)
     }
@@ -312,7 +312,7 @@ import ClientSocket from "src/game/interfaces/clientSocket.interface";
       };
       // updateUserContact
       const users = await this.chatCrud.findUsersInCommonChannels (currentUserId)
-
+      console.log ('--------------create channel users', users)
       const channel = await this.chatCrud.createChannel (currentUserId, channel_data,  channelData.invitedUsers)
       for (let i = 0; i < channel.memberUsersIds.length; i++) {
         this.server.to(`inbox-${channel.memberUsersIds[i]}`)
@@ -321,8 +321,12 @@ import ClientSocket from "src/game/interfaces/clientSocket.interface";
             image: channel_data.image, 
             type:channel_data.type
           })
+        console.log ('--------------channel.memberUsersIds[i]', channel.memberUsersIds[i])
+
         this.server.to(`inbox-${channel.memberUsersIds[i]}`)
-        .emit('updateUserContact', users)
+        .emit('updateUserContactChannelCreate',
+            await this.chatCrud.findUsersInCommonChannels (channel.memberUsersIds[i])
+         )
       } 
 
     }
