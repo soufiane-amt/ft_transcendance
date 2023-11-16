@@ -11,15 +11,29 @@
     width: 100%;
     height: 300px;
     overflow: scroll;
-
+    overflow-x: hidden; /* This hides the vertical scrollbar */
 
 }
 .user_initiative_talks::-webkit-scrollbar,
  .channel_joins::-webkit-scrollbar {
-    width: 0em; 
+    width: 10px;
   }
 
-
+  .user_initiative_talks::-webkit-scrollbar-track,
+  .channel_joins::-webkit-scrollbar-track {
+    background: #ecb1b1;
+   }
+ 
+   .user_initiative_talks::-webkit-scrollbar-thumb,
+   .channel_joins::-webkit-scrollbar-thumb {
+        background: #252525;
+    }
+    .user_initiative_talks::-webkit-scrollbar-thumb:hover,
+    .channel_joins::-webkit-scrollbar-thumb:hover {
+        background: #555;
+    }
+   
+ 
 .welcoming_page_talks__title {
     color: white;
     font-size: 15px;

@@ -9,7 +9,7 @@ const MinPasswordLength = 8;
 
 interface TypeSetterProps{
   selectedOptionState : {
-    selectedOption : string | undefined,
+    selectedOption : string | undefined ,
     setSelectedOption : React.Dispatch<React.SetStateAction<string | undefined>>;
   }
   // setNewPassword : React.Dispatch<React.SetStateAction<string>>;
@@ -79,7 +79,7 @@ interface ChannelSettingProps{
 }
 export function ChannelSetting({channel_id}:ChannelSettingProps) {
   const currentChannel = useFindChannelBook(channel_id)
-  const [selectedOption, setSelectedOption] = useState(currentChannel?.type); // State to track selected option
+  const [selectedOption, setSelectedOption] = useState <string | undefined>('PROTECTED'); // State to track selected option
   const [password, setNewPassword] = useState(''); // State to track selected option
 
 
