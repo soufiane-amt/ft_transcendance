@@ -5,6 +5,7 @@ import Speed from "../../types/Speed";
 import Status from "../../types/Status";
 import Player from "./Player";
 import Puck from "./Puck";
+import DeviceType from "../../types/DeviceType";
 
 
 export default class PracticeGame {
@@ -25,6 +26,7 @@ export default class PracticeGame {
     SetUserScore: React.Dispatch<number>;
     SetRound: React.Dispatch<number>;
     computerDistance: number;
+    DeviceType: DeviceType;
 
 
     constructor(mapType: MapType, speed: string, SetUserScore: React.Dispatch<number>, SetComputerScore: React.Dispatch<number>, SetRound: React.Dispatch<number>) {
@@ -52,6 +54,7 @@ export default class PracticeGame {
         this.roundsScores = [7, 5, 3];
         this.currentRound = 0;
         this.status = 'started';
+        this.DeviceType = 'Laptop';
         this.setup();
     }
 
@@ -67,10 +70,10 @@ export default class PracticeGame {
 
     render() {
         this.ctx.drawImage(this.offcanvas, 0, 0);
-        this.User.draw();
-        this.Computer.draw();
+        this.User.draw(this.DeviceType);
+        this.Computer.draw(this.DeviceType);
         const player: Player = (this.puck.velocityX > 0) ? this.Computer : this.User;
-        this.puck.draw(player);
+        this.puck.draw(player, this.DeviceType);
     }
 
     update() {
@@ -115,6 +118,10 @@ export default class PracticeGame {
     resize() : void {
         const width: number = Number(window.getComputedStyle(this.container).getPropertyValue('width').slice(0, -2));
         const height: number = Number(window.getComputedStyle(this.container).getPropertyValue('height').slice(0, -2));
+        if (width > 425)
+            this.DeviceType = 'Laptop';
+        else if (width <= 425)
+            this.DeviceType = 'Mobile';
         this.canvas.height = height;
         this.canvas.width = width;
         this.offcanvas.height = this.canvas.height;
@@ -141,13 +148,14 @@ export default class PracticeGame {
         this.offctx.fillStyle = '#B2A4FA';
         this.offctx.fillRect(0, 0, this.offcanvas.width, this.offcanvas.height);
         this.offctx.fillStyle = '#0D0149';
-        for(let i = 0; i <= this.offcanvas.height;) {
-            const width = Math.ceil(this.offcanvas.width * 0.004);
-            const x = (this.offcanvas.width / 2) - (width / 2);
-            const y = i;
-            const height = Math.ceil(this.offcanvas.height * 0.06);
+        const end: number = this.DeviceType === 'Laptop' ? this.offcanvas.height : this.offcanvas.width;
+        for(let i = 0; i <= end;) {
+            const width = this.DeviceType === 'Laptop' ? Math.ceil(this.offcanvas.width * 0.004) : Math.ceil(this.offcanvas.width * 0.06);
+            const x = this.DeviceType === 'Laptop' ? (this.offcanvas.width / 2) - (width / 2) : i;
+            const height = this.DeviceType === 'Laptop' ? Math.ceil(this.offcanvas.height * 0.06) : Math.ceil(this.offcanvas.height * 0.004);
+            const y = this.DeviceType === 'Laptop' ? i : (this.offcanvas.height / 2) - (height / 2);
             this.offctx.fillRect(x, y, width, height);
-            i += (height) + 3;
+            i += this.DeviceType === 'Laptop' ? (height) + 3 : width + 3;
         }
     }
 
@@ -155,10 +163,10 @@ export default class PracticeGame {
         this.offctx.fillStyle = '#FF3230';
         this.offctx.fillRect(0, 0, this.offcanvas.width, this.offcanvas.height);
         this.offctx.fillStyle = 'WHITE';
-        const width = Math.ceil(this.offcanvas.width * 0.003);
-        const x = (this.offcanvas.width / 2) - (width / 2);
-        const y = 0;
-        const height = this.offcanvas.height;
+        const width = this.DeviceType === 'Laptop' ? Math.ceil(this.offcanvas.width * 0.003) : this.offcanvas.width;
+        const height = this.DeviceType === 'Laptop' ? this.offcanvas.height : Math.ceil(this.offcanvas.height * 0.003);
+        const x = this.DeviceType === 'Laptop' ? (this.offcanvas.width / 2) - (width / 2) : 0;
+        const y = this.DeviceType === 'Laptop' ? 0 : (this.offcanvas.height / 2) - (height / 2);
         this.offctx.fillRect(x, y, width, height);
         this.offctx.beginPath();
         const centerX = (this.offcanvas.width / 2);
@@ -176,15 +184,15 @@ export default class PracticeGame {
         this.offctx.fillStyle = '#393970';
         this.offctx.fillRect(0, 0, this.offcanvas.width, this.offcanvas.height);
         this.offctx.fillStyle = 'WHITE';
-        const width = Math.ceil(this.offcanvas.width * 0.05);
-        const x = (this.offcanvas.width / 2) - (width / 2);
-        const y = 0;
-        const height = this.offcanvas.height;
+        const width = this.DeviceType === 'Laptop' ? Math.ceil(this.offcanvas.width * 0.05) : this.offcanvas.width;
+        const height = this.DeviceType === 'Laptop' ? this.offcanvas.height : Math.ceil(this.offcanvas.height * 0.05);
+        const x = this.DeviceType === 'Laptop' ? (this.offcanvas.width / 2) - (width / 2) : 0;
+        const y = this.DeviceType === 'Laptop' ? 0 : (this.offcanvas.height / 2) - (height / 2);
         this.offctx.fillRect(x, y, width, height);
     }
 
     moveUser(e: any) : void {
-        const newPos: number = (e.offsetY / this.canvas.height);
-        this.User.moveUser(newPos);
+        const newPosition: number = this.DeviceType === 'Laptop' ? (e.offsetY / this.canvas.height) : (this.scene.width - (e.offsetX / this.canvas.width));
+        this.User.moveUser(newPosition);
     }
 }

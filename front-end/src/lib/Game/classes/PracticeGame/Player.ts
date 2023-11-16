@@ -1,5 +1,6 @@
 import Boundaries from "../../interfaces/Boundaries";
 import Scene from "../../interfaces/Scene";
+import DeviceType from "../../types/DeviceType";
 import Role from "../../types/Role";
 import Puck from "./Puck";
 
@@ -38,11 +39,11 @@ export default class Player {
         this.winningRounds = 0;
     }
 
-    draw() : void {
-        const x: number = this.boundaries.left * this.ctx.canvas.width;
-        const y: number = this.boundaries.top * this.ctx.canvas.height;
-        const width: number = Math.ceil(this.width * this.ctx.canvas.width);
-        const height: number = Math.ceil(this.height * this.ctx.canvas.height);
+    draw(deviceType: DeviceType) : void {
+        const x: number = deviceType === 'Laptop' ? Math.floor(this.boundaries.left * this.ctx.canvas.width) : Math.floor((this.scene.width - this.boundaries.bottom) * this.ctx.canvas.width);
+        const y: number = deviceType === 'Laptop' ? Math.floor(this.boundaries.top * this.ctx.canvas.height) : Math.floor(this.boundaries.left * this.ctx.canvas.height);
+        const width: number = deviceType === 'Laptop' ? Math.ceil(this.width * this.ctx.canvas.width) : Math.ceil(this.height * this.ctx.canvas.width);
+        const height: number = deviceType === 'Laptop' ? Math.ceil(this.height * this.ctx.canvas.height) : Math.ceil(this.width * this.ctx.canvas.height);
         this.ctx.fillStyle = this.color;
         this.ctx.fillRect(x, y, width, height);
     }
