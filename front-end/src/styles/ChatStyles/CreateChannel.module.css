@@ -112,11 +112,20 @@
 
 @media (max-width:650px) 
 {
+    .create_channel{
+        width: calc(100vw - 60px);
+    }
     .create_channel__image input {
         width: 100px;
     }
     .create_channel label {
         font-size: x-small;
+    }
+
+    .create_channel__button button{
+        width: 40%;
+        height: 40px;
+        font-size: 10px;
     }
     .create_channel__name input,
     .create_channel__select select,
@@ -132,7 +141,13 @@
     .create_channel__image{
         margin-bottom: 20px;
     }
+    .create_channel__image img {
+        width: 100px;
+        height: 100px;
+
+    }
 }  
+
 
 @media (max-width:427px) 
 {   
