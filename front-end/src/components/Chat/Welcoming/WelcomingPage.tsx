@@ -39,18 +39,6 @@ export function WelcomingPage() {
         {dataToDisplay?.dmsToJoin.map((user: { username: string; avatar: string }) => {
           return <UserInitiativeTalk key={'user_' + user.username} userData={{ username: user.username, avatar: user.avatar }} />;
         })}
-        {dataToDisplay?.dmsToJoin.map((user: { username: string; avatar: string }) => {
-          return <UserInitiativeTalk key={'user_' + user.username} userData={{ username: user.username, avatar: user.avatar }} />;
-        })}
-        {dataToDisplay?.dmsToJoin.map((user: { username: string; avatar: string }) => {
-          return <UserInitiativeTalk key={'user_' + user.username} userData={{ username: user.username, avatar: user.avatar }} />;
-        })}
-        {dataToDisplay?.dmsToJoin.map((user: { username: string; avatar: string }) => {
-          return <UserInitiativeTalk key={'user_' + user.username} userData={{ username: user.username, avatar: user.avatar }} />;
-        })}
-        {dataToDisplay?.dmsToJoin.map((user: { username: string; avatar: string }) => {
-          return <UserInitiativeTalk key={'user_' + user.username} userData={{ username: user.username, avatar: user.avatar }} />;
-        })}
       </div>
     );
   }
