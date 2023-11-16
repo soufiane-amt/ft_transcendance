@@ -24,10 +24,28 @@
 .users_cards{
   overflow: scroll;
 
+  overflow-x: hidden;
 }
 .users_cards::-webkit-scrollbar {
-  width: 0em; 
+  width: 15px;
 }
+
+/* Track */
+.users_cards::-webkit-scrollbar-track {
+  background: #b1b7ec;
+}
+
+/* Handle */
+.users_cards::-webkit-scrollbar-thumb {
+  background: #0b1869;
+  border-radius: 30px;
+}
+
+/* Handle on hover */
+.users_cards::-webkit-scrollbar-thumb:hover {
+  background: #030136;
+}
+
 
 .user_addition{
   display: flex;
