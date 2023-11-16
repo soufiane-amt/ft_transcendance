@@ -10,6 +10,7 @@ import { useRouter } from "next/navigation";
 import Cookies from "js-cookie";
 import JoinLeavingGameData from "@/components/game/interfaces/JoinLeavingGameData";
 import JoinLeavingGameComponent from "@/components/game/JoingLeavingGameComponent";
+import InviteThroghtChatData from "@/components/game/interfaces/InviteThroghtChatData";
 
 const Structure = ({ children }: { children: React.ReactNode }) => {
   const [GameInvitationBool, setGameInvitationBool] = useState(false);
@@ -47,6 +48,10 @@ const Structure = ({ children }: { children: React.ReactNode }) => {
       const remainingTime: number = Math.floor(payload.remainingTime / 1000);
       setTimer(remainingTime);
     });
+
+    newSocket.on('show_settings_component', (payload: InviteThroghtChatData) => {
+      console.log(payload);
+    })
   }, []);
 
   useEffect(() => {

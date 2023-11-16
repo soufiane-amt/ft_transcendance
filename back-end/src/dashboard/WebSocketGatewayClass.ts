@@ -29,6 +29,7 @@ import { GatewaysGuard } from 'src/game/guards/gateways.guard';
 import Game from 'src/game/Game/classes/Game';
 import socketIOMiddleware, { wsmiddleware } from 'src/game/gateways.middleware';
 import JoiningLeavingGameResponseDto, { joiningLeavingGameResponseDto } from 'src/game/dto/JoiningLeavingGameResponse.dto';
+import GameInvitationFromChatDto, { gameInvitationFromChatDto } from 'src/game/dto/GameInvitationFromChat.dto';
 @WebSocketGateway({ cors: true, origins: 'http://localhost:3000' })
 @Injectable()
 @UseGuards(GatewaysGuard)
@@ -307,5 +308,11 @@ export class WebSocketGatewayClass
   @SubscribeMessage('joining_leaving_game_response')
   handleJoiningLeavingGameResponse(@MessageBody(new ZodValidationPipe(joiningLeavingGameResponseDto)) joiningLeavingGameResponseDto: JoiningLeavingGameResponseDto, @ConnectedSocket() client : ClientSocket) : string {
     return this.gameService.joining_leaving_game_response(client, joiningLeavingGameResponseDto);
+  }
+
+  @SubscribeMessage('invite_to_game_through_chat')
+  handleInviteToGameThroughChat(@MessageBody(new ZodValidationPipe(gameInvitationFromChatDto)) gameInvitationFromChatDto : GameInvitationFromChatDto, @ConnectedSocket() client: ClientSocket) {
+    this.gameService.handleInvitationFromChat(gameInvitationFromChatDto, client);
+    return 'the operation done successfully';
   }
 }

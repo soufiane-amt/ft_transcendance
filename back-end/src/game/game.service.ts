@@ -19,6 +19,7 @@ import ClientSocket from './interfaces/clientSocket.interface';
 import GuestPlayer from './interfaces/guestPlayer.interface';
 import HostPlayer from './interfaces/hostPlayers.interface';
 import { Player } from './interfaces/player.interface';
+import GameInvitationFromChatDto from './dto/GameInvitationFromChat.dto';
 
 @Injectable()
 export class GameService {
@@ -552,4 +553,13 @@ export class GameService {
       game.status = 'finished';
     }
   }
+  
+  handleInvitationFromChat(gameInvitationFromChatDto: GameInvitationFromChatDto, client: ClientSocket) {
+    const payload: any = {
+      ...gameInvitationFromChatDto,
+      invitorId: client.userId
+    }
+    client.emit('show_settings_component', payload);
+  }
 }
+
