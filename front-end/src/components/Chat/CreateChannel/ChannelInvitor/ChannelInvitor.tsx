@@ -1,3 +1,5 @@
+'use client'
+
 import { useState } from "react";
 import style from "../../../../styles/ChatStyles/ChannelInvitor.module.css";
 import { useOutsideClick } from "../../../../CustomHooks/useOutsideClick";

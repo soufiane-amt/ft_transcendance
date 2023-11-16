@@ -1,3 +1,5 @@
+'use client'
+
 import React, { useEffect, useState } from "react";
 import { DiscussionDto, MinMessageDto, discussionPanelSelectType } from "../../interfaces/DiscussionPanel";
 import style from "../../../../styles/ChatStyles/DiscussionsBar.module.css";

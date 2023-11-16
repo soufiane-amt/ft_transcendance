@@ -1,3 +1,5 @@
+'use client'
+
 import React, { useState } from "react";
 import style from "../../../../styles/ChatStyles/ChannelSetting.module.css";
 import { useFindChannelBook } from "../../../../app/context/ChannelInfoBook";

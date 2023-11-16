@@ -1,3 +1,5 @@
+'use client'
+
 import style from '../../../../styles/ChatStyles/UserInitiativeTalk.module.css';
 import helloIcon from '../../../../../public/chatIcons/icons/CreateChannel/hello.png';
 import axios from 'axios';

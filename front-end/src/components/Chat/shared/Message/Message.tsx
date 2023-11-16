@@ -1,3 +1,5 @@
+'use client'
+
 import clsx from "clsx";
 import style from "../../../../styles/ChatStyles/Message.module.css";
 import Avatar from "../Avatar/Avatar";

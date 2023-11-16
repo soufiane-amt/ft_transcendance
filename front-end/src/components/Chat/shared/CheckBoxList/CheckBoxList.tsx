@@ -1,3 +1,5 @@
+'use client'
+
 import React, { useEffect, useState } from 'react';
 import style from "../../../../styles/ChatStyles/CheckBoxList.module.css";
 import socket from '../../../../app/socket/socket';

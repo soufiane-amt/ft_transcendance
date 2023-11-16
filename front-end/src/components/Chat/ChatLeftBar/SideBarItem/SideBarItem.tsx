@@ -1,3 +1,4 @@
+'use client'
 import React from 'react';
 import style from '../../../../styles/ChatStyles/SideBarItem.module.css';
 

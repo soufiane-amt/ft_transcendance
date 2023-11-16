@@ -1,3 +1,5 @@
+'use client'
+
 import { formatDateAndTime } from '../../../../app/utils/dateUtils';
 import style from '../../../../styles/ChatStyles/TimeStamp.module.css'
 

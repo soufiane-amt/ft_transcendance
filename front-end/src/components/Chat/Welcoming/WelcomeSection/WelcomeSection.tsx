@@ -1,3 +1,5 @@
+'use client'
+
 import style from '../../../../styles/ChatStyles/WelcomeSection.module.css';
 
 

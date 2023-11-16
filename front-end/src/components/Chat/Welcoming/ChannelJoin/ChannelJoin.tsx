@@ -1,3 +1,5 @@
+'use client'
+
 import { useState } from 'react';
 import { ChannelPasswordInput } from '../ChannelPasswordInput/ChannelPasswordInput';
 import style from '../../../../styles/ChatStyles/ChannelJoin.module.css';

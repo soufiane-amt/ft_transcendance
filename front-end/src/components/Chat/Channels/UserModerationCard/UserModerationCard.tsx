@@ -1,3 +1,5 @@
+'use client'
+
 import React, { ReactNode, useState } from "react";
 import Avatar from "../../shared/Avatar/Avatar";
 import style from "../../../../styles/ChatStyles/UserModerationCard.module.css";

@@ -1,3 +1,4 @@
+'use client'
 import React, {  ReactNode, useState } from "react";
 import { ChannelSetting } from "../ChannelSetting/ChannelSetting";
 import { ModerationToolBox, getUserRole } from "../ModerationToolBox/ModerationToolBox";

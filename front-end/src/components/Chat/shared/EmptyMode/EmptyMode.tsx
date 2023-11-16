@@ -1,3 +1,5 @@
+'use client'
+
 import { useEffect } from 'react';
 import SadBubbleIcon from  '../../../../../public/chatIcons/icons/sad.png'
 import style from "../../../../styles/ChatStyles/EmptyMode.module.css";

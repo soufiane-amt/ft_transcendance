@@ -1,3 +1,5 @@
+'use client'
+
 import React, { useState } from "react";
 import style from "../../../../styles/ChatStyles/LeaveChannel.module.css";
 import CheckboxList from "../CheckBoxList/CheckBoxList";

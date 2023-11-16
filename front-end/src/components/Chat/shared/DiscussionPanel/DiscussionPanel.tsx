@@ -1,3 +1,5 @@
+'use client'
+
 import React, { useEffect, useRef, useState } from "react";
 import style from "../../../../styles/ChatStyles/DiscussionPanel.module.css"; // Import styles
 import { DiscussionDto } from "../../interfaces/DiscussionPanel";

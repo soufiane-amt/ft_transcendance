@@ -1,3 +1,5 @@
+'use client'
+
 import React from 'react';
 import style from '../../../../styles/ChatStyles/Avatar.module.css'; // Import your CSS styles
 import Image from 'next/image';

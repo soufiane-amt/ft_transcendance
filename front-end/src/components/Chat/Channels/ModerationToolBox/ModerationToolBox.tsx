@@ -1,3 +1,4 @@
+'use client'
 import { useSessionUser } from "../../../../app/context/SessionUserContext"
 import { useUserContacts } from "../../../../app/context/UsersContactBookContext"
 import { ChannelData } from "../../interfaces/ChannelData"

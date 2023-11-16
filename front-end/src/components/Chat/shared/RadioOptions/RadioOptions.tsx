@@ -1,3 +1,5 @@
+'use client'
+
 import React, { useState } from "react";
 import style from "../../../../styles/ChatStyles/RadioOptions.module.css";
 import { useOutsideClick } from "../../../../CustomHooks/useOutsideClick";

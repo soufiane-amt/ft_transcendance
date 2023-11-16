@@ -1,3 +1,4 @@
+'use client'
 import { useEffect, useState } from "react";
 import { ChannelJoin } from "./ChannelJoin/ChannelJoin";
 import { UserInitiativeTalk } from "./UserInitiativeTalk/UserInitiativeTalk";
@@ -25,7 +26,6 @@ export function WelcomingPage() {
         `http://localhost:3001/chat/channels_users_inits`
         );
         setDataToDisplay(fetchedData);
-        console.log('fetchedData:',fetchedData.dmsToJoin)
     }
     fetchDataAsync();
   }, []); 
@@ -33,10 +33,11 @@ export function WelcomingPage() {
   let InitiativeComp: JSX.Element[] = [];
   if (dataToDisplay?.dmsToJoin.length > 0) {
    InitiativeComp.push(
-      <div className={style.user_initiative_talks}>
+      <div key='user_initiative_talks'
+        className={style.user_initiative_talks}>
         <h5 className={style.welcoming_page_talks__title}>Start a conversation:</h5>
         {dataToDisplay?.dmsToJoin.map((user: { username: string; avatar: string }) => {
-          return <UserInitiativeTalk key={user.username} userData={{ username: user.username, avatar: user.avatar }} />;
+          return <UserInitiativeTalk key={'user_' + user.username} userData={{ username: user.username, avatar: user.avatar }} />;
         })}
       </div>
     );
@@ -45,11 +46,13 @@ export function WelcomingPage() {
   {
    InitiativeComp.push(
 
-    <div className={style.channel_joins}>
+    <div
+      key='channelsToJoin' 
+      className={style.channel_joins}>
         <h5 className={style.welcoming_page_talks__title}>Join a rooom:</h5>
         {
              dataToDisplay?.channelsToJoin.map((channel:ChannelType) => {
-              return <ChannelJoin key={channel.id} channelData={channel}/>
+              return <ChannelJoin key={'channel_' + channel.id} channelData={channel}/>
             })
         }
     </div>)

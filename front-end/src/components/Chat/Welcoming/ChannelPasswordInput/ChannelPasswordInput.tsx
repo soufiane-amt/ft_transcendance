@@ -1,3 +1,5 @@
+'use client'
+
 import style from '../../../../styles/ChatStyles/ChannelPasswordInput.module.css';
 import { useOutsideClick } from '../../../../CustomHooks/useOutsideClick';
 import { useState } from 'react';

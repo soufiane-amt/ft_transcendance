@@ -1,3 +1,5 @@
+'use client'
+
 import React, { useEffect, useState } from "react";
 import style from "../../../../styles/ChatStyles/ChatTextbox.module.css";
 import { Send } from "../../svgs";
