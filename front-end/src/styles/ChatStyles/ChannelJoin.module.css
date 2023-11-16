@@ -64,4 +64,16 @@
     .channel_join_type{
         display: none;
     }
+    .channel_join__user__avatar{
+        width: 30px;
+        height: 30px;
+    }
+    .channel_join__message{
+        width: 30px;
+        height: 30px;
+    }
+    .channel_join__message button{
+        padding: 5px 7px;
+        font-size: x-small;
+    }
 }

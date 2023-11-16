@@ -2,6 +2,11 @@
     background-color: #7270A8;
     width: 84vw;
     height: 100vh;
+    overflow: hidden;
+}
+
+.user_initiative_talks{
+    border-bottom: solid 7px rgb(116, 68, 194);
 }
 
 .user_initiative_talks,  .channel_joins  {
@@ -12,7 +17,8 @@
     height: 300px;
     overflow: scroll;
     overflow-x: hidden; /* This hides the vertical scrollbar */
-
+    margin-top: 40px;
+    
 }
 .user_initiative_talks::-webkit-scrollbar,
  .channel_joins::-webkit-scrollbar {
@@ -51,6 +57,7 @@
     font-size: 17px;
     margin-top: 5%;
 }
+
 @media (max-width:650px) 
 {
     .welcoming_page{
@@ -61,5 +68,9 @@
     }
     .welcoming_page__init_bubble{
         font-size: 12px;
+    }
+    .user_initiative_talks,  .channel_joins  {
+        margin-top: 10px;
+
     }
 }

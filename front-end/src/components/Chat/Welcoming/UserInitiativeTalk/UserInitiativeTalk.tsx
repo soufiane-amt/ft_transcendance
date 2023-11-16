@@ -2,10 +2,8 @@
 
 import style from '../../../../styles/ChatStyles/UserInitiativeTalk.module.css';
 import helloIcon from '../../../../../public/chatIcons/icons/CreateChannel/hello.png';
-import axios from 'axios';
 import socket from '../../../../app/socket/socket';
 import { fetchDataFromApi } from '../../CustomFetch/fetchDataFromApi';
-import { useSessionUser } from '../../../../app/context/SessionUserContext';
 
 export interface UserInitiativeTalkProps
 {

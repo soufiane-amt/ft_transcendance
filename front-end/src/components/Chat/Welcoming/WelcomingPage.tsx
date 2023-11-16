@@ -32,10 +32,22 @@ export function WelcomingPage() {
 
   let InitiativeComp: JSX.Element[] = [];
   if (dataToDisplay?.dmsToJoin.length > 0) {
-   InitiativeComp.push(
+    InitiativeComp.push(
       <div key='user_initiative_talks'
         className={style.user_initiative_talks}>
         <h5 className={style.welcoming_page_talks__title}>Start a conversation:</h5>
+        {dataToDisplay?.dmsToJoin.map((user: { username: string; avatar: string }) => {
+          return <UserInitiativeTalk key={'user_' + user.username} userData={{ username: user.username, avatar: user.avatar }} />;
+        })}
+        {dataToDisplay?.dmsToJoin.map((user: { username: string; avatar: string }) => {
+          return <UserInitiativeTalk key={'user_' + user.username} userData={{ username: user.username, avatar: user.avatar }} />;
+        })}
+        {dataToDisplay?.dmsToJoin.map((user: { username: string; avatar: string }) => {
+          return <UserInitiativeTalk key={'user_' + user.username} userData={{ username: user.username, avatar: user.avatar }} />;
+        })}
+        {dataToDisplay?.dmsToJoin.map((user: { username: string; avatar: string }) => {
+          return <UserInitiativeTalk key={'user_' + user.username} userData={{ username: user.username, avatar: user.avatar }} />;
+        })}
         {dataToDisplay?.dmsToJoin.map((user: { username: string; avatar: string }) => {
           return <UserInitiativeTalk key={'user_' + user.username} userData={{ username: user.username, avatar: user.avatar }} />;
         })}
