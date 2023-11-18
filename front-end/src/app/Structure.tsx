@@ -11,21 +11,28 @@ import Cookies from "js-cookie";
 import JoinLeavingGameData from "@/components/game/interfaces/JoinLeavingGameData";
 import JoinLeavingGameComponent from "@/components/game/JoingLeavingGameComponent";
 import InviteThroghtChatData from "@/components/game/interfaces/InviteThroghtChatData";
+import InvitorWaiting from "@/components/game/GameInviterwaiting";
+import GameChatSettings from "@/components/GlobalComponents/GameChatSettings";
 
 const Structure = ({ children }: { children: React.ReactNode }) => {
   const [GameInvitationBool, setGameInvitationBool] = useState(false);
   const [GameReqData, setGameReqData] = useState();
-  const [leavingGameData, setLeavingGameData] = useState<JoinLeavingGameData | null>(null);
-  const [Timer, setTimer]: any = useState(0);
+  const [leavingGameData, setLeavingGameData] =
+    useState<JoinLeavingGameData | null>(null);
   const [IsJoinLeavingGame, setIsJoinLeavingGame] = useState<boolean>(false);
   const router = useRouter();
+  const [ChatSettings, setChatSettings] = useState(false);
+  const [invitor, setInvitor] = useState(false);
+  const [Timer, setTimer]: any = useState(0);
+  const [chatSettingsData, setchatSettingsData] =
+    useState<InviteThroghtChatData>({ inviteeId: "", invitorId: "" });
+  const [TimerInvitorWaiting, setTimerInvitorWaiting]: any = useState(0);
 
   useEffect(() => {
-
-    newSocket.on('close_leaving_game_notification_model', () => {
+    newSocket.on("close_leaving_game_notification_model", () => {
       setTimer(0);
       setIsJoinLeavingGame(false);
-    })
+    });
     newSocket.on("GameInvitation", (data) => {
       if (data) {
         setGameReqData(data);
@@ -42,16 +49,22 @@ const Structure = ({ children }: { children: React.ReactNode }) => {
     newSocket.on("redirect_to_invitation_game", (game_id: string) => {
       router.push(`/game?id=${game_id}`);
     });
-    newSocket.on('joining_leaving_game', (payload: JoinLeavingGameData) => {
+    newSocket.on("joining_leaving_game", (payload: JoinLeavingGameData) => {
       setIsJoinLeavingGame(true);
       setLeavingGameData(payload);
       const remainingTime: number = Math.floor(payload.remainingTime / 1000);
       setTimer(remainingTime);
     });
 
-    newSocket.on('show_settings_component', (payload: InviteThroghtChatData) => {
-      console.log(payload);
-    })
+    newSocket.on(
+      "show_settings_component",
+      (payload: InviteThroghtChatData) => {
+        if (payload) {
+          setchatSettingsData({ ...payload });
+          setChatSettings(true);
+        }
+      }
+    );
   }, []);
 
   useEffect(() => {
@@ -87,6 +100,21 @@ const Structure = ({ children }: { children: React.ReactNode }) => {
     });
   }, [JwtToken]);
 
+  useEffect(() => {
+    const interval = setInterval(() => {
+      if (TimerInvitorWaiting > 0) {
+        setTimerInvitorWaiting(TimerInvitorWaiting - 1);
+      } else {
+        clearInterval(interval);
+        setInvitor(false);
+      }
+    }, 1000);
+
+    return () => {
+      clearInterval(interval);
+    };
+  }, [TimerInvitorWaiting]);
+
   return (
     <main>
       <NavBar />
@@ -98,11 +126,28 @@ const Structure = ({ children }: { children: React.ReactNode }) => {
           Timer={Timer}
         />
       )}
-      {IsJoinLeavingGame && <JoinLeavingGameComponent
+      {IsJoinLeavingGame && (
+        <JoinLeavingGameComponent
           data={leavingGameData}
           State={setIsJoinLeavingGame}
           Timer={Timer}
-        />}
+        />
+      )}
+      {ChatSettings && (
+        <GameChatSettings
+          newSocket={newSocket}
+          chatSettingsData={chatSettingsData}
+          setChatSettings={setChatSettings}
+          setInvitorWaiting={setInvitor}
+          setTimer={setTimerInvitorWaiting}
+        />
+      )}
+      {invitor && (
+        <InvitorWaiting
+          Timer={TimerInvitorWaiting}
+          setInvitorWaiting={setInvitor}
+        />
+      )}
     </main>
   );
 };
