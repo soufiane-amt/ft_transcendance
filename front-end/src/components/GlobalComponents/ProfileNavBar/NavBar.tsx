@@ -9,6 +9,7 @@ import { toast } from "react-toastify";
 import CustomToast from "@/components/Dashboard/CustomToast";
 import { useRouter } from "next/navigation";
 import newSocket from "../Socket/socket";
+import socket from "../../../app/socket/socket";
 
 function NavBar() {
   const [isVisible, setIsVisible] = useState(false);
@@ -141,6 +142,19 @@ function NavBar() {
       setUsers(user);
     });
   });
+
+  useEffect(() => {
+    const handleNewMessageNotif = (newMessage: messageDto) => {
+      if (newMessage.dm_id && newMessage.user_id != user.id) {
+        setgetmsg(1);
+      }
+    };
+
+    socket.on("newMessage", handleNewMessageNotif);
+    return () => {
+      socket.off("newMessage", handleNewMessageNotif);
+    };
+  }, []);
 
   useEffect(() => {
     fetch("http://localhost:3001/api/Dashboard/allUsers", {
@@ -297,7 +311,12 @@ function NavBar() {
         </div>
         <div className={NavBarCSS.nav_left}>
           <div className={NavBarCSS.nav_icon}>
-            <div className={NavBarCSS.notification_msg}>
+            <div
+              className={NavBarCSS.notification_msg}
+              onClick={(event: any) => {
+                router.push("/chat/DirectMessaging");
+              }}
+            >
               {getmsg != 0 && <span>{getmsg}</span>}
               <img
                 src="../chatroom.png"

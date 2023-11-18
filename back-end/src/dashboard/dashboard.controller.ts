@@ -2,6 +2,7 @@ import {
   Body,
   Controller,
   Get,
+  Param,
   Patch,
   Post,
   Req,
@@ -13,6 +14,7 @@ import { UserCrudService } from 'src/prisma/user-crud.service';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-aut.guard';
 import { AuthService } from 'src/auth/auth.service';
 import { PrismaService } from 'src/prisma/prisma.service';
+import { response } from 'express';
 
 @Controller('api')
 export class DashboardController {
@@ -47,6 +49,18 @@ export class DashboardController {
       },
     });
     return response.status(200).send(user);
+  }
+
+  @Get('profile/:username')
+  async getProfile(@Param('username') username: string, @Res() response: any) {
+    let alldata: any = {};
+    const user_id = await this.user.findUserByUsername(username);
+    if (user_id) {
+      const user = await this.user.findUserByID(user_id);
+      const achiv = await this.user.getUserStats(user_id);
+      alldata = { ...user, ...achiv };
+      return response.status(200).send(alldata);
+    } else return response.status(400);
   }
 
   @Get('Dashboard/allUsers')

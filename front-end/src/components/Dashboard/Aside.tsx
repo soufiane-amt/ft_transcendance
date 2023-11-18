@@ -196,7 +196,12 @@ const Aside: React.FC<AsideProps> = ({ onSelectSection }) => {
               />
             </div>
             {isactiveachat && (
-              <div className="homepage">
+              <div
+                className="homepage"
+                onClick={(event: any) => {
+                  router.push("/chat");
+                }}
+              >
                 <img src="../space.png" alt="Photo" width={22} height={22} />
                 <button>Chat Space</button>
               </div>

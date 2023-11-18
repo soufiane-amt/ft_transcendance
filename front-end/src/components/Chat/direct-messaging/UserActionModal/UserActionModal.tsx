@@ -96,6 +96,10 @@ function UserActionModal({
   const userIsBanned = useFindBannedRoomContext(targetedDiscussion);
   const ref = useOutsideClick(handleVisibility);
 
+  const handleProfileRouting = () => {
+    if (userContact?.username)
+      window.location.href = `/profile?username=${userContact.username}`;
+  };
   if (!userContact) return <div>User action modal not found!</div>;
 
   return (
@@ -108,7 +112,11 @@ function UserActionModal({
     >
       <div className={style.action_targeted_user}>
         {/* <Avatar src={userContact.avatar} avatarToRight={false} /> */}
-        <img src={userContact.avatar} alt="avatar" />
+        <img
+          src={userContact.avatar}
+          alt="avatar"
+          onClick={handleProfileRouting}
+        />
         <h1>{userContact.username}</h1>
       </div>
       <div className={style.interaction_buttons}>
