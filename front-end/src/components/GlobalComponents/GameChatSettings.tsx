@@ -65,17 +65,17 @@ function GameChatSettings({ ...props }) {
   };
 
   return (
-    <div className="fixed inset-0 flex items-center justify-center z-[4]">
+    <div className="fixed inset-0 flex items-center justify-center z-[40]">
       {/* this is the backdrop (the background opacity) */}
       <div
-        className="absolute bg-black w-full h-full opacity-50 z-[4]"
+        className="absolute bg-black w-full h-full opacity-50 z-[40]"
         onClick={(ev) => {
           ev.preventDefault();
           props.setChatSettings(false);
         }}
       ></div>
       {/* this is the main component */}
-      <div className="bg-[#E4E7FF] rounded shadow-lg w-[80vw] h-[80vh] flex flex-col   p-[30px] box-border overflow-scroll items-center z-[5] min-h-[400px] min-w-[300px] max-h-[800px] max-w-[720px]">
+      <div className="bg-[#E4E7FF] rounded shadow-lg w-[80vw] h-[80vh] flex flex-col   p-[30px] box-border overflow-scroll items-center z-[50] min-h-[400px] min-w-[300px] max-h-[800px] max-w-[720px]">
         <div className="flex items-center w-full flex-row-reverse h-[3%] mb-[15px]">
           <img
             src="/close.png"

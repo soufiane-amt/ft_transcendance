@@ -82,6 +82,7 @@ export function ModerationToolBox({
                       selectedChannel={selectedChannel}
                       currentUserIsModerator={currentUserIsModerator}
                       targetedUser={{
+                        userId: user,
                         src: userData?.avatar,
                         username: userData?.username,
                         role: userRole,

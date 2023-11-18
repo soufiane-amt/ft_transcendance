@@ -17,11 +17,11 @@ function InvitorWaiting({ ...props }) {
     props.setInvitorWaiting(false);
   });
   return (
-    <div className="fixed inset-0 flex items-center justify-center z-[4]">
+    <div className="fixed inset-0 flex items-center justify-center z-[400]">
       {/* this is the backdrop (the background opacity) */}
-      <div className="absolute bg-black w-full h-full opacity-50 z-[4]"></div>
+      <div className="absolute bg-black w-full h-full opacity-50 z-[400]"></div>
       {/* this is the main component */}
-      <div className="bg-[#E4E7FF] rounded shadow-lg w-[80vw] h-[80vh] box-border overflow-scroll  z-[5] min-h-[400px] min-w-[300px] max-h-[800px] max-w-[720px] flex items-center justify-center">
+      <div className="bg-[#E4E7FF] rounded shadow-lg w-[80vw] h-[80vh] box-border overflow-scroll  z-[500] min-h-[400px] min-w-[300px] max-h-[800px] max-w-[720px] flex items-center justify-center">
         <div className="m-auto">
           <h3
             className={`${mono.className} text-center font-bold text-red-600`}

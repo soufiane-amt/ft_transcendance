@@ -1,4 +1,4 @@
-'use client'
+"use client";
 
 import React, { ReactNode, useState } from "react";
 import Avatar from "../../shared/Avatar/Avatar";
@@ -7,7 +7,11 @@ import { useSessionUser } from "../../../../app/context/SessionUserContext";
 import { RadioOptions } from "../../shared/RadioOptions/RadioOptions";
 import { ConfirmationDialog } from "../../shared/ConfirmationDialog/ConfirmationDialog";
 import socket from "../../../../app/socket/socket";
-import { Ban, useFindBannedRoomContext } from "../../../../app/context/BanContext";
+import {
+  Ban,
+  useFindBannedRoomContext,
+} from "../../../../app/context/BanContext";
+import newSocket from "@/components/GlobalComponents/Socket/socket";
 
 const data = {
   src: "/chatIcons/avatar.png",
@@ -16,6 +20,7 @@ const data = {
 };
 
 interface MemberType {
+  userId: string;
   src: string;
   username: string;
   role: string;
@@ -54,8 +59,6 @@ function getActionIcon(actionType: ActionType): string {
   return button.kick;
 }
 
-
-
 function getOppositeButton(currentButton: ActionType): ActionType {
   if (currentButton === ActionType.PLAY) return ActionType.PLAY;
   else if (currentButton === ActionType.BAN) return ActionType.UNBAN;
@@ -67,11 +70,11 @@ function getOppositeButton(currentButton: ActionType): ActionType {
 }
 
 interface ModerationActionProps {
-  actionData: {targeted_user: string, channel_id: string};
+  actionData: { userId: string; targeted_user: string; channel_id: string };
   actionType: ActionType;
 }
 
-function ModerationAction({actionData,  actionType }: ModerationActionProps) {
+function ModerationAction({ actionData, actionType }: ModerationActionProps) {
   const [showRadioOptions, setShowRadioOptions] = useState(false); // State to control the display of radio options
   const [showConfirmation, setShowShowConfirmation] = useState(false); // State to control the display of radio options
   const [currentActionType, setCurrentActionType] = useState(actionType);
@@ -87,62 +90,91 @@ function ModerationAction({actionData,  actionType }: ModerationActionProps) {
   const handleClickConfirmDialog = () => {
     switch (currentActionType) {
       case ActionType.UNBAN:
-        socket.emit('channelUserUnBan', {target_username: actionData.targeted_user, channel_id: actionData.channel_id});
+        socket.emit("channelUserUnBan", {
+          target_username: actionData.targeted_user,
+          channel_id: actionData.channel_id,
+        });
         break;
 
       case ActionType.UNMUTE:
-        socket.emit('channelUserUnMute', {target_username: actionData.targeted_user, channel_id: actionData.channel_id});
+        socket.emit("channelUserUnMute", {
+          target_username: actionData.targeted_user,
+          channel_id: actionData.channel_id,
+        });
         break;
       case ActionType.KICK:
-          socket.emit('kickOutUser', {target_username: actionData.targeted_user, channel_id: actionData.channel_id});
+        socket.emit("kickOutUser", {
+          target_username: actionData.targeted_user,
+          channel_id: actionData.channel_id,
+        });
         break;
 
       case ActionType.PLAY:
         //To merge with game
+        console.log("hrllo");
+        const payload: any = {
+          inviteeId: actionData.userId,
+        };
+        newSocket.emit("invite_to_game_through_chat", payload);
         break;
 
       case ActionType.SETADMIN:
-          socket.emit('upgradeMemberToAdmin', {targeted_username: actionData.targeted_user, channel_id: actionData.channel_id});
+        socket.emit("upgradeMemberToAdmin", {
+          targeted_username: actionData.targeted_user,
+          channel_id: actionData.channel_id,
+        });
         break;
 
       case ActionType.SETUSER:
-          socket.emit('setAdminToMember', {targeted_username: actionData.targeted_user, channel_id: actionData.channel_id});
+        socket.emit("setAdminToMember", {
+          targeted_username: actionData.targeted_user,
+          channel_id: actionData.channel_id,
+        });
         break;
       default:
         break;
     }
   };
 
-
   const handleOptionsClick = (selectedOption: number) => {
-
     switch (currentActionType) {
       case ActionType.BAN:
-          socket.emit('channelUserBan', {target_username: actionData.targeted_user, channel_id: actionData.channel_id, actionDuration: selectedOption});
+        socket.emit("channelUserBan", {
+          target_username: actionData.targeted_user,
+          channel_id: actionData.channel_id,
+          actionDuration: selectedOption,
+        });
         break;
       case ActionType.MUTE:
-        socket.emit('channelUserMute', {target_username: actionData.targeted_user, channel_id: actionData.channel_id, actionDuration: selectedOption});
+        socket.emit("channelUserMute", {
+          target_username: actionData.targeted_user,
+          channel_id: actionData.channel_id,
+          actionDuration: selectedOption,
+        });
         break;
       default:
         break;
     }
     handleButtonToggle();
-  }
+  };
 
   const handleClickButton = () => {
-    if (currentActionType === ActionType.BAN || currentActionType === ActionType.MUTE)
+    if (
+      currentActionType === ActionType.BAN ||
+      currentActionType === ActionType.MUTE
+    )
       setShowRadioOptions(true);
-    else
-      setShowShowConfirmation(true);
-  }
-
+    else setShowShowConfirmation(true);
+  };
 
   return (
     <button onClick={handleClickButton} className={style.moderation_action}>
       <img src={buttonSrc} alt={`Action: ${ActionType[currentActionType]}`} />
       {showRadioOptions && (
         <RadioOptions
-          handleButtonToggle={(op)=>{handleOptionsClick(op)}}
+          handleButtonToggle={(op) => {
+            handleOptionsClick(op);
+          }}
           setShowRadioOptions={setShowRadioOptions}
           selectType={`${ActionType[currentActionType]}`}
         />
@@ -157,9 +189,6 @@ function ModerationAction({actionData,  actionType }: ModerationActionProps) {
     </button>
   );
 }
-
-
-
 
 interface UserModerationCardProps {
   targetedUser: MemberType;
@@ -179,50 +208,87 @@ function renderModerationActions(
   bannedRooms: Ban | undefined
 ) {
   const actions: ReactNode[] = [];
-  const actionData = {targeted_user: targetedUser.username, channel_id: selectedChannel};
+  const actionData = {
+    userId: targetedUser.userId,
+    targeted_user: targetedUser.username,
+    channel_id: selectedChannel,
+  };
   if (currentUser.username === targetedUser.username) return actions;
   const userKey = `user_${targetedUser.username}_${selectedChannel}`;
-  if (sessionUserModeratType !== 'Member' && bannedRooms == null) {
-    if (sessionUserModeratType === 'Owner')
-    {
-      if (targetedUser.role ===  'Admin')
-      actions.push(
-        <ModerationAction key={userKey+"setUser"} actionData={actionData}  actionType={ActionType.SETUSER} />
-      );
-      else if (targetedUser.role ===  'Member')
-      actions.push(
-        <ModerationAction key={userKey+"setAdmin"} actionData={actionData}  actionType={ActionType.SETADMIN} />
-      );
+  if (sessionUserModeratType !== "Member" && bannedRooms == null) {
+    if (sessionUserModeratType === "Owner") {
+      if (targetedUser.role === "Admin")
+        actions.push(
+          <ModerationAction
+            key={userKey + "setUser"}
+            actionData={actionData}
+            actionType={ActionType.SETUSER}
+          />
+        );
+      else if (targetedUser.role === "Member")
+        actions.push(
+          <ModerationAction
+            key={userKey + "setAdmin"}
+            actionData={actionData}
+            actionType={ActionType.SETADMIN}
+          />
+        );
     }
 
     if (!isOwner(targetedUser)) {
       if (targetedUser.isBanned)
         actions.push(
-          <ModerationAction key={userKey+"unban"} actionData={actionData}  actionType={ActionType.UNBAN} />
+          <ModerationAction
+            key={userKey + "unban"}
+            actionData={actionData}
+            actionType={ActionType.UNBAN}
+          />
         );
       else if (!targetedUser.isMuted)
-        actions.push(<ModerationAction  key={userKey+"ban"} actionData={actionData}   actionType={ActionType.BAN} />);
-      
+        actions.push(
+          <ModerationAction
+            key={userKey + "ban"}
+            actionData={actionData}
+            actionType={ActionType.BAN}
+          />
+        );
+
       if (targetedUser.isMuted)
         actions.push(
-          <ModerationAction  key={userKey+"unmute"} actionData={actionData}   actionType={ActionType.UNMUTE} />
+          <ModerationAction
+            key={userKey + "unmute"}
+            actionData={actionData}
+            actionType={ActionType.UNMUTE}
+          />
         );
-      else if  (!targetedUser.isBanned)
+      else if (!targetedUser.isBanned)
         actions.push(
-          <ModerationAction  key={userKey+"mute"} actionData={actionData}   actionType={ActionType.MUTE} />
+          <ModerationAction
+            key={userKey + "mute"}
+            actionData={actionData}
+            actionType={ActionType.MUTE}
+          />
         );
       actions.push(
-        <ModerationAction  key={userKey+"kick"} actionData={actionData}   actionType={ActionType.KICK} />
+        <ModerationAction
+          key={userKey + "kick"}
+          actionData={actionData}
+          actionType={ActionType.KICK}
+        />
       );
     }
   }
 
-  actions.push(<ModerationAction key={userKey+"play"} actionData={actionData}   actionType={ActionType.PLAY} />);
+  actions.push(
+    <ModerationAction
+      key={userKey + "play"}
+      actionData={actionData}
+      actionType={ActionType.PLAY}
+    />
+  );
 
   return actions;
 }
-
-
 
 interface UserModerationCardProps {
   selectedChannel: string;
@@ -235,7 +301,7 @@ export function UserModerationCard({
   targetedUser,
 }: UserModerationCardProps) {
   const currentUser = useSessionUser();
-  const bannedRooms = useFindBannedRoomContext(selectedChannel)
+  const bannedRooms = useFindBannedRoomContext(selectedChannel);
 
   return (
     <div className={style.moderation_card}>
@@ -247,7 +313,13 @@ export function UserModerationCard({
         </div>
       </div>
       <div className={style.action_buttons}>
-        {renderModerationActions(selectedChannel, targetedUser, currentUser, currentUserIsModerator, bannedRooms)}
+        {renderModerationActions(
+          selectedChannel,
+          targetedUser,
+          currentUser,
+          currentUserIsModerator,
+          bannedRooms
+        )}
       </div>
     </div>
   );

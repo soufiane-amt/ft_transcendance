@@ -1,19 +1,16 @@
 .direct_msg_main {
-    width : calc(100vw - 60px);
-    height : 100vh;
+  width: calc(100vw - 60px);
+  height: 100vh;
 
-    display: flex;
-    position: relative;
-    padding: 0;
-    margin: 0;
-  }
-  
-  
+  display: flex;
+  position: relative;
+  padding: 0;
+  margin: 0;
+}
 
-.discussions_bar_swither
-{   
+.discussions_bar_swither {
   position: absolute;
-  z-index: 1000;
+  z-index: 10;
   left: 30%;
 
   align-self: center;
@@ -28,32 +25,26 @@
   color: white;
   border-bottom-right-radius: 7px;
   border-top-right-radius: 7px;
-
 }
 
-.discussions_bar_swither:hover
-{
+.discussions_bar_swither:hover {
   background-color: rgb(15, 15, 81);
 }
 
-.discussions_bar_swither_close{
+.discussions_bar_swither_close {
   left: 0%;
 }
 
-@media (max-width:650px) 
-{
-  .discussions_bar_swither
-  {
+@media (max-width: 650px) {
+  .discussions_bar_swither {
     left: 95%;
   }
-  .discussions_bar_swither
-  {
+  .discussions_bar_swither {
     width: 15px;
-    height: 40px;  
+    height: 40px;
     font-size: medium;
   }
-  .discussions_bar_swither_close{
+  .discussions_bar_swither_close {
     left: 0%;
   }
-
 }

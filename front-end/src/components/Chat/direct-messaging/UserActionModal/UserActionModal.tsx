@@ -14,10 +14,7 @@ import { useOutsideClick } from "../../../../CustomHooks/useOutsideClick";
 import ChannelActionModal from "../../Channels/ChannelActionModal/ChannelActionModal";
 import { ChannelSetting } from "../../Channels/ChannelSetting/ChannelSetting";
 import { ChannelData } from "../../interfaces/ChannelData";
-
-
-
-
+import newSocket from "@/components/GlobalComponents/Socket/socket";
 
 type buttonType = { title: string; icon: string; backgroundColor: string };
 
@@ -49,8 +46,14 @@ function ActionButton({ targetId, buttonData }: ActionButtonProps) {
     switch (buttonData.title) {
       case "Play":
         // To merge with game
+        console.log("test");
+        const payload: any = {
+          inviteeId: targetId,
+        };
+        newSocket.emit("invite_to_game_through_chat", payload);
+
         break;
-        
+
       case "Ban":
         socket.emit("dmModeration", {
           targetedUserId: targetId,
@@ -71,9 +74,9 @@ function ActionButton({ targetId, buttonData }: ActionButtonProps) {
     <button
       className={style.action_button}
       style={{ backgroundColor: buttonData.backgroundColor }}
-        onClick={handleButtonClick}
-      >
-        <img src={buttonData.icon} alt="" />
+      onClick={handleButtonClick}
+    >
+      <img src={buttonData.icon} alt="" />
       {buttonData.title}
     </button>
   );
@@ -92,7 +95,7 @@ function UserActionModal({
   const userContact = useFindUserContacts(targetedUserId);
   const userIsBanned = useFindBannedRoomContext(targetedDiscussion);
   const ref = useOutsideClick(handleVisibility);
-  
+
   if (!userContact) return <div>User action modal not found!</div>;
 
   return (
@@ -105,15 +108,12 @@ function UserActionModal({
     >
       <div className={style.action_targeted_user}>
         {/* <Avatar src={userContact.avatar} avatarToRight={false} /> */}
-        <img src={userContact.avatar} alt="avatar"/>
+        <img src={userContact.avatar} alt="avatar" />
         <h1>{userContact.username}</h1>
       </div>
       <div className={style.interaction_buttons}>
-        {
-          <ActionButton targetId={targetedUserId} buttonData={playButton} />
-        }
-        {
-          (!userIsBanned || userIsBanned.blocker_id === userSession.id) && 
+        {<ActionButton targetId={targetedUserId} buttonData={playButton} />}
+        {(!userIsBanned || userIsBanned.blocker_id === userSession.id) && (
           <ActionButton
             targetId={targetedUserId}
             buttonData={
@@ -122,15 +122,11 @@ function UserActionModal({
                 : banButton
             }
           />
-
-        }
+        )}
       </div>
     </div>
   );
 }
-
-
-
 
 /*This container does the same as UserActionModal execpt that it adds visibility managment*/
 
@@ -138,51 +134,43 @@ type DmUserActionModalMainProps = {
   userToActId: string | undefined;
   DiscussionToActId: string;
   modalState: [boolean, React.Dispatch<React.SetStateAction<boolean>>];
-  ActionContext: string
+  ActionContext: string;
 };
-
-
 
 export type ChUserActionModalMainProps = {
   DiscussionToActId: string;
-  channel_data :ChannelData | undefined;
+  channel_data: ChannelData | undefined;
   modalState: [boolean, React.Dispatch<React.SetStateAction<boolean>>];
-  ActionContext: string
+  ActionContext: string;
 };
 type MyComponentProps = DmUserActionModalMainProps | ChUserActionModalMainProps;
 
-
-function UserActionModalMain( props: MyComponentProps) {
+function UserActionModalMain(props: MyComponentProps) {
   const [isVisible, setAsVisible] = props.modalState;
   var actionModal;
-  
-  if (props.ActionContext === "Direct_messaging" && 'userToActId' in props)
-  {
-    
-    actionModal = (props.userToActId && <div className={style.user_action_main_modal}>
-      <UserActionModal
-        handleVisibility={setAsVisible}
-        targetedUserId={props.userToActId}
-        targetedDiscussion={props.DiscussionToActId}
-        />
-    </div>)
-  }
-  else if (props.ActionContext === "Channels" && 'channel_data' in props) {
-    actionModal = (( 
+
+  if (props.ActionContext === "Direct_messaging" && "userToActId" in props) {
+    actionModal = props.userToActId && (
       <div className={style.user_action_main_modal}>
-        <ChannelActionModal 
+        <UserActionModal
+          handleVisibility={setAsVisible}
+          targetedUserId={props.userToActId}
+          targetedDiscussion={props.DiscussionToActId}
+        />
+      </div>
+    );
+  } else if (props.ActionContext === "Channels" && "channel_data" in props) {
+    actionModal = (
+      <div className={style.user_action_main_modal}>
+        <ChannelActionModal
           selectedDiscussionId={props.DiscussionToActId}
           channelData={props.channel_data}
           handleVisibility={setAsVisible}
         />
       </div>
-    ))
-  }  
-  return (
-    <>
-      {isVisible && actionModal}
-    </>
-  );
+    );
+  }
+  return <>{isVisible && actionModal}</>;
 }
 
 export default UserActionModalMain;

@@ -55,16 +55,16 @@ function GameInvitation({ ...props }) {
   }, [jwtToken, props.data]);
 
   return (
-    <div className="fixed inset-0 flex items-center justify-center z-[5]">
+    <div className="fixed inset-0 flex items-center justify-center z-[500]">
       {/* this is the backdrop (the background opacity) */}
       <div
-        className="absolute bg-black w-full h-full opacity-50 z-[5]"
+        className="absolute bg-black w-full h-full opacity-50 z-[500]"
         onClick={(ev) => {
           ev.preventDefault();
         }}
       ></div>
       {/* this is the main component */}
-      <div className="bg-[#E4E7FF] rounded shadow-lg w-[80vw] h-[80vh] flex flex-col   p-[30px] box-border overflow-y-scroll overflow-x-hidden items-center z-[6] min-h-[400px] min-w-[300px] max-h-[800px] max-w-[720px] text-[#0D0149] justify-between md:justify-evenly">
+      <div className="bg-[#E4E7FF] rounded shadow-lg w-[80vw] h-[80vh] flex flex-col   p-[30px] box-border overflow-y-scroll overflow-x-hidden items-center z-[600] min-h-[400px] min-w-[300px] max-h-[800px] max-w-[720px] text-[#0D0149] justify-between md:justify-evenly">
         <h2
           className={`text-[#0D0149] text-center font-bold text-[15px] md:text-[20px] ${pixelfont.className} min-h-[30px]`}
         >
