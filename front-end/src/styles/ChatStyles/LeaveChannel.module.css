@@ -1,0 +1,39 @@
+.channel_quitting_section{
+    margin-top: 5%;
+}
+
+.channel_quitting_section button{
+    width: 200px;
+    height: 50px;
+    padding-block: 10px;
+    transition: all 0.3s ease-in-out;
+
+    background-color: #b7b6e3;
+    border: 0;
+    border-radius: 50px;
+    font-weight: bold;
+    cursor: pointer;
+    font-size: larger;
+    box-shadow: 10px 10px 15px -3px rgba(0, 0, 0, 0.5);
+}
+
+
+.channel_quitting_section button:hover{
+    background-color: #3e44a0;
+    color: white;
+}
+
+
+@media (max-width:650px) 
+{
+    .channel_quitting_section button{
+        width: 150px;
+        height: 30px;
+        font-size: large;
+        padding-bottom: 40px;
+    
+    }
+    .channel_quitting_section h3{
+        font-size: medium;
+    }
+}

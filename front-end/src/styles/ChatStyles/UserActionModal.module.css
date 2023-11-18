@@ -1,0 +1,102 @@
+.user_action_main_modal{ /*This class  styles the parent of the modal component */
+    position: fixed;
+    top: 0;
+    left:0;
+    height: 100vh ;
+    width: 100vw ;
+    background-color: rgba(0, 0, 0, 0.4) ;
+    display: flex;
+    justify-content: center ;
+    align-items: center ;
+    z-index: 1000;
+}
+
+.user_action_modal{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15%; /*30% is the space between user info and action buttons*/
+
+    width: 400px;
+    height: 500px;
+    padding-top: 4%;
+    font-size:medium;
+    
+    border-radius: 10px;
+
+
+    background-color: white;
+}
+
+
+.action_targeted_user {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    font-family: Georgia, 'Times New Roman', Times, serif;
+
+}
+
+
+.action_targeted_user img{
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    border: solid 10px rgb(246, 228, 228);
+
+}
+
+.interaction_buttons {
+    display: flex;
+
+    justify-content:space-evenly;
+}
+
+.action_button {
+    display: flex;
+    align-items: center;
+    
+    border: none;
+    border-radius: 20px;
+    font-family: Georgia, 'Times New Roman', Times, serif;
+    
+    gap: 20px;
+
+    color: white;
+    font-size: large;
+    font-weight: bold;
+
+    cursor: pointer;
+
+    padding: 7px 15px;
+    margin-inline: 20% ;
+}
+
+.action_button img {
+    width: 35px;
+}
+
+
+
+
+@media (max-width : 869px)
+{
+    .action_button img {
+        display: none;
+    }
+    .action_button {
+        height: 50px;
+    }
+    .user_action_modal {
+        height: 350px;
+        width: 250px;
+    }
+    .user_action_modal h1{
+        font-size:larger;
+    }
+    .action_targeted_user img{
+        width: 100px;
+        height: 100px;
+    }
+
+}

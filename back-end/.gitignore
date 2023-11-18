@@ -27,14 +27,17 @@ lerna-debug.log*
 .settings/
 *.sublime-workspace
 
+*.png
+*.jpeg
 # IDE - VSCode
 .vscode/*
 !.vscode/settings.json
 !.vscode/tasks.json
 !.vscode/launch.json
+<<<<<<< HEAD
+!.vscode/extensions.json%
+=======
 !.vscode/extensions.json
 
 prisma/migrations
 nest-cli/
-
-package-lock.json

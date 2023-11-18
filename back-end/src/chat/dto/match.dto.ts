@@ -4,3 +4,4 @@ export interface matchDto
     player_2_id :string;
     result :string;
 }
+ 

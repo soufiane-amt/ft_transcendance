@@ -6,6 +6,8 @@ import * as cookieParser from 'cookie-parser';
 import { DashboardModule } from './dashboard/dashboard.module';
 import { TwoFactorAuthModule } from './2fa/TwoFactorAuth.module';
 import { GameModule } from './game/game.module';
+import { ChatModule } from 'src/chat/chat.module';
+import { ScheduleModule } from '@nestjs/schedule';
 
 @Module({
   // do not forgot to import prisma module here
@@ -16,6 +18,8 @@ import { GameModule } from './game/game.module';
     DashboardModule,
     TwoFactorAuthModule,
     GameModule,
+    ChatModule,
+    ScheduleModule.forRoot(),
   ],
   controllers: [],
   providers: [],

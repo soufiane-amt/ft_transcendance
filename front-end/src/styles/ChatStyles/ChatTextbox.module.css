@@ -1,0 +1,72 @@
+.message_bar {
+    display: flex;
+    align-items: center;
+    position: sticky;
+    bottom: 0;
+    width: 100%;
+    /* background-color: var(--chat_field_back_color); */
+    background-color: rgb(14 13 94);
+    border-top: 0.1px solid black;
+    z-index: 3;
+    border-radius: 15px 15px 0px 0px;
+    box-shadow: 0px 5px 5px 12px rgb(104, 104, 108);
+
+}
+
+.message_input_bar{
+    /*Removing default style*/
+    border: none;
+    outline: none;
+    resize: none;
+    overflow: hidden;
+
+    background-color: var(--chat_text_box_back_color); 
+    font-size: 21px;
+    border-radius: 15px;
+    border: solid black 5px;
+    
+    font-family: Georgia, 'Times New Roman', Times, serif;
+    font-weight: bold;
+
+    width: 100%;
+    height: 45px;
+
+    padding: 20px 50px 5px;
+    margin-inline: 20px;
+
+
+} 
+
+.message_send_icon {
+    width:  90px;
+    height: 90px;
+    cursor: pointer;
+}
+
+.message_send_icon__init_fill{
+    transition: all 0.3s ease-in-out;
+    fill: var(--send_icon_default_color);
+}
+
+.message_send_icon__init_fill:hover{
+    fill: var(--send_icon_on_hover_color);
+}
+
+.banned_message{
+    color: red;
+    font-size: 20px;
+    font-weight: bold;
+    text-align: center;
+    margin: 0px 0px 10px 0px;
+}
+@media (max-width:650px) 
+{
+    .message_bar {
+        height: 60px;
+    }
+    .message_input_bar{
+        height: 30px;
+        font-size: 15px;
+        padding: 10px 30px 0px;
+    }
+}

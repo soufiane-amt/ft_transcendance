@@ -34,6 +34,7 @@ model User {
 
   initiator DirectMessaging[] @relation("initiator")
   receiver DirectMessaging[] @relation("receiver")
+  blocker DirectMessaging[] @relation("blocker")
 
   channels ChannelMembership[]
   messages Message[]
@@ -81,7 +82,6 @@ model Stats {
 
 
 enum RelationStatus {
-  PENDING
   FRIENDS
   BLOCK
 }
@@ -89,13 +89,13 @@ enum RelationStatus {
 model Friendships {
   id      String @id @default(uuid())
   user1    User   @relation("invited", fields: [user1_id], references: [id])
-  user1_id String 
+  user1_id String @unique
 
-    user2    User   @relation("invitor", fields: [user2_id], references: [id])
-    user2_id String 
+  user2    User   @relation("invitor", fields: [user2_id], references: [id])
+  user2_id String @unique
 
-    createdAt  DateTime @default(now())
-    relationStatus RelationStatus  @default(PENDING)
+  createdAt  DateTime @default(now())
+  relationStatus RelationStatus  @default(FRIENDS)
 }
 
 
@@ -117,11 +117,18 @@ model ChannelMembership {
   role      Role
   joined_at DateTime @default(now())
 
-  is_banned Boolean @default(false)
-  banned_at DateTime?
+  last_visit DateTime @default(now())
+  
+  is_banned Boolean? @default(false)
+  ban_expires_at     DateTime?
 
+  is_muted Boolean? @default(false)
+  mute_expires_at   DateTime?
+
+  createdAt DateTime? @default(now())
   @@unique([channel_id, user_id])
 }
+
 
 model Message {
   id String @id @default(uuid())
@@ -147,11 +154,11 @@ enum Channel_type {
 }
 
 model Channel {
-  id String @id @default(uuid())
+  id String @id @default(uuid()) 
 
   type         Channel_type
   name         String
-  image        String //(2)this attribiute is for storing image location in filesystem also check (1)
+  image        String 
   memeberShips ChannelMembership[]
   messages     Message[]
   password     String?
@@ -176,8 +183,12 @@ model DirectMessaging {
 
   messages  Message[]
 
-  status    DmStatus @default(ALLOWED)
-  createdAt DateTime @default(now())
+  status     DmStatus @default(ALLOWED)
+
+  blocker     User?   @relation("blocker", fields: [blocker_id], references: [id])
+  blocker_id  String? 
+
+  createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
 }
 

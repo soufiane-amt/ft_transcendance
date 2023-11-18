@@ -1,0 +1,71 @@
+.communication_initiative{
+    display: flex;
+    justify-content: space-between;
+    width: 80%;
+    align-items: center;
+    background-color: #6361A2;
+    border-radius: 15px;
+    padding: 5px 10px;
+    margin-bottom: 10px;
+}
+
+.communication_initiative__user{
+    display: flex;
+    align-items: center;
+    width: 30%;
+    height: 100%;
+}
+
+.communication_initiative__user__avatar{
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    margin-right: 10px;
+}
+
+.communication_initiative__user__name {
+    color: aquamarine;
+}
+
+.communication_initiative__message{
+    background-color: #6361A2;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    width: 50px;
+    height: 50px;
+    display: flex;
+    align-items: center;
+
+}
+
+
+.communication_initiative__message button{
+    background-color: transparent;
+    border: none;
+    outline: none;
+    cursor: pointer;
+}
+.communication_initiative__message_icon{
+    width: 100%;
+    height: 100%;
+
+}
+
+@media (max-width:650px) 
+{
+    .communication_initiative{
+        padding: 0px 10px;
+    }
+
+    .communication_initiative__user__avatar{
+        width: 30px;
+        height: 30px;
+    }
+    .communication_initiative__message{
+        width: 30px;
+        height: 30px;
+    }
+    
+    
+}

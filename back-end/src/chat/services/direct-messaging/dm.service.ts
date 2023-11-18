@@ -27,7 +27,7 @@ export class DmService
    async checkDmTableExistence (user1_id:string, user2_id:string)
    {
       try{
-         return await this.chatCrudService.getDmTable (user1_id, user2_id)
+         return await this.chatCrudService.findDmByUsers (user1_id, user2_id)
       }
       catch {
          return null;
@@ -40,15 +40,6 @@ export class DmService
    }
 
 
-   async retrieveAllDmRooms (user_id :string)
-   {
-      try{
-         return await this.chatCrudService.retrieveUserDmChannels(user_id)
-      }
-      catch {
-         return null;
-      }
-   }
 
    async storeMessageInDb (message : MessageDto)
    {

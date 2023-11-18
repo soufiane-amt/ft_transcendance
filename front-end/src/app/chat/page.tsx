@@ -1,9 +1,19 @@
-import Structure from "../Structure";
+'use client'
 
-export default function Dashboard() {
+import { ChatLeftBar } from '../../components/Chat/ChatLeftBar/ChatLeftBar'
+import { WelcomingPage } from '../../components/Chat/Welcoming/WelcomingPage'
+import { SessionUserProvider } from '../context/SessionUserContext';
+import style from './page.module.css';
+
+
+
+export default function page() {
+  
   return (
-    <Structure>
-      <h1>chat</h1>
-    </Structure>
-  );
+      <div className={style.initial_arranging}>
+        <ChatLeftBar activateShrinkMode={false}/>
+        <WelcomingPage/>
+      </div>
+    )
 }
+

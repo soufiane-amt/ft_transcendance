@@ -1,98 +1,147 @@
-import { WebSocketGateway, SubscribeMessage, WebSocketServer, 
-  OnGatewayConnection, OnGatewayDisconnect, WsException } from '@nestjs/websockets';
+import {
+  WebSocketGateway,
+  SubscribeMessage,
+  WebSocketServer,
+  OnGatewayConnection,
+  OnGatewayDisconnect,
+  WsException,
+} from '@nestjs/websockets';
 
-import { DmService } from './dm.service';
 import { MessageDto, banManageSignalDto } from '../../dto/chat.dto';
-import { inboxPacketDto } from '../../dto/userInbox.dto';
 import { Server, Socket } from 'socket.io';
-import {  bannedConversationGuard, userRoomSubscriptionGuard } from 'src/chat/guards/chat.guards';
+import {
+  bannedConversationGuard,
+  userRoomSubscriptionGuard,
+} from 'src/chat/guards/chat.guards';
 import { UseGuards } from '@nestjs/common';
 import { UserCrudService } from 'src/prisma/user-crud.service';
 import { ChatCrudService } from 'src/prisma/chat-crud.service';
+import * as cookie from 'cookie';
+import socketIOMiddleware, { wsmiddleware } from 'src/game/gateways.middleware';
+import { GameService } from 'src/game/game.service';
+import ClientSocket from 'src/game/interfaces/clientSocket.interface';
 
-
-
-@WebSocketGateway()
-export class dmGateway implements OnGatewayConnection, OnGatewayDisconnect {
+@WebSocketGateway({ namespace: 'chat', cors: '*' })
+export class dmGateway implements OnGatewayConnection {
   @WebSocketServer()
   server: Server;
-  
-  constructor(private readonly dmService:DmService, 
-    private readonly userCrud :UserCrudService, private readonly chatCrud :ChatCrudService) {}
 
-  //When the user connects to websocket it will be passed the id of the user 
-  //to use it to create an inbox of notifications and new dm's to be initiated
-  
-  async handleConnection(client: any, ...args: any[]) {
-    const user_id = client.handshake.query.id
-    // console.log ("user_id" + user_id)
-    if (await this.userCrud.findUserByID(user_id) == null)
-      throw new WsException ("User not existing")
-    console.log (`user ${user_id} connected\n`)
-    const inbox_id = "inbox-".concat(user_id)
-    client.join (inbox_id);
-    (await this.dmService.retrieveAllDmRooms(user_id)).forEach(room => {
-      client.join("dm-"+room.id)
-    });
-    
+  constructor(
+    private readonly userCrud: UserCrudService,
+    private readonly gameservice: GameService,
+    private readonly chatCrud: ChatCrudService,
+  ) {}
+
+  async afterInit(server: Server) {
+    const wsmidware: wsmiddleware = await socketIOMiddleware(this.gameservice);
+    server.use(wsmidware);
   }
 
-  handleDisconnect(client: any) {
-    // This method is triggered when a user disconnects from the WebSocket server
-    console.log(`User disconnected: ID=${client.id}`);
-  }
-
-
-
-  @SubscribeMessage('joinInbox')
-  handleJoinInbox(client: Socket, inbox_id: string): void { 
-    console.log (`${client.id} is connected to ${inbox_id}`)
+  async handleConnection(client: ClientSocket, ...args: any[]) {
+    const currentUserId = client.userId;
+    if (!currentUserId) return;
+    if ((await this.userCrud.findUserByID(currentUserId)) == null)
+      throw new WsException('User not existing');
+    const inbox_id = 'inbox-'.concat(currentUserId);
     client.join(inbox_id);
+    (await this.chatCrud.retrieveUserDmChannels(currentUserId)).forEach(
+      (room) => {
+        client.join('dm-' + room.id);
+      },
+    );
   }
-
-
-  //this method serves as a postman to inbox destination
-  @SubscribeMessage('toInbox')
-  deliver_to_inbox (client: Socket, packet: inboxPacketDto)
-  {
-    //here I will send you the room  you must join
-    this.server.to(packet.inbox_id).emit('inboxMsg', "hello")
-    this.server.to("inbox-" + packet.sender_id).emit('inboxMsg', "hello")
-    //when the inboxMsg is triggered it will fire an event to client side
-      // the right client will receive that event and will trigger the joinDm 
-      //function wich will make him join the common room , the Dm room where 
-      //the real messaging will happen
-  }
-
-  //this method will be triggered right after deliver_to_inbox right after the client get the dm room id
-  @SubscribeMessage ("joinDm")
-  handleJoinDm(client: any,  dm_id:string ) {
-    client.join(dm_id)
-  }  
-
-
-  //In case 
-  @UseGuards (userRoomSubscriptionGuard)
-  @UseGuards (bannedConversationGuard)
-  @SubscribeMessage ("sendMsgDm")
-  handleSendMesDm(client: any,  message:MessageDto ) 
-  {
-    console.log ("----messge sent----")
-    this.server.to(message.dm_id).emit('message', message.content)
-  }  
 
   @UseGuards(userRoomSubscriptionGuard)
-  @SubscribeMessage ("dmModeration")
-  handleDmBan(client: any,  banSignal:banManageSignalDto ) 
-  {
-    if (banSignal.type == "BAN")
-      this.chatCrud.blockAUserWithDm(banSignal.dm_id)
-    else
-      this.chatCrud.unblockAUserWithDm (banSignal.dm_id)
-  }  
+  @UseGuards(bannedConversationGuard)
+  @SubscribeMessage('joinDm')
+  async handleJoinDm(client: ClientSocket, dm_id: string) {
+    client.join('dm-' + dm_id);
+  }
 
+  @SubscribeMessage('broadacastJoinSignal')
+  async handleJoinSignal(
+    client: ClientSocket,
+    joinSignal: { dm_id: string; userToContact: string },
+  ) {
+    const currentUserId = client.userId;
+    //if true throw server error
 
+    const userToContactPublicData = await this.userCrud.findUserSessionDataByID(
+      joinSignal.userToContact,
+    );
+    const currentUserPublicData = await this.userCrud.findUserSessionDataByID(
+      currentUserId,
+    );
 
+    this.server
+      .to(`inbox-${currentUserId}`)
+      .emit('updateUserContact', {
+        id: userToContactPublicData.id,
+        username: userToContactPublicData.username,
+        avatar: userToContactPublicData.avatar,
+      });
+    this.server
+      .to(`inbox-${joinSignal.userToContact}`)
+      .emit('updateUserContact', {
+        id: currentUserPublicData.id,
+        username: currentUserPublicData.username,
+        avatar: currentUserPublicData.avatar,
+      });
 
+    this.server
+      .to(`inbox-${currentUserId}`)
+      .emit('dmIsJoined', joinSignal.dm_id);
+    this.server
+      .to(`inbox-${joinSignal.userToContact}`)
+      .emit('dmIsJoined', joinSignal.dm_id);
+  }
 
+  @UseGuards(userRoomSubscriptionGuard)
+  @UseGuards(bannedConversationGuard)
+  @SubscribeMessage('sendMsg')
+  async handleSendMesDm(client: ClientSocket, message: MessageDto) {
+    message.channel_id = null;
+    const messageToBrodcast = await this.chatCrud.createMessage(message);
+    this.server.to(`dm-${message.dm_id}`).emit('newMessage', messageToBrodcast);
+  }
+
+  @UseGuards(userRoomSubscriptionGuard)
+  @SubscribeMessage('MarkMsgRead')
+  async handleMarkMsgAsRead(client: ClientSocket, room: { _id: string }) {
+    const currentUserId = client.userId;
+
+    await this.chatCrud.markRoomMessagesAsRead(currentUserId, room._id); //mark the messages that unsent by this user as read
+    this.server.to(`inbox-${currentUserId}`).emit('setRoomAsRead', room);
+  }
+
+  @UseGuards(userRoomSubscriptionGuard)
+  @SubscribeMessage('dmModeration')
+  async handleDmBan(
+    client: ClientSocket,
+    banSignal: { targetedUserId: string; type: string },
+  ) {
+    const currentUserId = client.userId;
+
+    const dm = await this.chatCrud.findDmByUsers(
+      currentUserId,
+      banSignal.targetedUserId,
+    );
+    if (banSignal.type == 'BAN' && (await this.chatCrud.dmIsBanned(dm.id)))
+      return;
+    if (banSignal.type == 'BAN') {
+      await this.chatCrud.blockAUserWithDm(banSignal.targetedUserId, dm.id);
+      this.server
+        .to(`dm-${dm.id}`)
+        .emit('userBanned', {
+          room_id: dm.id,
+          agent_id: currentUserId,
+          expirationDate: new Date('9999-12-31T23:59:59.999Z'),
+        });
+    } else {
+      await this.chatCrud.unblockAUserWithDm(banSignal.targetedUserId, dm.id);
+      this.server
+        .to(`dm-${dm.id}`)
+        .emit('userUnBanned', { room_id: dm.id, agent_id: currentUserId });
+    }
+  }
 }

@@ -1,11 +1,98 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { PrismaService } from './prisma.service';
 import { userDto } from 'src/chat/dto/user.dto';
-import { NotificationType, Status, User } from '@prisma/client';
+import { NotificationType, Status } from '@prisma/client';
+
+interface notificationType {
+
+  user1_id : string;
+
+  user2_id : string;
+
+  notificationType : NotificationType;
+}
 
 @Injectable()
-export class UserCrudService {
-  constructor(@Inject(PrismaService) private readonly prisma: PrismaService) {}
+export class UserCrudService 
+{
+    constructor (@Inject (PrismaService) private readonly prisma:PrismaService ){}
+
+//   Read:
+//ifindUser method finds user by id 
+async findUserAvatar(userId: string)
+{
+  return await this.prisma.prismaClient.user.findUnique (
+    {
+      where : {
+        id : userId
+      },
+      select: {
+        avatar:true,
+      }
+
+    }
+  )
+}
+
+async findUserSessionDataByID(userId: string)
+{
+  return await this.prisma.prismaClient.user.findUnique (
+    {
+      where : {
+        id : userId
+      },
+      select: {
+        id:true,
+        username:true,
+        avatar:true,
+
+      }
+    }
+  )
+}
+
+
+
+async findFriendsUsernameAvatar(user_id: string)
+{
+  const friends_ids = await this.findFriendsList(user_id)
+  const friends = await this.prisma.prismaClient.user.findMany({
+    where: {
+      id: {
+        in: friends_ids,
+      },
+    },
+    select:{
+      username:true, 
+      avatar:true,
+
+    }
+  });
+  return friends;
+}
+
+
+async findFriendship(current_user_id: string, targeted_user_id: string)
+{
+  const friendship = await this.prisma.prismaClient.friendships.findFirst (
+    {
+      where : {
+        OR: [
+          { user1_id: current_user_id, user2_id: targeted_user_id },
+          { user1_id: targeted_user_id, user2_id: current_user_id },
+        ],
+        },
+      select :
+      {
+        id :true
+      }
+    }
+  )
+  return friendship ? friendship.id : null 
+}
+
+
+
 
   async findAllUsersdata(userID: string) {
     const usersID: any[] = await this.findAllUsers(userID);
@@ -135,7 +222,8 @@ export class UserCrudService {
     });
 
     return notificationsWithUser2Data;
-  }
+}
+
   //   Read:
   //ifindUser method finds user by id
   async findUserByID(userId: string) {
@@ -179,18 +267,6 @@ export class UserCrudService {
     });
 
     return friends_ids;
-  }
-
-  async findFriendship(current_user_id: string, targeted_user_id: string) {
-    const friendship = await this.prisma.prismaClient.friendships.findFirst({
-      where: {
-        OR: [{ user1_id: current_user_id, user2_id: targeted_user_id }],
-      },
-      select: {
-        id: true,
-      },
-    });
-    return friendship ? friendship.id : null;
   }
 
   // Retrieve user stats (wins, losses, ladder level, achievements, etc.).
