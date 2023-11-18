@@ -18,6 +18,8 @@ function Dashboard() {
   const [image, setImage] = useState("backgroundrandom.jpg");
 
   useEffect(() => {
+    const url = new URL(`${window.location}`);
+
     if (url.searchParams.has("username") && url.searchParams.size === 1) {
       const username = url.searchParams.get("username");
       if (username) setname(username);
@@ -47,13 +49,11 @@ function Dashboard() {
     }
   }, [name]);
 
-  const url = new URL(`${window.location}`);
-
   // Check if the URL has only the 'username' parameter
 
   return (
-    <div className="mybody ">
-      <Structure>
+    <Structure>
+      <div className="mybody ">
         <div className="section-container">
           <div className="section-image">
             <div className="parent-section-background">
@@ -104,8 +104,8 @@ function Dashboard() {
             <hr id="section-line"></hr>
           </div>
         </div>
-      </Structure>
-    </div>
+      </div>
+    </Structure>
   );
 }
 
