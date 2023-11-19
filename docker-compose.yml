@@ -1,20 +1,47 @@
 version: "3.8"
 services:
+  # ================= database ==================
   db:
     image: postgres:13
     ports:
       - 5432:5432
+    container_name: db
     networks:
       - pingpong
     env_file:
       - .env
-    # volumes:
-    #   - /Users/odakhch/Desktop/game_dashboard/data-base/pg-data:/var/lib/postgresql/data
+    volumes:
+      - ./data-base/pg-data:/var/lib/postgresql/data
     restart: on-failure
+  #============== backend ===============
+  backend:
+    build: ./back-end/.
+    image: backend
+    ports:
+      - 3001:3001
+    container_name: backend
+    networks:
+      - pingpong
+    env_file:
+      - .env
+    restart: on-failure
+    depends_on:
+      - db
+  #============== frontend ===============
+  frontend:
+    build: ./front-end/.
+    image: frontend
+    ports:
+      - 3000:3000
+    container_name: frontend
+    networks:
+      - pingpong
+    env_file:
+      - .env
+    restart: on-failure
+    depends_on:
+      - backend
 
 networks:
   pingpong:
-    driver:
-      bridge
-
-      # - /home/abdellah/projects/ft_transcendance/data-base/pg-data:/var/lib/postgresql/data
+    driver: bridge
