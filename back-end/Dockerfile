@@ -4,14 +4,13 @@ WORKDIR /backend
 
 COPY . .
 
-
 EXPOSE 3001
-
 
 RUN npm install
 
+# Set the default command to start your application
+RUN ["chmod", "+x", "entrypoint.sh"]
 
-# Run the migration command when the container starts
-CMD ["npx", "prisma", "migrate", "dev", "--name", "init", "&&", "npm", "run", "build"]
+CMD ["./entrypoint.sh" ]
 
-ENTRYPOINT [ "npm" , "run", "start"]
+ENTRYPOINT [ "npm", "run" ,"start" ]
