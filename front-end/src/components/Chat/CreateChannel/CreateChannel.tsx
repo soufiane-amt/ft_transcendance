@@ -74,7 +74,6 @@ export function CreateChannel() {
         },
       })
       .then((res) => {
-        console.log('REs', res)
         if (res.status === 201 || res.status === 200) {
           // Continue with the rest of your createChannel logic
           socket.emit("createChannel", {

@@ -111,7 +111,6 @@ function ModerationAction({ actionData, actionType }: ModerationActionProps) {
 
       case ActionType.PLAY:
         //To merge with game
-        console.log("hrllo");
         const payload: any = {
           inviteeId: actionData.userId,
         };

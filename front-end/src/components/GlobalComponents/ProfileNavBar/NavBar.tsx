@@ -92,7 +92,6 @@ function NavBar() {
         });
     }
     const handleNewMessageNotif = (newMessage: messageDto) => {
-      console.log(newMessage, ' ', user);
       if (newMessage.dm_id && user && newMessage.user_id != user.id) {
         setgetmsg(1);
       }
