@@ -127,7 +127,6 @@ export class ChatCrudService {
     const channelPartners = channelMembers
     .filter((member) => member.user.id !== user_id)
     .map((member) => member.user);
-    console.log('Channel partners : ', channelPartners)
     return channelPartners
   }
 

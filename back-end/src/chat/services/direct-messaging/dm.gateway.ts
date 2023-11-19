@@ -104,10 +104,8 @@ export class dmGateway implements OnGatewayConnection {
     const targetedUserId = await this.chatCrud.findDmPartnerId (message.dm_id, client.userId)
     const messageToBrodcast = await this.chatCrud.createMessage(message);
     this.server.to(`dm-${message.dm_id}`).emit('newMessage', messageToBrodcast);
-    console.log ('targetedUserId; ', targetedUserId, 'message.dm_id; ', message.dm_id)
     if (await this.chatCrud.getDmMessagesCount(message.dm_id) === 1)
       this.server.to(`inbox-${targetedUserId}`).emit('newMessage', messageToBrodcast);
-
   }
 
   @UseGuards(userRoomSubscriptionGuard)

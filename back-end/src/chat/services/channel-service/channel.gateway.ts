@@ -389,7 +389,6 @@ export class channelGateway implements OnGatewayConnection {
     client: ClientSocket,
     channelData: channelCreateDto,
   ) {
-    console.log('handleCreateChannel ') 
     const currentUserId = client.userId;
     if (!currentUserId) return;
     const channel_data: channelDto = {

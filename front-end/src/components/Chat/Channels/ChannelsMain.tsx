@@ -39,6 +39,7 @@ function ChannelsMain() {
       selectedDiscussion,
       selectDiscussion,
     };
+    
     return (
       <UserContactsProvider currentRoute="channels">
         <ChannelBooksProvider>

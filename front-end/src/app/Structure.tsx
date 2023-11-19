@@ -59,7 +59,6 @@ const Structure = ({ children }: { children: React.ReactNode }) => {
     newSocket.on(
       "show_settings_component",
       (payload: InviteThroghtChatData) => {
-        console.log("test");
         if (payload) {
           setchatSettingsData({ ...payload });
           setChatSettings(true);
