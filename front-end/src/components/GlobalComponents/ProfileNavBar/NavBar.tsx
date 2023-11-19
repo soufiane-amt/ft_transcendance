@@ -10,6 +10,7 @@ import CustomToast from "@/components/Dashboard/CustomToast";
 import { useRouter } from "next/navigation";
 import newSocket from "../Socket/socket";
 import socket from "../../../app/socket/socket";
+import { userAgentFromString } from "next/server";
 
 function NavBar() {
   const [isVisible, setIsVisible] = useState(false);
@@ -91,6 +92,7 @@ function NavBar() {
         });
     }
     const handleNewMessageNotif = (newMessage: messageDto) => {
+      console.log(newMessage, ' ', user);
       if (newMessage.dm_id && user && newMessage.user_id != user.id) {
         setgetmsg(1);
       }

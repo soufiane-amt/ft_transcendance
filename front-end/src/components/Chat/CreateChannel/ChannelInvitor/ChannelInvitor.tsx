@@ -66,13 +66,12 @@ export function ChannelInvitor({userCondidates, onConfirm, handleVisibility}: Ch
 
     const handleConfirm = () => {
         onConfirm(invitedUsers);
-        window.location.reload();
+        handleVisibility()
     }
         return (
         <div   className={style.dark_background}>
 
             <div ref={ref} className={style.user_invitor_modal}>
-                {/* <h3>Include users to the channel:</h3> */}
                 <div className={style.user_invitor_modal_search}>
                     <input
                     type="text"

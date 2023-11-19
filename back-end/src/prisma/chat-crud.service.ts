@@ -7,6 +7,7 @@ import {
   dmDto,
 } from 'src/chat/dto/chat.dto';
 import * as bcrypt from 'bcryptjs';
+import { use } from 'passport';
 
 @Injectable()
 export class ChatCrudService {
@@ -104,6 +105,30 @@ export class ChatCrudService {
         type: item.channel.type,
       };
     });
+  }
+  async findUsersInCommonChannel(channel_id:string, user_id: string) {
+    const channelMembers = await this.prisma.prismaClient.channelMembership.findMany
+    (
+      {
+        where:{
+          channel_id : channel_id, 
+        },
+        select:{
+          user:{
+            select:{
+              id:true,
+              username: true,
+              avatar:true, 
+            }
+          }
+        }
+      }
+    )
+    const channelPartners = channelMembers
+    .filter((member) => member.user.id !== user_id)
+    .map((member) => member.user);
+    console.log('Channel partners : ', channelPartners)
+    return channelPartners
   }
 
   async findUsersInCommonChannels(user_id: string) {
@@ -683,7 +708,7 @@ export class ChatCrudService {
 
       await this.prisma.prismaClient.channelMembership.update({
         where: { id: channelMembership.id },
-        data: {
+        data: { 
           last_visit: now,
         },
       });
@@ -1010,22 +1035,26 @@ export class ChatCrudService {
       },
     });
   }
+
+
   async leaveChannel(user_id: string, channel_id: string) {
     const memberCount = await this.findMembersCount(channel_id);
 
-    await this.prisma.prismaClient.channelMembership.delete({
-      where: {
-        channel_id_user_id: {
-          channel_id: channel_id,
-          user_id: user_id,
+    try{
+      await this.prisma.prismaClient.channelMembership.delete({
+        where: {
+          channel_id_user_id: {
+            channel_id: channel_id,
+            user_id: user_id,
+          },
         },
-      },
-    });
-    if (memberCount === 1) {
-      await this.deleteChannel(channel_id);
-      return true;
-    }
-    return false;
+      });
+      if (memberCount === 1) {
+        await this.deleteChannel(channel_id);
+        return true;
+      }
+      return false;
+    }catch(err){}
   }
 
   async findOwnersCount(channel_id: string) {
@@ -1234,5 +1263,15 @@ export class ChatCrudService {
       isInDMTable: Boolean(dmExists),
       isInMembershipTable: Boolean(membershipExists),
     };
+  }
+
+  async getDmMessagesCount (dm_id: string){
+    return await this.prisma.prismaClient.message.count(
+      {
+        where:{
+          dm_id:dm_id
+        }
+      }
+    )
   }
 }

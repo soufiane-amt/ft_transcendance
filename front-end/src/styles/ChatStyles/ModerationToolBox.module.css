@@ -1,7 +1,7 @@
 .moderation_tool_box {
-  height: 800px;
+  height: 768px;
   width: 500px;
-
+  margin-top: 13px;
 }
 
 .user_moderation_part{

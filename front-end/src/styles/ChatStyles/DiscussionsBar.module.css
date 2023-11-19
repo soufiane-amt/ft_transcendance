@@ -1,6 +1,6 @@
 .discussion_panel_bar {
   width: 30%;
-  height: 100vh;
+  height: 100%;
   overflow-y: auto;
   background: linear-gradient(180deg, rgb(70, 63, 163) 0%, rgb(14, 9, 87) 100%);
 

@@ -3,7 +3,7 @@
     flex-direction: column;
     background-color: #24234F;
     width: 18vw;
-    height: 100vh;
+    height: calc(100vh - 91px);
     position: sticky;
     top: 0;
     left: 0;
@@ -35,7 +35,7 @@
 
 /* Shrinking Mode */
 .chat_left_bar__side_bar_shrink_mode{
-    height: 100vh;
+    height: calc(100vh - 91px);
     width: 60px;
     position: sticky;
     top: 0;

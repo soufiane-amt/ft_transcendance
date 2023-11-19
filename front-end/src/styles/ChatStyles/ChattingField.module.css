@@ -4,7 +4,7 @@
     justify-content: space-between;
 
     width: 70%; 
-    height: 100vh; /*to enable chat field scrolling */
+    height: 100%;
     overflow: auto;
     background-color: var(--chat_field_back_color);
   }

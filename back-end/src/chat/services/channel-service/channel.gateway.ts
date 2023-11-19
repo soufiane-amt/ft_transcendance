@@ -1,6 +1,5 @@
 import { UseGuards } from '@nestjs/common';
 import {
-  ConnectedSocket,
   OnGatewayConnection,
   SubscribeMessage,
   WebSocketGateway,
@@ -12,17 +11,13 @@ import { Roles } from 'src/chat/decorators/chat.decorator';
 import {
   MessageDto,
   UserBanMuteSignalDto,
-  banManageSignalDto,
   channelCreateDto,
   channelDto,
-  channelMembershipDto,
-  channelReqDto,
   kickSignalDto,
   setOwnerSignalDto,
 } from 'src/chat/dto/chat.dto';
 import {
   UpdateChannelDto,
-  UpdateUserMemberShip,
   UserRoleSignal,
 } from 'src/chat/dto/update-chat.dto';
 import { Role } from 'src/chat/enum/role.enum';
@@ -115,6 +110,26 @@ export class channelGateway implements OnGatewayConnection {
     const channel_data = await this.chatCrud.getChannelData(channel_id);
     const userPublicData = await this.userCrud.findUserSessionDataByID(user_id);
 
+    const channelPartnersUserPublicData = await this.chatCrud.findUsersInCommonChannel(
+      channel_id,
+      user_id
+    );
+    
+    if (Array.isArray(channelPartnersUserPublicData) && channelPartnersUserPublicData.length > 0) {
+      channelPartnersUserPublicData.map((channelPartner) => {
+        this.server
+          .to(`inbox-${user_id}`)
+          .emit('updateUserContact', {
+            id: channelPartner.id,
+            username: channelPartner.username,
+            avatar: channelPartner.avatar,
+          });
+      });
+  } else {
+    // Handle the case where channelPartnersUserPublicData is not an array or is empty.
+    console.error('Invalid or empty channelPartnersUserPublicData:', channelPartnersUserPublicData);
+  }
+  
     this.server
       .to(`channel-${channel_id}`)
       .emit('updateUserContact', {
@@ -374,6 +389,7 @@ export class channelGateway implements OnGatewayConnection {
     client: ClientSocket,
     channelData: channelCreateDto,
   ) {
+    console.log('handleCreateChannel ') 
     const currentUserId = client.userId;
     if (!currentUserId) return;
     const channel_data: channelDto = {
@@ -381,9 +397,8 @@ export class channelGateway implements OnGatewayConnection {
       type: channelData.channelType,
       password: await this.hashPassword(channelData.password),
       image: `http://localhost:3001/chat/image/${channelData.imageSrc}`,
-    };
+    };  
     // updateUserContact
-    const users = await this.chatCrud.findUsersInCommonChannels(currentUserId);
     const channel = await this.chatCrud.createChannel(
       currentUserId,
       channel_data,
@@ -398,6 +413,7 @@ export class channelGateway implements OnGatewayConnection {
           image: channel_data.image,
           type: channel_data.type,
         });
+
 
       this.server
         .to(`inbox-${channel.memberUsersIds[i]}`)

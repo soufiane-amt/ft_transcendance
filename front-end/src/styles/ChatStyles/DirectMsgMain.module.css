@@ -1,6 +1,7 @@
 .direct_msg_main {
   width: calc(100vw - 60px);
-  height: 100vh;
+  height: calc(100vh - 91px);
+  /* height: 50vh; */
 
   display: flex;
   position: relative;

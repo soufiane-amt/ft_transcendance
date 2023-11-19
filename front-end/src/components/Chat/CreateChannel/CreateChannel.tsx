@@ -24,6 +24,11 @@ export function CreateChannel() {
   const [image, setImage] = useState<FormData | null>(null);
   const jwtToken = Cookies.get("access_token");
 
+  const setDataToDefault = ()=>{
+    setChannelName("");
+    setPassword("");
+    setChannelType("PUBLIC") ;  
+  }
   const [condidateUsers, setUserCondidates] = useState<Map<string, string>>(
     new Map<string, string>()
   ); // [username, avatar
@@ -69,6 +74,7 @@ export function CreateChannel() {
         },
       })
       .then((res) => {
+        console.log('REs', res)
         if (res.status === 201 || res.status === 200) {
           // Continue with the rest of your createChannel logic
           socket.emit("createChannel", {
@@ -78,6 +84,7 @@ export function CreateChannel() {
             password,
             invitedUsers,
           });
+          setDataToDefault()
         }
       });
   };

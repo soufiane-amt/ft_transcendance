@@ -37,7 +37,7 @@
 }
 
 .type_setter div {
-    margin-bottom: 50px;
+    margin-block: 50px;
 }
 
 .type_setter select {
@@ -53,7 +53,7 @@
     text-align: center;
     cursor: pointer;
     height: 45px;
-    width: 90%;
+    width: 83%;
 }
 
 
@@ -87,6 +87,8 @@
     }
     .type_setter select {
         height: 30px;
+        width: 79%;
+
     }
     .type_setter input {
         height: 30px;

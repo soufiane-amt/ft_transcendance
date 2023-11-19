@@ -5,9 +5,6 @@
     overflow: hidden;
 }
 
-.user_initiative_talks{
-    border-bottom: solid 7px rgb(116, 68, 194);
-}
 
 .user_initiative_talks,  .channel_joins  {
     display: flex;
