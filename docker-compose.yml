@@ -3,13 +3,13 @@ services:
   db:
     image: postgres:13
     ports:
-      - 5434:5432
+      - 5432:5432
     networks:
       - pingpong
     env_file:
       - .env
     # volumes:
-    #   - /Users/samajat/Desktop/ft_transcendence/back-chat/data-base/pg-data:/var/lib/postgresql/data
+    #   - /Users/odakhch/Desktop/game_dashboard/data-base/pg-data:/var/lib/postgresql/data
     restart: on-failure
 
 networks:

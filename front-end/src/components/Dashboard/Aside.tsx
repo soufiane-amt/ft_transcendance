@@ -34,7 +34,7 @@ const Aside: React.FC<AsideProps> = ({ onSelectSection }) => {
       })
       .then((data) => setUsers(data))
       .catch((error) => {
-        console.error("Error:", error);
+        // console.error("Error:", error);
       });
   }, [JwtToken]);
 

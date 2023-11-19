@@ -1,14 +1,29 @@
 "use client";
 import "@/styles/Dashboard.css";
 import Structure from "@/app/Structure";
-import DisplayComponent from "@/components/Dashboard/DisplayComponent";
-import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import Section from "@/components/Dashboard/Section";
 import { useRouter } from "next/navigation";
+import { showToast } from "../../components/Dashboard/ShowToast";
 import Cookies from "js-cookie";
 import { useEffect, useState } from "react";
-import Aside from "@/components/Dashboard/Aside";
+import { notFound } from 'next/navigation'
+import GameStatistics from "@/components/Dashboard/interfaces/GameStatistics";
+import {
+  LineChart,
+  Line,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  Legend,
+  ResponsiveContainer,
+} from "recharts";
+
+interface Data {
+  date: string;
+  win: number;
+  lose: number;
+}
 
 function Dashboard() {
   const router = useRouter();
@@ -16,6 +31,28 @@ function Dashboard() {
   const JwtToken = Cookies.get("access_token");
   const [friend, setfriend]: any = useState();
   const [image, setImage] = useState("backgroundrandom.jpg");
+  const [statistic, setstatistic] = useState<GameStatistics[] | []>([]);
+  let data: Data[] = [];
+
+  function CheckDuplicateDates(array: Data[]) {
+    const dateMap = new Map<string, { win: number; lose: number }>();
+
+    for (const item of array) {
+      if (dateMap.has(item.date)) {
+        const existing = dateMap.get(item.date)!;
+        existing.win += item.win;
+        existing.lose += item.lose;
+      } else {
+        dateMap.set(item.date, { win: item.win, lose: item.lose });
+      }
+    }
+
+    const aggregatedData: Data[] = [];
+    dateMap.forEach((stats, date) => {
+      aggregatedData.push({ date, ...stats });
+    });
+    return aggregatedData;
+  }
 
   useEffect(() => {
     const url = new URL(`${window.location}`);
@@ -24,9 +61,10 @@ function Dashboard() {
       const username = url.searchParams.get("username");
       if (username) setname(username);
       else {
+        router.push(`/profile/404`);
       }
-      console.log("Username:", username);
     } else {
+      router.push(`/404`);
     }
     if (name) {
       fetch(`http://localhost:3001/api/profile/${name}`, {
@@ -37,23 +75,64 @@ function Dashboard() {
         },
       })
         .then((response) => {
-          if (!response.ok) throw new Error("Network response was not ok");
-          return response.json();
+          if (response.status == 400){
+            router.push(`/404`);
+          }
+          if (!response.ok) {
+            throw new Error("Network response was not ok");
+          }
+          else{
+            return response.json();
+          }
         })
         .then((data) => {
           setfriend(data);
         })
         .catch((error) => {
-          console.error("Error:", error);
+          router.push(`/chat/DirectMessaging`);
         });
+        fetch(`http://localhost:3001/api/profile/statistic/${name}`, {
+          method: "Get",
+          headers: {
+            Authorization: `Bearer ${JwtToken}`,
+            "Content-Type": "application/json",
+          },
+        })
+          .then((response) => {
+            if (!response.ok){
+              router.push(`/profile/Error`);
+              throw new Error("Network response was not ok");
+            }
+            return response.json();
+          })
+          .then((data) => {
+            setstatistic(data);
+          })
+          .catch((error) => {
+            console.clear();
+          });
     }
+  
   }, [name]);
-
-  // Check if the URL has only the 'username' parameter
-
+  data = statistic.map((statistic: GameStatistics) => {
+    const result = statistic.result.split("-");
+    const date = statistic.createdAt.split("-");
+    return {
+      date: `${date[0]}-${date[1]}-${date[2].slice(0, 2)}`,
+      win: result[0] > result[1] ? 1 : 0,
+      lose: result[0] < result[1] ? 1 : 0,
+    };
+  }, []);
+  const duplicateDates = CheckDuplicateDates(data);
   return (
     <Structure>
       <div className="mybody ">
+        <div className="left-bar">
+          <div className="head">
+            <p>Profile Friend</p>
+            <hr></hr>
+          </div>
+        </div>
         <div className="section-container">
           <div className="section-image">
             <div className="parent-section-background">
@@ -67,7 +146,6 @@ function Dashboard() {
           <div className="identification">
             <div className="identification-header one">
               <hr id="section-line"></hr>
-
               <div className="identification-information">
                 <h3>Wins</h3>
                 <p>{friend?.wins}</p>
@@ -104,6 +182,43 @@ function Dashboard() {
             <hr id="section-line"></hr>
           </div>
         </div>
+      </div>
+      {/* statistic */}
+      <div className="home-page">
+      <div className="Statistic">
+      <div className="statistic-diagram">
+        <div className="chart-container">
+          <div className="chart-wrapper">
+            <ResponsiveContainer width="100%" height={350}>
+              <LineChart
+                width={1110}
+                height={300}
+                data={duplicateDates}
+                margin={{
+                  top: 5,
+                  right: 30,
+                  left: 20,
+                  bottom: 5,
+                }}
+              >
+                <CartesianGrid strokeDasharray="3 3" stroke="#FFF" />
+                <XAxis dataKey="date" stroke="#FFF" />
+                <YAxis stroke="#FFF" />
+                <Tooltip />
+                <Legend stroke="#FFF" />
+                <Line
+                  type="monotone"
+                  dataKey="win"
+                  stroke="#19CC05"
+                  activeDot={{ r: 8 }}
+                />
+                <Line type="monotone" dataKey="lose" stroke="#BE263B" />
+              </LineChart>
+            </ResponsiveContainer>
+          </div>
+        </div>
+      </div>
+    </div>
       </div>
     </Structure>
   );

@@ -57,7 +57,7 @@ function Invite({ ...props }) {
       })
       .then((data) => setuserFriend(data))
       .catch((error) => {
-        console.error("Error:", error);
+        // console.error("Error:", error);
       });
   }, [JwtToken, userFriend]);
 
@@ -80,7 +80,7 @@ function Invite({ ...props }) {
           setuserFriend(friends);
         }
       } catch (error) {
-        console.error("Error handling friend event:", error);
+        // console.error("Error handling friend event:", error);
       }
     });
   }, [JwtToken, updateFriend]);

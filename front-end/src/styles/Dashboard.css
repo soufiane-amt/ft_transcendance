@@ -208,6 +208,32 @@ aside {
   display: flex;
 }
 
+.left-bar{
+  position: absolute;
+  width: 19%;
+  border-top: 1px solid rgba(255, 255, 255, 0.3);
+  height: calc(100% - 91px);
+  background-color: #24234f;
+  overflow: visible;
+}
+.head{
+  height: 10%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.head p{
+  margin: 14px 14px;
+  color: rgba(255,255,255,0.9);
+  font-size: 19px;
+}
+
+.head hr{
+  width: 41%;
+  margin-left: 9px;
+}
+
 .homepage img {
   cursor: pointer;
 }
@@ -746,22 +772,11 @@ aside {
 .statistic-diagram {
   width: 100%;
   height: 100%;
-  /* overflow-x: auto;
-    white-space: nowrap; */
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-/* .statistic-diagram::-webkit-scrollbar {
-    width: 12px;
-  }
-  
-.statistic-diagram::-webkit-scrollbar-thumb {
-    background-color: #888;
-    border-radius: 6px;
-  }
-  
-.statistic-diagram::-webkit-scrollbar-track {
-    background-color: #f1f1f1;
-  } */
 
 #choose {
   display: none;
@@ -778,7 +793,6 @@ aside {
   width: 79%;
   position: absolute;
   left: 20%;
-  /* height: 100vh; */
   height: 80%;
   top: 14%;
 }
@@ -1084,10 +1098,16 @@ svg.svg-inline--fa.fa-user-plus {
   }
 
   .usercomponent {
-    top: 11%;
+    top: 15%;
   }
   .Add-user {
-    top: 7%;
+    top: 8%;
+  }
+
+  .head p{
+    font-size: 10px;
+    margin: 0;
+    margin-left: 4px;
   }
 
   .add-user-card.offline div:nth-child(2) h2,
@@ -1113,6 +1133,10 @@ svg.svg-inline--fa.fa-user-plus {
 
   .flag {
     width: 11px;
+  }
+
+  .score-friend.handle{
+    margin-left: 0px;
   }
 
   .myaside:nth-child(1) div {
@@ -1285,7 +1309,7 @@ svg.svg-inline--fa.fa-user-plus {
   }
   #pet-select {
     width: 100%;
-    height: 100%;
+    height: 51%;
   }
   .home-page-search {
     width: 86%;
@@ -1313,7 +1337,7 @@ svg.svg-inline--fa.fa-user-plus {
 
   .informationaboutuser {
     margin: 0;
-    width: 100%;
+    width: 99%;
   }
   .nameuser {
     width: 100px;
@@ -1421,7 +1445,7 @@ svg.svg-inline--fa.fa-user-plus {
     margin-bottom: 5px;
   }
   .information-user div {
-    margin-left: 14px;
+    margin-left: 11px;
     margin-bottom: 7px;
     height: 46px;
     width: 72px;
@@ -1459,7 +1483,7 @@ svg.svg-inline--fa.fa-user-plus {
     margin-top: 0px;
     width: 21px;
     height: 21px;
-    margin-right: 112px;
+    margin-right: 3px;
   }
 
   .score-friend {
@@ -1482,9 +1506,13 @@ svg.svg-inline--fa.fa-user-plus {
   }
   .information-user div img,
   .information-friend div img {
-    width: 32px;
-    height: 34px;
+    width: 28px;
+    height: 30px;
     margin: 0;
+  }
+  .information-friend div img
+  {
+    margin-right: 14px;
   }
   .container-user.friend {
     height: 44px;
@@ -1716,7 +1744,6 @@ svg.svg-inline--fa.fa-user-plus {
     height: 30px;
   }
   #crown-score-friend {
-    margin-right: 108px;
     margin-top: 1px;
     width: 30px;
     height: 30px;
@@ -1760,6 +1787,9 @@ svg.svg-inline--fa.fa-user-plus {
 }
 
 @media screen and (max-width: 681px) and (min-width: 401px) {
+  .score-friend.handle{
+    margin-left: 34px;
+  }
   .identification-header.one .identification-information:nth-child(1) {
     /* background-color: red; */
     margin: 0;
@@ -1816,7 +1846,6 @@ svg.svg-inline--fa.fa-user-plus {
     margin-bottom: 6px;
   }
   #crown-score-friend {
-    margin-right: 90px;
     margin-top: 1px;
   }
   .information-user div img,
@@ -2034,9 +2063,6 @@ svg.svg-inline--fa.fa-user-plus {
   }
   img#crown-score {
     margin-left: 73px;
-  }
-  #crown-score-friend {
-    margin-right: 102px;
   }
   .identification-header.one .identification-information:nth-child(1) {
     margin: 0;

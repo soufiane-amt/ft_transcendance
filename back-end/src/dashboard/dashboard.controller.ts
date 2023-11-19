@@ -60,7 +60,21 @@ export class DashboardController {
       const achiv = await this.user.getUserStats(user_id);
       alldata = { ...user, ...achiv };
       return response.status(200).send(alldata);
-    } else return response.status(400);
+    } else {
+      return response.status(400);
+    }
+  }
+
+  @Get('profile/statistic/:username')
+  async getProfileStatistic(@Param('username') username: string, @Res() response: any) {
+    let alldata: any = {};
+    const user_id = await this.user.findUserByUsername(username);
+    if (user_id) {
+      const statistic: any[] =
+        await this.resultgame.retreiveGamesScoreForStatistic(user_id);
+      return response.status(200).send(statistic);
+    } else return response.status(400).json({ error: 'Bad Request: Your custom error message' });
+;
   }
 
   @Get('Dashboard/allUsers')
@@ -285,7 +299,7 @@ export class DashboardController {
       return response.status(200).send(levelsFriends);
     } catch (error) {
       // Handle any errors that occur during the process
-      console.error('Error:', error);
+      // console.error('Error:', error);
       return response.status(500).send({ error: 'Internal Server Error' });
     }
   }

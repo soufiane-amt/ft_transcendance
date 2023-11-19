@@ -90,6 +90,16 @@ function NavBar() {
           console.clear();
         });
     }
+    const handleNewMessageNotif = (newMessage: messageDto) => {
+      if (newMessage.dm_id && user && newMessage.user_id != user.id) {
+        setgetmsg(1);
+      }
+    };
+
+    socket.on("newMessage", handleNewMessageNotif);
+    return () => {
+      socket.off("newMessage", handleNewMessageNotif);
+    };
   }, [user, JwtToken]);
 
   const handlesearchuser = (e: any) => {
@@ -143,18 +153,6 @@ function NavBar() {
     });
   });
 
-  useEffect(() => {
-    const handleNewMessageNotif = (newMessage: messageDto) => {
-      if (newMessage.dm_id && newMessage.user_id != user.id) {
-        setgetmsg(1);
-      }
-    };
-
-    socket.on("newMessage", handleNewMessageNotif);
-    return () => {
-      socket.off("newMessage", handleNewMessageNotif);
-    };
-  }, []);
 
   useEffect(() => {
     fetch("http://localhost:3001/api/Dashboard/allUsers", {

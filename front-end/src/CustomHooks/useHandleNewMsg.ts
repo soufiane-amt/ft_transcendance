@@ -9,6 +9,7 @@ export function useHandleNewMsg(
   const [messagesHistory, setMessageHistory] = messagesHistoryState;
   useEffect(() => {
     const handleNewMessage = (newMessage: messageDto) => {
+      console.log(newMessage);
       // Add message id later
       const messageRoomId = newMessage.dm_id
         ? newMessage.dm_id

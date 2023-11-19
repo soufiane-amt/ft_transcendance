@@ -89,7 +89,7 @@ function Section() {
           }
         })
         .catch((error) => {
-          console.error("add user:", error);
+          // console.error("add user:", error);
         });
     }
   }, [user, JwtToken]);
@@ -116,7 +116,7 @@ function Section() {
         }
       })
       .catch((error) => {
-        console.error("Error:", error);
+        // console.error("Error:", error);
       });
   }, [gameInformation, JwtToken]);
 
@@ -143,7 +143,7 @@ function Section() {
             const code = GetCountryCode(country);
             if (code) setcountryCode(code);
           } catch (error) {
-            console.error("An error occurred:", error);
+            // console.error("An error occurred:", error);
           }
         },
         (error) => {
@@ -172,7 +172,7 @@ function Section() {
           if (gameInformation) {
             let Rank = 1;
             Tab.map((friend) => {
-              if (friend.ladder_level >= gameInformation?.ladder_level) Rank++;
+              if (friend.ladder_level > gameInformation?.ladder_level) Rank++;
             });
             setrank(Rank);
           }
@@ -181,7 +181,7 @@ function Section() {
         }
       })
       .catch((error) => {
-        console.error("Error:", error);
+        // console.error("Error:", error);
       });
   }, [gameInformation, rank]);
   if (gameInformation?.wins || gameInformation?.losses)

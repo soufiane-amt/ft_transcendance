@@ -54,7 +54,7 @@ const Setting: React.FC<Settingprops> = ({ handleSettingData }) => {
           setImage(data.avatar);
         })
         .catch((error) => {
-          console.error("Error:", error);
+          // console.error("Error:", error);
         });
     }
   }, [JwtToken]);
