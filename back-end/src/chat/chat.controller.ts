@@ -163,7 +163,8 @@ export class ChatController {
   }
   @UseGuards(JwtAuthGuard)
   @Get('/direct_messaging/bannedRooms')
-  async findBannedRoomsDm(@Req() request: Request) {
+  async findBannedRoomsDm(@Req() request: Request) 
+  {
     const currentUserId = this.currentUserId(request);
 
     const bannedRooms = await this.chatCrud.findBannedDmRooms(currentUserId);
@@ -172,6 +173,7 @@ export class ChatController {
     });
     return bannedRoomsData;
   }
+
   @UseGuards(JwtAuthGuard)
   @Get('/Channels/bannedRooms')
   async findBannedRoomsChannels(@Req() request: Request) {
@@ -199,7 +201,7 @@ export class ChatController {
     });
     return mutedRoomsData;
   }
-  @UseGuards(JwtAuthGuard)
+  // @UseGuards(JwtAuthGuard)
   @Get('/userData')
   async getUserData(@Req() request: Request) {
     const currentUserId = this.currentUserId(request);

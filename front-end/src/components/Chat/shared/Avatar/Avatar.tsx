@@ -17,7 +17,7 @@ const Avatar: React.FC<AvatarProps> = ({ src, avatarToRight, channelType }) => {
 
   return (
     <div className={avatarStylingClasses}>
-        <Image
+        <img
           className={`${style.avatar__dimentions} ${style.image__full_circle}`}
           src={src}
           alt="user avatar"

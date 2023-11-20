@@ -600,6 +600,7 @@ export class ChatCrudService {
           OR: [{ channel_id: room_id }, { dm_id: room_id }],
         },
         select: {
+          id:true,
           user_id: true,
           content: true,
           createdAt: true,

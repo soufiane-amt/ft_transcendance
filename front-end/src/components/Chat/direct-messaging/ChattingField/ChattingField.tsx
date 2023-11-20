@@ -6,7 +6,7 @@ import ChatTextBox from "../../shared/ChatTextbox/ChatTextbox";
 import style from "../../../../styles/ChatStyles/ChattingField.module.css";
 import Message from "../../shared/Message/Message";
 import { selectedPanelDefault } from "../DirectMsgMain";
-import clsx from "clsx";
+
 
 
 function MessagesHistory({ messages }: { messages: messageDto[] }) {
@@ -25,9 +25,11 @@ function MessagesHistory({ messages }: { messages: messageDto[] }) {
     return (
       <div className={style.messages_history}>
         {messages && messages.map((messageElement: messageDto) => {
+          console.log ('Message_id: ', messageElement)
           return <Message key={messageElement.id} messageData={messageElement} />;
         })}
-        {/* this is a dummy div created so that it references the bottom of the chatfield to scroll there whenever a message comes */}
+        {
+        /* this is a dummy div created so that it references the bottom of the chatfield to scroll there whenever a message comes */}
         <div style={{ marginTop: "100px" }} ref={scrollDown}></div>
       </div>
     );
@@ -55,7 +57,7 @@ function MessagesHistory({ messages }: { messages: messageDto[] }) {
         );
         setMessageHistory(messagesHistory_tmp);
       }
-      if (selectedDiscussion != selectedPanelDefault) fetchDataAsync();
+      if (selectedDiscussion != selectedPanelDefault && selectedDiscussion.id ) fetchDataAsync();
     }, [selectedDiscussion]);
   
     return (

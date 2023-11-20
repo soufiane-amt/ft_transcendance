@@ -414,7 +414,7 @@ function NavBar() {
                                   )
                                 }
                               >
-                                <img src="checkmark.png" alt="Photo"></img>
+                                <img src="../checkmark.png" alt="Photo"></img>
                               </button>
                             </div>
                           </div>

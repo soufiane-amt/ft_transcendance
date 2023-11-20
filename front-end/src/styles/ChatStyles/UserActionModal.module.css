@@ -41,7 +41,11 @@
   border-radius: 50%;
   border: solid 10px rgb(246, 228, 228);
 }
-
+.action_targeted_user img:hover 
+{
+  cursor: pointer;
+  border: solid 10px rgb(0, 0, 0);
+}
 .interaction_buttons {
   display: flex;
 
