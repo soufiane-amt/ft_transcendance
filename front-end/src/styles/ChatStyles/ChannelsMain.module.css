@@ -8,7 +8,7 @@
 
 .discussions_bar_swither {
   position: absolute;
-  z-index: 2;
+  z-index: 1;
   left: 30%;
 
   align-self: center;
