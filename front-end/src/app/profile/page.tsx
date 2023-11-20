@@ -136,12 +136,6 @@ function Dashboard() {
         </div>
         <div className="section-container">
           <div className="section-image">
-            <div className="parent-section-background">
-              <div className="section-background">
-                <label htmlFor="choose">Change background profile</label>
-                <input type="file" accept="image/*" id="choose" />
-              </div>
-            </div>
             <img src={friend?.background || (image as string)} alt="Photo" />
           </div>
           <div className="identification">
