@@ -123,7 +123,6 @@ export class WebSocketGatewayClass
   }
 
   @SubscribeMessage('sendNotification')
-  // @UseGuards(JwtAuthGuard)
   async handleSendNotification(@MessageBody() notificationData: any) {
     const targetClientRoom = `room_${notificationData.user_id}`;
     const token: any = notificationData.token;
@@ -267,6 +266,12 @@ export class WebSocketGatewayClass
     const invitorStatus: Status = await this.user.getUserStatus(
       gameInvitationDto.invitor_id,
     );
+    const inviteeStatus: Status = await this.user.getUserStatus(
+      gameInvitationDto.invitee_id,
+    );
+    if (inviteeStatus === Status.IN_GAME) {
+      return "the invitee isn't available for game"
+    }
     if (invitorStatus === Status.IN_GAME) {
       return 'You are already in game';
     }

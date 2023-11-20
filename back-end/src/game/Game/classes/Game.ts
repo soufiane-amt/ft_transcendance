@@ -24,6 +24,7 @@ export default class Game {
     mapType: string;
     missingUser: string;
     stopedAt: Date | null;
+    nullresult: boolean;
 
     constructor(gameId: string, leftPlayerSokcet: ClientSocket, rightPlayerSocket: ClientSocket, speed: string, server: GameServer, gameRoom: string, mapType: string) {
         this.roundsScores = [7, 5, 3];
@@ -35,6 +36,7 @@ export default class Game {
         this.stopedAt = null;
         this.round = 0;
         this.scene = {} as Scene;
+        this.nullresult = false;
         this.scene.top = 0;
         this.scene.bottom = 1;
         this.scene.left = 0;
@@ -114,6 +116,7 @@ export default class Game {
                 } else if (responses.length === 0) {
                     this.leftPlayer.winningRounds = 0;
                     this.rightPlayer.winningRounds = 0;
+                    this.nullresult = true;
                     this.leftPlayerSocket.emit('game_finished', 'null');
                     this.rightPlayerSocket.emit('game_finished', 'null');
                     this.status = 'finished';
@@ -136,6 +139,7 @@ export default class Game {
                 this.missingUser = '';
                 this.leftPlayer.winningRounds = 0;
                 this.rightPlayer.winningRounds = 0;
+                this.nullresult = true;
                 this.status = 'finished';
                 return ;
             }
@@ -149,6 +153,7 @@ export default class Game {
                 this.missingUser = '';
                 this.leftPlayer.winningRounds = 0;
                 this.rightPlayer.winningRounds = 0;
+                this.nullresult = true;
                 this.status = 'finished';
                 return ;
             }
@@ -193,6 +198,7 @@ export default class Game {
                 this.missingUser = '';
                 this.leftPlayer.winningRounds = 0;
                 this.rightPlayer.winningRounds = 0;
+                this.nullresult = true;
                 this.status = 'finished';
                 return ;
             }

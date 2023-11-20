@@ -1,7 +1,5 @@
 import { Controller, Post, UseInterceptors, UploadedFile, Header, Req, UseGuards, Res, Body, Param, Get, UnsupportedMediaTypeException, HttpException, HttpStatus } from "@nestjs/common";
-import { ExceptionsHandler } from "@nestjs/core/exceptions/exceptions-handler";
 import { FileInterceptor } from "@nestjs/platform-express";
-import { response } from "express";
 import { diskStorage} from 'multer';
 import { AuthService } from "src/auth/auth.service";
 import { JwtAuthGuard } from "src/auth/guards/jwt-aut.guard";
@@ -62,7 +60,7 @@ export class UploadController
             
                 try {
                   const payload: any = this.authservice.extractPayload(JwtToken);
-                  this.user.changeUserAvatar(payload.userId, `${process.env.NEXT_PUBLIC_BACKEND_SERV}/auth/uploads/${file.filename}`);
+                  this.user.changeUserAvatar(payload.userId, `${process.env.BACKEND_SERV}/auth/uploads/${file.filename}`);
                 } catch (error) {
                   // Handle any errors that occur during the process
                   console.error('Error:', error);
@@ -75,7 +73,7 @@ export class UploadController
             
                 try {
                   const payload: any = this.authservice.extractPayload(JwtToken);
-                  this.user.changeUserBackgroundImg(payload.userId, `${process.env.NEXT_PUBLIC_BACKEND_SERV}/auth/uploads/${file.filename}`);
+                  this.user.changeUserBackgroundImg(payload.userId, `${process.env.BACKEND_SERV}/auth/uploads/${file.filename}`);
                   response.ok;
                 } catch (error) {
                   // console.error('Error:', error);

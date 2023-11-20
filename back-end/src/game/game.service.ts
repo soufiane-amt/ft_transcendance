@@ -20,6 +20,7 @@ import GuestPlayer from './interfaces/guestPlayer.interface';
 import HostPlayer from './interfaces/hostPlayers.interface';
 import { Player } from './interfaces/player.interface';
 import GameInvitationFromChatDto from './dto/GameInvitationFromChat.dto';
+import e from 'express';
 
 @Injectable()
 export class GameService {
@@ -422,7 +423,7 @@ export class GameService {
           gameId,
           gameScore,
           player1Socket.player.id,
-          player2Socket.player.id,
+          player2Socket.player.id, game.nullresult
         );
         clearInterval(intervalId);
       }
@@ -433,7 +434,7 @@ export class GameService {
     game_id: string,
     gameScore: GameScore,
     player1_id: string,
-    player2_id: string,
+    player2_id: string, nullresult: boolean
   ): Promise<void> {
     await this.gameCrudService.updateGameStatus(game_id, 'FINISHED');
     await this.gameCrudService.updateGameScore(game_id, gameScore);
@@ -445,8 +446,10 @@ export class GameService {
       gameScore.player1_score > gameScore.player2_score
         ? player1_id
         : player2_id;
-    await this.gameCrudService.addLossesToUser(loser);
-    await this.gameCrudService.addWinsToUser(winner);
+    if (nullresult === false) {
+      await this.gameCrudService.addLossesToUser(loser);
+      await this.gameCrudService.addWinsToUser(winner);
+    }
     await this.userCrudService.changeVisibily(player1_id, 'ONLINE');
     await this.userCrudService.changeVisibily(player2_id, 'ONLINE');
   }
