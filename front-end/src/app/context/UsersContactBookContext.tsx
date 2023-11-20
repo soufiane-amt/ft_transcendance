@@ -34,7 +34,7 @@ export function UserContactsProvider({
   useEffect(() => {
     async function fetchDataAsync() {
       const userContactsBook_tmp = await fetchDataFromApi(
-        `http://localhost:3001/chat/${currentRoute}/userContactsBook`
+        `${process.env.NEXT_PUBLIC_BACKEND_SERV}/chat/${currentRoute}/userContactsBook`
       );
       const map = new Map();
       if (Array.isArray(userContactsBook_tmp)) {

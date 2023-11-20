@@ -34,7 +34,7 @@ import JoiningLeavingGameResponseDto, {
 import GameInvitationFromChatDto, {
   gameInvitationFromChatDto,
 } from 'src/game/dto/GameInvitationFromChat.dto';
-@WebSocketGateway({ cors: true, origins: 'http://localhost:3000' })
+@WebSocketGateway({ cors: true, origins: `${process.env.FRONT_SERV}` })
 @Injectable()
 @UseGuards(GatewaysGuard)
 export class WebSocketGatewayClass

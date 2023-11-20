@@ -28,7 +28,7 @@ export function WelcomingPage() {
   useEffect(() => {
     async function fetchDataAsync() {
       const fetchedData = await fetchDataFromApi(
-        `http://localhost:3001/chat/channels_users_inits`
+        `${process.env.NEXT_PUBLIC_BACKEND_SERV}/chat/channels_users_inits`
       );
       setDataToDisplay(fetchedData);
     }

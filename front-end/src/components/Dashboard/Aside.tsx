@@ -21,7 +21,7 @@ const Aside: React.FC<AsideProps> = ({ onSelectSection }) => {
 
   totalonlineUsers = 0;
   useEffect(() => {
-    fetch("http://localhost:3001/api/Dashboard/friends", {
+    fetch(`${process.env.NEXT_PUBLIC_BACKEND_SERV}/api/Dashboard/friends`, {
       method: "Get",
       headers: {
         Authorization: `Bearer ${JwtToken}`,

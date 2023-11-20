@@ -46,7 +46,7 @@ function Statictic() {
   }
 
   useEffect(() => {
-    fetch("http://localhost:3001/api/Dashboard/statistic", {
+    fetch(`${process.env.NEXT_PUBLIC_BACKEND_SERV}/api/Dashboard/statistic`, {
       method: "GET",
       headers: {
         Authorization: `Bearer ${JwtToken}`,

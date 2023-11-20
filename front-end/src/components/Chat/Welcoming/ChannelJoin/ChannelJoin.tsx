@@ -29,7 +29,7 @@ export function ChannelJoin({ channelData }: ChannelJoinProps) {
         // join channel
         await axios
           .post(
-            "http://localhost:3001/chat/channelJoinRequest",
+            `${process.env.NEXT_PUBLIC_BACKEND_SERV}/chat/channelJoinRequest`,
             channelRequestMembership,
             {
               headers: {

@@ -41,7 +41,7 @@ export function SessionUserProvider({ children }: SessionUserProviderProps) {
   useEffect(() => {
     async function fetchDataAsync() {
       const userSessiondata = await fetchDataFromApi(
-        "http://localhost:3001/chat/userData"
+        `${process.env.NEXT_PUBLIC_BACKEND_SERV}/chat/userData`
       );
 
       setUserData(userSessiondata);
@@ -57,7 +57,7 @@ export function SessionUserProvider({ children }: SessionUserProviderProps) {
 }
 
 // Custom hook to use the context
-export function useSessionUser() :UserContactDto {
+export function useSessionUser(): UserContactDto {
   const context = useContext(SessionUserContext);
   if (!context) {
     throw new Error("useSessionUser must be used within a SessionUserProvider");

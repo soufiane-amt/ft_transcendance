@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation";
 import { showToast } from "../../components/Dashboard/ShowToast";
 import Cookies from "js-cookie";
 import { useEffect, useState } from "react";
-import { notFound } from 'next/navigation'
+import { notFound } from "next/navigation";
 import GameStatistics from "@/components/Dashboard/interfaces/GameStatistics";
 import {
   LineChart,
@@ -67,7 +67,7 @@ function Dashboard() {
       router.push(`/404`);
     }
     if (name) {
-      fetch(`http://localhost:3001/api/profile/${name}`, {
+      fetch(`${process.env.NEXT_PUBLIC_BACKEND_SERV}/api/profile/${name}`, {
         method: "Get",
         headers: {
           Authorization: `Bearer ${JwtToken}`,
@@ -75,13 +75,12 @@ function Dashboard() {
         },
       })
         .then((response) => {
-          if (response.status == 400){
+          if (response.status == 400) {
             router.push(`/404`);
           }
           if (!response.ok) {
             throw new Error("Network response was not ok");
-          }
-          else{
+          } else {
             return response.json();
           }
         })
@@ -91,28 +90,30 @@ function Dashboard() {
         .catch((error) => {
           router.push(`/chat/DirectMessaging`);
         });
-        fetch(`http://localhost:3001/api/profile/statistic/${name}`, {
+      fetch(
+        `${process.env.NEXT_PUBLIC_BACKEND_SERV}/api/profile/statistic/${name}`,
+        {
           method: "Get",
           headers: {
             Authorization: `Bearer ${JwtToken}`,
             "Content-Type": "application/json",
           },
+        }
+      )
+        .then((response) => {
+          if (!response.ok) {
+            router.push(`/profile/Error`);
+            throw new Error("Network response was not ok");
+          }
+          return response.json();
         })
-          .then((response) => {
-            if (!response.ok){
-              router.push(`/profile/Error`);
-              throw new Error("Network response was not ok");
-            }
-            return response.json();
-          })
-          .then((data) => {
-            setstatistic(data);
-          })
-          .catch((error) => {
-            console.clear();
-          });
+        .then((data) => {
+          setstatistic(data);
+        })
+        .catch((error) => {
+          console.clear();
+        });
     }
-  
   }, [name]);
   data = statistic.map((statistic: GameStatistics) => {
     const result = statistic.result.split("-");
@@ -185,40 +186,40 @@ function Dashboard() {
       </div>
       {/* statistic */}
       <div className="home-page">
-      <div className="Statistic">
-      <div className="statistic-diagram">
-        <div className="chart-container">
-          <div className="chart-wrapper">
-            <ResponsiveContainer width="100%" height={350}>
-              <LineChart
-                width={1110}
-                height={300}
-                data={duplicateDates}
-                margin={{
-                  top: 5,
-                  right: 30,
-                  left: 20,
-                  bottom: 5,
-                }}
-              >
-                <CartesianGrid strokeDasharray="3 3" stroke="#FFF" />
-                <XAxis dataKey="date" stroke="#FFF" />
-                <YAxis stroke="#FFF" />
-                <Tooltip />
-                <Legend stroke="#FFF" />
-                <Line
-                  type="monotone"
-                  dataKey="win"
-                  stroke="#19CC05"
-                  activeDot={{ r: 8 }}
-                />
-                <Line type="monotone" dataKey="lose" stroke="#BE263B" />
-              </LineChart>
-            </ResponsiveContainer>
+        <div className="Statistic">
+          <div className="statistic-diagram">
+            <div className="chart-container">
+              <div className="chart-wrapper">
+                <ResponsiveContainer width="100%" height={350}>
+                  <LineChart
+                    width={1110}
+                    height={300}
+                    data={duplicateDates}
+                    margin={{
+                      top: 5,
+                      right: 30,
+                      left: 20,
+                      bottom: 5,
+                    }}
+                  >
+                    <CartesianGrid strokeDasharray="3 3" stroke="#FFF" />
+                    <XAxis dataKey="date" stroke="#FFF" />
+                    <YAxis stroke="#FFF" />
+                    <Tooltip />
+                    <Legend stroke="#FFF" />
+                    <Line
+                      type="monotone"
+                      dataKey="win"
+                      stroke="#19CC05"
+                      activeDot={{ r: 8 }}
+                    />
+                    <Line type="monotone" dataKey="lose" stroke="#BE263B" />
+                  </LineChart>
+                </ResponsiveContainer>
+              </div>
+            </div>
           </div>
         </div>
-      </div>
-    </div>
       </div>
     </Structure>
   );

@@ -75,7 +75,7 @@ function NavBar() {
 
   useEffect(() => {
     if (JwtToken) {
-      fetch("http://localhost:3001/api/Dashboard", {
+      fetch(`${process.env.NEXT_PUBLIC_BACKEND_SERV}/api/Dashboard`, {
         method: "Get",
         headers: {
           Authorization: `Bearer ${JwtToken}`,
@@ -154,9 +154,8 @@ function NavBar() {
     });
   });
 
-
   useEffect(() => {
-    fetch("http://localhost:3001/api/Dashboard/allUsers", {
+    fetch(`${process.env.NEXT_PUBLIC_BACKEND_SERV}/api/Dashboard/allUsers`, {
       method: "Get",
       headers: {
         Authorization: `Bearer ${JwtToken}`,
@@ -174,13 +173,16 @@ function NavBar() {
   }, [JwtToken, userFriend]);
 
   useEffect(() => {
-    fetch("http://localhost:3001/api/Dashboard/notification", {
-      method: "GET",
-      headers: {
-        Authorization: `Bearer ${JwtToken}`,
-        "Content-Type": "application/json",
-      },
-    })
+    fetch(
+      `${process.env.NEXT_PUBLIC_BACKEND_SERV}/api/Dashboard/notification`,
+      {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${JwtToken}`,
+          "Content-Type": "application/json",
+        },
+      }
+    )
       .then((response) => {
         if (!response.ok) throw new Error("Network response was not ok");
         return response.json();

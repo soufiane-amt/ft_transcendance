@@ -34,7 +34,7 @@ function Section() {
         const formData = new FormData();
         formData.append("file", background);
 
-        fetch("http://localhost:3001/upload/file", {
+        fetch(`${process.env.NEXT_PUBLIC_BACKEND_SERV}/upload/file`, {
           method: "POST",
           body: formData,
           headers: {
@@ -70,7 +70,7 @@ function Section() {
 
   useEffect(() => {
     if (JwtToken) {
-      fetch("http://localhost:3001/api/Dashboard", {
+      fetch(`${process.env.NEXT_PUBLIC_BACKEND_SERV}/api/Dashboard`, {
         method: "Get",
         headers: {
           Authorization: `Bearer ${JwtToken}`,
@@ -95,7 +95,7 @@ function Section() {
   }, [user, JwtToken]);
 
   useEffect(() => {
-    fetch("http://localhost:3001/api/Dashboard/game", {
+    fetch(`${process.env.NEXT_PUBLIC_BACKEND_SERV}/api/Dashboard/game`, {
       method: "GET",
       headers: {
         Authorization: `Bearer ${JwtToken}`,
@@ -153,7 +153,7 @@ function Section() {
     }
   }, []);
   useEffect(() => {
-    fetch("http://localhost:3001/api/Dashboard/RankUsers", {
+    fetch(`${process.env.NEXT_PUBLIC_BACKEND_SERV}/api/Dashboard/RankUsers`, {
       method: "GET",
       headers: {
         Authorization: `Bearer ${JwtToken}`,

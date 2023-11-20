@@ -45,7 +45,7 @@ export function DiscussionsBar({
   useEffect(() => {
     async function fetchDataAsync() {
       const fetchedData = await fetchDataFromApi(
-        `http://localhost:3001/chat/${currentRoute}/discussionsBar`
+        `${process.env.NEXT_PUBLIC_BACKEND_SERV}/chat/${currentRoute}/discussionsBar`
       );
       if (fetchedData.length === 0) setDiscussionIsEmpty(true);
       if (currentRoute === "Direct_messaging") {

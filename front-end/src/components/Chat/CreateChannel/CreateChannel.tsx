@@ -24,18 +24,18 @@ export function CreateChannel() {
   const [image, setImage] = useState<FormData | null>(null);
   const jwtToken = Cookies.get("access_token");
 
-  const setDataToDefault = ()=>{
+  const setDataToDefault = () => {
     setChannelName("");
     setPassword("");
-    setChannelType("PUBLIC") ;  
-  }
+    setChannelType("PUBLIC");
+  };
   const [condidateUsers, setUserCondidates] = useState<Map<string, string>>(
     new Map<string, string>()
   ); // [username, avatar
   useEffect(() => {
     async function fetchDataAsync() {
       const messagesHistory_tmp = await fetchDataFromApi(
-        `http://localhost:3001/chat/memberCondidatesOfChannelCreation`
+        `${process.env.NEXT_PUBLIC_BACKEND_SERV}/chat/memberCondidatesOfChannelCreation`
       );
       const condidateUsers_tmp = new Map<string, string>();
       messagesHistory_tmp?.forEach((user: any) => {
@@ -67,7 +67,7 @@ export function CreateChannel() {
       return;
     }
     await axios
-      .post("http://localhost:3001/chat/upload", image, {
+      .post(`${process.env.NEXT_PUBLIC_BACKEND_SERV}/chat/upload`, image, {
         headers: {
           Authorization: `Bearer ${jwtToken}`,
           "Content-Type": "multipart/form-data",
@@ -83,7 +83,7 @@ export function CreateChannel() {
             password,
             invitedUsers,
           });
-          setDataToDefault()
+          setDataToDefault();
         }
       });
   };

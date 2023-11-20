@@ -43,7 +43,7 @@ function AddUser() {
     }
   }
   useEffect(() => {
-    fetch("http://localhost:3001/api/Dashboard/allUsers", {
+    fetch(`${process.env.NEXT_PUBLIC_BACKEND_SERV}/api/Dashboard/allUsers`, {
       method: "Get",
       headers: {
         Authorization: `Bearer ${JwtToken}`,
@@ -55,8 +55,7 @@ function AddUser() {
         return response.json();
       })
       .then((data) => setuserFriend(data))
-      .catch((error) => {
-      });
+      .catch((error) => {});
   }, [JwtToken]);
 
   useEffect(() => {

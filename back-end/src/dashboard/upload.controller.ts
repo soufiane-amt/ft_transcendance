@@ -62,7 +62,7 @@ export class UploadController
             
                 try {
                   const payload: any = this.authservice.extractPayload(JwtToken);
-                  this.user.changeUserAvatar(payload.userId, `http://localhost:3001/auth/uploads/${file.filename}`);
+                  this.user.changeUserAvatar(payload.userId, `${process.env.NEXT_PUBLIC_BACKEND_SERV}/auth/uploads/${file.filename}`);
                 } catch (error) {
                   // Handle any errors that occur during the process
                   console.error('Error:', error);
@@ -75,7 +75,7 @@ export class UploadController
             
                 try {
                   const payload: any = this.authservice.extractPayload(JwtToken);
-                  this.user.changeUserBackgroundImg(payload.userId, `http://localhost:3001/auth/uploads/${file.filename}`);
+                  this.user.changeUserBackgroundImg(payload.userId, `${process.env.NEXT_PUBLIC_BACKEND_SERV}/auth/uploads/${file.filename}`);
                   response.ok;
                 } catch (error) {
                   // console.error('Error:', error);

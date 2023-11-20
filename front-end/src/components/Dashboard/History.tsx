@@ -8,13 +8,16 @@ function History() {
   const JwtToken = Cookies.get("access_token");
 
   useEffect(() => {
-    fetch("http://localhost:3001/api/Dashboard/friends/result", {
-      method: "GET",
-      headers: {
-        Authorization: `Bearer ${JwtToken}`,
-        "Content-Type": "application/json",
-      },
-    })
+    fetch(
+      `${process.env.NEXT_PUBLIC_BACKEND_SERV}/api/Dashboard/friends/result`,
+      {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${JwtToken}`,
+          "Content-Type": "application/json",
+        },
+      }
+    )
       .then((response) => {
         if (!response.ok) throw new Error("Network response was not ok");
         return response.json();
@@ -63,7 +66,7 @@ function History() {
                   </p>
                 </div>
               )}
-               {score_1 == score_2 && (
+              {score_1 == score_2 && (
                 <div className="score-friend handle">
                   <p>Score</p>
                   <p>

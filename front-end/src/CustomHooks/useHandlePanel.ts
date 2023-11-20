@@ -22,7 +22,6 @@ export function useHandlePanel(
   const currentUserId = useSessionUser().id;
   useEffect(() => {
     const handleNewMessage = async (newMessage: messageDto) => {
-
       const updatedRooms = [...discussionPanels];
       const messageRoomId = newMessage.dm_id
         ? newMessage.dm_id
@@ -50,7 +49,7 @@ export function useHandlePanel(
           createdAt: newMessage.createdAt,
         };
         const partner_id = await fetchDataFromApi(
-          "http://localhost:3001/chat/DirectMessaging/getPartner/" +
+          `${process.env.NEXT_PUBLIC_BACKEND_SERV}/chat/DirectMessaging/getPartner/` +
             messageRoomId
         );
         var newDiscussionPanel: DiscussionDto = updatedRooms[0];

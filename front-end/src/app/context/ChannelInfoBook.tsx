@@ -33,7 +33,7 @@ export function ChannelBooksProvider({
   useEffect(() => {
     async function fetchDataAsync() {
       const ChannelBooksBook_tmp = await fetchDataFromApi(
-        "http://localhost:3001/chat/Channels/channelsInfoBook"
+        `${process.env.NEXT_PUBLIC_BACKEND_SERV}/chat/Channels/channelsInfoBook`
       );
       const map = new Map();
       ChannelBooksBook_tmp.forEach((item: any) => {
