@@ -44,6 +44,7 @@
   },
   "devDependencies": {
     "@types/country-list": "^2.1.2",
-    "@types/js-cookie": "^3.0.3"
+    "@types/js-cookie": "^3.0.3",
+    "@types/recharts": "^1.8.27"
   }
 }

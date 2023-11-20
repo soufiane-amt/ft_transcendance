@@ -17,11 +17,10 @@
 
 .logo {
   box-sizing: border-box;
-  background-color: #24234f;
+  /* background-color: #24234f; */
   width: 19%;
   position: absolute;
   height: 91px;
-  /* padding: 4%; */
   display: flex;
   align-items: center;
   justify-content: center;
@@ -31,13 +30,6 @@
   cursor: pointer;
   margin-right: 16px;
 }
-
-/* .nav_search img
-{
-    margin-left: 20%;
-    margin-bottom: 4px;
-    cursor: pointer;
-} */
 
 .btn_search {
   position: absolute;

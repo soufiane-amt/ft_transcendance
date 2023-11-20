@@ -138,7 +138,6 @@ export class DashboardController {
     try {
       const payload: any = this.authservice.extractPayload(JwtToken);
       const usersId: any[] = await this.user.findFriendsList(payload.userId);
-      // console.log("users ID : ", usersId);
       const users: any[] = [];
 
       await Promise.all(
@@ -149,7 +148,6 @@ export class DashboardController {
       );
       return response.status(200).send(users);
     } catch (error) {
-      // Handle any errors that occur during the process
       console.error('Error:', error);
       return response.status(500).send({ error: 'Internal Server Error' });
     }

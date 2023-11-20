@@ -56,28 +56,8 @@ function AddUser() {
       })
       .then((data) => setuserFriend(data))
       .catch((error) => {
-        // console.error("Error:", error);
       });
   }, [JwtToken]);
-
-  // useEffect(() => {
-  //     fetch('http://localhost:3001/api/Dashboard/allUsers/filter', {
-  //         method: 'Get',
-  //         headers: {
-  //           'Authorization' : `Bearer ${JwtToken}`,
-  //           'Content-Type': 'application/json',
-  //         }
-  //       })
-  //         .then((response) => {
-  //             if (!response.ok)
-  //                 throw new Error('Network response was not ok');
-  //             return response.json();
-  //         })
-  //         .then((data) => setnewuserFriend(data))
-  //         .catch((error) => {
-  //             console.error('Error:', error);
-  //         });
-  // }, [JwtToken]);
 
   useEffect(() => {
     if (searchQuery === "") setupdateFriend(userFriend);

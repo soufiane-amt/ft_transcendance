@@ -57,10 +57,6 @@ const Home = () => {
     try {
       if (!ProfilePicture) setError("Select an image");
       else {
-        // console.log("FormData entries:");
-        // for (const [key, value] of Data.entries()) {
-        //   console.log(key, value);
-        // }
         const response = await axios.post(
           `${process.env.NEXT_PUBLIC_BACKEND_SERV}/auth/updatecredentials`,
           Data,

@@ -109,13 +109,12 @@ svg.svg-inline--fa.fa-shield-halved {
 
 .mybody {
   font-family: "Open Sans", sans-serif;
-  overflow: hidden;
+  overflow: visible;
 }
-
 aside {
   position: absolute;
   width: 19%;
-  border-top: 1px solid rgba(255, 255, 255, 0.3);
+  /* border-top: 1px solid rgba(255, 255, 255, 0.3); */
   height: calc(100% - 91px);
   background-color: #24234f;
   height: fit-content;
@@ -215,6 +214,7 @@ aside {
   height: calc(100% - 91px);
   background-color: #24234f;
   overflow: visible;
+  top: 91px;
 }
 .head{
   height: 10%;
@@ -467,7 +467,7 @@ aside {
   margin-top: 43px;
   margin-right: 10px;
   width: 70%;
-  height: 35vh;
+  height: 27vh;
   padding-top: 18px;
   overflow-y: auto;
   min-height: fit-content;

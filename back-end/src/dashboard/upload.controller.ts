@@ -57,7 +57,6 @@ export class UploadController
             );
             if (authorizationHeader && !check)
             {
-              console.log('Photo profile');
                 const tokenParts = authorizationHeader.split(' ');
                 const JwtToken: string = tokenParts[1];
             

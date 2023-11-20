@@ -65,7 +65,6 @@ export class WebSocketGatewayClass
       const payload: any = this.authservice.extractPayload(JwtToken);
       if (payload) {
         const clientRoom = `room_${payload.userId}`;
-        // console.log('clientRoom : ', clientRoom);
         client.join(clientRoom);
         this.clients.set(client.id, clientRoom);
         const gameInvRoom: string = `gameInv-${payload.userId}`;
@@ -106,9 +105,7 @@ export class WebSocketGatewayClass
           });
           if (counter === 1) {
             await this.user.changeVisibily(user_Id, 'OFFLINE');
-            //       this.server.to(targetClientRoom).emit('offline', payload.userId);
             const usersId: any[] = await this.user.findFriendsList(user_Id);
-            // console.log("users ID : ", usersId);
             const users: any[] = [];
 
             await Promise.all(
@@ -161,9 +158,7 @@ export class WebSocketGatewayClass
 
     const payload: any = this.authservice.extractPayload(JwtToken);
     if (notificationData.response === 'accept') {
-      // console.log('user_id', payload.userId);
       try {
-        // console.log('My Id : ' + payload.userId + ' notificationData : ' + notificationData.user_id);
         const check = await this.service.prismaClient.friendships.findMany({
           where: {
             OR: [
@@ -221,15 +216,12 @@ export class WebSocketGatewayClass
       const JwtToken: string = tokenParts[1];
       const payload: any = this.authservice.extractPayload(JwtToken);
       const usersId: any[] = await this.user.findFriendsList(payload.userId);
-      // console.log('users : ', users);
       if (usersId) {
         usersId.map(async (userId) => {
           if (notificationData.status === 'INGAME') {
             const targetClientRoom = `room_${userId}`;
-            //     // console.log('target : ', targetClientRoom);
             await this.user.changeVisibily(payload.userId, 'IN_GAME');
             const usersId: any[] = await this.user.findFriendsList(userId);
-            // console.log("users ID : ", usersId);
             const users: any[] = [];
 
             await Promise.all(
@@ -249,12 +241,8 @@ export class WebSocketGatewayClass
           });
           if (notificationData.status != 'INGAME') {
             const targetClientRoom = `room_${userId}`;
-            //     // console.log('target : ', targetClientRoom);
             await this.user.changeVisibily(payload.userId, 'ONLINE');
-            //       // const user = await this.user.findUserByID(userId);
-            //       // console.log('users : ', user);
             const usersId: any[] = await this.user.findFriendsList(userId);
-            // console.log("users ID : ", usersId);
             const users: any[] = [];
 
             await Promise.all(

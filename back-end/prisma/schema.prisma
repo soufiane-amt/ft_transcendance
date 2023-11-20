@@ -89,10 +89,10 @@ enum RelationStatus {
 model Friendships {
   id      String @id @default(uuid())
   user1    User   @relation("invited", fields: [user1_id], references: [id])
-  user1_id String 
+  user1_id String
 
   user2    User   @relation("invitor", fields: [user2_id], references: [id])
-  user2_id String 
+  user2_id String
 
   createdAt  DateTime @default(now())
   relationStatus RelationStatus  @default(FRIENDS)

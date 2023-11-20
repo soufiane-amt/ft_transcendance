@@ -64,7 +64,6 @@ function Statictic() {
         // console.error("Error fetching data:", error);
       });
   }, [JwtToken]);
-  console.log('statistic : ', statistic);
   data = statistic.map((statistic: GameStatistics) => {
     const result = statistic.result.split("-");
     const date = statistic.createdAt.split("-");

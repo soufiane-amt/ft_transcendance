@@ -143,7 +143,7 @@ function Section() {
             const code = GetCountryCode(country);
             if (code) setcountryCode(code);
           } catch (error) {
-            // console.error("An error occurred:", error);
+            console.clear();
           }
         },
         (error) => {
