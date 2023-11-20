@@ -24,7 +24,6 @@ function MessagesHistory({ messages }: { messages: messageDto[] }) {
     <div className={style.messages_history}>
       {messages &&
         messages.map((messageElement: messageDto) => {
-          console.log("Message_id: ", messageElement);
           return (
             <Message key={messageElement.id} messageData={messageElement} />
           );

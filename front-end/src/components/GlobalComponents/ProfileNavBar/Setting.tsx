@@ -1,5 +1,4 @@
 "use client";
-
 import SettingCss from "./Setting.module.css";
 import React, { useEffect, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -54,7 +53,7 @@ const Setting: React.FC<Settingprops> = ({ handleSettingData }) => {
           setImage(data.avatar);
         })
         .catch((error) => {
-          // console.error("Error:", error);
+          console.clear();
         });
     }
   }, [JwtToken]);

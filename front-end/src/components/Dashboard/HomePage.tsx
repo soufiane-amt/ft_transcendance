@@ -48,7 +48,7 @@ function HomePage() {
       })
       .then((data) => setuserFriend(data))
       .catch((error) => {
-        // console.error("Error:", error);
+        console.clear();
       });
   }, [JwtToken, userFriend]);
 
@@ -71,7 +71,7 @@ function HomePage() {
           setuserFriend(friends);
         }
       } catch (error) {
-        // console.error("Error handling friend event:", error);
+        console.clear();
       }
     });
   }, [JwtToken, updateFriend]);

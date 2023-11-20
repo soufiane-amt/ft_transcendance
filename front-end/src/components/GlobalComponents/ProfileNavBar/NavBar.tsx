@@ -1,3 +1,4 @@
+"use client";
 import { faClock, faUserPlus } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useState, useEffect } from "react";
@@ -10,7 +11,6 @@ import CustomToast from "@/components/Dashboard/CustomToast";
 import { useRouter } from "next/navigation";
 import newSocket from "../Socket/socket";
 import socket from "../../../app/socket/socket";
-import { userAgentFromString } from "next/server";
 
 function NavBar() {
   const [isVisible, setIsVisible] = useState(false);
@@ -235,7 +235,7 @@ function NavBar() {
         }
       }
     });
-  }, []); // check
+  }, []);
 
   useEffect(() => {
     if (searchQuery !== "") {
@@ -250,7 +250,6 @@ function NavBar() {
       <div className={NavBarCSS.nav}>
         <div className={NavBarCSS.nav_search}>
           <div className={NavBarCSS.logo}>
-            {/* onclick dahboard */}
             <img
               src="../myWhiteLogo.png"
               alt="Photo"

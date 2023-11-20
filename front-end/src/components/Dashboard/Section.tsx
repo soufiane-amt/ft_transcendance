@@ -116,7 +116,7 @@ function Section() {
         }
       })
       .catch((error) => {
-        // console.error("Error:", error);
+        console.clear();
       });
   }, [gameInformation, JwtToken]);
 

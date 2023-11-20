@@ -20,8 +20,6 @@ const SectionDashboard: React.FC<SectionProps> = ({ selectSelection }) => {
         return <Friends />;
       case "history":
         return <History />;
-      // case 'add-user':
-      //   return <AddUser />
     }
   };
   return (

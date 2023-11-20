@@ -708,7 +708,12 @@ aside {
   margin-top: 3px;
 }
 
-.score-friend.handle {
+#score-handle {
+  margin-left: 49px;
+}
+
+#friend-win
+{
   margin-left: 84px;
 }
 
@@ -1738,10 +1743,14 @@ svg.svg-inline--fa.fa-user-plus {
     margin-right: 0;
   }
   #crown-score {
-    margin-left: 81px;
+    /* margin-left: 81px; */
     margin-bottom: 6px;
     width: 30px;
     height: 30px;
+  }
+  
+  #friend-win{
+    margin-left: 71px;
   }
   #crown-score-friend {
     margin-top: 1px;

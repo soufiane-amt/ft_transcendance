@@ -1,3 +1,4 @@
+"use client";
 import React, { useState } from "react";
 import Section from "./Section";
 import SectionDashboard from "./SectionDashboard";
@@ -14,12 +15,6 @@ function DisplayComponent() {
     setmyindex(section);
   };
   const JwtToken = Cookies.get("access_token");
-  useEffect(() => {
-    const statusData = {
-      token: `Bearer ${JwtToken}`,
-    };
-    newSocket.emit("status", statusData);
-  }, [JwtToken]);
   return (
     <>
       <Aside onSelectSection={handleSelectSection}></Aside>

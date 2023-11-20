@@ -61,7 +61,7 @@ function Statictic() {
         setstatistic(data);
       })
       .catch((error) => {
-        // console.error("Error fetching data:", error);
+        console.clear();
       });
   }, [JwtToken]);
   data = statistic.map((statistic: GameStatistics) => {

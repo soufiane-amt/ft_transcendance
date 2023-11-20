@@ -46,7 +46,6 @@ function ActionButton({ targetId, buttonData }: ActionButtonProps) {
     switch (buttonData.title) {
       case "Play":
         // To merge with game
-        console.log("test");
         const payload: any = {
           inviteeId: targetId,
         };

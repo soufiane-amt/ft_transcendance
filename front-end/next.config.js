@@ -19,16 +19,38 @@ module.exports = {
   },
 
   images: {
-    domains: ["localhost", "cdn.intra.42.fr"], // Add any other domains as needed
+    remotePatterns: [
+      {
+        protocol: 'http',
+        port: '3001',
+        hostname: process.env.NEXT_PUBLIC_DOMAIN,
+        pathname: '**',
+      },
+      {
+        protocol: 'https',
+        port: '443',
+        hostname: process.env.INTRA_DOMAIN,
+        pathname: '**',
+      }
+    ],
   },
 };
 
 const nextConfig = {
   images: {
-    domains: [
-      process.env.NEXT_PUBLIC_BACKEND_SERV,
-      "cdn.intra.42.fr",
-      process.env.NEXT_PUBLIC_DOMAIN,
+    remotePatterns: [
+      {
+        protocol: 'http',
+        port: '3001',
+        hostname: process.env.NEXT_PUBLIC_DOMAIN,
+        pathname: '**',
+      },
+      {
+        protocol: 'https',
+        port: '443',
+        hostname: process.env.INTRA_DOMAIN,
+        pathname: '**',
+      }
     ],
   },
 };

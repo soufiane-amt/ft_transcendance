@@ -24,7 +24,7 @@ function History() {
       })
       .then((data) => setFriendHistory(data))
       .catch((error) => {
-        // console.error("Error:", error);
+        console.clear();
       });
   }, [JwtToken]);
   return (
@@ -59,7 +59,7 @@ function History() {
                 </div>
               )}
               {score_1 < score_2 && (
-                <div className="score-friend handle">
+                <div className="score-friend" id="friend-win">
                   <p>Score</p>
                   <p>
                     <span>{score_1}</span>VS<span>{score_2}</span>
@@ -67,7 +67,7 @@ function History() {
                 </div>
               )}
               {score_1 == score_2 && (
-                <div className="score-friend handle">
+                <div className="score-friend" id="score-handle">
                   <p>Score</p>
                   <p>
                     <span>{score_1}</span>VS<span>{score_2}</span>
