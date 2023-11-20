@@ -1,0 +1,106 @@
+
+/**The pannel main class*/
+.discussion_panel {
+    display:flex;
+    flex-direction: row;
+    align-items: center;
+    gap:10px;
+    width: 96%;
+    height: 80px;
+    padding-inline: 2%;
+    overflow: hidden;
+
+    position: relative;
+    border-bottom: 1px solid white;
+    cursor: pointer;
+}
+
+
+.discussion_panel_default_colors {
+    background-color: var(--discussion_panel_back_color);
+    color: var(--discussion_panel_element_color);
+}
+
+.discussion_panel_selection_colors {
+    transition: all 0.2s ease-in-out;
+    background-color: var(--discussion_panel_selection_color);
+    color: var(--discussion_panel_element_selection_color);
+}
+
+/**The button that displays play/bock styling*/
+.discussion_panel button {
+    font-size: 20px;
+    font-weight: bolder;
+    border: 0;
+    background-color: transparent;
+    color:#000000;
+    cursor: pointer;
+
+}
+
+
+/*setting the size of central part of the panel*/
+.panel_central_part {
+    width: 60%;
+    overflow: hidden;
+
+}
+
+
+/* selectors to ensure handling the overflow when width changes
+, Also to ensure that the overflowed lastMessage will end in ellipsis */
+.panel_central_part .panel_last_message {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.panel_last_message__unread_state{
+    font-weight: bolder;
+}
+
+.panel_last_part{
+    position: absolute;
+    right: 1%;
+
+    overflow: hidden;
+
+    display: flex;
+    flex-direction: column;
+    align-items:flex-end;
+}
+
+.panel_message_notifier{
+    background-color: red;
+    border-radius: 50%;
+    
+    font-weight: bold;
+    padding: 3px 8px ;
+
+}
+
+
+ @media (max-width:600px) 
+{
+    .panel_last_message {
+        display: none;
+    }
+    .panel_last_part :not(button):not(.panel_message_notifier) {
+        display: none;
+      }
+      .panel_last_part button{
+        margin-bottom: 20px;
+      }
+}
+/*
+@media (max-width:478px) 
+{
+    .discussion_panel {
+        min-width: 245px;
+    }
+      /* .panel_central_part :not(button) {
+        display: none;
+      } */
+
+
+/* } */

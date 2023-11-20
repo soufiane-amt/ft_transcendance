@@ -1,0 +1,48 @@
+.channel_main {
+  width: calc(100vw - 60px);
+  height: calc(100vh - 91px);
+
+  display: flex;
+  position: relative;
+}
+
+.discussions_bar_swither {
+  position: absolute;
+  z-index: 1;
+  left: 30%;
+
+  align-self: center;
+  width: 20px;
+  height: 50px;
+  background-color: rgba(255, 255, 255, 0.242);
+  cursor: pointer;
+  font-size: larger;
+  font-weight: bolder;
+  font-family: "Cooper Black", serif;
+  border: 0;
+  color: white;
+  border-bottom-right-radius: 7px;
+  border-top-right-radius: 7px;
+}
+
+.discussions_bar_swither:hover {
+  background-color: rgb(15, 15, 81);
+}
+
+.discussions_bar_swither_close {
+  left: 0%;
+}
+
+@media (max-width: 650px) {
+  .discussions_bar_swither {
+    left: 95%;
+  }
+  .discussions_bar_swither {
+    width: 15px;
+    height: 40px;
+    font-size: medium;
+  }
+  .discussions_bar_swither_close {
+    left: 0%;
+  }
+}

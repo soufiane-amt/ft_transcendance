@@ -1,0 +1,56 @@
+.confirmation_dialog{
+    display: flex;
+    flex-direction: column;
+    width: 300px;
+    background-color: rgba(108, 173, 251, 0.95) ;
+    border-radius: 5px;
+    padding: 10px;
+    border: 1px solid black;
+    position: absolute;
+}
+
+.confirmation_dialog h3{
+    border-bottom: 1px solid red;
+    font-size:medium;
+
+}
+.confirmation_buttons {
+    display: grid;
+    grid-template-columns: 1fr 1fr; /* Split the available space into two equal columns */
+    gap: 20px; /* Add some gap between the elements */
+    margin: 15px;
+}
+
+.confirmation_buttons button {
+    font-weight: bold;
+    font-size: medium;
+    border: none;
+    border-radius: 6px;
+    padding: 8px;
+    cursor: pointer;
+}
+.confirmation_buttons button:first-child {
+    color: aliceblue;
+    background-color: red;
+}
+.confirmation_dialog h3{
+    margin-block: 5px;
+}
+
+
+@media (max-width:650px) 
+{
+    .confirmation_dialog{
+        width: 150px;
+        position: absolute;
+        right: 50px;
+    }
+    .confirmation_dialog h3{
+        font-size:small;
+    
+    }
+    .confirmation_buttons button {
+        font-size: small;
+
+    }
+}

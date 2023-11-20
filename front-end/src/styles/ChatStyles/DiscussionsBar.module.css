@@ -1,0 +1,43 @@
+.discussion_panel_bar {
+  width: 30%;
+  height: 100%;
+  overflow-y: auto;
+  background: linear-gradient(180deg, rgb(70, 63, 163) 0%, rgb(14, 9, 87) 100%);
+
+  /* background-color: var(--discussion_panel_back_color); */
+  border-right: solid 6px black;
+  z-index: 2;
+}
+
+.discussion_panel_bar::-webkit-scrollbar {
+  width: 15px;
+}
+
+/* Track */
+.discussion_panel_bar::-webkit-scrollbar-track {
+  background: #b1b7ec;
+}
+
+/* Handle */
+.discussion_panel_bar::-webkit-scrollbar-thumb {
+  background: #0b1869;
+  border-radius: 30px;
+}
+
+/* Handle on hover */
+.discussion_panel_bar::-webkit-scrollbar-thumb:hover {
+  background: #030136;
+}
+
+.discussion_panel_bar_close {
+  width: 0%;
+}
+
+@media (max-width: 650px) {
+  .discussion_panel_bar {
+    width: 95%;
+  }
+  .discussion_panel_bar_close {
+    width: 0%;
+  }
+}

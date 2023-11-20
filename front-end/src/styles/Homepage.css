@@ -1,0 +1,43 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.myclass {
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+}
+
+.myclass::-webkit-scrollbar {
+  display: none;
+}
+
+.myclass {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.myclass {
+  width: 100vw;
+  height: 100vh;
+  overflow-x: hidden;
+  overflow-y: hidden;
+}
+
+/*  this code is made by abdellah in homepage part */
+.popup {
+  animation: showPopup 0.5s ease-in-out forwards;
+}
+
+@keyframes showPopup {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+.card-shadow {
+  box-shadow: 1px 1px 15px #000000;
+}

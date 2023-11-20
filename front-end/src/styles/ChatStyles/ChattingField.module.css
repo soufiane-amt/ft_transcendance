@@ -1,0 +1,54 @@
+  .chat_field {
+    display: flex; /*The next 3 lines added after a serious problem with making messageBox sticky at the bottom*/
+    flex-direction:column;
+    justify-content: space-between;
+
+    width: 70%; 
+    height: 100%;
+    overflow: auto;
+    background-color: var(--chat_field_back_color);
+  }
+
+  .chat_field_close {
+    width: 100%; 
+  }
+
+  .chat_field::-webkit-scrollbar {
+    width: 10px;
+  }
+  
+  /* Track */
+  .chat_field::-webkit-scrollbar-track {
+    background: #ecb1b1;
+  }
+  
+  /* Handle */
+  .chat_field::-webkit-scrollbar-thumb {
+    background: #8495f3;
+  }
+  
+  /* Handle on hover */
+  .chat_field::-webkit-scrollbar-thumb:hover {
+    background: #555;
+  }
+  
+  .messages_history {
+    position: relative;
+    top: 10%;
+    margin-bottom: 50px;
+  }
+  
+
+  @media (max-width:650px) 
+  {
+    .chat_field {
+      width: 5%; 
+      display: none;
+    }
+    
+  .chat_field_close {
+    width: 100%; 
+    display: flex;
+  }
+
+  }

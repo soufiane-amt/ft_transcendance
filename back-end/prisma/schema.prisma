@@ -1,0 +1,213 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+
+enum Status {
+  IN_GAME
+  ONLINE
+  OFFLINE
+}
+
+model User {
+  id          String @id @default(uuid())
+  username       String @unique
+  firstname   String
+  lastname   String
+  email       String @unique
+  avatar      String
+  background String
+  firstauth   Boolean @default(false)
+  twoFactorAuthenticationSecret String
+  isTwoFactorAuthenticationEnabled Boolean @default(false)
+
+  status  Status @default(ONLINE)
+
+  stats   Stats?
+  invited Friendships[] @relation("invited")
+  invitor Friendships[] @relation("invitor")
+
+  initiator DirectMessaging[] @relation("initiator")
+  receiver DirectMessaging[] @relation("receiver")
+  blocker DirectMessaging[] @relation("blocker")
+
+  channels ChannelMembership[]
+  messages Message[]
+
+  notifyer Notification[] @relation("notifyer")
+  notifyed Notification[] @relation("notifyed")
+
+  Player1Games Game[] @relation("Player1")
+  Player2Games Game[] @relation("Player2")
+
+}
+
+enum GameStatus {
+  PENDING
+  IN_PROGRESS
+  FINISHED
+}
+
+model Game {
+  game_id String @id @default(uuid())
+
+  player1_id String
+  player1 User @relation("Player1", fields: [player1_id], references: [id])
+
+  player2_id String
+  player2 User @relation("Player2", fields: [player2_id], references: [id])
+
+  player1_score Int @default(0)
+  player2_score Int @default(0)
+  status GameStatus @default(PENDING)
+  created_At DateTime @default(now())
+
+}
+
+
+model Stats {
+  id      String @id @default(uuid())
+  user    User   @relation(fields: [user_id], references: [id])
+  user_id String @unique
+
+  wins         Int @default(0)
+  losses       Int @default(0)
+  ladder_level Int @default(0)
+}
+
+
+enum RelationStatus {
+  FRIENDS
+  BLOCK
+}
+
+model Friendships {
+  id      String @id @default(uuid())
+  user1    User   @relation("invited", fields: [user1_id], references: [id])
+  user1_id String
+
+  user2    User   @relation("invitor", fields: [user2_id], references: [id])
+  user2_id String
+
+  createdAt  DateTime @default(now())
+  relationStatus RelationStatus  @default(FRIENDS)
+}
+
+
+enum Role {
+  OWNER
+  ADMIN
+  USER
+}
+
+model ChannelMembership {
+  id String @id @default(uuid())
+
+  channel    Channel @relation(fields: [channel_id], references: [id])
+  channel_id String  
+
+  user    User   @relation(fields: [user_id], references: [id])
+  user_id String 
+
+  role      Role
+  joined_at DateTime @default(now())
+
+  last_visit DateTime @default(now())
+  
+  is_banned Boolean? @default(false)
+  ban_expires_at     DateTime?
+
+  is_muted Boolean? @default(false)
+  mute_expires_at   DateTime?
+
+  createdAt DateTime? @default(now())
+  @@unique([channel_id, user_id])
+}
+
+
+model Message {
+  id String @id @default(uuid())
+
+  user    User   @relation(fields: [user_id], references: [id])
+  user_id String 
+
+  channel    Channel?  @relation(fields: [channel_id], references: [id])
+  channel_id String?   
+
+  dm         DirectMessaging?  @relation(fields: [dm_id], references: [id])
+  dm_id      String?   
+
+  content    String
+  createdAt DateTime? @default(now())
+  is_read    Boolean ? @default(false)
+}
+
+enum Channel_type {
+  PUBLIC
+  PRIVATE
+  PROTECTED
+}
+
+model Channel {
+  id String @id @default(uuid()) 
+
+  type         Channel_type
+  name         String
+  image        String 
+  memeberShips ChannelMembership[]
+  messages     Message[]
+  password     String?
+  createdAt DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+}
+
+enum DmStatus {
+  ALLOWED
+  BANNED
+}
+
+model DirectMessaging {
+  id String @id @default(uuid())
+
+  
+  user1     User   @relation("initiator", fields: [user1_id], references: [id])
+  user1_id  String
+
+  user2     User   @relation("receiver", fields: [user2_id], references: [id])
+  user2_id  String
+
+  messages  Message[]
+
+  status     DmStatus @default(ALLOWED)
+
+  blocker     User?   @relation("blocker", fields: [blocker_id], references: [id])
+  blocker_id  String? 
+
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+}
+
+
+enum NotificationType {
+  ACCEPTED_INVITATION
+  FRIENDSHIP_REQUEST
+}
+
+model Notification {
+  id String @id @default(uuid())
+
+  user1     User   @relation("notifyer", fields: [user1_id], references: [id])
+  user1_id  String 
+
+  user2     User   @relation("notifyed", fields: [user2_id], references: [id])
+  user2_id  String
+
+  //I still don't know how the source notification will be like
+  type       NotificationType
+  createdAt DateTime         @default(now())
+}

@@ -1,0 +1,62 @@
+.discussion_empty_mode{
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background: rgb(102,94,245);
+    background: linear-gradient(180deg, rgba(102,94,245,1) 0%, rgba(213,174,250,1) 45%, rgba(0,212,255,1) 100%);
+  }
+  
+  .discussion_empty_mode__label{
+    font-size: 20px;
+    font-weight: bolder;
+    color: rgb(254, 10, 10);
+    margin-top: 100px;
+  }
+
+  .discussion_empty_mode_nav_buttons{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    margin-top: 50px;
+  }
+
+  .discussion_empty_mode__button{
+    width: 150px;
+    height: 50px;
+    border-radius: 20px;
+    border: 0;
+    font-size: 17px;
+    font-weight: bolder;
+    color: white;
+    cursor: pointer;
+    background: rgb(189, 32, 237);
+    box-shadow: 10px 10px 15px -3px rgba(0, 0, 0, 0.5);
+    font-family: Georgia, 'Times New Roman', Times, serif;
+    
+  }
+  
+.discussion_empty_mode__button:hover{
+    background: rgb(52, 5, 66);
+  }
+
+
+  @media (max-width:650px) 
+  {
+    .discussion_empty_mode img{
+      width: 50%;
+    }
+    .discussion_empty_mode__label{
+      font-size: 12px;
+    }
+    .discussion_empty_mode__button{
+      width: 100px;
+      height: 40px;
+      font-size: 10px;
+    }  
+    .discussion_empty_mode__text{
+      font-size: 10px;
+    }
+
+}

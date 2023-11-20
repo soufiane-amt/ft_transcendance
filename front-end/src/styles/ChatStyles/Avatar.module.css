@@ -1,0 +1,42 @@
+.avatar__style {
+  display: inline-block;
+  position: relative;
+}
+
+
+.avatar__dimentions {
+  height: var(--avatar_size);
+  width: var(--avatar_size);
+}
+
+.image__full_circle {
+    border-radius: 50%;
+    border: 3px solid rgb(80, 17, 17);
+  }
+  
+/*This class is needed only if we need to reverse the row order of the message */
+.image__switch_order {
+    order: 2;
+  }
+  
+  .channelTypeIndicator{
+    position: absolute;
+    bottom: 0;
+    right: 0;
+  }
+  @media (max-width:650px) 
+{
+  .avatar__dimentions {
+    height: 50px;
+    width: 50px;
+  }
+}
+
+@media (max-width :450px) 
+{
+  .avatar__dimentions {
+    height: 30px;
+    width: 30px;
+  }
+
+}

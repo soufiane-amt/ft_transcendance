@@ -1,0 +1,39 @@
+.welcome_to_chat{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-shadow: 2px 2px 18px #000000;
+
+}
+
+.welcome_section{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-bottom: 1px solid rgb(209, 189, 228);
+    color: white;
+}
+
+.welcome_section img{
+    width: 70px;
+    height: 70px;
+    border-radius: 50%;
+}
+
+.welcome_section_instrucation{
+    letter-spacing: 5px;
+    font-size: small;
+    font-weight: bolder;
+    color: antiquewhite;
+}
+
+@media (max-width:650px) 
+{
+    .welcome_section{
+        font-size: small   ;
+    }
+
+    .welcome_section_instrucation{
+        font-size: x-small;
+    }
+}
