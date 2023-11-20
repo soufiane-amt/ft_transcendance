@@ -9,10 +9,6 @@
   z-index: 2;
 }
 
-/* ////////// */
-/* .discussion_panel_bar::-webkit-scrollbar {
-    width: 0; /* Adjust the width as needed */
-/* }  */
 .discussion_panel_bar::-webkit-scrollbar {
   width: 15px;
 }
@@ -32,7 +28,6 @@
 .discussion_panel_bar::-webkit-scrollbar-thumb:hover {
   background: #030136;
 }
-/* /////////////////: */
 
 .discussion_panel_bar_close {
   width: 0%;

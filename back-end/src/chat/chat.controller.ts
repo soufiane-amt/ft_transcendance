@@ -201,7 +201,7 @@ export class ChatController {
     });
     return mutedRoomsData;
   }
-  // @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard)
   @Get('/userData')
   async getUserData(@Req() request: Request) {
     const currentUserId = this.currentUserId(request);
@@ -265,7 +265,6 @@ export class ChatController {
   ///////////////////////////////////////////////////////////
   //-                                  -//
   ///////////////////////////////////////////////////////////
-
   @UseGuards(JwtAuthGuard)
   @Get('/channels_users_inits')
   async findUserAndChannelToJoin(@Req() request: Request) {

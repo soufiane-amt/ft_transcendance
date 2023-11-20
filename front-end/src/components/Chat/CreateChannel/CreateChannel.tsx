@@ -31,7 +31,7 @@ export function CreateChannel() {
   };
   const [condidateUsers, setUserCondidates] = useState<Map<string, string>>(
     new Map<string, string>()
-  ); // [username, avatar
+  );
   useEffect(() => {
     async function fetchDataAsync() {
       const messagesHistory_tmp = await fetchDataFromApi(

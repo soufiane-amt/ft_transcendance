@@ -50,12 +50,19 @@ export function ChattingField({
 
   useEffect(() => {
     async function fetchDataAsync() {
-      const messagesHistory_tmp = await fetchDataFromApi(
-        `${process.env.NEXT_PUBLIC_BACKEND_SERV}/chat/${selectedDiscussion.id}/messages`
-      );
-      setMessageHistory(messagesHistory_tmp);
+      var  messagesHistory_tmp;
+      if (selectedDiscussion.id)
+      {
+        messagesHistory_tmp = await fetchDataFromApi(
+          `${process.env.NEXT_PUBLIC_BACKEND_SERV}/chat/${selectedDiscussion.id}/messages`
+        );
+        setMessageHistory(messagesHistory_tmp);
+      }
+      else 
+        setMessageHistory([])
+
     }
-    if (selectedDiscussion != selectedPanelDefault && selectedDiscussion.id)
+    if (selectedDiscussion != selectedPanelDefault)
       fetchDataAsync();
   }, [selectedDiscussion]);
 

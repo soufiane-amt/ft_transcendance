@@ -63,9 +63,7 @@ export function UserContactsProvider({
         username: user.username,
         avatar: user.avatar,
       });
-      // setTimeout(() => {
       setUserContactsBook(updatedUserContactsBook);
-      // }, 0)
     };
     const handleUpdateContactsChannelCreate = (users: any) => {
       const map = new Map(userContactsBook);

@@ -65,11 +65,7 @@ export function ChannelBooksProvider({
       });
       // Set the state to the updated Map
       setChannelBooksBook(updatedChannelBooksBook);
-      // socket.emit("resumeChannelUpdates", joinSignal.id);
-      // setTimeout( () => {
       socket.emit("resumeChannelUpdates", joinSignal.id);
-      // }, 1000);
-      // socket.emit("joinSignal", joinSignal.id);
     };
     socket.on("joinChannel", handleJoinChannel);
     return () => {

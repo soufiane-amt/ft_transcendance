@@ -14,7 +14,6 @@ interface TypeSetterProps{
     selectedOption : string | undefined ,
     setSelectedOption : React.Dispatch<React.SetStateAction<string | undefined>>;
   }
-  // setNewPassword : React.Dispatch<React.SetStateAction<string>>;
   passwordState : {
     password : string,
     setNewPassword : React.Dispatch<React.SetStateAction<string>>;

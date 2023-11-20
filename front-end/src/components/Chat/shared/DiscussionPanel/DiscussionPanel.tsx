@@ -18,7 +18,6 @@ const findDiscussions = (
   discussionData : ChannelBookDto | undefined,
   sessionUserData: UserContactDto,
 ) => {
-  // useFindUserContacts(partner_id)
   if (currentRoute === "Direct_messaging") {
       if (partner_id !== undefined) {
         const discussion_data = userContacts;

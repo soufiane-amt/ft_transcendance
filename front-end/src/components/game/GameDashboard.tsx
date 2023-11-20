@@ -24,8 +24,8 @@ function GameDashboard() {
   const [gameData, setgameData] = useState<LeavingGameData | null>(null);
 
   useEffect(() => {
-    gameContext.gameSocket.on('leaving_game_data', (payload: any) => {
-      const gameState: GameState  = {
+    gameContext.gameSocket.on("leaving_game_data", (payload: any) => {
+      const gameState: GameState = {
         player1_avatar: payload.player1_avatar,
         player2_avatar: payload.player2_avatar,
         player1_username: payload.player1_username,
@@ -33,17 +33,17 @@ function GameDashboard() {
         player1_score: payload.player1_score,
         player2_score: payload.player2_score,
         round: payload.round,
-      }
+      };
       setGameState(gameState);
       const gameData: LeavingGameData = {
         mapType: payload.mapType,
         side: payload.side,
         leftplayerPos: payload.leftplayerPos,
         rightplayerPos: payload.rightplayerPos,
-      }
+      };
       setgameData(gameData);
       setIsGameStarted(true);
-    })
+    });
   }, []);
 
   useEffect(() => {
@@ -61,6 +61,7 @@ function GameDashboard() {
         status: "INGAME",
         token: `bearer ${JwtToken}`,
       };
+      console.log("ingame");
       newSocket.emit("status", payload);
     } else if (isGameFinished === true) {
       const payload: any = {
@@ -96,7 +97,7 @@ function GameDashboard() {
         setgameData(null);
         setGameState(null);
       }
-    })
+    });
   }, []);
 
   useEffect(() => {
@@ -117,8 +118,25 @@ function GameDashboard() {
   return (
     <div className="content-height flex flex-col flex-no-wrap justify-around bg-[#0D0149]">
       {!isGameStarted && !isGameFinished && <GameWaiting />}
-      {isGameStarted && <ScoreBoardComponent gameState={gameState} Round={Round} UserScore={UserScore} ComputerScore={ComputerScore}></ScoreBoardComponent>}
-      {isGameStarted && <GameSceneComponent gameData={gameData} setIsGameStarted={setIsGameStarted} setIsGameFinished={setIsGameFinished} setresult={setresult} setRound={setRound} setUserScore={setUserScore} setComputerScore={setComputerScore} ></GameSceneComponent>}
+      {isGameStarted && (
+        <ScoreBoardComponent
+          gameState={gameState}
+          Round={Round}
+          UserScore={UserScore}
+          ComputerScore={ComputerScore}
+        ></ScoreBoardComponent>
+      )}
+      {isGameStarted && (
+        <GameSceneComponent
+          gameData={gameData}
+          setIsGameStarted={setIsGameStarted}
+          setIsGameFinished={setIsGameFinished}
+          setresult={setresult}
+          setRound={setRound}
+          setUserScore={setUserScore}
+          setComputerScore={setComputerScore}
+        ></GameSceneComponent>
+      )}
       {isGameFinished && <GameResult result={result} />}
     </div>
   );

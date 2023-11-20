@@ -13,7 +13,6 @@
     width: 100%; 
   }
 
-  /* ////////// */
   .chat_field::-webkit-scrollbar {
     width: 10px;
   }
@@ -32,7 +31,6 @@
   .chat_field::-webkit-scrollbar-thumb:hover {
     background: #555;
   }
-  /* /////////////////: */
   
   .messages_history {
     position: relative;

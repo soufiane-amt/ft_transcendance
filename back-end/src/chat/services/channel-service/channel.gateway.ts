@@ -66,12 +66,6 @@ export class channelGateway implements OnGatewayConnection {
     );
   }
 
-  // private (client:Socket) {
-  //   const headers = client.handshake.headers;
-  //   const parsedCookies = cookie.parse(headers.cookie || "");
-  //   return parsedCookies["user.id"];
-  // }
-
   private async hashPassword(password: string): Promise<string> {
     try {
       // Generate a salt (a random string) to make the hash unique
@@ -270,15 +264,8 @@ export class channelGateway implements OnGatewayConnection {
   @UseGuards(userRoomSubscriptionGuard)
   @SubscribeMessage('resumeChannelUpdates') //A gard must be added to check if the user has the right to request to unmute him
   async handleResumeChannelUpdates(client: ClientSocket, channel_id: string) {
-    // const user_id = client.userId;
 
     client.join(`channel-${channel_id}`);
-    // const userPublicData =  await this.userCrud.findUserSessionDataByID(user_id);
-
-    // this.server.to(`channel-${channel_id}`).emit('updateUserContact', {id:userPublicData.id,
-    //   username: userPublicData.username,
-    //   avatar: userPublicData.avatar,
-    // })
 
     this.broadcastChannelChanges(channel_id);
   }

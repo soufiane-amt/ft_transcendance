@@ -94,10 +94,10 @@ export function DiscussionsBar({
   useHandleJoinDm(selectedDiscussion);
 
   useHandlePanel(
+    currentRoute, 
     discussionPanels,
     selectedDiscussionState,
-    setDiscussionRooms,
-    setDiscussionIsEmpty
+    setDiscussionRooms
   );
 
   const handlePanelClick = async (panelData: DiscussionDto) => {

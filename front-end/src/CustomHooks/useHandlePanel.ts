@@ -10,18 +10,19 @@ import { useSessionUser } from "../app/context/SessionUserContext";
 import { fetchDataFromApi } from "../components/Chat/CustomFetch/fetchDataFromApi";
 
 export function useHandlePanel(
+  currentRoute:string,
   discussionPanels: DiscussionDto[],
   selectedDiscussionState: {
     selectedDiscussion: discussionPanelSelectType;
     selectDiscussion: (e: discussionPanelSelectType) => void;
   },
-  setDiscussionRooms: React.Dispatch<React.SetStateAction<DiscussionDto[]>>,
-  setDiscussionIsEmpty: React.Dispatch<React.SetStateAction<boolean>>
+  setDiscussionRooms: React.Dispatch<React.SetStateAction<DiscussionDto[]>>
 ) {
   const { selectedDiscussion, selectDiscussion } = selectedDiscussionState;
   const currentUserId = useSessionUser().id;
   useEffect(() => {
     const handleNewMessage = async (newMessage: messageDto) => {
+      console.log ('newMessage: ', newMessage)
       const updatedRooms = [...discussionPanels];
       const messageRoomId = newMessage.dm_id
         ? newMessage.dm_id
@@ -62,7 +63,11 @@ export function useHandlePanel(
               ? partner_id
               : newMessage.user_id,
         };
-        setDiscussionRooms(() => [newDiscussionPanel, ...discussionPanels]);
+        
+        if (currentRoute === 'Channels' && newMessage.channel_id)
+          setDiscussionRooms(() => [newDiscussionPanel, ...discussionPanels]);
+        else if (currentRoute === 'Direct_messaging' && newMessage.dm_id)
+          setDiscussionRooms(() => [newDiscussionPanel, ...discussionPanels]);
       }
 
       //wait untill discussion panel is updated

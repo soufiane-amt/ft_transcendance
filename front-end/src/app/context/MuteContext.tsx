@@ -25,9 +25,6 @@ const MuteContext = createContext<IMuteContext | undefined>(undefined);
 // Custom hook for using the MuteContext
 export function useMuteContext(): IMuteContext | undefined {
   const context = useContext(MuteContext);
-  // if (!context) {
-  //   throw new Error('useMuteContext must be used within a MuteProvider');
-  // }
   return context;
 }
 

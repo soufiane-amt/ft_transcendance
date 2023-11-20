@@ -57,10 +57,6 @@ export function ChannelPasswordInput({
       setDisplayJoinFailure(true);
     }
 
-    // socket.emit('joinSignal', { channel_id: channelData.id, channelType: channelData.type, password: password });
-
-    //and redirect to channel
-    // window.location.href = `/chat/Channels/`;
   };
   return (
     <div className={style.dark_background}>
