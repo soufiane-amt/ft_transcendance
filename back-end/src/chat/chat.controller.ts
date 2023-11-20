@@ -45,7 +45,7 @@ export class ChatController {
     return payload.userId;
   }
 
-  // @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard)
   @Get('/image/:image_path')
   async getUserImage(
     @Param('image_path') image_path: string,
@@ -237,7 +237,7 @@ export class ChatController {
     return await this.userCrud.findFriendsUsernameAvatar(currentUserId);
   }
 
-  //  @UseGuards(JwtAuthGuard)
+   @UseGuards(JwtAuthGuard)
   @UseGuards(allowJoinGuard)
   @Post('/channelJoinRequest')
   async handleChannelJoinRequest(

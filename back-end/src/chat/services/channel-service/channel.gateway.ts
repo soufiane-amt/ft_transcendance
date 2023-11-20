@@ -382,7 +382,7 @@ export class channelGateway implements OnGatewayConnection {
       name: channelData.channelName,
       type: channelData.channelType,
       password: await this.hashPassword(channelData.password),
-      image: `${process.env.NEXT_PUBLIC_BACKEND_SERV}/chat/image/${channelData.imageSrc}`,
+      image: `${process.env.BACKEND_SERV}/chat/image/${channelData.imageSrc}`,
     };  
     // updateUserContact
     const channel = await this.chatCrud.createChannel(
