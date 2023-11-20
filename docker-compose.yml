@@ -10,8 +10,6 @@ services:
       - pingpong
     env_file:
       - .env
-    volumes:
-      - ./data-base/pg-data:/var/lib/postgresql/data
     restart: on-failure
   #============== backend ===============
   backend:
