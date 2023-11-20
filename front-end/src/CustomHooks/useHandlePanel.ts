@@ -22,7 +22,6 @@ export function useHandlePanel(
   const currentUserId = useSessionUser().id;
   useEffect(() => {
     const handleNewMessage = async (newMessage: messageDto) => {
-      console.log ('newMessage: ', newMessage)
       const updatedRooms = [...discussionPanels];
       const messageRoomId = newMessage.dm_id
         ? newMessage.dm_id

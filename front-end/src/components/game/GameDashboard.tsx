@@ -61,7 +61,6 @@ function GameDashboard() {
         status: "INGAME",
         token: `bearer ${JwtToken}`,
       };
-      console.log("ingame");
       newSocket.emit("status", payload);
     } else if (isGameFinished === true) {
       const payload: any = {
