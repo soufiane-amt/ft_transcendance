@@ -15,8 +15,6 @@ This is a website for playing multiplayer Pong games.
 2. Configure the environment variables in the `.env` file.
 3. Build and run the project using Docker Compose.
 
-For detailed installation instructions, please refer to the [Installation Guide](installation_guide.md).
-
 ## Usage
 
 1. Open the website in your web browser.
