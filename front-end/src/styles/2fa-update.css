@@ -2,27 +2,26 @@
 @tailwind components;
 @tailwind utilities;
 
-* {
+.myclass {
   box-sizing: border-box;
   padding: 0;
   margin: 0;
 }
 
-*::-webkit-scrollbar {
+.myclass::-webkit-scrollbar {
   display: none;
 }
 
-* {
+.myclass {
   -ms-overflow-style: none;
   scrollbar-width: none;
 }
 
-html,
-body {
+.myclass {
   width: 100vw;
   height: 100vh;
-  overflow-x: hidden;
-  overflow-y: hidden;
+  overflow-x: auto;
+  overflow-y: auto;
 }
 
 /*  this code is made by abdellah in homepage part */

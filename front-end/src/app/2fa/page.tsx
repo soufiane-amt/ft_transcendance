@@ -3,7 +3,7 @@ import { Space_Mono } from "next/font/google";
 import { useState } from "react";
 import { motion } from "framer-motion";
 import { useRouter } from "next/navigation";
-import "../../styles/Homepage.css";
+import "../../styles/2fa-update.css";
 import Lottie from "react-lottie-player";
 import codeAnimation from "../../../public/CodeAnimation.json";
 import axios from "axios";

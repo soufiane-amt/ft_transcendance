@@ -6,7 +6,7 @@ import Cookies from "js-cookie";
 import { motion } from "framer-motion";
 import { useRouter } from "next/navigation";
 import withAuth from "@/components/GlobalComponents/HigherOrderComponent";
-import "../../styles/Homepage.css";
+import "../../styles/2fa-update.css";
 
 const mono = Space_Mono({
   preload: false,
