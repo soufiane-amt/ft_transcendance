@@ -22,6 +22,9 @@ This is a website for playing multiplayer Pong games.
 3. Explore user account management, chat, and the Pong game.
 4. Enjoy playing Pong with other users in real-time.
 
+## Environment Variables
+For the sake of running the project, a .env file has been pushed to this repository. However, please note that this is just an example and .env files should not typically be pushed to public repositories for security reasons.
+
 ## Technologies
 
 - Backend: NestJS
