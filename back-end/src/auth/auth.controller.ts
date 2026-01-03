@@ -10,14 +10,16 @@ import {
   UploadedFile,
   UseGuards,
   UseInterceptors,
+  Body,
 } from '@nestjs/common';
-import FortytwoOauthGuard from './guards/Fortytwo-Oauth.guard';
 import { AuthService } from './auth.service';
 import { Response } from 'express';
 import { JwtAuthGuard } from './guards/jwt-aut.guard';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
+import { LoginDto } from './dto/login.dto';
+import { RegisterDto } from './dto/register.dto';
 
 @Controller('auth')
 export class AuthController {
@@ -28,12 +30,12 @@ export class AuthController {
   //===================================================================================
 
   @Get('login')
-  @UseGuards(FortytwoOauthGuard)
+  // @UseGuards(FortytwoOauthGuard)
   async HandleLogin() {}
   //===================================================================================
 
   @Get('redirect')
-  @UseGuards(FortytwoOauthGuard)
+  // @UseGuards(FortytwoOauthGuard)
   async HandleRedirect(@Req() request, @Res() response: Response) {
     const token = await this.authservice.signIn(request.user);
     const user = await this.service.prismaClient.user.findUnique({
@@ -55,7 +57,10 @@ export class AuthController {
         },
       });
       return response.redirect(`${process.env.FRONT_SERV}/updatecredentials`);
-    } else if (user.isTwoFactorAuthenticationEnabled === true && request.cookies['access_token'] === undefined) {
+    } else if (
+      user.isTwoFactorAuthenticationEnabled === true &&
+      request.cookies['access_token'] === undefined
+    ) {
       const TwoFaToken = await this.authservice.TwoFaToken(user.email);
       response.cookie('twofa_token', TwoFaToken, {
         maxAge: 86400000,
@@ -70,6 +75,36 @@ export class AuthController {
       return response.redirect(`${process.env.FRONT_SERV}/dashboard`);
     }
   }
+
+  // Local register
+  @Post('register')
+  async registerLocal(@Body() body: RegisterDto, @Res() response: Response) {
+    try {
+      const token = await this.authservice.registerLocal(body);
+      return response.json({ access_token: token });
+    } catch (error) {
+      return response
+        .status(error.status || 500)
+        .json({ message: error.message });
+    }
+  }
+
+  // Local login
+  @Post('login/local')
+  async loginLocal(@Body() body: LoginDto, @Res() response: Response) {
+    try {
+      const token = await this.authservice.validateLocal(
+        body.email,
+        body.password,
+      );
+      return response.json({ access_token: token });
+    } catch (error) {
+      return response
+        .status(error.status || 401)
+        .json({ message: error.message });
+    }
+  }
+
   //============================================================================
   @Post('updatecredentials')
   @UseGuards(JwtAuthGuard)
@@ -129,7 +164,7 @@ export class AuthController {
       }
       response.json({ message: 'Credentials updated successfully' });
     } catch (error) {
-      (response).status(error.status).json({ message: error.message });
+      response.status(error.status).json({ message: error.message });
     }
   }
 

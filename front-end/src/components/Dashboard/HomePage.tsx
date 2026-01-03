@@ -50,7 +50,7 @@ function HomePage() {
       .catch((error) => {
         console.clear();
       });
-  }, [JwtToken, userFriend]);
+  }, [JwtToken]);
 
   useEffect(() => {
     newSocket.on("online", (userObj) => {

@@ -177,10 +177,6 @@ export function CreateChannel() {
                 : UploadChannelIcon.src
             }
             alt="Selected"
-            style={{
-              maxWidth: "100%",
-              maxHeight: "300px",
-            }}
           />
         }
 
@@ -192,7 +188,7 @@ export function CreateChannel() {
           value={channelName}
           type="text"
           onChange={handleChannelNameChange}
-          placeholder="Type in the channel name ..."
+          placeholder="Channel name ..."
           maxLength={MaxChannelNameLength}
         />
         {channelName && channelName.length < MinChannelNameLength && (
@@ -231,9 +227,7 @@ export function CreateChannel() {
       )}
 
       <div className={style.create_channel__button}>
-        <button onClick={handleInviteUsersModal}>
-          Add Members And Create Channel
-        </button>
+        <button onClick={handleInviteUsersModal}>Let's chat !</button>
       </div>
       {displayChannelInvitor && (
         <ChannelInvitor

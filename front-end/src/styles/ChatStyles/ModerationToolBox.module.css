@@ -14,8 +14,6 @@
 .moderation_tool_box h2 {
   width: 9em ;
   font-weight: bolder;
-  margin-left: 25px;
-  font-family:cursive;
   /* letter-spacing: 1px; */
   border-bottom: 1px solid rgb(188, 185, 185);
 }

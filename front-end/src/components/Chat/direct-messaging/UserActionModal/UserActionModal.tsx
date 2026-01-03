@@ -40,8 +40,16 @@ enum actionTypes {
   UNBAN = "UNBAN",
 }
 
-type ActionButtonProps = { targetId: string; buttonData: buttonType };
-function ActionButton({ targetId, buttonData }: ActionButtonProps) {
+type ActionButtonProps = {
+  handleVisibility: (parm: boolean) => void;
+  targetId: string;
+  buttonData: buttonType;
+};
+function ActionButton({
+  handleVisibility,
+  targetId,
+  buttonData,
+}: ActionButtonProps) {
   const handleButtonClick = () => {
     switch (buttonData.title) {
       case "Play":
@@ -50,7 +58,7 @@ function ActionButton({ targetId, buttonData }: ActionButtonProps) {
           inviteeId: targetId,
         };
         newSocket.emit("invite_to_game_through_chat", payload);
-
+        handleVisibility(false);
         break;
 
       case "Ban":
@@ -76,7 +84,7 @@ function ActionButton({ targetId, buttonData }: ActionButtonProps) {
       onClick={handleButtonClick}
     >
       <img src={buttonData.icon} alt="" />
-      {buttonData.title}
+      <p>{buttonData.title}</p>
     </button>
   );
 }
@@ -119,9 +127,16 @@ function UserActionModal({
         <h1>{userContact.username}</h1>
       </div>
       <div className={style.interaction_buttons}>
-        {<ActionButton targetId={targetedUserId} buttonData={playButton} />}
+        {
+          <ActionButton
+            handleVisibility={handleVisibility}
+            targetId={targetedUserId}
+            buttonData={playButton}
+          />
+        }
         {(!userIsBanned || userIsBanned.blocker_id === userSession.id) && (
           <ActionButton
+            handleVisibility={handleVisibility}
             targetId={targetedUserId}
             buttonData={
               userIsBanned != null && userIsBanned.blocker_id === userSession.id

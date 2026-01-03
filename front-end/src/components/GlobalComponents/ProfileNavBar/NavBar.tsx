@@ -101,7 +101,7 @@ function NavBar() {
     return () => {
       socket.off("newMessage", handleNewMessageNotif);
     };
-  }, [user, JwtToken]);
+  }, [JwtToken]);
 
   const handlesearchuser = (e: any) => {
     const value = e.target.value;
@@ -170,7 +170,7 @@ function NavBar() {
       .catch(() => {
         console.clear();
       });
-  }, [JwtToken, userFriend]);
+  }, [JwtToken]);
 
   useEffect(() => {
     fetch(

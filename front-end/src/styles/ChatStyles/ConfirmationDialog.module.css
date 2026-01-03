@@ -4,15 +4,14 @@
     width: 300px;
     background-color: rgba(108, 173, 251, 0.95) ;
     border-radius: 5px;
-    padding: 10px;
     border: 1px solid black;
     position: absolute;
+    padding-top: 5px;
 }
 
 .confirmation_dialog h3{
     border-bottom: 1px solid red;
-    font-size:medium;
-
+    font-size:small;
 }
 .confirmation_buttons {
     display: grid;
@@ -23,7 +22,7 @@
 
 .confirmation_buttons button {
     font-weight: bold;
-    font-size: medium;
+    font-size: small;
     border: none;
     border-radius: 6px;
     padding: 8px;
@@ -46,11 +45,11 @@
         right: 50px;
     }
     .confirmation_dialog h3{
-        font-size:small;
+        font-size:smaller;
     
     }
     .confirmation_buttons button {
-        font-size: small;
+        font-size: smaller;
 
     }
 }

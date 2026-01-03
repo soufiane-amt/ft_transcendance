@@ -17,11 +17,13 @@
 
 
 .discussion_panel_default_colors {
+    font-size: small;
     background-color: var(--discussion_panel_back_color);
     color: var(--discussion_panel_element_color);
 }
 
 .discussion_panel_selection_colors {
+    font-size: small;
     transition: all 0.2s ease-in-out;
     background-color: var(--discussion_panel_selection_color);
     color: var(--discussion_panel_element_selection_color);
@@ -29,7 +31,7 @@
 
 /**The button that displays play/bock styling*/
 .discussion_panel button {
-    font-size: 20px;
+    font-size: medium;
     font-weight: bolder;
     border: 0;
     background-color: transparent;

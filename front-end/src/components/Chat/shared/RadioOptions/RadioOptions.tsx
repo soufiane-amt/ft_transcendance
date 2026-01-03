@@ -39,7 +39,7 @@ export function RadioOptions({
   return (
     <div ref={ref} data-inside-modal>
       <div className={style.radio_modal} data-inside-modal>
-        <h3>how long do you want to {selectType} this user :</h3>
+        <h4>How long do you want to {selectType} this user :</h4>
         <label data-inside-modal className={style.radio_option}>
           <input
             type="radio"

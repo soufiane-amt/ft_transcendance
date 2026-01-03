@@ -2,9 +2,11 @@ import {
   BadRequestException,
   Injectable,
   InternalServerErrorException,
+  UnauthorizedException,
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { PrismaService } from 'src/prisma/prisma.service';
+import * as bcrypt from 'bcryptjs';
 
 @Injectable()
 export class AuthService {
@@ -13,7 +15,7 @@ export class AuthService {
     private readonly jwtservice: JwtService,
   ) {}
 
-  // signin function
+  // signin function (keeps compatibility with oauth flow)
   async signIn(user) {
     if (!user) throw new BadRequestException('Unauthenticated');
 
@@ -23,21 +25,78 @@ export class AuthService {
     return this.signToken(userExists.id, userExists.email);
   }
 
-  // function to register user
+  // function to register user (used for oauth fallback)
   async registerUser(user) {
     try {
       const newUser = await this.service.prismaClient.user.create({
-        data: { ...user, firstauth: true, background: '' , twoFactorAuthenticationSecret: ''},
+        data: {
+          ...user,
+          firstauth: true,
+          background: '',
+          twoFactorAuthenticationSecret: '',
+        },
       });
 
       await this.service.prismaClient.stats.create({
-        data: {user_id: newUser.id, wins: 0, losses: 0, ladder_level: 0}
-      })
+        data: { user_id: newUser.id, wins: 0, losses: 0, ladder_level: 0 },
+      });
       return this.signToken(newUser.id, newUser.email);
     } catch (error) {
       console.log('\nerror\n', error);
       throw new InternalServerErrorException();
     }
+  }
+
+  // new: register local user with password
+  async registerLocal(dto: {
+    username: string;
+    firstname: string;
+    lastname: string;
+    email: string;
+    password: string;
+    avatar?: string;
+  }) {
+    const { email, password, username, firstname, lastname, avatar } = dto;
+    const existing = await this.findUserByEmail(email);
+    if (existing) throw new BadRequestException('User already exists');
+
+    const hashed = await bcrypt.hash(password, 10);
+    try {
+      const newUser = await this.service.prismaClient.user.create({
+        data: {
+          username,
+          firstname,
+          lastname,
+          email,
+          avatar: avatar ?? '',
+          password: hashed,
+          firstauth: false,
+          background: '',
+          twoFactorAuthenticationSecret: '',
+        },
+      });
+
+      await this.service.prismaClient.stats.create({
+        data: { user_id: newUser.id, wins: 0, losses: 0, ladder_level: 0 },
+      });
+
+      return this.signToken(newUser.id, newUser.email);
+    } catch (error) {
+      console.log(error);
+      throw new InternalServerErrorException();
+    }
+  }
+
+  // new: validate local credentials
+  async validateLocal(email: string, password: string) {
+    const user = await this.findUserByEmail(email);
+    if (!user || !user.password)
+      throw new UnauthorizedException('Invalid credentials');
+
+    const match = await bcrypt.compare(password, user.password);
+    if (!match) throw new UnauthorizedException('Invalid credentials');
+
+    return this.signToken(user.id, user.email);
   }
 
   // function to find user by email on database
@@ -65,12 +124,11 @@ export class AuthService {
     }
   }
 
-
   async TwoFaToken(email: string) {
     const payload = {
       email: email,
     };
-    
+
     try {
       const token = await this.jwtservice.signAsync(payload);
       return token;

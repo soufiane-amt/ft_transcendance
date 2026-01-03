@@ -184,7 +184,7 @@ const Aside: React.FC<AsideProps> = ({ onSelectSection }) => {
             )}
           </div>
           <hr id="aside-line"></hr>
-          <div className="myaside">
+          <div className="myaside ">
             <div className="myaside1 aside">
               <h3>Chat</h3>
               <img
@@ -203,7 +203,7 @@ const Aside: React.FC<AsideProps> = ({ onSelectSection }) => {
                 }}
               >
                 <img src="../space.png" alt="Photo" width={22} height={22} />
-                <button>Chat Space</button>
+                <button>Chat </button>
               </div>
             )}
           </div>

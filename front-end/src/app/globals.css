@@ -4,8 +4,8 @@
   --black_circle_char: "\25CF";
 
   /*Chat messages*/
-  --avatar_size: 70px;
-  --message_header_body_spacing: 30px;
+  --avatar_size: 60px;
+  --message_header_body_spacing: 10px;
 
   /*Chat chatting box*/
   --chat_text_box_back_color: #cbcae5;
@@ -19,7 +19,7 @@
 
 
   /*sent message bubble color*/
-  --message_sent_bubble_color:#432ea5;
+  --message_sent_bubble_color:#5f5e92;
   /*received message bubble color*/
   --message_received_bubble_color:rgb(197, 197, 212);
 

@@ -41,6 +41,7 @@
     height: 50px;
     display: flex;
     align-items: center;
+    margin-right: 10px;
 
 }
 .channel_join__message button{

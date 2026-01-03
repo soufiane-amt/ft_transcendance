@@ -1,12 +1,13 @@
 .message {
   display: flex;
+  align-items: start;
+  padding-bottom: 5px;
   flex-direction: row;
   width: 50%;
   gap: var(--message_header_body_spacing);
   word-break: break-all;
   margin-bottom: 40px;
 }
-
 
 /*********-Message body section-****************/
 
@@ -15,15 +16,14 @@
   flex-direction: column;
 }
 
-
 /*This class styles the main element of message container*/
 .message_bubble {
   display: inline-block; /*Making the parent container resizes based on the size of its content*/
-  padding: 10px 50px;
-  
+  padding: 8px 40px;
+  font-size: 15px;
   border-radius: 20px;
 
-  margin-top: calc(var(--avatar_size) / 2);
+  margin-top: 10px;
   position: relative;
 }
 
@@ -41,12 +41,9 @@
   transform: rotate(352deg);
 }
 
-
 .message_bubble___sent_style {
   background-color: var(--message_sent_bubble_color);
   color: white;
-  background: linear-gradient(0deg, #432ea5 45%, #7763d0  100%);
-
 }
 
 /* |received message styling| */
@@ -65,12 +62,11 @@
 .message_bubble___received_style {
   background-color: var(--message_received_bubble_color);
   color: rgb(0, 0, 0);
-  background: linear-gradient(0deg,var(--message_received_bubble_color) 45%, rgb(221, 221, 230)  100%);
 }
 
 /*|UserName|*/
 .message_username__style {
-  font-size: large;
+  font-size: medium;
   color: red;
   letter-spacing: 1px;
 }
@@ -86,30 +82,20 @@
   text-align: right;
 }
 
-
-
-@media (max-width:650px) 
-{
+@media (max-width: 650px) {
   .message_bubble {
-    font-size: 12px;
-      padding: 13px 40px;
-      width: 70%;
-      margin-top: calc(var(--avatar_size) / 1.5);
-
+    font-size: 10px;
+    padding: 13px 30px;
   }
   .message_username__style {
     font-size: small;
   }
 }
 
-@media (max-width:450px) 
-{
+@media (max-width: 450px) {
   .message_bubble {
     font-size: 9px;
-      padding: 13px 23px;
-      width: 70%;
-      margin-top: calc(var(--avatar_size) / 1.5);
-
+    padding: 13px 23px;
   }
   .message_username__style {
     font-size: small;

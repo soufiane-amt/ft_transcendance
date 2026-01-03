@@ -29,6 +29,7 @@ function AddUser() {
   const [clickedUsers, setClickedUsers] = useState<string[]>([]);
   const JwtToken = Cookies.get("access_token");
 
+  console.log("JwtToken in AddUser:", JwtToken);
   function handleclickButtom(user_id: string, username: string) {
     if (user_id && newSocket) {
       const notificationData = {
@@ -44,6 +45,8 @@ function AddUser() {
     }
   }
   useEffect(() => {
+      console.log("JwtToken in effect:", JwtToken);
+
     fetch(`${process.env.NEXT_PUBLIC_BACKEND_SERV}/api/Dashboard/allUsers`, {
       method: "Get",
       headers: {

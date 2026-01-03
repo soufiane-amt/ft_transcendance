@@ -20,10 +20,10 @@
     flex-grow: 1;
 }
 
-.user_info  h3{
+.user_info  h4{
     padding-left: 10px;
 }
-.user_info  h5{
+.user_info  h6{
     color: rgb(111, 109, 107);
     padding-left: 10px;
 
@@ -31,12 +31,11 @@
 
 .action_buttons button:hover {
     cursor: pointer;
-    border: 0.5px solid rgb(255, 0, 0);
 }
 
 
 .action_buttons button img {
-    width: 25px;
+    width: 15px;
     margin-inline: 7px;
     padding-block: 10px;
 }
@@ -67,7 +66,7 @@
     .user_info  h3{
         font-size: medium;
     }    
-    .user_info  h5{
+    .user_info  h6{
         font-size:smaller;
     }
 }

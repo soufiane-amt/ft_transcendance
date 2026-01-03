@@ -53,7 +53,7 @@ export function ConfirmationDialog({onConfirm, onCancel, selectType }: Confirmat
     return (
       <div ref={ref} data-inside-modal>
           <div className={style.confirmation_dialog} data-inside-modal>
-            <h3> {getAppropriateMessage(selectType)}</h3>
+            <h4> {getAppropriateMessage(selectType)}</h4>
             <div className={style.confirmation_buttons}>
               <button data-inside-modal onClick={handleConfirmClick}>Confirm</button>
               <button data-inside-modal onClick={handleCancelClick}>Cancel</button>

@@ -5,7 +5,7 @@
   justify-content: space-between;
   height: 91px;
   position: sticky;
-  z-index: 3;
+  z-index: 0;
 }
 
 .nav_search {

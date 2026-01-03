@@ -75,10 +75,7 @@ export default function MediumView() {
             style={{ width: 400, height: 275 }}
           />
         </motion.div>
-        <Link
-          href={`${process.env.NEXT_PUBLIC_BACKEND_SERV}/auth/login`}
-          className="no-underline"
-        >
+        <Link href={`/auth/login`} className="no-underline">
           <HomePageIntraLoginButton />
         </Link>
       </section>

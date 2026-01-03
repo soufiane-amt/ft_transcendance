@@ -1,10 +1,10 @@
 .modal{
   background-color: #ffffff;
-  height: 850px;
+  height: 650px;
   width: 500px;
   padding-inline: 10px;
   position: relative;
-
+  z-index: 4;
 }
 .tabs{
   display: flex;
@@ -18,9 +18,10 @@
   padding: 14px;
   border-bottom: 2px solid black;
 
-  font-size: large;
+  font-size: medium;
+  font-weight: bold;
   /* font-weight: bold; */
-  font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+  /* font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif; */
 }
 
 .tab_active{
@@ -28,9 +29,6 @@
   border-left: 2px solid black;
   border-right: 2px solid black;
   border-top: 2px solid black;
-  border-top-right-radius: 5px;
-  border-top-left-radius: 5px;
-  background-color: rgb(183, 183, 200);
 }
 
 .lol {

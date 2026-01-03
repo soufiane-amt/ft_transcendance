@@ -92,7 +92,7 @@ function Section() {
           // console.error("add user:", error);
         });
     }
-  }, [user, JwtToken]);
+  }, [JwtToken]);
 
   useEffect(() => {
     fetch(`${process.env.NEXT_PUBLIC_BACKEND_SERV}/api/Dashboard/game`, {
@@ -118,7 +118,7 @@ function Section() {
       .catch((error) => {
         console.clear();
       });
-  }, [gameInformation, JwtToken]);
+  }, [JwtToken]);
 
   useEffect(() => {
     if ("geolocation" in navigator) {
@@ -183,7 +183,7 @@ function Section() {
       .catch((error) => {
         // console.error("Error:", error);
       });
-  }, [gameInformation, rank]);
+  }, [gameInformation]);
   if (gameInformation?.wins || gameInformation?.losses)
     total = gameInformation?.wins + gameInformation?.losses;
 

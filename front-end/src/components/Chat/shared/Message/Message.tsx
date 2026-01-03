@@ -1,4 +1,4 @@
-'use client'
+"use client";
 
 import clsx from "clsx";
 import style from "../../../../styles/ChatStyles/Message.module.css";
@@ -38,21 +38,21 @@ function Message({ messageData }: MessageProps) {
   const messagePositionStyle = sentMessage ? `${style.message__to_right}` : "";
   return (
     <>
-    {currentUser &&
-    <div className={`${style.message} ${messagePositionStyle}`}>
-      <Avatar src={currentUser.avatar} avatarToRight={sentMessage} />
-        <div className={style.message_body}>
-          <span className={style.message_username__style}>
-            {currentUser.username}
-          </span>
-          <MessageBubble
-            messageContent={messageData.content}
-            isMessageSent={sentMessage}
-          />
-          <TimeStamp time={messageData.createdAt} />
+      {currentUser && (
+        <div className={`${style.message} ${messagePositionStyle}`}>
+          <Avatar src={currentUser.avatar} avatarToRight={sentMessage} />
+          <div className={style.message_body}>
+            <span className={style.message_username__style}>
+              {currentUser.username}
+            </span>
+            <MessageBubble
+              messageContent={messageData.content}
+              isMessageSent={sentMessage}
+            />
+            <TimeStamp time={messageData.createdAt} />
+          </div>
         </div>
-      </div>
-    }
+      )}
     </>
   );
 }

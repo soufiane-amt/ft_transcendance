@@ -61,7 +61,7 @@ export function ModerationToolBox({
     <>
       {channelData && (
         <div className={style.moderation_tool_box}>
-          <h2>Channel Members</h2>
+          <h3>Channel Members</h3>
           <div className={style.user_moderation_part}>
             <div className={style.users_cards}>
               {sortedChannelUsers?.map((user, index) => {

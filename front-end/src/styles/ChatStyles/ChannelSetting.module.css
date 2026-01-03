@@ -1,106 +1,122 @@
-.channel_setting{
-    display: flex;
-    flex-direction:column;
-    align-items: center;
+.channel_setting {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 
-    border-radius: 40px;
-    text-align: center;
-
+  border-radius: 40px;
+  text-align: center;
 }
 
 .channel_setting__img {
-    border-radius: 50%;
-    height: 150px;
-    width: 150px;
-    margin-top: 80px;
-    margin-bottom: 5px;
-    border: 3px solid black;
-
+  border-radius: 50%;
+  height: 100px;
+  width: 100px;
+  margin-top: 80px;
+  margin-bottom: 5px;
+  border: 3px solid black;
 }
 
-.channel_setting button{
-    /* position: absolute; */
-    bottom: 10px ;
-
-    width: 200px;
-    height: 80px;
-    transition: all 0.3s ease-in-out;
-    background-color: #5C5B8B;
-    border: 0;
-    border-radius: 50px;
-    font-weight: bold;
-    cursor: pointer;
+.channel_setting button {
+  width: 200px;
+  height: 50px;
+  font-size: medium;
+  color: white;
+  transition: all 0.3s ease-in-out;
+  background-color: #5c5b8b;
+  border: 0;
+  border-radius: 50px;
+  font-weight: bold;
+  cursor: pointer;
+  margin-top: 30px;
 }
 
-.channel_setting button:hover{
-    background-color: #3e44a0;
+.channel_setting button:hover {
+  background-color: #3e44a0;
+}
+
+.type_setter {
+  width: 100%;
+}
+
+.type_setter label {
+  font-size: medium;
+  font-weight: bold;
 }
 
 .type_setter div {
-    margin-block: 50px;
+  margin-block: 10px;
 }
 
 .type_setter select {
-    position: absolute;
-    left: 5%;
-    appearance: none;
-    background-image: url('/chatIcons/icons/Ch/select_arrow.png');
-    background-repeat: no-repeat;
-    background-position: right 10px center;
-    background-size: 16px 16px; 
-    
-    outline: none;
-    text-align: center;
-    cursor: pointer;
-    height: 45px;
-    width: 83%;
+  outline: none;
+  text-align: center;
+  cursor: pointer;
+  height: 45px;
+  width: 80%;
+  color: #e4e7ff;
+  background-color: #8280bd;
+  font-size: medium;
+  margin-bottom: 20px;
 }
 
+.type_setter input {
+  outline: none;
+  text-align: center;
+  color: #e4e7ff;
+  height: 45px;
+  width: 80%;
+  background-color: #3e3d7d;
+  font-size: medium;
+}
 
-.user_input_fields{
-    margin: 0 auto;
-    display: block; /* Ensures the margin:auto works correctly */
+.type_setter select::after {
+  content: "▼";
+  position: absolute;
+  right: 25px;
+  pointer-events: none;
+  background-color: black;
+}
 
-    padding-inline: 20px;
-    width: 400px;
-    background-color: #4c46ec;
-    border: 0;
+.user_input_fields {
+  margin: 0 auto;
+  display: block; /* Ensures the margin:auto works correctly */
+
+  padding-inline: 20px;
+  /* width: 400px; */
+  background-color: #4c46ec;
+  border: 0;
+  height: 40px;
+  border-radius: 20px;
+  color: white;
+  font-size: large;
+}
+
+.password_warning_message {
+  color: red;
+  font-size: small;
+  margin-top: 10px;
+}
+
+@media (max-width: 650px) {
+  .channel_setting button {
+    width: 150px;
     height: 40px;
-    border-radius: 20px;
-    color: white;
-    font-size: large;
-}
-
-.password_warning_message
-{
-    color: red;
-    font-size: small;
-    margin-top: 10px;
-
-}
-
-@media (max-width:650px) 
-{
-    .channel_setting button{
-        width: 150px;
-        height: 40px;
-    }
-    .type_setter select {
-        height: 30px;
-        width: 79%;
-
-    }
-    .type_setter input {
-        height: 30px;
-    }
-    .channel_setting__img {
-        height: 105px;
-        width: 105px;
-        margin-top: 5px;
-    }
-    .user_input_fields{
-        width:250px;
-        height: 30px;
-        font-size: medium;
-    }
+  }
+  .type_setter select {
+    height: 30px;
+    width: 79%;
+  }
+  .type_setter input {
+    height: 30px;
+  }
+  .channel_setting__img {
+    height: 75px;
+    width: 75px;
+    margin-top: 5px;
+  }
+  .user_input_fields {
+    width: 250px;
+    height: 30px;
+    font-size: medium;
+  }
 }

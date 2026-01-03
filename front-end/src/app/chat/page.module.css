@@ -1,5 +1,5 @@
-.initial_arranging{
-    display: flex;
-    /* overflow: hidden; */
+.initial_arranging {
+  display: flex;
+  align-items: flex-start;
+  height: 100%;
 }
-

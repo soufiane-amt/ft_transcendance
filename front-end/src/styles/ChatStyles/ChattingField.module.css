@@ -7,6 +7,7 @@
     height: 100%;
     overflow: auto;
     background-color: var(--chat_field_back_color);
+    padding-inline: 20px;
   }
 
   .chat_field_close {
