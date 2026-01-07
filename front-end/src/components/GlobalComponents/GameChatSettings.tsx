@@ -65,7 +65,7 @@ function GameChatSettings({ ...props }) {
   };
 
   return (
-    <div className="fixed inset-0 flex items-center justify-center z-[40]">
+    <div className="fixed inset-0 flex items-center justify-center z-[4000]">
       {/* this is the backdrop (the background opacity) */}
       <div
         className="absolute bg-black w-full h-full opacity-50 z-[40]"

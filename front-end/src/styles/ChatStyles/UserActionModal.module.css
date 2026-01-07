@@ -1,101 +1,202 @@
-.user_action_main_modal {
-  /*This class  styles the parent of the modal component */
+/* Modal backdrop - Fixed position to cover entire viewport */
+.modal_backdrop {
   position: fixed;
   top: 0;
   left: 0;
-  height: 100vh;
+  right: 0;
+  bottom: 0;
   width: 100vw;
-  background-color: rgba(0, 0, 0, 0.4);
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(4px);
   display: flex;
+  align-items: center;
   justify-content: center;
-  align-items: center;
-  z-index: 10;
+  z-index: 9999;
+  animation: backdropIn 0.2s ease;
 }
 
-.user_action_modal {
+@keyframes backdropIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.modal_wrapper {
   display: flex;
-  flex-direction: column;
   align-items: center;
-  gap: 15%; /*30% is the space between user info and action buttons*/
-
-  width: 400px;
-  height: 500px;
-  padding-top: 4%;
-  font-size: medium;
-
-  border-radius: 10px;
-
-  background-color: white;
+  justify-content: center;
+  padding: 20px;
+  width: 100%;
+  max-width: 420px;
+  max-height: 90vh;
+  overflow-y: auto;
 }
 
+/* User action modal container */
+.user_action_modal {
+  width: 100%;
+  background: rgba(36, 35, 79, 0.98);
+  backdrop-filter: blur(16px);
+  border-radius: 20px;
+  border: 1px solid rgba(113, 167, 167, 0.15);
+  box-shadow: 
+    0 24px 48px rgba(0, 0, 0, 0.4),
+    0 0 0 1px rgba(255, 255, 255, 0.05) inset;
+  overflow: hidden;
+  animation: modalIn 0.25s ease;
+}
+
+@keyframes modalIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95) translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+/* Targeted user section */
 .action_targeted_user {
   display: flex;
   flex-direction: column;
   align-items: center;
-  font-family: Georgia, "Times New Roman", Times, serif;
+  padding: 32px 24px 24px;
+  text-align: center;
+  border-bottom: 1px solid rgba(113, 167, 167, 0.1);
 }
 
 .action_targeted_user img {
-  width: 150px;
-  height: 150px;
+  width: 88px;
+  height: 88px;
   border-radius: 50%;
-  border: solid 10px rgb(246, 228, 228);
-}
-.action_targeted_user img:hover {
+  object-fit: cover;
+  border: 3px solid rgba(113, 167, 167, 0.2);
   cursor: pointer;
-  border: solid 10px rgb(0, 0, 0);
+  transition: all 0.3s ease;
+  margin-bottom: 16px;
 }
+
+.action_targeted_user img:hover {
+  border-color: rgba(99, 102, 241, 0.5);
+  transform: scale(1.05);
+}
+
+.action_targeted_user h1 {
+  font-size: 20px;
+  font-weight: 700;
+  color: #ffffff;
+  margin: 0;
+}
+
+/* Interaction buttons */
 .interaction_buttons {
   display: flex;
-  width: 100%;
-  margin-top: 50px;
-  justify-content: space-evenly;
+  flex-direction: column;
+  gap: 10px;
+  padding: 20px 24px 24px;
 }
 
 .action_button {
   display: flex;
   align-items: center;
-
+  gap: 14px;
+  padding: 14px 16px;
   border: none;
-  border-radius: 15px;
-
-  color: white;
-  font-size: large;
-  font-weight: bold;
-
+  border-radius: 12px;
   cursor: pointer;
+  transition: all 0.2s ease;
+  text-align: left;
+}
 
-  padding: 10px 15px;
+.action_button:hover {
+  transform: translateX(4px);
+  filter: brightness(1.1);
+}
+
+.action_button:active {
+  transform: translateX(2px);
 }
 
 .action_button img {
-  width: 25px;
-  padding-right: 8px;
+  width: 24px;
+  height: 24px;
+  filter: brightness(0) invert(1);
 }
 
-@media (max-width: 869px) {
-  .action_button {
-    font-size: small;
+.action_button p {
+  font-size: 15px;
+  font-weight: 600;
+  color: #ffffff;
+  margin: 0;
+}
+
+/* Responsive - Mobile bottom sheet style */
+@media (max-width: 500px) {
+  .modal_wrapper {
+    padding: 0;
+    align-items: flex-end;
+    max-width: 100%;
   }
-  .action_button p {
-    display: none;
-  }
-  .action_button img {
-    width: 20px;
-    padding-right: 0px;
-  }
-  .action_button {
-    height: 25px;
-  }
+
   .user_action_modal {
-    height: 300px;
-    width: 250px;
+    width: 100%;
+    border-radius: 20px 20px 0 0;
+    animation: modalInMobile 0.3s ease;
   }
-  .user_action_modal h1 {
-    font-size: medium;
+
+  @keyframes modalInMobile {
+    from {
+      opacity: 0;
+      transform: translateY(100%);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
   }
+
+  .action_targeted_user {
+    padding: 28px 20px 20px;
+  }
+
   .action_targeted_user img {
-    width: 100px;
-    height: 100px;
+    width: 76px;
+    height: 76px;
+  }
+
+  .action_targeted_user h1 {
+    font-size: 18px;
+  }
+
+  .interaction_buttons {
+    padding: 16px 20px 28px;
+  }
+
+  .action_button {
+    padding: 12px 14px;
+  }
+
+  .action_button img {
+    width: 22px;
+    height: 22px;
+  }
+
+  .action_button p {
+    font-size: 14px;
+  }
+}
+
+/* Safe area for mobile devices with notches */
+@supports (padding-bottom: env(safe-area-inset-bottom)) {
+  @media (max-width: 500px) {
+    .interaction_buttons {
+      padding-bottom: calc(28px + env(safe-area-inset-bottom));
+    }
   }
 }

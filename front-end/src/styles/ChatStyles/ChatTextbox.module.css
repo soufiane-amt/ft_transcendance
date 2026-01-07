@@ -1,66 +1,445 @@
-.message_bar {
+.textbox_container {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  width: 100%;
+  position: relative;
+}
+
+/* Main input wrapper */
+.input_wrapper {
+  display: flex;
+  align-items: flex-end;
+  gap: 8px;
+  padding: 8px 12px;
+  background: rgba(60, 59, 108, 0.5);
+  border-radius: 16px;
+  border: 1px solid rgba(113, 167, 167, 0.15);
+  transition: all 0.2s ease;
+}
+
+.input_wrapper_focused {
+  background: rgba(60, 59, 108, 0.7);
+  border-color: rgba(99, 102, 241, 0.4);
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+}
+
+/* Input container */
+.input_container {
+  flex: 1;
   display: flex;
   align-items: center;
-  position: sticky;
-  bottom: 0;
-  width: 100%;
-  background-color: var(--chat_field_back_color);
-  z-index: 1;
+  min-height: 40px;
 }
 
-.message_input_bar {
-  /*Removing default style*/
+.text_input {
+  width: 100%;
+  background: transparent;
   border: none;
   outline: none;
+  color: #ffffff;
+  font-size: 14px;
+  line-height: 1.5;
   resize: none;
-  overflow: hidden;
-  align-content: center;
-  background-color: var(--chat_text_box_back_color);
-  font-size: 15px;
-  border-radius: 15px;
-
-  font-weight: bold;
-
-  width: 100%;
-  height: 45px;
-
-  padding: 15px 20px;
-  margin-bottom: 10px;
-  margin-inline: 20px;
+  padding: 8px 0;
+  max-height: 120px;
+  overflow-y: auto;
+  font-family: inherit;
 }
 
-.message_send_icon {
-  width: 38px;
-  height: 33px;
+.text_input::placeholder {
+  color: rgba(255, 255, 255, 0.4);
+}
+
+/* Custom scrollbar for textarea */
+.text_input::-webkit-scrollbar {
+  width: 4px;
+}
+
+.text_input::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.text_input::-webkit-scrollbar-thumb {
+  background: rgba(113, 167, 167, 0.3);
+  border-radius: 2px;
+}
+
+/* Action buttons */
+.action_button {
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  background: transparent;
+  border: none;
   cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+  flex-shrink: 0;
+}
+
+.action_button svg {
+  width: 20px;
+  height: 20px;
+  color: rgba(255, 255, 255, 0.5);
+  transition: color 0.2s ease;
+}
+
+.action_button:hover {
+  background: rgba(113, 167, 167, 0.15);
+}
+
+.action_button:hover svg {
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.action_button_active {
+  background: rgba(99, 102, 241, 0.2);
+}
+
+.action_button_active svg {
+  color: #8b5cf6;
+}
+
+/* Send button */
+.send_button {
+  width: 40px;
+  height: 40px;
+  border-radius: 12px;
+  background: rgba(60, 59, 108, 0.6);
+  border: none;
+  cursor: not-allowed;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+  flex-shrink: 0;
+  opacity: 0.5;
+}
+
+.send_button svg {
+  width: 18px;
+  height: 18px;
+  color: rgba(255, 255, 255, 0.5);
+  transition: all 0.2s ease;
+  transform: translateX(1px);
+}
+
+.send_button_active {
+  background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+  cursor: pointer;
+  opacity: 1;
+  box-shadow: 0 2px 10px rgba(99, 102, 241, 0.3);
+}
+
+.send_button_active svg {
+  color: #ffffff;
+}
+
+.send_button_active:hover {
+  transform: scale(1.05);
+  box-shadow: 0 4px 15px rgba(99, 102, 241, 0.4);
+}
+
+.send_button_active:active {
+  transform: scale(0.95);
+}
+
+/* Hint text */
+.hint_text {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.3);
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+.textbox_container:focus-within .hint_text {
+  opacity: 1;
+}
+
+.hint_text kbd {
+  padding: 2px 6px;
+  background: rgba(60, 59, 108, 0.5);
+  border-radius: 4px;
+  font-size: 10px;
+  font-family: inherit;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+/* Emoji picker */
+.emoji_picker {
   position: absolute;
-  right: 30px;
+  bottom: calc(100% + 8px);
+  right: 0;
+  background: rgba(36, 35, 79, 0.98);
+  backdrop-filter: blur(12px);
+  border-radius: 16px;
+  border: 1px solid rgba(113, 167, 167, 0.2);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+  padding: 12px;
+  min-width: 220px;
+  animation: pickerIn 0.2s ease;
+  z-index: 100;
 }
 
-.message_send_icon__init_fill {
-  transition: all 0.3s ease-in-out;
-  fill: var(--send_icon_default_color);
-}
-
-.message_send_icon__init_fill:hover {
-  fill: var(--send_icon_on_hover_color);
-}
-
-.banned_message {
-  color: red;
-  font-size: 20px;
-  font-weight: bold;
-  text-align: center;
-  margin: 0px 0px 10px 0px;
-}
-@media (max-width: 650px) {
-  .message_bar {
-    /* width: 27px;
-    height: 222px; */
+@keyframes pickerIn {
+  from {
+    opacity: 0;
+    transform: translateY(8px) scale(0.95);
   }
-  .message_input_bar {
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.emoji_header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 10px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid rgba(113, 167, 167, 0.1);
+}
+
+.emoji_header span {
+  font-size: 12px;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.emoji_close {
+  width: 24px;
+  height: 24px;
+  border-radius: 6px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.15s ease;
+}
+
+.emoji_close svg {
+  width: 14px;
+  height: 14px;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.emoji_close:hover {
+  background: rgba(239, 68, 68, 0.2);
+}
+
+.emoji_close:hover svg {
+  color: #ef4444;
+}
+
+.emoji_grid {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 4px;
+}
+
+.emoji_btn {
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  font-size: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.15s ease;
+}
+
+.emoji_btn:hover {
+  background: rgba(99, 102, 241, 0.2);
+  transform: scale(1.15);
+}
+
+.emoji_btn:active {
+  transform: scale(0.95);
+}
+
+/* Disabled state */
+.disabled_state {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 16px 20px;
+  background: rgba(239, 68, 68, 0.1);
+  border-radius: 14px;
+  border: 1px solid rgba(239, 68, 68, 0.2);
+}
+
+.disabled_icon {
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  background: rgba(239, 68, 68, 0.15);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.disabled_icon svg {
+  width: 22px;
+  height: 22px;
+  color: #ef4444;
+}
+
+.disabled_text {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.disabled_text span {
+  font-size: 14px;
+  font-weight: 600;
+  color: #ef4444;
+}
+
+.disabled_text p {
+  font-size: 12px;
+  color: rgba(239, 68, 68, 0.7);
+  margin: 0;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .input_wrapper {
+    padding: 6px 10px;
+    border-radius: 14px;
+    gap: 6px;
+  }
+
+  .input_container {
+    min-height: 36px;
+  }
+
+  .text_input {
+    font-size: 15px;
+    padding: 6px 0;
+  }
+
+  .action_button {
+    width: 32px;
+    height: 32px;
+  }
+
+  .action_button svg {
+    width: 18px;
+    height: 18px;
+  }
+
+  .send_button {
+    width: 36px;
+    height: 36px;
+  }
+
+  .send_button svg {
+    width: 16px;
+    height: 16px;
+  }
+
+  .hint_text {
+    display: none;
+  }
+
+  .emoji_picker {
+    right: -8px;
+    min-width: 200px;
+  }
+}
+
+@media (max-width: 500px) {
+  .input_wrapper {
+    padding: 6px 8px;
+    gap: 4px;
+  }
+
+  .action_button {
+    width: 30px;
     height: 30px;
-    font-size: 10px;
-    padding: 5px 30px 0px;
   }
+
+  .action_button svg {
+    width: 16px;
+    height: 16px;
+  }
+
+  .send_button {
+    width: 34px;
+    height: 34px;
+    border-radius: 10px;
+  }
+
+  .disabled_state {
+    padding: 12px 14px;
+    gap: 10px;
+  }
+
+  .disabled_icon {
+    width: 36px;
+    height: 36px;
+  }
+
+  .disabled_icon svg {
+    width: 18px;
+    height: 18px;
+  }
+
+  .disabled_text span {
+    font-size: 13px;
+  }
+
+  .disabled_text p {
+    font-size: 11px;
+  }
+}
+
+/* Typing animation (optional - for showing typing indicator) */
+@keyframes typingPulse {
+  0%, 100% {
+    opacity: 0.4;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+.typing_indicator {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 0;
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.typing_dot {
+  width: 6px;
+  height: 6px;
+  background: rgba(113, 167, 167, 0.6);
+  border-radius: 50%;
+  animation: typingPulse 1.4s infinite;
+}
+
+.typing_dot:nth-child(2) {
+  animation-delay: 0.2s;
+}
+
+.typing_dot:nth-child(3) {
+  animation-delay: 0.4s;
 }

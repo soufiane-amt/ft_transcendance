@@ -1,14 +1,10 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import style from "../../../../styles/ChatStyles/ChatTextbox.module.css";
-import { Send } from "../../svgs";
 import { useSessionUser } from "../../../../app/context/SessionUserContext";
-import {
-  discussionPanelSelectType,
-  selectDiscStateType,
-} from "../../interfaces/DiscussionPanel";
-import socket from "../../../../app/socket/socket"; // Import the socket object
+import { discussionPanelSelectType } from "../../interfaces/DiscussionPanel";
+import socket from "../../../../app/socket/socket";
 import { useBanContext } from "../../../../app/context/BanContext";
 import { useHandleNewMsg } from "../../../../CustomHooks/useHandleNewMsg";
 import {
@@ -39,28 +35,40 @@ function ChatTextBox({
   messagesHistoryState,
 }: ChatTextBoxProps) {
   const userSession = useSessionUser();
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
 
   const [newMessageContent, setNewMessageContent] = useState<string>("");
-  const [isChatTextBoxDisabled, disableChatTextBox] = useState<boolean>(); // State to track if the chatTextBox is allowed or not
+  const [isChatTextBoxDisabled, disableChatTextBox] = useState<boolean>(false);
+  const [isFocused, setIsFocused] = useState(false);
+  const [showEmojiPicker, setShowEmojiPicker] = useState(false);
+
   const BanContext = useBanContext();
   const MuteContext = useMuteContext();
 
   useHandleNewMsg(messagesHistoryState, selectedDiscussion);
   useHandleBan(BanContext, selectedDiscussion, disableChatTextBox);
   useHandleUnBan(BanContext, selectedDiscussion, disableChatTextBox);
-
-  //ELINT Change happened here
   useHandleMute(MuteContext, selectedDiscussion, disableChatTextBox);
   useHandleUnMute(MuteContext, selectedDiscussion, disableChatTextBox);
-
   useHandleChattingDisable(
     BanContext,
     MuteContext,
     selectedDiscussion,
     disableChatTextBox
   );
+
+  // Auto-resize textarea
+  useEffect(() => {
+    if (textareaRef.current) {
+      textareaRef.current.style.height = "auto";
+      const scrollHeight = textareaRef.current.scrollHeight;
+      textareaRef.current.style.height = `${Math.min(scrollHeight, 120)}px`;
+    }
+  }, [newMessageContent]);
+
   const handleSendMessage = () => {
-    if (isMessageValid(newMessageContent) === false) return;
+    if (!isMessageValid(newMessageContent)) return;
+
     const newMessage = {
       user_id: userSession.id,
       content: newMessageContent,
@@ -68,40 +76,160 @@ function ChatTextBox({
       dm_id: selectedDiscussion.id,
       createdAt: new Date().toISOString(),
     };
+
     socket.emit("sendMsg", newMessage);
     setNewMessageContent("");
+
+    // Reset textarea height
+    if (textareaRef.current) {
+      textareaRef.current.style.height = "auto";
+    }
   };
+
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
+    if (e.key === "Enter" && !e.shiftKey) {
+      e.preventDefault();
+      handleSendMessage();
+    }
+  };
+
+  const insertEmoji = (emoji: string) => {
+    setNewMessageContent((prev) => prev + emoji);
+    setShowEmojiPicker(false);
+    textareaRef.current?.focus();
+  };
+
+  const quickEmojis = ["😊", "👍", "❤️", "😂", "🎉", "🔥"];
 
   if (!selectedDiscussion.id) return null;
 
-  return (
-    <div className={`${style.message_bar} `}>
-      {isChatTextBoxDisabled ? (
-        <div className={style.banned_message}>
-          You can&rsquo;t use this room for now.
+  if (isChatTextBoxDisabled) {
+    return (
+      <div className={style.textbox_container}>
+        <div className={style.disabled_state}>
+          <div className={style.disabled_icon}>
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+            >
+              <circle cx="12" cy="12" r="10" />
+              <line x1="4.93" y1="4.93" x2="19.07" y2="19.07" />
+            </svg>
+          </div>
+          <div className={style.disabled_text}>
+            <span>You can&apos;t send messages</span>
+            <p>You have been restricted from this conversation</p>
+          </div>
         </div>
-      ) : (
-        <div className="w-full">
-          <div className="relative w-full flex items-center">
-            <textarea
-              className={`${style.message_input_bar} `}
-              placeholder="Message..."
-              value={newMessageContent}
-              onChange={(e) => setNewMessageContent(e.target.value)}
-            />
-            <img
-              onClick={handleSendMessage}
-              className={`${style.message_send_icon__init_fill} ${style.message_send_icon}`}
-              src="https://media.canva.com/v2/image-resize/format:PNG/height:64/quality:100/uri:ifs%3A%2F%2FM%2F225e0b87-3672-403d-9613-b3dfcf817c80/watermark:F/width:64?csig=AAAAAAAAAAAAAAAAAAAAAGi12bWjy81TKTFfiaRnWOME0tFNSXXHtlOvGCqvPPpO&exp=1767454816&osig=AAAAAAAAAAAAAAAAAAAAADZM035Sbrj4LSaU4TTTrmXtLsIf_hcQvBf88t1cvglc&signer=media-rpc&x-canva-quality=thumbnail"
-            />
+      </div>
+    );
+  }
 
-            {/* <Send
-            onClick={handleSendMessage}
-            className={`${style.message_send_icon__init_fill} ${style.message_send_icon}`}
-          /> */}
+  return (
+    <div className={style.textbox_container}>
+      {/* Quick emoji bar */}
+      {showEmojiPicker && (
+        <div className={style.emoji_picker}>
+          <div className={style.emoji_header}>
+            <span>Quick Reactions</span>
+            <button
+              className={style.emoji_close}
+              onClick={() => setShowEmojiPicker(false)}
+            >
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+              >
+                <line x1="18" y1="6" x2="6" y2="18" />
+                <line x1="6" y1="6" x2="18" y2="18" />
+              </svg>
+            </button>
+          </div>
+          <div className={style.emoji_grid}>
+            {quickEmojis.map((emoji) => (
+              <button
+                key={emoji}
+                className={style.emoji_btn}
+                onClick={() => insertEmoji(emoji)}
+              >
+                {emoji}
+              </button>
+            ))}
           </div>
         </div>
       )}
+
+      {/* Main input area */}
+      <div
+        className={`${style.input_wrapper} ${
+          isFocused ? style.input_wrapper_focused : ""
+        }`}
+      >
+        {/* Text input */}
+        <div className={style.input_container}>
+          <textarea
+            ref={textareaRef}
+            className={style.text_input}
+            placeholder="Type a message..."
+            value={newMessageContent}
+            onChange={(e) => setNewMessageContent(e.target.value)}
+            onKeyDown={handleKeyDown}
+            onFocus={() => setIsFocused(true)}
+            onBlur={() => setIsFocused(false)}
+            rows={1}
+          />
+        </div>
+
+        {/* Emoji button */}
+        <button
+          className={`${style.action_button} ${
+            showEmojiPicker ? style.action_button_active : ""
+          }`}
+          onClick={() => setShowEmojiPicker(!showEmojiPicker)}
+          title="Add emoji"
+        >
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+          >
+            <circle cx="12" cy="12" r="10" />
+            <path d="M8 14s1.5 2 4 2 4-2 4-2" />
+            <line x1="9" y1="9" x2="9.01" y2="9" />
+            <line x1="15" y1="9" x2="15.01" y2="9" />
+          </svg>
+        </button>
+
+        {/* Send button */}
+        <button
+          className={`${style.send_button} ${
+            isMessageValid(newMessageContent) ? style.send_button_active : ""
+          }`}
+          onClick={handleSendMessage}
+          disabled={!isMessageValid(newMessageContent)}
+          title="Send message"
+        >
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+          >
+            <line x1="22" y1="2" x2="11" y2="13" />
+            <polygon points="22 2 15 22 11 13 2 9 22 2" />
+          </svg>
+        </button>
+      </div>
+
+      {/* Hint text */}
+      <div className={style.hint_text}>
+        Press <kbd>Enter</kbd> to send, <kbd>Shift + Enter</kbd> for new line
+      </div>
     </div>
   );
 }

@@ -1,3 +1,27 @@
+.radio_overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  animation: fadeIn 0.2s ease;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
 .radio_modal {
   display: flex;
   flex-direction: column;
@@ -7,57 +31,360 @@
   padding: 10px;
   border: 1px solid black;
   position: absolute;
+  background: linear-gradient(145deg, #1a1a2e 0%, #16162a 100%);
+  border-radius: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 
+    0 25px 50px -12px rgba(0, 0, 0, 0.5),
+    0 0 0 1px rgba(255, 255, 255, 0.05),
+    inset 0 1px 0 rgba(255, 255, 255, 0.05);
+  width: 90%;
+  max-width: 420px;
+  overflow: hidden;
+  animation: slideUp 0.3s ease;
 }
 
-.radio_modal h4 {
-  border-bottom: 1px solid red;
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
 }
 
-.radio_option {
-  margin-block: 5px;
-  font-size: small;
-  text-align: left;
-  margin-left: 10px;
+/* Header */
+.modal_header {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  padding: 20px 20px 16px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  position: relative;
 }
 
-.radio_buttons {
-  display: grid;
-  grid-template-columns: 1fr 1fr; /* Split the available space into two equal columns */
-  gap: 20px; /* Add some gap between the elements */
-  margin: 15px;
+.header_icon {
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
 }
 
-.radio_buttons button {
-  font-weight: bold;
-  font-size: medium;
-  border: none;
-  border-radius: 6px;
-  padding: 8px;
+.header_icon svg {
+  width: 22px;
+  height: 22px;
+}
+
+.icon_danger {
+  background: rgba(239, 68, 68, 0.15);
+  color: #f87171;
+  border: 1px solid rgba(239, 68, 68, 0.2);
+}
+
+.icon_warning {
+  background: rgba(245, 158, 11, 0.15);
+  color: #fbbf24;
+  border: 1px solid rgba(245, 158, 11, 0.2);
+}
+
+.header_text {
+  flex: 1;
+  min-width: 0;
+}
+
+.modal_title {
+  font-size: 18px;
+  font-weight: 600;
+  color: #ffffff;
+  margin: 0 0 4px 0;
+  letter-spacing: -0.02em;
+}
+
+.modal_subtitle {
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.5);
+  margin: 0;
+}
+
+.close_button {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  color: rgba(255, 255, 255, 0.5);
   cursor: pointer;
-}
-.radio_buttons button:first-child {
-  color: aliceblue;
-  background-color: red;
-}
-.radio_option h3 {
-  border-top: 2px solid red;
-  margin-block: 5px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
 }
 
-@media (max-width: 650px) {
+.close_button:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: #ffffff;
+  transform: rotate(90deg);
+}
+
+.close_button svg {
+  width: 16px;
+  height: 16px;
+}
+
+/* Options Container */
+.options_container {
+  padding: 16px 20px;
+}
+
+.options_grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+}
+
+.option_card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 16px 8px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.option_card:hover {
+  background: rgba(255, 255, 255, 0.06);
+  border-color: rgba(255, 255, 255, 0.12);
+  transform: translateY(-2px);
+}
+
+.option_card.option_selected {
+  background: rgba(99, 102, 241, 0.15);
+  border-color: rgba(99, 102, 241, 0.4);
+  color: #ffffff;
+}
+
+.option_card.option_permanent {
+  background: rgba(239, 68, 68, 0.08);
+  border-color: rgba(239, 68, 68, 0.15);
+}
+
+.option_card.option_permanent:hover {
+  background: rgba(239, 68, 68, 0.12);
+  border-color: rgba(239, 68, 68, 0.25);
+}
+
+.option_card.option_permanent.option_selected {
+  background: rgba(239, 68, 68, 0.2);
+  border-color: rgba(239, 68, 68, 0.5);
+}
+
+.option_icon {
+  width: 24px;
+  height: 24px;
+  opacity: 0.5;
+}
+
+.option_icon svg {
+  width: 100%;
+  height: 100%;
+}
+
+.option_selected .option_icon {
+  opacity: 1;
+  color: #818cf8;
+}
+
+.option_permanent .option_icon {
+  color: #f87171;
+}
+
+.option_short {
+  font-size: 20px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+.option_label {
+  font-size: 11px;
+  opacity: 0.6;
+  text-align: center;
+}
+
+.option_check {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  width: 18px;
+  height: 18px;
+  background: #6366f1;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: popIn 0.2s ease;
+}
+
+.option_check svg {
+  width: 12px;
+  height: 12px;
+  color: #ffffff;
+}
+
+@keyframes popIn {
+  from {
+    transform: scale(0);
+  }
+  to {
+    transform: scale(1);
+  }
+}
+
+/* Summary */
+.summary {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 12px 20px;
+  background: rgba(0, 0, 0, 0.2);
+  border-top: 1px solid rgba(255, 255, 255, 0.04);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+}
+
+.summary_label {
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.summary_value {
+  font-size: 13px;
+  font-weight: 600;
+  padding: 4px 10px;
+  border-radius: 6px;
+}
+
+.summary_value.danger {
+  background: rgba(239, 68, 68, 0.15);
+  color: #f87171;
+}
+
+.summary_value.warning {
+  background: rgba(245, 158, 11, 0.15);
+  color: #fbbf24;
+}
+
+/* Action Buttons */
+.action_buttons {
+  display: flex;
+  gap: 12px;
+  padding: 16px 20px 20px;
+}
+
+.cancel_button {
+  flex: 1;
+  padding: 12px 20px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.cancel_button:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: #ffffff;
+}
+
+.confirm_button {
+  flex: 1.5;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 12px 20px;
+  border: none;
+  border-radius: 10px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.confirm_button svg {
+  width: 16px;
+  height: 16px;
+}
+
+.confirm_danger {
+  background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+  color: #ffffff;
+  box-shadow: 0 4px 15px rgba(239, 68, 68, 0.3);
+}
+
+.confirm_danger:hover {
+  background: linear-gradient(135deg, #f87171 0%, #ef4444 100%);
+  box-shadow: 0 6px 20px rgba(239, 68, 68, 0.4);
+  transform: translateY(-1px);
+}
+
+.confirm_warning {
+  background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+  color: #ffffff;
+  box-shadow: 0 4px 15px rgba(245, 158, 11, 0.3);
+}
+
+.confirm_warning:hover {
+  background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
+  box-shadow: 0 6px 20px rgba(245, 158, 11, 0.4);
+  transform: translateY(-1px);
+}
+
+/* Responsive */
+@media (max-width: 480px) {
   .radio_modal {
-    width: 150px;
-    position: absolute;
-    right: 50px;
+    width: 95%;
+    max-width: none;
+    margin: 16px;
   }
 
-  .radio_modal h3 {
-    font-size: small;
+  .options_grid {
+    grid-template-columns: repeat(2, 1fr);
   }
-  .radio_option {
-    font-size: small;
+
+  .modal_header {
+    padding: 16px;
   }
-  .radio_buttons button {
-    font-size: small;
+
+  .options_container {
+    padding: 12px 16px;
+  }
+
+  .action_buttons {
+    padding: 12px 16px 16px;
+    flex-direction: column;
+  }
+
+  .cancel_button,
+  .confirm_button {
+    flex: none;
+    width: 100%;
   }
 }

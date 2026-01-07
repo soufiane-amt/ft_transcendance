@@ -1,76 +1,110 @@
 "use client";
-import React, { useEffect, useRef, useState } from "react";
-import style from "../../../styles/ChatStyles/DirectMsgMain.module.css";
+import React, { useState } from "react";
 import { discussionPanelSelectType } from "../interfaces/DiscussionPanel";
-
-import { UserContactsProvider } from "../../../app/context/UsersContactBookContext";
-import { BanProvider } from "../../../app/context/BanContext";
-import { DiscussionsBar } from "./DiscussionsBar/DiscussionsBar";
+import { UserContactsProvider } from "@/app/context/UsersContactBookContext";
+import { ChannelBooksProvider } from "@/app/context/ChannelInfoBook";
+import { BanProvider } from "@/app/context/BanContext";
+import { MuteProvider } from "@/app/context/MuteContext";
 import { ChattingField } from "./ChattingField/ChattingField";
-import EmptyDiscussionMode from "../shared/EmptyMode/EmptyMode";
+import { DiscussionsBar } from "./DiscussionsBar/DiscussionsBar";
+import style from "../../../styles/ChatStyles/DirectMsgMain.module.css";
 
-/*stopPropagation is used here to prevent the click event to take way up to the parent it got limited right here */
+
 export const selectedPanelDefault: discussionPanelSelectType = {
   id: "",
   partner_id: "",
 };
 
-
-function DirectMesgMain() {
+function DirectMsgMain() {
   const [selectedDiscussion, setSelectedDiscussion] =
     useState<discussionPanelSelectType>(selectedPanelDefault);
-    
-    const selectDiscussion = (e : discussionPanelSelectType) => {
-      setSelectedDiscussion(e);
-    };
-    const [discussionIsEmpty, setDiscussionIsEmpty] = useState<boolean>(false);
+  const [discussionIsEmpty, setDiscussionIsEmpty] = useState<boolean>(false);
 
-    const [openBar, setOpenBar] = useState(true);
-    const handleOpenBar = () => {
-      setOpenBar(!openBar);
-    }
+  const selectDiscussion = (e: discussionPanelSelectType) => {
+    setSelectedDiscussion(e);
+  };
 
-    const selectState = {
-      selectedDiscussion,
-      selectDiscussion,
-    };
-    return (
+  const [openBar, setOpenBar] = useState(true);
+  const handleOpenBar = () => {
+    setOpenBar(!openBar);
+  };
+
+  const selectState = {
+    selectedDiscussion,
+    selectDiscussion,
+  };
+
+  return (
     <UserContactsProvider currentRoute="direct_messaging">
-      <BanProvider currentRoute="direct_messaging">
-        { !discussionIsEmpty && (
-        
-        <div className={style.direct_msg_main}>
-          {
-              <DiscussionsBar
-                openBar={openBar}
-                selectedDiscussionState={selectState}
-                currentRoute={"Direct_messaging"}
-                discussionIsEmptyState={{ discussionIsEmpty, setDiscussionIsEmpty }}
+      <ChannelBooksProvider>
+        <BanProvider currentRoute="direct_messaging">
+          <MuteProvider currentRoute="direct_messaging">
+            <div className={style.dm_main}>
+              {/* Background decorations */}
+              <div className={style.bg_gradient}></div>
+              <div className={style.bg_circle_1}></div>
+              <div className={style.bg_circle_2}></div>
 
-              />
-          }
-          <ChattingField
-            openBar={openBar}
-            selectDiscussionState={selectState}
-          />
-            
-          <button className={`${style.discussions_bar_swither} 
-              ${!openBar ? style.discussions_bar_swither_close : ''}`} 
-                 onClick={handleOpenBar}>
-              {
-                openBar === true ? '<' : '>'
-              }
-          </button> 
-        </div>)}
-        {discussionIsEmpty && <EmptyDiscussionMode
-              selectedDiscussion={selectedDiscussion}
-               currentRoute={"Direct_messaging"}
-               setDiscussionIsEmpty={setDiscussionIsEmpty}
-               />}
+              <div className={style.chat_container}>
+                {/* Discussions sidebar */}
+                <aside
+                  className={`${style.sidebar} ${
+                    openBar ? style.sidebar_open : style.sidebar_closed
+                  }`}
+                >
+                  <DiscussionsBar
+                    openBar={openBar}
+                    selectedDiscussionState={selectState}
+                    currentRoute={"Direct_messaging"}
+                    discussionIsEmptyState={{
+                      discussionIsEmpty,
+                      setDiscussionIsEmpty,
+                    }}
+                  />
+                </aside>
 
-      </BanProvider>
+                {/* Toggle button */}
+                <button
+                  className={`${style.toggle_button} ${
+                    !openBar ? style.toggle_button_closed : ""
+                  }`}
+                  onClick={handleOpenBar}
+                  aria-label={openBar ? "Close sidebar" : "Open sidebar"}
+                >
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    className={`${style.toggle_icon} ${
+                      !openBar ? style.toggle_icon_flipped : ""
+                    }`}
+                  >
+                    <polyline points="15 18 9 12 15 6" />
+                  </svg>
+                </button>
+
+                {/* Main chat area */}
+                <main
+                  className={`${style.chat_area} ${
+                    !openBar ? style.chat_area_expanded : ""
+                  }`}
+                >
+                  <ChattingField
+                    openBar={openBar}
+                    selectDiscussionState={selectState}
+                    currentRoute={"Direct_messaging"}
+                  />
+                </main>
+              </div>
+            </div>
+          </MuteProvider>
+        </BanProvider>
+      </ChannelBooksProvider>
     </UserContactsProvider>
   );
 }
 
-export default DirectMesgMain;
+export default DirectMsgMain;

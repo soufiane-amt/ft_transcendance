@@ -15,6 +15,7 @@ import ChannelActionModal from "../../Channels/ChannelActionModal/ChannelActionM
 import { ChannelSetting } from "../../Channels/ChannelSetting/ChannelSetting";
 import { ChannelData } from "../../interfaces/ChannelData";
 import newSocket from "@/components/GlobalComponents/Socket/socket";
+import { createPortal } from "react-dom";
 
 type buttonType = { title: string; icon: string; backgroundColor: string };
 
@@ -118,7 +119,6 @@ function UserActionModal({
       }}
     >
       <div className={style.action_targeted_user}>
-        {/* <Avatar src={userContact.avatar} avatarToRight={false} /> */}
         <img
           src={userContact.avatar}
           alt="avatar"
@@ -169,30 +169,63 @@ type MyComponentProps = DmUserActionModalMainProps | ChUserActionModalMainProps;
 
 function UserActionModalMain(props: MyComponentProps) {
   const [isVisible, setAsVisible] = props.modalState;
-  var actionModal;
+  const [mounted, setMounted] = useState(false);
 
-  if (props.ActionContext === "Direct_messaging" && "userToActId" in props) {
-    actionModal = props.userToActId && (
-      <div className={style.user_action_main_modal}>
-        <UserActionModal
-          handleVisibility={setAsVisible}
-          targetedUserId={props.userToActId}
-          targetedDiscussion={props.DiscussionToActId}
-        />
+  // Ensure we're on the client before using portal
+  useEffect(() => {
+    setMounted(true);
+    return () => setMounted(false);
+  }, []);
+
+  // Prevent body scroll when modal is open
+  useEffect(() => {
+    if (isVisible) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "";
+    }
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [isVisible]);
+
+  // Don't render if not visible or not mounted on client
+  if (!isVisible || !mounted) return null;
+
+  const handleBackdropClick = (e: React.MouseEvent) => {
+    if (e.target === e.currentTarget) {
+      setAsVisible(false);
+    }
+  };
+  console.log("Rendering UserActionModalMain with props:", props);
+
+  const modalContent = (
+    <div className={style.modal_backdrop} onClick={handleBackdropClick}>
+      <div className={style.modal_wrapper}>
+        {props.ActionContext === "Direct_messaging" &&
+          "userToActId" in props &&
+          props.userToActId && (
+            <UserActionModal
+              handleVisibility={setAsVisible}
+              targetedUserId={props.userToActId}
+              targetedDiscussion={props.DiscussionToActId}
+            />
+          )}
+
+        {props.ActionContext === "Channels" && "channel_data" in props && (
+          <ChannelActionModal
+            selectedDiscussionId={props.DiscussionToActId}
+            channelData={props.channel_data}
+            handleVisibility={setAsVisible}
+          />
+        )}
       </div>
-    );
-  } else if (props.ActionContext === "Channels" && "channel_data" in props) {
-    actionModal = (
-      <div className={style.user_action_main_modal}>
-        <ChannelActionModal
-          selectedDiscussionId={props.DiscussionToActId}
-          channelData={props.channel_data}
-          handleVisibility={setAsVisible}
-        />
-      </div>
-    );
-  }
-  return <>{isVisible && actionModal}</>;
+    </div>
+  );
+
+  // Use createPortal to render the modal at the document body level
+  return createPortal(modalContent, document.body);
 }
+
 
 export default UserActionModalMain;

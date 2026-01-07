@@ -1,62 +1,295 @@
-.discussion_empty_mode{
-    width: 100vw;
-    height: 100vh;
-    display: flex;
+.empty_container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  min-height: calc(100vh - 91px);
+  background: linear-gradient(135deg, #1a1942 0%, #24234f 50%, #2d2a5e 100%);
+  position: relative;
+  overflow: hidden;
+  padding: 40px 20px;
+}
+
+/* Decorative background circles */
+.bg_circle_1 {
+  position: absolute;
+  width: 300px;
+  height: 300px;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle,
+    rgba(138, 43, 226, 0.15) 0%,
+    transparent 70%
+  );
+  top: -100px;
+  right: -50px;
+  animation: float 8s ease-in-out infinite;
+}
+
+.bg_circle_2 {
+  position: absolute;
+  width: 200px;
+  height: 200px;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle,
+    rgba(0, 255, 255, 0.1) 0%,
+    transparent 70%
+  );
+  bottom: -50px;
+  left: -50px;
+  animation: float 6s ease-in-out infinite reverse;
+}
+
+@keyframes float {
+  0%,
+  100% {
+    transform: translateY(0) scale(1);
+  }
+  50% {
+    transform: translateY(-20px) scale(1.05);
+  }
+}
+
+.empty_content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  max-width: 480px;
+  z-index: 1;
+}
+
+/* Icon wrapper with glow effect */
+.icon_wrapper {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #3c3b6c 0%, #4a4980 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 32px;
+  box-shadow: 0 10px 40px rgba(138, 43, 226, 0.3),
+    0 0 60px rgba(0, 255, 255, 0.1);
+  animation: pulse 3s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%,
+  100% {
+    box-shadow: 0 10px 40px rgba(138, 43, 226, 0.3),
+      0 0 60px rgba(0, 255, 255, 0.1);
+  }
+  50% {
+    box-shadow: 0 10px 50px rgba(138, 43, 226, 0.4),
+      0 0 80px rgba(0, 255, 255, 0.2);
+  }
+}
+
+.chat_icon {
+  width: 56px;
+  height: 56px;
+  color: #71a7a7;
+}
+
+/* Animated dots inside the chat bubble */
+.dot_1,
+.dot_2,
+.dot_3 {
+  animation: bounce 1.4s ease-in-out infinite;
+}
+
+.dot_1 {
+  animation-delay: 0s;
+}
+
+.dot_2 {
+  animation-delay: 0.2s;
+}
+
+.dot_3 {
+  animation-delay: 0.4s;
+}
+
+@keyframes bounce {
+  0%,
+  60%,
+  100% {
+    transform: translateY(0);
+  }
+  30% {
+    transform: translateY(-4px);
+  }
+}
+
+.empty_title {
+  font-size: 28px;
+  font-weight: 700;
+  color: #ffffff;
+  margin: 0 0 16px 0;
+  letter-spacing: -0.5px;
+}
+
+.empty_description {
+  font-size: 16px;
+  line-height: 1.6;
+  color: rgba(255, 255, 255, 0.7);
+  margin: 0 0 32px 0;
+  max-width: 380px;
+}
+
+.button_group {
+  display: flex;
+  flex-direction: row;
+  gap: 16px;
+  margin-bottom: 40px;
+}
+
+.action_button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 14px 28px;
+  border-radius: 50px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border: none;
+  outline: none;
+}
+
+.button_icon {
+  width: 18px;
+  height: 18px;
+}
+
+.primary_button {
+  background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+  color: #ffffff;
+  box-shadow: 0 4px 20px rgba(99, 102, 241, 0.4);
+}
+
+.primary_button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 30px rgba(99, 102, 241, 0.5);
+}
+
+.primary_button:active {
+  transform: translateY(0);
+}
+
+.secondary_button {
+  background: rgba(60, 59, 108, 0.8);
+  color: #71a7a7;
+  border: 2px solid rgba(113, 167, 167, 0.3);
+}
+
+.secondary_button:hover {
+  background: rgba(60, 59, 108, 1);
+  border-color: rgba(113, 167, 167, 0.5);
+  transform: translateY(-2px);
+}
+
+.secondary_button:active {
+  transform: translateY(0);
+}
+
+.tip_container {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 20px;
+  background: rgba(60, 59, 108, 0.5);
+  border-radius: 12px;
+  border: 1px solid rgba(113, 167, 167, 0.2);
+}
+
+.tip_icon {
+  font-size: 18px;
+}
+
+.tip_text {
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.6);
+  text-align: left;
+}
+
+/* Responsive adjustments */
+@media (max-width: 600px) {
+  .empty_container {
+    padding: 30px 16px;
+  }
+
+  .icon_wrapper {
+    width: 100px;
+    height: 100px;
+    margin-bottom: 24px;
+  }
+
+  .chat_icon {
+    width: 48px;
+    height: 48px;
+  }
+
+  .empty_title {
+    font-size: 22px;
+  }
+
+  .empty_description {
+    font-size: 14px;
+    margin-bottom: 24px;
+  }
+
+  .button_group {
     flex-direction: column;
-    align-items: center;
-    background: rgb(102,94,245);
-    background: linear-gradient(180deg, rgba(102,94,245,1) 0%, rgba(213,174,250,1) 45%, rgba(0,212,255,1) 100%);
-  }
-  
-  .discussion_empty_mode__label{
-    font-size: 20px;
-    font-weight: bolder;
-    color: rgb(254, 10, 10);
-    margin-top: 100px;
+    width: 100%;
+    max-width: 280px;
   }
 
-  .discussion_empty_mode_nav_buttons{
-    display: flex;
-    flex-direction: row;
-    justify-content: space-around;
-    margin-top: 50px;
+  .action_button {
+    width: 100%;
+    padding: 12px 24px;
+    font-size: 14px;
   }
 
-  .discussion_empty_mode__button{
+  .tip_container {
+    flex-direction: column;
+    text-align: center;
+    gap: 6px;
+  }
+
+  .tip_text {
+    text-align: center;
+  }
+
+  .bg_circle_1 {
+    width: 200px;
+    height: 200px;
+  }
+
+  .bg_circle_2 {
     width: 150px;
-    height: 50px;
-    border-radius: 20px;
-    border: 0;
-    font-size: 17px;
-    font-weight: bolder;
-    color: white;
-    cursor: pointer;
-    background: rgb(189, 32, 237);
-    box-shadow: 10px 10px 15px -3px rgba(0, 0, 0, 0.5);
-    font-family: Georgia, 'Times New Roman', Times, serif;
-    
+    height: 150px;
   }
-  
-.discussion_empty_mode__button:hover{
-    background: rgb(52, 5, 66);
+}
+
+@media (max-width: 400px) {
+  .icon_wrapper {
+    width: 80px;
+    height: 80px;
   }
 
+  .chat_icon {
+    width: 40px;
+    height: 40px;
+  }
 
-  @media (max-width:650px) 
-  {
-    .discussion_empty_mode img{
-      width: 50%;
-    }
-    .discussion_empty_mode__label{
-      font-size: 12px;
-    }
-    .discussion_empty_mode__button{
-      width: 100px;
-      height: 40px;
-      font-size: 10px;
-    }  
-    .discussion_empty_mode__text{
-      font-size: 10px;
-    }
-
+  .empty_title {
+    font-size: 20px;
+  }
 }

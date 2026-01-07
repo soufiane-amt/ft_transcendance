@@ -1,108 +1,316 @@
-
-/**The pannel main class*/
-.discussion_panel {
-    display:flex;
-    flex-direction: row;
-    align-items: center;
-    gap:10px;
-    width: 96%;
-    height: 80px;
-    padding-inline: 2%;
-    overflow: hidden;
-
-    position: relative;
-    border-bottom: 1px solid white;
-    cursor: pointer;
+.panel {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 14px;
+  background: rgba(60, 59, 108, 0.2);
+  border-radius: 14px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  position: relative;
+  border: 1px solid transparent;
+  list-style: none;
 }
 
-
-.discussion_panel_default_colors {
-    font-size: small;
-    background-color: var(--discussion_panel_back_color);
-    color: var(--discussion_panel_element_color);
+.panel:hover {
+  background: rgba(60, 59, 108, 0.45);
 }
 
-.discussion_panel_selection_colors {
-    font-size: small;
-    transition: all 0.2s ease-in-out;
-    background-color: var(--discussion_panel_selection_color);
-    color: var(--discussion_panel_element_selection_color);
+.panel_selected {
+  background: rgba(99, 102, 241, 0.15);
+  border-color: rgba(99, 102, 241, 0.3);
 }
 
-/**The button that displays play/bock styling*/
-.discussion_panel button {
-    font-size: medium;
-    font-weight: bolder;
-    border: 0;
-    background-color: transparent;
-    color:#000000;
-    cursor: pointer;
-
+.panel_selected:hover {
+  background: rgba(99, 102, 241, 0.2);
 }
 
-
-/*setting the size of central part of the panel*/
-.panel_central_part {
-    width: 60%;
-    overflow: hidden;
-
+.panel_unread {
+  background: rgba(60, 59, 108, 0.35);
 }
 
-
-/* selectors to ensure handling the overflow when width changes
-, Also to ensure that the overflowed lastMessage will end in ellipsis */
-.panel_central_part .panel_last_message {
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
+/* Selection indicator */
+.selection_indicator {
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 3px;
+  height: 28px;
+  background: linear-gradient(180deg, #6366f1 0%, #8b5cf6 100%);
+  border-radius: 0 3px 3px 0;
 }
 
-.panel_last_message__unread_state{
-    font-weight: bolder;
+/* Avatar wrapper */
+.avatar_wrapper {
+  position: relative;
+  flex-shrink: 0;
 }
 
-.panel_last_part{
-    position: absolute;
-    right: 1%;
-
-    overflow: hidden;
-
-    display: flex;
-    flex-direction: column;
-    align-items:flex-end;
+.type_badge {
+  position: absolute;
+  bottom: -2px;
+  right: -2px;
+  width: 18px;
+  height: 18px;
+  border-radius: 5px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid #24234f;
 }
 
-.panel_message_notifier{
-    background-color: red;
-    border-radius: 50%;
-    
-    font-weight: bold;
-    padding: 3px 8px ;
-
+.type_badge svg {
+  width: 10px;
+  height: 10px;
+  color: #ffffff;
 }
 
-
- @media (max-width:600px) 
-{
-    .panel_last_message {
-        display: none;
-    }
-    .panel_last_part :not(button):not(.panel_message_notifier) {
-        display: none;
-      }
-      .panel_last_part button{
-        margin-bottom: 20px;
-      }
+.type_public {
+  background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
 }
-/*
-@media (max-width:478px) 
-{
-    .discussion_panel {
-        min-width: 245px;
-    }
-      /* .panel_central_part :not(button) {
-        display: none;
-      } */
 
+.type_private {
+  background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+}
 
-/* } */
+.type_protected {
+  background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+}
+
+/* Content */
+.content {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.content_top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.name {
+  font-size: 14px;
+  font-weight: 600;
+  color: #ffffff;
+  margin: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.panel_selected .name {
+  color: #ffffff;
+}
+
+.meta {
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.content_bottom {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+/* Last message */
+.last_message {
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.5);
+  margin: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  flex: 1;
+  transition: color 0.2s ease;
+}
+
+.last_message_unread {
+  color: rgba(255, 255, 255, 0.75);
+  font-weight: 500;
+}
+
+.panel_selected .last_message {
+  color: rgba(255, 255, 255, 0.6);
+}
+
+/* Actions */
+.actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+/* Unread badge */
+.unread_badge {
+  min-width: 20px;
+  height: 20px;
+  padding: 0 6px;
+  background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+  border-radius: 10px;
+  font-size: 11px;
+  font-weight: 700;
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 8px rgba(99, 102, 241, 0.4);
+  animation: badgePop 0.3s ease;
+}
+
+@keyframes badgePop {
+  0% {
+    transform: scale(0.8);
+    opacity: 0;
+  }
+  50% {
+    transform: scale(1.1);
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+/* Menu button */
+.menu_button {
+  width: 28px;
+  height: 28px;
+  border-radius: 8px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transform: translateX(8px);
+  transition: all 0.2s ease;
+}
+
+.menu_button svg {
+  width: 16px;
+  height: 16px;
+  color: rgba(255, 255, 255, 0.5);
+  transition: color 0.2s ease;
+}
+
+.menu_button_visible {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.menu_button:hover {
+  background: rgba(60, 59, 108, 0.8);
+}
+
+.menu_button:hover svg {
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.panel_selected .menu_button:hover {
+  background: rgba(99, 102, 241, 0.3);
+}
+
+/* Glow effect */
+.glow_effect {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(99, 102, 241, 0.04) 50%,
+    transparent 100%
+  );
+  opacity: 0;
+  transition: opacity 0.2s ease;
+  pointer-events: none;
+}
+
+.panel:hover .glow_effect {
+  opacity: 1;
+}
+
+/* Active/pressed state */
+.panel:active {
+  transform: scale(0.98);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .panel {
+    padding: 10px 12px;
+    gap: 10px;
+    border-radius: 12px;
+  }
+
+  .selection_indicator {
+    height: 24px;
+  }
+
+  .name {
+    font-size: 13px;
+  }
+
+  .last_message {
+    font-size: 12px;
+  }
+
+  .type_badge {
+    width: 16px;
+    height: 16px;
+  }
+
+  .type_badge svg {
+    width: 9px;
+    height: 9px;
+  }
+
+  .unread_badge {
+    min-width: 18px;
+    height: 18px;
+    font-size: 10px;
+  }
+
+  .menu_button {
+    width: 26px;
+    height: 26px;
+  }
+
+  .menu_button svg {
+    width: 14px;
+    height: 14px;
+  }
+
+  /* Always show menu button on mobile */
+  .menu_button {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@media (max-width: 400px) {
+  .panel {
+    padding: 8px 10px;
+  }
+
+  .name {
+    font-size: 12px;
+  }
+
+  .last_message {
+    font-size: 11px;
+  }
+}

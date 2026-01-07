@@ -1,19 +1,20 @@
 "use client";
-
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
+import style from "../../../../styles/ChatStyles/DiscussionsBar.module.css";
+// import { DiscussionPanel } from "./DiscussionPanel/DiscussionPanel";
 import {
   DiscussionDto,
-  MinMessageDto,
   discussionPanelSelectType,
 } from "../../interfaces/DiscussionPanel";
-import style from "../../../../styles/ChatStyles/DiscussionsBar.module.css";
 import { fetchDataFromApi } from "../../CustomFetch/fetchDataFromApi";
-import DiscussionPanel from "../../shared/DiscussionPanel/DiscussionPanel";
-import { useHandlePanel } from "../../../../CustomHooks/useHandlePanel";
-import UserActionModalMain from "../UserActionModal/UserActionModal";
 import socket from "../../../../app/socket/socket";
+import { useRouter } from "next/navigation";
 import { ChannelData } from "../../interfaces/ChannelData";
-import { useHandleJoinDm } from "../../../../CustomHooks/useHandleJoinChannel";
+import { useHandlePanel } from "@/CustomHooks/useHandlePanel";
+import { useHandleJoinDm } from "@/CustomHooks/useHandleJoinChannel";
+import DiscussionPanel from "../../shared/DiscussionPanel/DiscussionPanel";
+import { useFindChannelBook } from "@/app/context/ChannelInfoBook"; // adjust import as needed
+import { useFindUserContacts } from "@/app/context/UsersContactBookContext";
 
 interface DiscussionsBarProps {
   openBar: boolean;
@@ -34,49 +35,63 @@ export function DiscussionsBar({
   currentRoute,
   discussionIsEmptyState,
 }: DiscussionsBarProps) {
-  const [discussionPanels, setDiscussionRooms] = useState<DiscussionDto[]>([]);
-  const [modalIsVisible, setModalAsVisible] = useState<boolean>(false);
+  const [discussions, setDiscussions] = useState<DiscussionDto[]>([]);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [isLoading, setIsLoading] = useState(true);
   const { selectedDiscussion, selectDiscussion } = selectedDiscussionState;
+  const router = useRouter();
+
   const [channelData, setChannelData] = useState<Map<string, ChannelData>>(
     new Map()
   );
-  const { discussionIsEmpty, setDiscussionIsEmpty } = discussionIsEmptyState;
 
+  const { setDiscussionIsEmpty } = discussionIsEmptyState;
+
+  const isChannels = currentRoute === "Channels";
+  console.log("Current Route in DiscussionsBar:", currentRoute);
   useEffect(() => {
-    async function fetchDataAsync() {
-      const fetchedData = await fetchDataFromApi(
-        `${process.env.NEXT_PUBLIC_BACKEND_SERV}/chat/${currentRoute}/discussionsBar`
-      );
-      if (fetchedData.length === 0) setDiscussionIsEmpty(true);
-      if (currentRoute === "Direct_messaging") {
-        setDiscussionRooms(fetchedData);
-      } else {
-        const room_data: DiscussionDto[] = fetchedData?.map(
-          (item: DiscussionDto) => {
-            return {
-              id: item.id,
-              partner_id: item.partner_id,
-              last_message: item.last_message,
-              unread_messages: item.unread_messages,
-            };
-          }
+    async function fetchDiscussions() {
+      setIsLoading(true);
+      try {
+        const fetchedData = await fetchDataFromApi(
+          `${process.env.NEXT_PUBLIC_BACKEND_SERV}/chat/${currentRoute}/discussionsBar`
         );
-        setDiscussionRooms(() => room_data);
-        const tmpMap = new Map();
-        fetchedData.map((channel: any) => {
-          tmpMap.set(channel.id, {
-            channelUsers: channel.channelUsers,
-            channelOwner: channel.channelOwner,
-            channelAdmins: channel.channelAdmins,
-            channelBans: channel.channelBans,
-            channelMutes: channel.channelMutes,
+        if (fetchedData.length === 0) setDiscussionIsEmpty(true);
+        if (!isChannels) {
+          setDiscussions(fetchedData);
+          console.log("Fetched DMs:", fetchedData);
+        } else {
+          const room_data: DiscussionDto[] = fetchedData?.map(
+            (item: DiscussionDto) => {
+              return {
+                id: item.id,
+                partner_id: item.partner_id,
+                last_message: item.last_message,
+                unread_messages: item.unread_messages,
+              };
+            }
+          );
+          setDiscussions(() => room_data);
+          const tmpMap = new Map();
+          fetchedData.map((channel: any) => {
+            tmpMap.set(channel.id, {
+              channelUsers: channel.channelUsers,
+              channelOwner: channel.channelOwner,
+              channelAdmins: channel.channelAdmins,
+              channelBans: channel.channelBans,
+              channelMutes: channel.channelMutes,
+            });
           });
-        });
-        setChannelData(() => tmpMap);
+          setChannelData(() => tmpMap);
+        }
+      } catch (error) {
+        console.error("Failed to fetch discussions:", error);
+      } finally {
+        setIsLoading(false);
       }
     }
-    fetchDataAsync();
-  }, []);
+    fetchDiscussions();
+  }, [currentRoute]);
 
   useEffect(() => {
     const handleNewChannelUpdate = (
@@ -89,68 +104,224 @@ export function DiscussionsBar({
       setChannelData(() => tmpMap);
     };
     socket.on("updateChannelData", handleNewChannelUpdate);
-  }, [channelData, modalIsVisible]);
+  }, [channelData]);
 
+  // Filter discussions by channel name using useFindChannelBook
+const filteredDiscussions = discussions.filter((d) => {
+  if (isChannels) {
+    const channelInfo = useFindChannelBook(d.id);
+    if (!channelInfo) return false;
+    return channelInfo.name.toLowerCase().includes(searchQuery.toLowerCase());
+  } else {
+    // For DMs, use partner's name or other DM-specific property
+    const user = useFindUserContacts(d.partner_id);
+    return user?.username.toLowerCase().includes(searchQuery.toLowerCase());
+  }
+});
   useHandleJoinDm(selectedDiscussion);
 
   useHandlePanel(
-    currentRoute, 
-    discussionPanels,
+    currentRoute,
+    discussions,
     selectedDiscussionState,
-    setDiscussionRooms
+    setDiscussions
   );
+
+  const handleCreateNew = () => {
+    router.push("/chat");
+  };
 
   const handlePanelClick = async (panelData: DiscussionDto) => {
     selectDiscussion(panelData);
-    const updatedRooms = [...discussionPanels];
+    console.log("Selected Discussion:", panelData);
+    const updatedRooms = [...discussions];
 
     const indexToModify = updatedRooms.findIndex(
       (item) => item.id === panelData.id
     );
     if (indexToModify !== -1) {
       updatedRooms[indexToModify].unread_messages = 0;
-      setDiscussionRooms(updatedRooms);
+      setDiscussions(updatedRooms);
     }
   };
 
-  const displayActionModal = () => setModalAsVisible(true);
   return (
-    <div
-      className={`${style.discussion_panel_bar} ${
-        !openBar ? style.discussion_panel_bar_close : ""
-      }`}
-    >
-      <ul>
-        {discussionPanels?.map((panelElement) => {
-          const isSelected = panelElement?.id === selectedDiscussion.id;
-          return (
-            <DiscussionPanel
-              key={panelElement.id}
-              onSelect={handlePanelClick}
-              DiscussionPanel={panelElement}
-              isSelected={isSelected}
-              showUserActionModal={displayActionModal}
-              currentRoute={currentRoute}
-            />
-          );
-        })}
-        {currentRoute === "Direct_messaging" && (
-          <UserActionModalMain
-            userToActId={selectedDiscussion.partner_id}
-            DiscussionToActId={selectedDiscussion.id}
-            modalState={[modalIsVisible, setModalAsVisible]}
-            ActionContext={currentRoute}
+    <div className={style.discussions_bar}>
+      {/* Header */}
+      <div className={style.header}>
+        <div className={style.header_content}>
+          <div className={style.header_icon}>
+            {isChannels ? (
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+              >
+                <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
+              </svg>
+            ) : (
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+              >
+                <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z" />
+              </svg>
+            )}
+          </div>
+          <div className={style.header_text}>
+            <h2>{isChannels ? "Channels" : "Messages"}</h2>
+            <span className={style.discussion_count}>
+              {discussions.length} {isChannels ? "channels" : "conversations"}
+            </span>
+          </div>
+        </div>
+        <button
+          className={style.create_button}
+          onClick={handleCreateNew}
+          title={isChannels ? "Create Channel" : "New Message"}
+        >
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+          >
+            <line x1="12" y1="5" x2="12" y2="19" />
+            <line x1="5" y1="12" x2="19" y2="12" />
+          </svg>
+        </button>
+      </div>
+
+      {/* Search */}
+      <div className={style.search_section}>
+        <div className={style.search_wrapper}>
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+          >
+            <circle cx="11" cy="11" r="8" />
+            <line x1="21" y1="21" x2="16.65" y2="16.65" />
+          </svg>
+          <input
+            type="text"
+            placeholder={
+              isChannels ? "Search channels..." : "Search messages..."
+            }
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className={style.search_input}
           />
+          {searchQuery && (
+            <button
+              className={style.clear_search}
+              onClick={() => setSearchQuery("")}
+            >
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+              >
+                <line x1="18" y1="6" x2="6" y2="18" />
+                <line x1="6" y1="6" x2="18" y2="18" />
+              </svg>
+            </button>
+          )}
+        </div>
+      </div>
+
+      {/* Discussions list */}
+      <div className={style.discussions_list}>
+        {isLoading ? (
+          <div className={style.loading_state}>
+            <div className={style.loading_spinner}></div>
+            <p>Loading {isChannels ? "channels" : "conversations"}...</p>
+          </div>
+        ) : discussions.length > 0 ? (
+          filteredDiscussions.map((panelElement) => {
+            const isSelected = panelElement?.id === selectedDiscussion.id;
+
+            return (
+              <DiscussionPanel
+                key={panelElement.id}
+                channelId={panelElement.id}
+                onSelect={handlePanelClick}
+                DiscussionPanel={panelElement}
+                selectedDiscussion={selectedDiscussion}
+                isSelected={isSelected}
+                currentRoute={currentRoute}
+                channelData={channelData.get(panelElement.id)}
+              />
+            );
+          })
+        ) : searchQuery ? (
+          <div className={style.empty_state}>
+            <div className={style.empty_icon}>
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+              >
+                <circle cx="11" cy="11" r="8" />
+                <line x1="21" y1="21" x2="16.65" y2="16.65" />
+                <line x1="8" y1="11" x2="14" y2="11" />
+              </svg>
+            </div>
+            <h3>No results found</h3>
+            <p>Try a different search term</p>
+          </div>
+        ) : (
+          <div className={style.empty_state}>
+            <div className={style.empty_icon}>
+              {isChannels ? (
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                >
+                  <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
+                  <line x1="9" y1="10" x2="15" y2="10" />
+                  <line x1="12" y1="7" x2="12" y2="13" />
+                </svg>
+              ) : (
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                >
+                  <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z" />
+                </svg>
+              )}
+            </div>
+            <h3>No {isChannels ? "channels" : "conversations"} yet</h3>
+            <p>
+              {isChannels
+                ? "Create or join a channel to start chatting"
+                : "Start a conversation with someone"}
+            </p>
+            <button className={style.empty_action} onClick={handleCreateNew}>
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+              >
+                <line x1="12" y1="5" x2="12" y2="19" />
+                <line x1="5" y1="12" x2="19" y2="12" />
+              </svg>
+              {isChannels ? "Create Channel" : "Start Conversation"}
+            </button>
+          </div>
         )}
-        {currentRoute === "Channels" && (
-          <UserActionModalMain
-            DiscussionToActId={selectedDiscussion.id}
-            channel_data={channelData.get(selectedDiscussion.id)}
-            modalState={[modalIsVisible, setModalAsVisible]}
-            ActionContext={currentRoute}
-          />
-        )}
-      </ul>
+      </div>
     </div>
   );
 }

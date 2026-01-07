@@ -1,103 +1,378 @@
-.message {
+/* Message wrapper */
+.message_wrapper {
   display: flex;
-  align-items: start;
-  padding-bottom: 5px;
-  flex-direction: row;
-  width: 50%;
-  gap: var(--message_header_body_spacing);
-  word-break: break-all;
-  margin-bottom: 40px;
+  align-items: flex-end;
+  gap: 10px;
+  padding: 2px 0;
+  position: relative;
+  animation: messageIn 0.2s ease;
 }
 
-/*********-Message body section-****************/
+@keyframes messageIn {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
 
-.message_body {
+.message_wrapper_sent {
+  flex-direction: row-reverse;
+}
+
+.message_wrapper_received {
+  flex-direction: row;
+}
+
+.message_wrapper_grouped {
+  padding-top: 1px;
+}
+
+/* Avatar */
+.avatar_container {
+  width: 36px;
+  height: 36px;
+  flex-shrink: 0;
+  transition: opacity 0.2s ease;
+}
+
+.avatar_hidden {
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* Message content */
+.message_content {
   display: flex;
   flex-direction: column;
+  max-width: 70%;
+  min-width: 80px;
 }
 
-/*This class styles the main element of message container*/
-.message_bubble {
-  display: inline-block; /*Making the parent container resizes based on the size of its content*/
-  padding: 8px 40px;
-  font-size: 15px;
-  border-radius: 20px;
+.message_content_sent {
+  align-items: flex-end;
+}
 
-  margin-top: 10px;
+.message_content_received {
+  align-items: flex-start;
+}
+
+/* Username */
+.username {
+  font-size: 12px;
+  font-weight: 600;
+  color: #71a7a7;
+  margin-bottom: 4px;
+  margin-left: 12px;
+}
+
+/* Bubble wrapper */
+.bubble_wrapper {
   position: relative;
+  display: flex;
+  align-items: center;
 }
 
-/*This class serves a styling for the bubble tail triangle*/
+/* Message bubble */
+.bubble {
+  padding: 10px 14px;
+  border-radius: 18px;
+  position: relative;
+  word-wrap: break-word;
+  word-break: break-word;
+  transition: all 0.2s ease;
+}
 
-/* |sent message styling| */
-.left_tail.message_bubble::after {
-  content: "";
+.bubble_sent {
+  background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+  border-bottom-right-radius: 6px;
+  box-shadow: 0 2px 8px rgba(99, 102, 241, 0.25);
+}
+
+.bubble_received {
+  background: rgba(60, 59, 108, 0.7);
+  border: 1px solid rgba(113, 167, 167, 0.15);
+  border-bottom-left-radius: 6px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+.bubble_text {
+  font-size: 14px;
+  line-height: 1.45;
+  margin: 0;
+  color: #ffffff;
+}
+
+.bubble_received .bubble_text {
+  color: rgba(255, 255, 255, 0.9);
+}
+
+/* Bubble hover effect */
+.message_wrapper:hover .bubble_sent {
+  box-shadow: 0 4px 12px rgba(99, 102, 241, 0.35);
+}
+
+.message_wrapper:hover .bubble_received {
+  background: rgba(60, 59, 108, 0.85);
+}
+
+/* Message actions */
+.actions {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px;
+  background: rgba(36, 35, 79, 0.95);
+  backdrop-filter: blur(8px);
+  border-radius: 10px;
+  border: 1px solid rgba(113, 167, 167, 0.2);
   position: absolute;
-  bottom: 3px; /* Adjust this value to position the tail */
-  left: -15px;
-  border-width: 20px; /* Size of the triangle */
-  border-style: solid;
-  border-color: transparent transparent var(--message_sent_bubble_color);
-  transform: rotate(352deg);
+  top: 50%;
+  transform: translateY(-50%) scale(0.9);
+  opacity: 0;
+  pointer-events: none;
+  transition: all 0.2s ease;
+  z-index: 10;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
 }
 
-.message_bubble___sent_style {
-  background-color: var(--message_sent_bubble_color);
-  color: white;
+.actions_visible {
+  opacity: 1;
+  transform: translateY(-50%) scale(1);
+  pointer-events: auto;
 }
 
-/* |received message styling| */
+.actions_left {
+  right: calc(100% + 8px);
+}
 
-.right_tail.message_bubble::after {
-  content: "";
+.actions_right {
+  left: calc(100% + 8px);
+}
+
+.action_btn {
+  width: 30px;
+  height: 30px;
+  border-radius: 8px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.15s ease;
+}
+
+.action_btn svg {
+  width: 16px;
+  height: 16px;
+  color: rgba(255, 255, 255, 0.6);
+  transition: color 0.15s ease;
+}
+
+.action_btn:hover {
+  background: rgba(99, 102, 241, 0.3);
+}
+
+.action_btn:hover svg {
+  color: #ffffff;
+}
+
+.action_btn:active {
+  transform: scale(0.9);
+}
+
+/* Copied toast */
+.copied_toast {
   position: absolute;
-  bottom: 0px; /* Adjust this value to position the tail */
-  right: -15px;
-  border-width: 20px; /* Size of the triangle */
-  border-style: solid;
-  border-color: transparent transparent var(--message_received_bubble_color);
-  transform: rotate(8deg);
+  top: -36px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  background: rgba(34, 197, 94, 0.9);
+  backdrop-filter: blur(8px);
+  border-radius: 8px;
+  font-size: 12px;
+  font-weight: 500;
+  color: #ffffff;
+  animation: toastIn 0.2s ease;
+  z-index: 20;
 }
 
-.message_bubble___received_style {
-  background-color: var(--message_received_bubble_color);
-  color: rgb(0, 0, 0);
+.copied_toast svg {
+  width: 14px;
+  height: 14px;
 }
 
-/*|UserName|*/
-.message_username__style {
-  font-size: medium;
-  color: red;
-  letter-spacing: 1px;
-}
-
-/*/***********************/
-
-/***- utils -**/
-
-.message__to_right {
-  justify-content: end;
-
-  margin-left: auto;
-  text-align: right;
-}
-
-@media (max-width: 650px) {
-  .message_bubble {
-    font-size: 10px;
-    padding: 13px 30px;
+@keyframes toastIn {
+  from {
+    opacity: 0;
+    transform: translateX(-50%) translateY(4px);
   }
-  .message_username__style {
-    font-size: small;
+  to {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
   }
 }
 
-@media (max-width: 450px) {
-  .message_bubble {
-    font-size: 9px;
-    padding: 13px 23px;
+/* Timestamp */
+.timestamp {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin-top: 4px;
+  padding: 0 4px;
+}
+
+.timestamp_sent {
+  justify-content: flex-end;
+}
+
+.timestamp_received {
+  justify-content: flex-start;
+}
+
+.status_icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.status_icon svg {
+  width: 14px;
+  height: 14px;
+  color: #22c55e;
+}
+
+/* Link styling inside bubbles */
+.bubble a {
+  color: inherit;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.bubble_sent a {
+  color: rgba(255, 255, 255, 0.95);
+}
+
+.bubble_received a {
+  color: #71a7a7;
+}
+
+/* Image messages (if applicable) */
+.bubble_image {
+  padding: 4px;
+  overflow: hidden;
+}
+
+.bubble_image img {
+  max-width: 280px;
+  max-height: 200px;
+  border-radius: 14px;
+  object-fit: cover;
+}
+
+/* Emoji-only messages */
+.bubble_emoji {
+  background: transparent !important;
+  box-shadow: none !important;
+  border: none !important;
+  padding: 4px;
+}
+
+.bubble_emoji .bubble_text {
+  font-size: 32px;
+  line-height: 1.2;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .message_content {
+    max-width: 80%;
   }
-  .message_username__style {
-    font-size: small;
+
+  .avatar_container {
+    width: 32px;
+    height: 32px;
+  }
+
+  .bubble {
+    padding: 8px 12px;
+    border-radius: 16px;
+  }
+
+  .bubble_text {
+    font-size: 14px;
+  }
+
+  .username {
+    font-size: 11px;
+    margin-left: 10px;
+  }
+
+  .actions {
+    display: none;
+  }
+
+  .message_wrapper {
+    gap: 8px;
+  }
+}
+
+@media (max-width: 500px) {
+  .message_content {
+    max-width: 85%;
+  }
+
+  .avatar_container {
+    width: 28px;
+    height: 28px;
+  }
+
+  .bubble {
+    padding: 8px 10px;
+    border-radius: 14px;
+  }
+
+  .bubble_sent {
+    border-bottom-right-radius: 4px;
+  }
+
+  .bubble_received {
+    border-bottom-left-radius: 4px;
+  }
+
+  .bubble_text {
+    font-size: 13px;
+  }
+
+  .timestamp {
+    margin-top: 2px;
+  }
+}
+
+/* Selection highlight */
+.bubble::selection,
+.bubble_text::selection {
+  background: rgba(255, 255, 255, 0.3);
+}
+
+/* Long press context menu (mobile) */
+@media (hover: none) and (pointer: coarse) {
+  .message_wrapper {
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    user-select: none;
+  }
+
+  .bubble_text {
+    -webkit-user-select: text;
+    user-select: text;
   }
 }

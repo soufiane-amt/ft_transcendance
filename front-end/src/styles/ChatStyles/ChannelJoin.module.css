@@ -1,80 +1,617 @@
-.channel_join{
-    display: flex;
-    justify-content: space-between;
-    width: 80%;
-    align-items: center;
-    background-color: #6361A2;
-    border-radius: 15px;
-    padding: 5px 10px;
-    margin-bottom: 10px;
+.channel_join {
+  display: flex;
+  justify-content: space-between;
+  width: 80%;
+  align-items: center;
+  background-color: #6361a2;
+  border-radius: 15px;
+  padding: 5px 10px;
+  margin-bottom: 10px;
 }
 
-.channel_join__user{
-    display: flex;
-    align-items: center;
+.channel_join__user {
+  display: flex;
+  align-items: center;
 
-    width: 30%;
-    height: 100%;
+  width: 30%;
+  height: 100%;
 }
 
-.channel_join__user__avatar{
-    width: 50px;
-    height: 50px;
-    border-radius: 50%;
-    margin-right: 10px;
+.channel_join__user__avatar {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  margin-right: 10px;
 }
 
 .channel_join__user__name {
-    color: aquamarine;
+  color: aquamarine;
 }
 
-.channel_join_type span{
-    font-weight: bold;
-    color: greenyellow;
+.channel_join_type span {
+  font-weight: bold;
+  color: greenyellow;
 }
-.channel_join__message{
-    background-color: #6361A2;
-    border: none;
-    outline: none;
-    cursor: pointer;
-    width: 50px;
-    height: 50px;
+.channel_join__message {
+  background-color: #6361a2;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  width: 50px;
+  height: 50px;
+  display: flex;
+  align-items: center;
+  margin-right: 10px;
+}
+.channel_join__message button {
+  background-color: transparent;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  color: #6361a2;
+  background-color: #c9c7f2;
+  border-radius: 10px;
+  padding: 5px 15px;
+  font-weight: bold;
+}
+.channel_join__message_icon {
+  width: 100%;
+  height: 100%;
+}
+
+/* Channel card styles */
+.channel_card {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 14px 16px;
+  background: rgba(60, 59, 108, 0.4);
+  border-radius: 14px;
+  border: 1px solid rgba(113, 167, 167, 0.1);
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.channel_card_hover,
+.channel_card:hover {
+  background: rgba(60, 59, 108, 0.7);
+  border-color: rgba(113, 167, 167, 0.25);
+  transform: translateX(4px);
+}
+
+.channel_card_disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.channel_card_disabled:hover {
+  transform: none;
+  border-color: rgba(255, 255, 255, 0.08);
+}
+
+/* Image container */
+.image_container {
+  position: relative;
+  width: 56px;
+  height: 56px;
+  border-radius: 14px;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+.channel_image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.type_badge {
+  position: absolute;
+  bottom: -4px;
+  right: -4px;
+  width: 24px;
+  height: 24px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid rgba(20, 20, 40, 1);
+}
+
+.type_badge svg {
+  width: 12px;
+  height: 12px;
+}
+
+.badge_public {
+  background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
+  color: #ffffff;
+}
+
+.badge_private {
+  background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%);
+  color: #ffffff;
+}
+
+.badge_protected {
+  background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+  color: #ffffff;
+}
+
+/* Channel info */
+.channel_info {
+  flex: 1;
+  min-width: 0;
+}
+
+.channel_name {
+  font-size: 15px;
+  font-weight: 600;
+  color: #ffffff;
+  margin: 0 0 4px 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.channel_meta {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.channel_type {
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+/* Join button */
+.join_button {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 10px 16px;
+  background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+  border: none;
+  border-radius: 10px;
+  color: #ffffff;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+
+.join_button svg {
+  width: 16px;
+  height: 16px;
+}
+
+.join_button:hover {
+  box-shadow: 0 4px 15px rgba(99, 102, 241, 0.4);
+  transform: scale(1.05);
+}
+
+.join_button:disabled,
+.join_button.disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.join_button.joining {
+  padding: 10px 24px;
+}
+
+/* Spinner */
+.spinner {
+  width: 18px;
+  height: 18px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-top-color: #ffffff;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+.spinner_small {
+  width: 16px;
+  height: 16px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-top-color: #ffffff;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Glow effect */
+.glow_effect {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: radial-gradient(
+    circle at var(--mouse-x, 50%) var(--mouse-y, 50%),
+    rgba(99, 102, 241, 0.1) 0%,
+    transparent 50%
+  );
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+}
+
+.channel_card:hover .glow_effect {
+  opacity: 1;
+}
+
+/* ================================ */
+/* Password Modal Styles */
+/* ================================ */
+
+.modal_backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(8px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  animation: fadeIn 0.2s ease;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.password_modal {
+  background: linear-gradient(145deg, #1a1a2e 0%, #16162a 100%);
+  border-radius: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 
+    0 25px 50px -12px rgba(0, 0, 0, 0.5),
+    0 0 0 1px rgba(255, 255, 255, 0.05),
+    inset 0 1px 0 rgba(255, 255, 255, 0.05);
+  width: 90%;
+  max-width: 420px;
+  overflow: hidden;
+  animation: slideUp 0.3s ease;
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* Modal Header */
+.modal_header {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  padding: 24px 24px 20px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  position: relative;
+}
+
+.modal_icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 14px;
+  background: rgba(245, 158, 11, 0.15);
+  border: 1px solid rgba(245, 158, 11, 0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fbbf24;
+  flex-shrink: 0;
+}
+
+.modal_icon svg {
+  width: 24px;
+  height: 24px;
+}
+
+.modal_header_content {
+  flex: 1;
+  min-width: 0;
+  padding-right: 32px;
+}
+
+.modal_title {
+  font-size: 18px;
+  font-weight: 600;
+  color: #ffffff;
+  margin: 0 0 6px 0;
+  letter-spacing: -0.02em;
+}
+
+.modal_subtitle {
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.5);
+  margin: 0;
+  line-height: 1.4;
+}
+
+.modal_subtitle strong {
+  color: rgba(255, 255, 255, 0.8);
+  font-weight: 500;
+}
+
+.modal_close {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  color: rgba(255, 255, 255, 0.5);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+}
+
+.modal_close:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: #ffffff;
+  transform: rotate(90deg);
+}
+
+.modal_close svg {
+  width: 16px;
+  height: 16px;
+}
+
+/* Modal Body */
+.modal_body {
+  padding: 20px 24px 24px;
+}
+
+.input_group {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.input_label {
+  font-size: 12px;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.5);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.password_input_wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.input_icon {
+  position: absolute;
+  left: 14px;
+  width: 18px;
+  height: 18px;
+  color: rgba(255, 255, 255, 0.3);
+  pointer-events: none;
+}
+
+.input_icon svg {
+  width: 100%;
+  height: 100%;
+}
+
+.password_input {
+  width: 100%;
+  padding: 14px 48px 14px 44px;
+  background: rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  color: #ffffff;
+  font-size: 15px;
+  transition: all 0.2s ease;
+}
+
+.password_input::placeholder {
+  color: rgba(255, 255, 255, 0.3);
+}
+
+.password_input:focus {
+  outline: none;
+  border-color: rgba(245, 158, 11, 0.5);
+  box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.1);
+}
+
+.password_input.input_error {
+  border-color: rgba(239, 68, 68, 0.5);
+  box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1);
+}
+
+.password_toggle {
+  position: absolute;
+  right: 8px;
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  background: transparent;
+  border: none;
+  color: rgba(255, 255, 255, 0.4);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+}
+
+.password_toggle:hover {
+  color: rgba(255, 255, 255, 0.8);
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.password_toggle svg {
+  width: 18px;
+  height: 18px;
+}
+
+/* Error Message */
+.error_message {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 12px;
+  background: rgba(239, 68, 68, 0.1);
+  border: 1px solid rgba(239, 68, 68, 0.2);
+  border-radius: 10px;
+  color: #f87171;
+  font-size: 13px;
+  animation: shake 0.3s ease;
+}
+
+.error_icon {
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
+}
+
+.error_icon svg {
+  width: 100%;
+  height: 100%;
+}
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-5px); }
+  75% { transform: translateX(5px); }
+}
+
+/* Modal Actions */
+.modal_actions {
+  display: flex;
+  gap: 12px;
+  margin-top: 20px;
+}
+
+.cancel_button {
+  flex: 1;
+  padding: 14px 20px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.cancel_button:hover:not(:disabled) {
+  background: rgba(255, 255, 255, 0.1);
+  color: #ffffff;
+}
+
+.cancel_button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.submit_button {
+  flex: 1.5;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 14px 20px;
+  background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+  border: none;
+  border-radius: 12px;
+  color: #ffffff;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 4px 15px rgba(245, 158, 11, 0.3);
+}
+
+.submit_button svg {
+  width: 16px;
+  height: 16px;
+}
+
+.submit_button:hover:not(:disabled) {
+  background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
+  box-shadow: 0 6px 20px rgba(245, 158, 11, 0.4);
+  transform: translateY(-1px);
+}
+
+.submit_button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+/* Responsive */
+@media (max-width: 480px) {
+  .channel_card {
+    flex-direction: column;
+    text-align: center;
+    padding: 20px;
+  }
+
+  .channel_info {
     display: flex;
+    flex-direction: column;
     align-items: center;
-    margin-right: 10px;
+  }
 
-}
-.channel_join__message button{
-    background-color: transparent;
-    border: none;
-    outline: none;
-    cursor: pointer;
-    color: #6361A2;
-    background-color:#c9c7f2;
-    border-radius: 10px;
-    padding: 5px 15px;
-    font-weight: bold;
-}
-.channel_join__message_icon{
+  .join_button {
     width: 100%;
-    height: 100%;
-}
+    justify-content: center;
+  }
 
-@media (max-width:650px) 
-{
-    .channel_join_type{
-        display: none;
-    }
-    .channel_join__user__avatar{
-        width: 30px;
-        height: 30px;
-    }
-    .channel_join__message{
-        width: 30px;
-        height: 30px;
-    }
-    .channel_join__message button{
-        padding: 5px 7px;
-        font-size: x-small;
-    }
+  .password_modal {
+    width: 95%;
+    margin: 16px;
+  }
+
+  .modal_header {
+    padding: 20px;
+  }
+
+  .modal_body {
+    padding: 16px 20px 20px;
+  }
+
+  .modal_actions {
+    flex-direction: column;
+  }
+
+  .cancel_button,
+  .submit_button {
+    flex: none;
+    width: 100%;
+  }
 }

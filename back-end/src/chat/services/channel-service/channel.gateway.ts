@@ -321,6 +321,7 @@ export class channelGateway implements OnGatewayConnection {
   @UseGuards(LeaveChannelGuard)
   @SubscribeMessage('leaveChannel')
   async handleChannelLeave(client: ClientSocket, channel_id: string) {
+    console.log('leaveChannel event triggered');
     const user_id = client.userId;
     client.leave(`channel-${channel_id}`); //Deleting the user from the websocket room
     const delete_channel = await this.chatCrud.leaveChannel(
