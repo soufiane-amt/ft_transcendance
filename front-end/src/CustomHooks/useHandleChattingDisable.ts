@@ -2,7 +2,7 @@ import { useEffect } from "react";
 import { discussionPanelSelectType, selectDiscStateType } from "../components/Chat/interfaces/DiscussionPanel";
 
 export function useHandleChattingDisable (BanContext:any, MuteContext:any, selectedDiscussion: discussionPanelSelectType, 
-  disableChatTextBox : React.Dispatch<React.SetStateAction<boolean | undefined>>)
+  disableChatTextBox : React.Dispatch<React.SetStateAction<boolean >>)
 {
     useEffect(() => {
         const roomIsBanned = BanContext.bannedRooms?.some((ban: {room_id: string}) => 

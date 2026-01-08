@@ -222,7 +222,7 @@ function Section() {
         </div>
         <div className="parent-identification-user">
           <div className="identification-user">
-            <img src={user?.avatar} alt="Photo" width={130} height={130} />
+            <img src={user?.avatar || "https://www.gravatar.com/avatar/?d=mp"} alt="Photo" width={130} height={130} />
             <div className="level">
               <p>{gameInformation?.ladder_level}</p>
             </div>

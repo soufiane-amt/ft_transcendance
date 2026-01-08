@@ -285,7 +285,7 @@ function NavBar() {
                   <div className={NavBarCSS.search_user} key={user?.id}>
                     <div className={NavBarCSS.search_user_div}>
                       <div>
-                        <img src={user.avatar} alt="Photo" />
+                        <img src={user.avatar || "https://www.gravatar.com/avatar/?d=mp"} alt="Photo" />
                         <p>{user.username}</p>
                       </div>
                       {clickedUsers.includes(user.id) ||
@@ -449,7 +449,7 @@ function NavBar() {
           </div>
           <div className={NavBarCSS.aa}>
             <img
-              src={user?.avatar}
+              src={user?.avatar || "https://www.gravatar.com/avatar/?d=mp"}
               alt="Photo"
               width={65}
               height={60}

@@ -5,7 +5,7 @@ import socket from "../app/socket/socket";
 
 
 export function useHandleBan (BanContext:IBanContext, selectedDiscussion : discussionPanelSelectType, 
-            disableChatTextBox : React.Dispatch<React.SetStateAction<boolean | undefined>>)
+            disableChatTextBox : React.Dispatch<React.SetStateAction<boolean>>)
 {
     useEffect(() => {
         const handleUserBanned = (banSignal: { room_id: string, agent_id:string }) => {
@@ -27,7 +27,7 @@ export function useHandleBan (BanContext:IBanContext, selectedDiscussion : discu
 
     
 export function useHandleUnBan (BanContext:IBanContext, selectedDiscussion : discussionPanelSelectType, 
-    disableChatTextBox : React.Dispatch<React.SetStateAction<boolean | undefined>>)
+    disableChatTextBox : React.Dispatch<React.SetStateAction<boolean >>)
     {
         useEffect(() => {
           const handleUserUnBanned = (banSignal: { room_id: string, agent_id:string }) => {

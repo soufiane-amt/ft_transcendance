@@ -15,12 +15,6 @@ import socket from "../../../../app/socket/socket";
 import newSocket from "@/components/GlobalComponents/Socket/socket";
 import { ChannelSetting } from "../ChannelSetting/ChannelSetting";
 
-// Debug: Log socket status on module load
-console.log("[ChannelActionModal] Socket imported:", socket);
-console.log("[ChannelActionModal] Socket connected:", socket?.connected);
-console.log("[ChannelActionModal] Socket id:", socket?.id);
-
-// Action types enum
 enum ActionType {
   BAN,
   UNBAN,
@@ -764,7 +758,7 @@ function MemberCard({
   const renderActions = () => {
     const actions: React.ReactNode[] = [];
 
-    // If it's the current user, show leave button
+    // If it&apos;s the current user, show leave button
     if (isCurrentUser) {
       return (
         <button
@@ -821,7 +815,7 @@ function MemberCard({
         }
       }
 
-      // Can't moderate owner
+      // Can&apos;t moderate owner
       if (!isMemberOwner) {
         // Ban/Unban
         if (member.isBanned) {
@@ -945,7 +939,12 @@ function MembersView({
     (userId: string) => {
       const user = userContacts.get(userId);
       const isOwner = userId === channelData.channelOwner;
-      console.log("[MembersView] Processing user:", userId, "channelData.channelAdmins:", channelData.channelAdmins);
+      console.log(
+        "[MembersView] Processing user:",
+        userId,
+        "channelData.channelAdmins:",
+        channelData.channelAdmins
+      );
       const isAdmin = channelData.channelAdmins.some(
         (adminId: string) => adminId === userId
       );
@@ -1074,9 +1073,7 @@ function OwnerTransferView({
     // Sort: admins first
     .sort((a, b) => (b.isAdmin ? 1 : 0) - (a.isAdmin ? 1 : 0));
 
-  const selectedMember = eligibleMembers.find(
-    (m) => m.userId === selectedUser
-  );
+  const selectedMember = eligibleMembers.find((m) => m.userId === selectedUser);
 
   const handleTransferOwnership = () => {
     if (!selectedUser || !selectedMember) return;
@@ -1113,10 +1110,10 @@ function OwnerTransferView({
 
         <div className={style.empty_transfer_state}>
           <div className={style.empty_transfer_icon}>{Icons.trash}</div>
-          <h4>You're the only member</h4>
+          <h4>You&apos;re the only member</h4>
           <p>
-            Since you're the only member in this channel, leaving will permanently
-            delete the channel and all its messages.
+            Since you&apos;re the only member in this channel, leaving will
+            permanently delete the channel and all its messages.
           </p>
           <div className={style.empty_transfer_actions}>
             <button className={style.cancel_btn} onClick={onBack}>
@@ -1178,7 +1175,9 @@ function OwnerTransferView({
           </svg>
         </div>
         <div className={style.warning_content}>
-          <span className={style.warning_title}>You must transfer ownership</span>
+          <span className={style.warning_title}>
+            You must transfer ownership
+          </span>
           <span className={style.warning_text}>
             As the channel owner, you need to select a new owner before you can
             leave.
@@ -1204,7 +1203,9 @@ function OwnerTransferView({
           <div
             key={member.userId}
             className={`${style.transfer_member_card} ${
-              selectedUser === member.userId ? style.transfer_member_selected : ""
+              selectedUser === member.userId
+                ? style.transfer_member_selected
+                : ""
             }`}
             onClick={() => setSelectedUser(member.userId)}
           >
@@ -1216,9 +1217,7 @@ function OwnerTransferView({
                   className={style.transfer_avatar}
                 />
                 {member.isAdmin && (
-                  <div className={style.transfer_admin_badge}>
-                    {Icons.star}
-                  </div>
+                  <div className={style.transfer_admin_badge}>{Icons.star}</div>
                 )}
               </div>
               <div className={style.transfer_member_details}>
@@ -1268,26 +1267,12 @@ function OwnerTransferView({
       </div>
 
       {/* Confirmation Dialog */}
-      {showConfirmation && selectedMember && (
+      {/* {showConfirmation && selectedMember && (
         <ConfirmationDialog
-          title="Transfer Ownership & Leave"
-          message={
-            <>
-              Are you sure you want to transfer ownership to{" "}
-              <strong>{selectedMember.username}</strong> and leave the channel?
-              <br />
-              <br />
-              This action cannot be undone.
-            </>
-          }
-          confirmLabel="Transfer & Leave"
-          cancelLabel="Cancel"
-          variant="warning"
           onConfirm={handleTransferOwnership}
           onCancel={() => setShowConfirmation(false)}
-          isLoading={isTransferring}
         />
-      )}
+      )} */}
     </div>
   );
 }
@@ -1329,7 +1314,7 @@ function ChannelActionModalContent({
               </svg>
             </div>
             <h3>Channel Not Found</h3>
-            <p>This channel may have been deleted or you don't have access.</p>
+            <p>This channel may have been deleted or you don&apos;t have access.</p>
             <button
               className={style.error_button}
               onClick={() => handleVisibility(false)}
@@ -1352,7 +1337,7 @@ function ChannelActionModalContent({
     ? "Admin"
     : "Member";
 
-    console.log("isAdmin : ", isAdmin);
+  console.log("isAdmin : ", isAdmin);
   const getChannelTypeIcon = () => {
     switch (currentChannel?.type) {
       case "PRIVATE":
@@ -1419,7 +1404,6 @@ function ChannelActionModalContent({
   const handleOpenMembers = () => {
     setCurrentView("members");
   };
-
 
   // Render transfer ownership view
   if (currentView === "transfer") {

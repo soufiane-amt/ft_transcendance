@@ -99,7 +99,7 @@ const Setting: React.FC<Settingprops> = ({ handleSettingData }) => {
           />
         </div>
         <div className={SettingCss.setting_form}>
-          <img src={image} alt="Photo" width="100" height="100" />
+          <img src={image || "https://www.gravatar.com/avatar/?d=mp"} alt="Photo" width="100" height="100" />
           <div className={SettingCss.choose_img}>
             <label htmlFor="choose">Change photo profile</label>
             <input

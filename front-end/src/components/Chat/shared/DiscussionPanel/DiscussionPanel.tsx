@@ -101,7 +101,6 @@ interface DiscussionPanelProps {
   channelId: string;
   channelData: ChannelData | undefined;
   isSelected: boolean;
-  showUserActionModal: () => void;
   currentRoute: "Direct_messaging" | "Channels";
 }
 

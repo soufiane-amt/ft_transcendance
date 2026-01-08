@@ -13,8 +13,14 @@ import { ChannelData } from "../../interfaces/ChannelData";
 import { useHandlePanel } from "@/CustomHooks/useHandlePanel";
 import { useHandleJoinDm } from "@/CustomHooks/useHandleJoinChannel";
 import DiscussionPanel from "../../shared/DiscussionPanel/DiscussionPanel";
-import { useFindChannelBook } from "@/app/context/ChannelInfoBook"; // adjust import as needed
-import { useFindUserContacts } from "@/app/context/UsersContactBookContext";
+import {
+  useChannelBooks,
+  useFindChannelBook,
+} from "@/app/context/ChannelInfoBook"; // adjust import as needed
+import {
+  useFindUserContacts,
+  useUserContacts,
+} from "@/app/context/UsersContactBookContext";
 
 interface DiscussionsBarProps {
   openBar: boolean;
@@ -44,10 +50,12 @@ export function DiscussionsBar({
   const [channelData, setChannelData] = useState<Map<string, ChannelData>>(
     new Map()
   );
-
   const { setDiscussionIsEmpty } = discussionIsEmptyState;
+  const channelBook = useChannelBooks();
+  const userContacts = useUserContacts();
 
   const isChannels = currentRoute === "Channels";
+
   console.log("Current Route in DiscussionsBar:", currentRoute);
   useEffect(() => {
     async function fetchDiscussions() {
@@ -107,17 +115,16 @@ export function DiscussionsBar({
   }, [channelData]);
 
   // Filter discussions by channel name using useFindChannelBook
-const filteredDiscussions = discussions.filter((d) => {
-  if (isChannels) {
-    const channelInfo = useFindChannelBook(d.id);
-    if (!channelInfo) return false;
-    return channelInfo.name.toLowerCase().includes(searchQuery.toLowerCase());
-  } else {
-    // For DMs, use partner's name or other DM-specific property
-    const user = useFindUserContacts(d.partner_id);
-    return user?.username.toLowerCase().includes(searchQuery.toLowerCase());
-  }
-});
+
+  const filteredDiscussions = discussions.filter((d) => {
+    if (isChannels) {
+      const channel = channelBook.get(d.id);
+      return channel?.name?.toLowerCase().includes(searchQuery.toLowerCase());
+    } else {
+      const user = userContacts.get(d.partner_id);
+      return user?.username?.toLowerCase().includes(searchQuery.toLowerCase());
+    }
+  });
   useHandleJoinDm(selectedDiscussion);
 
   useHandlePanel(

@@ -1,9 +1,8 @@
 "use client";
 import style from "../../../../../styles/ChatStyles/DiscussionPanel.module.css";
-import { DiscussionType } from "../DiscussionsBar";
 
 interface DiscussionPanelProps {
-  discussion: DiscussionType;
+  discussion: any;
   isSelected: boolean;
   onSelect: () => void;
   isChannel: boolean;

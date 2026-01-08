@@ -5,7 +5,7 @@ import { IMuteContext } from "../app/context/MuteContext";
 
 
 export function useHandleMute (MuteContext:IMuteContext | undefined, selectedDiscussion : discussionPanelSelectType, 
-            disableChatTextBox : React.Dispatch<React.SetStateAction<boolean | undefined>>)
+            disableChatTextBox : React.Dispatch<React.SetStateAction<boolean >>)
 {
   
   useEffect(() => {
@@ -28,7 +28,7 @@ export function useHandleMute (MuteContext:IMuteContext | undefined, selectedDis
 
     
 export function useHandleUnMute (MuteContext:IMuteContext | undefined, selectedDiscussion : discussionPanelSelectType, 
-    disableChatTextBox : React.Dispatch<React.SetStateAction<boolean | undefined>>)
+    disableChatTextBox : React.Dispatch<React.SetStateAction<boolean >>)
     {
         useEffect(() => {
           if (!MuteContext) return;

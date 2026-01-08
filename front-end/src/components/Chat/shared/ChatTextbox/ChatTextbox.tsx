@@ -38,7 +38,7 @@ function ChatTextBox({
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
   const [newMessageContent, setNewMessageContent] = useState<string>("");
-  const [isChatTextBoxDisabled, disableChatTextBox] = useState<boolean>(false);
+  const [isChatTextBoxDisabled, setIsChatTextBoxDisabled] = useState<boolean>(false);
   const [isFocused, setIsFocused] = useState(false);
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
 
@@ -46,15 +46,15 @@ function ChatTextBox({
   const MuteContext = useMuteContext();
 
   useHandleNewMsg(messagesHistoryState, selectedDiscussion);
-  useHandleBan(BanContext, selectedDiscussion, disableChatTextBox);
-  useHandleUnBan(BanContext, selectedDiscussion, disableChatTextBox);
-  useHandleMute(MuteContext, selectedDiscussion, disableChatTextBox);
-  useHandleUnMute(MuteContext, selectedDiscussion, disableChatTextBox);
+  useHandleBan(BanContext, selectedDiscussion, setIsChatTextBoxDisabled);
+  useHandleUnBan(BanContext, selectedDiscussion, setIsChatTextBoxDisabled);
+  useHandleMute(MuteContext, selectedDiscussion, setIsChatTextBoxDisabled);
+  useHandleUnMute(MuteContext, selectedDiscussion, setIsChatTextBoxDisabled);
   useHandleChattingDisable(
     BanContext,
     MuteContext,
     selectedDiscussion,
-    disableChatTextBox
+    setIsChatTextBoxDisabled
   );
 
   // Auto-resize textarea
