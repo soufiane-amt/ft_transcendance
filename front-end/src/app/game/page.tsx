@@ -2,7 +2,13 @@
 import "../../styles/TailwindRef.css";
 import Structure from "../Structure";
 import GameLandingPage from "@/components/game/GameLandingPage";
-import React, { useState, createContext, useEffect, useContext } from "react";
+import React, {
+  useState,
+  createContext,
+  useEffect,
+  useContext,
+  Suspense,
+} from "react";
 import GameContext from "@/components/game/GameContext";
 import { io, Socket } from "socket.io-client";
 import newSocket from "@/components/GlobalComponents/Socket/socket";
@@ -22,7 +28,7 @@ export interface GameSettingsInterface {
   Roll?: string | null;
 }
 
-export default function Game() {
+function GameContent() {
   const [GameLandingPageBool, SetGameLandingPageBool] = useState(true);
   const [GameDashboardBool, SetGameDashboardBool] = useState(false);
   const jwtToken: string | undefined = Cookies.get("access_token");
@@ -40,17 +46,18 @@ export default function Game() {
   const [gameSocket, setGameSocket] = useState<null | Socket>(null);
 
   useEffect(() => {
-    const joining_leaving_game: boolean = usesearchParams.get('joining_leaving_game') !== null;
+    const joining_leaving_game: boolean =
+      usesearchParams.get("joining_leaving_game") !== null;
     if (gameSocket !== null && joining_leaving_game === true) {
-        gameSocket.emit('join_leaving_game', (response: string) => {
-          if (response === "you've been join the game successfully") {
-            SetGameDashboardBool(true);
-            SetGameLandingPageBool(false);
-          }
-        })
-        router.replace('/game');
+      gameSocket.emit("join_leaving_game", (response: string) => {
+        if (response === "you've been join the game successfully") {
+          SetGameDashboardBool(true);
+          SetGameLandingPageBool(false);
+        }
+      });
+      router.replace("/game");
     }
-  })
+  });
 
   useEffect(() => {
     const socket: Socket = io(`${process.env.NEXT_PUBLIC_BACKEND_SERV}/Game`, {
@@ -85,28 +92,36 @@ export default function Game() {
   });
 
   return (
-    <Structure>
-      <GameContext.Provider
-        value={{
-          GameLandingPageBool,
-          SetGameLandingPageBool,
-          GameDashboardBool,
-          SetGameDashboardBool,
-          GameSettings,
-          setGameSettings,
-          gameSocket,
-          newSocket,
-          gameDataInfo,
-          setgameDataInfo,
-        }}
-      >
-        {GameLandingPageBool === true && GameDashboardBool === false && (
-          <GameLandingPage />
-        )}
-        {GameDashboardBool === true && GameLandingPageBool === false && (
-          <GameDashboard />
-        )}
-      </GameContext.Provider>
-    </Structure>
+      <Structure>
+        <GameContext.Provider
+          value={{
+            GameLandingPageBool,
+            SetGameLandingPageBool,
+            GameDashboardBool,
+            SetGameDashboardBool,
+            GameSettings,
+            setGameSettings,
+            gameSocket,
+            newSocket,
+            gameDataInfo,
+            setgameDataInfo,
+          }}
+        >
+          {GameLandingPageBool === true && GameDashboardBool === false && (
+            <GameLandingPage />
+          )}
+          {GameDashboardBool === true && GameLandingPageBool === false && (
+            <GameDashboard />
+          )}
+        </GameContext.Provider>
+      </Structure>
+  );
+}
+
+export default function Game() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <GameContent />
+    </Suspense>
   );
 }
