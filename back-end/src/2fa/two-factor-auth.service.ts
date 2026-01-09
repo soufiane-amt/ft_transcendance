@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { authenticator } from 'otplib';
-import { PrismaService } from 'src/prisma/prisma.service';
+import { PrismaService } from '../prisma/prisma.service';
 import { toFileStream } from 'qrcode';
 @Injectable()
 export class TwoFactorAuthService {
@@ -32,10 +32,13 @@ export class TwoFactorAuthService {
     return toFileStream(stream, otpauthUrl);
   }
 
-  isTwoFactorAuthenticationCodeValid(twoFactorAuthenticationCode: string, user) {
+  isTwoFactorAuthenticationCodeValid(
+    twoFactorAuthenticationCode: string,
+    user,
+  ) {
     return authenticator.verify({
-      token: twoFactorAuthenticationCode ,
-      secret: user.twoFactorAuthenticationSecret
-    })
+      token: twoFactorAuthenticationCode,
+      secret: user.twoFactorAuthenticationSecret,
+    });
   }
 }

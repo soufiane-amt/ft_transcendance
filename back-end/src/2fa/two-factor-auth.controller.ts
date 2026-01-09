@@ -13,7 +13,7 @@ import {
 import { TwoFactorAuthService } from './two-factor-auth.service';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-aut.guard';
 import { AuthService } from 'src/auth/auth.service';
-import { PrismaService } from 'src/prisma/prisma.service';
+import { PrismaService } from '../prisma/prisma.service';
 import { Response } from 'express';
 
 @Controller('2fa')
@@ -123,7 +123,11 @@ export class TwoFactorAuthController {
   }
 
   @Post('login')
-  async HandleLogin(@Req() request, @Res() response: Response, @Body() { twoFactorAuthenticationCode },) {
+  async HandleLogin(
+    @Req() request,
+    @Res() response: Response,
+    @Body() { twoFactorAuthenticationCode },
+  ) {
     try {
       const JwtToken: string = request.headers.authorization.split(' ')[1];
       const payload: any = this.authservice.extractPayload(JwtToken);
@@ -136,11 +140,10 @@ export class TwoFactorAuthController {
       const iscodevalid = this.twofaservice.isTwoFactorAuthenticationCodeValid(
         twoFactorAuthenticationCode,
         user,
-        );
+      );
       if (!iscodevalid)
         throw new UnauthorizedException('Wrong authentication code');
-      else
-      {
+      else {
         const token = await this.authservice.signToken(user.id, user.email);
         // response.clearCookie('twofa_token');
         // response.cookie('access_token', token, {
@@ -148,8 +151,10 @@ export class TwoFactorAuthController {
         //   secure: false,
         // });
 
-
-        response.json({ message: 'Two factor auth activated succesfully' , accessToken: token});
+        response.json({
+          message: 'Two factor auth activated succesfully',
+          accessToken: token,
+        });
         // return response.redirect(`${process.env.FRONT_SERV}/dashboard`);
       }
     } catch (err) {

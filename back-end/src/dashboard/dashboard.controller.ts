@@ -13,7 +13,7 @@ import { GameCrudService } from 'src/prisma/game-crud.service';
 import { UserCrudService } from 'src/prisma/user-crud.service';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-aut.guard';
 import { AuthService } from 'src/auth/auth.service';
-import { PrismaService } from 'src/prisma/prisma.service';
+import { PrismaService } from '../prisma/prisma.service';
 import { response } from 'express';
 
 @Controller('api')
@@ -66,15 +66,20 @@ export class DashboardController {
   }
 
   @Get('profile/statistic/:username')
-  async getProfileStatistic(@Param('username') username: string, @Res() response: any) {
+  async getProfileStatistic(
+    @Param('username') username: string,
+    @Res() response: any,
+  ) {
     let alldata: any = {};
     const user_id = await this.user.findUserByUsername(username);
     if (user_id) {
       const statistic: any[] =
         await this.resultgame.retreiveGamesScoreForStatistic(user_id);
       return response.status(200).send(statistic);
-    } else return response.status(400).json({ error: 'Bad Request: Your custom error message' });
-;
+    } else
+      return response
+        .status(400)
+        .json({ error: 'Bad Request: Your custom error message' });
   }
 
   @Get('Dashboard/allUsers')

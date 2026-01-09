@@ -13,7 +13,7 @@ import {
 import { Injectable, UseGuards } from '@nestjs/common';
 import { UserCrudService } from 'src/prisma/user-crud.service';
 import { AuthService } from 'src/auth/auth.service';
-import { PrismaService } from 'src/prisma/prisma.service';
+import { PrismaService } from '../prisma/prisma.service';
 
 import GameInvitationDto, {
   gameInvitationDto,
@@ -270,7 +270,7 @@ export class WebSocketGatewayClass
       gameInvitationDto.invitee_id,
     );
     if (inviteeStatus === Status.IN_GAME) {
-      return "the invitee isn't available for game"
+      return "the invitee isn't available for game";
     }
     if (invitorStatus === Status.IN_GAME) {
       return 'You are already in game';
