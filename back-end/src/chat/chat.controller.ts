@@ -45,7 +45,6 @@ export class ChatController {
     return payload.userId;
   }
 
-  @UseGuards(JwtAuthGuard)
   @Get('/image/:image_path')
   async getUserImage(
     @Param('image_path') image_path: string,
