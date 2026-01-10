@@ -37,8 +37,13 @@ function ChatTextBox({
   const userSession = useSessionUser();
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
+  // Destructure messagesHistory to listen for updates
+  const [messagesHistory] = messagesHistoryState;
+
   const [newMessageContent, setNewMessageContent] = useState<string>("");
-  const [isChatTextBoxDisabled, setIsChatTextBoxDisabled] = useState<boolean>(false);
+  const [isSending, setIsSending] = useState(false); // New state for loading
+  const [isChatTextBoxDisabled, setIsChatTextBoxDisabled] =
+    useState<boolean>(false);
   const [isFocused, setIsFocused] = useState(false);
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
 
@@ -66,8 +71,15 @@ function ChatTextBox({
     }
   }, [newMessageContent]);
 
+  // Reset loading state when the messages history changes (message received)
+  useEffect(() => {
+    setIsSending(false);
+  }, [messagesHistory]);
+
   const handleSendMessage = () => {
     if (!isMessageValid(newMessageContent)) return;
+
+    setIsSending(true); // Start loading
 
     const newMessage = {
       user_id: userSession.id,
@@ -211,18 +223,32 @@ function ChatTextBox({
             isMessageValid(newMessageContent) ? style.send_button_active : ""
           }`}
           onClick={handleSendMessage}
-          disabled={!isMessageValid(newMessageContent)}
+          disabled={!isMessageValid(newMessageContent) || isSending}
           title="Send message"
         >
-          <svg
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-          >
-            <line x1="22" y1="2" x2="11" y2="13" />
-            <polygon points="22 2 15 22 11 13 2 9 22 2" />
-          </svg>
+          {isSending ? (
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              className={style.spinner_icon} // Ensure you have rotation CSS or use inline style below
+              style={{ animation: "spin 1s linear infinite" }}
+            >
+              <style>{`@keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }`}</style>
+              <path d="M21 12a9 9 0 1 1-6.219-8.56" />
+            </svg>
+          ) : (
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+            >
+              <line x1="22" y1="2" x2="11" y2="13" />
+              <polygon points="22 2 15 22 11 13 2 9 22 2" />
+            </svg>
+          )}
         </button>
       </div>
 
