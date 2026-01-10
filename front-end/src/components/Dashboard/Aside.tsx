@@ -155,6 +155,19 @@ const Aside: React.FC<AsideProps> = ({ onSelectSection }) => {
             )}
           </div>
           <hr id="aside-line"></hr>
+          <div className="myaside ">
+            <div
+              className="homepage"
+              onClick={(event: any) => {
+                router.push("/chat");
+              }}
+            >
+              <img src="../space.png" alt="Photo" width={25} height={25} />
+              <button>Chat </button>
+            </div>
+          </div>
+
+          <hr id="aside-line"></hr>
           <div className="myaside">
             <div className="myaside1 aside">
               <h3>Game PLay</h3>
@@ -180,30 +193,6 @@ const Aside: React.FC<AsideProps> = ({ onSelectSection }) => {
                   height={20}
                 />
                 <button>Game Play</button>
-              </div>
-            )}
-          </div>
-          <hr id="aside-line"></hr>
-          <div className="myaside ">
-            <div className="myaside1 aside">
-              <h3>Chat</h3>
-              <img
-                src="../up-arrow.png"
-                alt="Photo"
-                width={20}
-                height={20}
-                onClick={handleuparrowchat}
-              />
-            </div>
-            {isactiveachat && (
-              <div
-                className="homepage"
-                onClick={(event: any) => {
-                  router.push("/chat");
-                }}
-              >
-                <img src="../space.png" alt="Photo" width={22} height={22} />
-                <button>Chat </button>
               </div>
             )}
           </div>
