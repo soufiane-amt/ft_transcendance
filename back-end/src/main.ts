@@ -7,10 +7,12 @@ async function bootstrap() {
     origin: true,
     credentials: true,
     // origin: '*',
-  });  
+  });
 
+  const port = process.env.PORT || 3001;
 
-  await app.listen(3001);
+  await app.listen(port, '0.0.0.0');
+
+  console.log(`NestJS is running on port ${port}`);
 }
 bootstrap();
-     
