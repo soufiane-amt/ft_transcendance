@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Install necessary packages
-apt-get -y update
+# apt-get -y update
 # apt-get install -y postgresql-client 
 
 # # Function to check if the PostgreSQL database is ready
