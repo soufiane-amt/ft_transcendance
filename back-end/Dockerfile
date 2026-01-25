@@ -1,7 +1,7 @@
 FROM node:20.8.0
 
 WORKDIR /backend
-RUN touch dummy.txt
+ARG CACHEBUST=1
 COPY back-end/package*.json ./
 RUN npm install
 
