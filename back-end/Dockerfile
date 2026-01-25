@@ -1,15 +1,14 @@
 FROM node:20.8.0
 
-# WORKDIR /backend
+WORKDIR /backend
 
-COPY . .
+COPY backend/package*.json ./
+RUN npm install
+
+COPY backend/ .
 
 EXPOSE 3001
 
-RUN npm install
+RUN chmod +x entrypoint.sh
 
-RUN ["chmod", "+x", "entrypoint.sh"]
-
-ENTRYPOINT ["./entrypoint.sh" ]
-
- 
+ENTRYPOINT ["./entrypoint.sh"]
