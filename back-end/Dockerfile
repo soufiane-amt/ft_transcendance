@@ -2,7 +2,7 @@ FROM node:20.8.0
 
 WORKDIR /backend
 
-COPY backend/package*.json ./
+COPY back-end/package*.json ./
 RUN npm install
 
 COPY back-end/ .
