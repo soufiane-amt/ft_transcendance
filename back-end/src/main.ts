@@ -4,7 +4,7 @@ import { AppModule } from './app.module';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   app.enableCors({
-    origin: process.env.FRONT_SERV,
+    origin: "https://ft-transcendance-three.vercel.app",
     credentials: true,
   });
 
