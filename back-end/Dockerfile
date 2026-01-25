@@ -7,6 +7,8 @@ RUN npm install
 
 COPY back-end/ .
 
+RUN npx prisma generate
+
 EXPOSE 3001
 
 RUN chmod +x entrypoint.sh
