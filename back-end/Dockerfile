@@ -9,7 +9,7 @@ COPY back-end/ .
 
 RUN npx prisma generate
 
-EXPOSE 3001
+EXPOSE 3000
 
 RUN chmod +x entrypoint.sh
 RUN npm run build
