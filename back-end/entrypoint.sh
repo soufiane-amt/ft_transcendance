@@ -1,23 +1,17 @@
 #!/bin/bash
 
-# Install necessary packages
-# apt-get -y update
-# apt-get install -y postgresql-client 
+set -e
 
-# # Function to check if the PostgreSQL database is ready
-# check_postgresql() {
-#   until pg_isready -h db -p 5432 -q; do
-#     echo "Waiting for PostgreSQL database to start..."
-#     sleep 1
-#   done
-#   echo "PostgreSQL database is ready!"
-# }
+echo "🚀 Starting Deployment Script..."
 
-# # Wait for PostgreSQL to start
-# check_postgresql
+# 1. Apply Migrations (The Fix)
+# We use 'deploy' instead of 'dev'. This runs non-interactively and is safe for production.
+# It automatically uses the 'directUrl' you configured in schema.prisma.
+echo "🔄 Running Database Migrations..."
+npx prisma migrate deploy
 
-
-# Run the commands once the database is ready
-npx prisma migrate dev --name init
-npm run build
-npm run start
+# 2. Start the App (The Speed Fix)
+# We run the COMPILED JavaScript directly.
+# This skips 'nest build' (which saves 30+ seconds) and prevents timeouts.
+echo "✅ Starting NestJS Server..."
+exec node dist/main.js
