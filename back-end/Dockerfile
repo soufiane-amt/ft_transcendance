@@ -10,5 +10,6 @@ COPY back-end/ .
 EXPOSE 3001
 
 RUN chmod +x entrypoint.sh
+RUN npm run build
 
 ENTRYPOINT ["./entrypoint.sh"]
