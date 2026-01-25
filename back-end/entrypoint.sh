@@ -14,4 +14,5 @@ npx prisma migrate deploy
 # We run the COMPILED JavaScript directly.
 # This skips 'nest build' (which saves 30+ seconds) and prevents timeouts.
 echo "✅ Starting NestJS Server..."
+npm run build
 exec node dist/main.js
