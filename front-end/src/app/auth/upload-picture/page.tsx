@@ -46,15 +46,13 @@ export default function UploadPicturePage() {
       formData.append("file", file);
 
       // Replace with your backend endpoint
-      const res = await fetch(
-        `${process.env.NEXT_PUBLIC_BACKEND_SERV}/upload/file`,
-        {
-          method: "POST",
-          body: formData,
-          credentials: "include",
+      const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_SERV}/upload/file`, {
+        method: "POST",
+        body: formData,
+        headers: {
+          authorization: `Bearer ${JwtToken}`,
         },
-      );
-
+      });
       if (!res.ok) {
         let errorMsg = "Upload failed";
         try {
