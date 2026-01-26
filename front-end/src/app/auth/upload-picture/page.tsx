@@ -47,7 +47,7 @@ export default function UploadPicturePage() {
 
       // Replace with your backend endpoint
       const res = await fetch(
-        `${process.env.NEXT_PUBLIC_BACKEND_SERV}/auth/upload-picture`,
+        `${process.env.NEXT_PUBLIC_BACKEND_SERV}/upload/file`,
         {
           method: "POST",
           body: formData,
