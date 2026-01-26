@@ -76,47 +76,17 @@ export class UploadController {
         const JwtToken: string = tokenParts[1];
 
         try {
-            const authorizationHeader = request.headers.authorization;
-            const check = request.headers.check;
-            if (!file)
-                    throw new UnsupportedMediaTypeException(
-                      'Invalid file type. Only jpg, jpeg, png, gif, bmp, tiff images are allowed.',
-            );
-            if (authorizationHeader && !check)
-            {
-                const tokenParts = authorizationHeader.split(' ');
-                const JwtToken: string = tokenParts[1];
-            
-                try {
-                  const payload: any = this.authservice.extractPayload(JwtToken);
-                  this.user.changeUserAvatar(payload.userId, `${process.env.BACKEND_SERV}/auth/uploads/${file.filename}`);
-                  return response.ok;
-                } catch (error) {
-                  // Handle any errors that occur during the process
-                  console.error('Error:', error);
-                  return 'An error occurred while processing the request.';
-                }
-            }
-            else if (authorizationHeader && check)
-            {
-              const tokenParts = authorizationHeader.split(' ');
-                const JwtToken: string = tokenParts[1];
-            
-                try {
-                  const payload: any = this.authservice.extractPayload(JwtToken);
-                  this.user.changeUserBackgroundImg(payload.userId, `${process.env.BACKEND_SERV}/auth/uploads/${file.filename}`);
-                  return response.ok;
-                } catch (error) {
-                  // console.error('Error:', error);
-                  return 'An error occurred while processing the request.';
-                }
-            }
-          }
-            catch (error) {
-            // console.error('Error during file upload:', error);
-            throw new HttpException('File format is not supported', HttpStatus.BAD_REQUEST);
-          }
-    }
+          const payload: any = this.authservice.extractPayload(JwtToken);
+          await this.user.changeUserAvatar(
+            payload.userId,
+            `${process.env.BACKEND_SERV}/auth/uploads/${file.filename}`,
+          );
+        } catch (error) {
+          console.error('Error:', error);
+        }
+      } else if (authorizationHeader && check) {
+        const tokenParts = authorizationHeader.split(' ');
+        const JwtToken: string = tokenParts[1];
 
         try {
           const payload: any = this.authservice.extractPayload(JwtToken);
