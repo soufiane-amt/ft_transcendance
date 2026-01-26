@@ -1,16 +1,32 @@
-import { Controller, Post, UseInterceptors, UploadedFile, Header, Req, UseGuards, Res, Body, Param, Get, UnsupportedMediaTypeException, HttpException, HttpStatus } from "@nestjs/common";
-import { FileInterceptor } from "@nestjs/platform-express";
-import { diskStorage} from 'multer';
-import { AuthService } from "src/auth/auth.service";
-import { JwtAuthGuard } from "src/auth/guards/jwt-aut.guard";
-import { UserCrudService } from "src/prisma/user-crud.service";
-
+import {
+  Controller,
+  Post,
+  UseInterceptors,
+  UploadedFile,
+  Header,
+  Req,
+  UseGuards,
+  Res,
+  Body,
+  Param,
+  Get,
+  UnsupportedMediaTypeException,
+  HttpException,
+  HttpStatus,
+} from '@nestjs/common';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { diskStorage } from 'multer';
+import { AuthService } from 'src/auth/auth.service';
+import { JwtAuthGuard } from 'src/auth/guards/jwt-aut.guard';
+import { UserCrudService } from 'src/prisma/user-crud.service';
 
 @Controller('upload')
 @UseGuards(JwtAuthGuard)
-export class UploadController
-{
-    constructor(private readonly user : UserCrudService, private readonly authservice: AuthService){};
+export class UploadController {
+  constructor(
+    private readonly user: UserCrudService,
+    private readonly authservice: AuthService,
+  ) {}
 
   //===============================
   // @Get(':filename')
@@ -19,33 +35,46 @@ export class UploadController
   //   response.sendFile(filename, { root: './uploads' });
   // }
 
+  @Post('file')
+  @UseGuards(JwtAuthGuard)
+  @UseInterceptors(
+    FileInterceptor('file', {
+      storage: diskStorage({
+        destination: './uploads',
+        filename: (rep, file, cb) => {
+          const parts = file.originalname.split('.');
+          const fileExtension = parts.pop();
+          const name = parts.join('.');
+          const uniqueSuffix =
+            name.split(' ').join('_') + '_' + Date.now() + '.' + fileExtension;
+          cb(null, uniqueSuffix);
+        },
+      }),
+      fileFilter(req, file, cb) {
+        if (!file.originalname.match(/\.(jpg|jpeg|png|gif|bmp|tiff)$/))
+          cb(null, false);
+        else cb(null, true);
+      },
+    }),
+  )
+  async uploadFile(
+    @UploadedFile() file: Express.Multer.File,
+    @Req() request,
+    @Res() response,
+    @Body() body,
+  ) {
+    console.log('Upload request received');
+    try {
+      const authorizationHeader = request.headers.authorization;
+      const check = request.headers.check;
+      if (!file)
+        throw new UnsupportedMediaTypeException(
+          'Invalid file type. Only jpg, jpeg, png, gif, bmp, tiff images are allowed.',
+        );
+      if (authorizationHeader && !check) {
+        const tokenParts = authorizationHeader.split(' ');
+        const JwtToken: string = tokenParts[1];
 
-
-
-    @Post('file')
-    @UseGuards(JwtAuthGuard)
-    @UseInterceptors(
-        FileInterceptor('file', {
-            storage: diskStorage({
-                destination: './uploads',
-                filename: (rep, file, cb) => {
-                    const parts = file.originalname.split('.');
-                    const fileExtension = parts.pop();
-                    const name = parts.join('.');
-                    const uniqueSuffix = name.split(' ').join('_') + '_' + Date.now() + '.' + fileExtension;
-                    cb(null, uniqueSuffix);
-                },
-            }),
-            fileFilter(req, file, cb) {
-                if (!file.originalname.match(/\.(jpg|jpeg|png|gif|bmp|tiff)$/))
-                  cb(null, false);
-                else cb(null, true);
-              },
-        }),
-    )
-    
-    async uploadFile(@UploadedFile() file : Express.Multer.File ,@Req() request, @Res() response : Response, @Body() body)
-    {
         try {
             const authorizationHeader = request.headers.authorization;
             const check = request.headers.check;
@@ -89,5 +118,29 @@ export class UploadController
           }
     }
 
-    
+        try {
+          const payload: any = this.authservice.extractPayload(JwtToken);
+          await this.user.changeUserBackgroundImg(
+            payload.userId,
+            `${process.env.BACKEND_SERV}/auth/uploads/${file.filename}`,
+          );
+        } catch (error) {
+          console.error('Error:', error);
+        }
+      }
+
+      // Send success response
+      return response.status(200).json({
+        message: 'File uploaded successfully',
+        filename: file.filename,
+        url: `${process.env.BACKEND_SERV}/auth/uploads/${file.filename}`,
+      });
+    } catch (error) {
+      console.error('Error during file upload:', error);
+      return response.status(400).json({
+        message: 'File format is not supported',
+        error: error.message,
+      });
+    }
+  }
 }

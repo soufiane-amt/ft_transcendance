@@ -46,13 +46,18 @@
   transform: translate(-50%, -50%);
   width: 37.5rem;
   height: 37.5rem;
-  background: linear-gradient(to right, rgba(99, 102, 241, 0.1), rgba(147, 51, 234, 0.1));
+  background: linear-gradient(
+    to right,
+    rgba(99, 102, 241, 0.1),
+    rgba(147, 51, 234, 0.1)
+  );
   border-radius: 50%;
   filter: blur(64px);
 }
 
 @keyframes pulse {
-  0%, 100% {
+  0%,
+  100% {
     opacity: 1;
     transform: scale(1);
   }
@@ -205,7 +210,6 @@
   justify-content: center;
   padding: 1.5rem;
 }
-
 
 .form_wrapper {
   width: 100%;
@@ -507,7 +511,7 @@
 }
 
 .checkbox:checked + .checkbox_custom::after {
-  content: '';
+  content: "";
   position: absolute;
   left: 0.35rem;
   top: 0.15rem;

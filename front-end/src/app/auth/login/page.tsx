@@ -65,6 +65,12 @@ export default function LoginPage() {
       return;
     }
 
+    console.log("Backend URL:", process.env.NEXT_PUBLIC_BACKEND_SERV);
+    console.log(
+      "Full URL:",
+      `${process.env.NEXT_PUBLIC_BACKEND_SERV}/auth/login/local`
+    );
+
     try {
       const r = await fetch(
         `${process.env.NEXT_PUBLIC_BACKEND_SERV}/auth/login/local`,

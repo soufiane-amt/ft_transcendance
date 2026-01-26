@@ -2,6 +2,7 @@
 import React, { useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import styles from "../register/register.module.css"; // Reuse your styles if you want
+import Cookies from "js-cookie";
 
 export default function UploadPicturePage() {
   const [file, setFile] = useState<File | null>(null);
@@ -10,6 +11,7 @@ export default function UploadPicturePage() {
   const [isLoading, setIsLoading] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
   const router = useRouter();
+  const JwtToken = Cookies.get("access_token");
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setError("");
@@ -41,7 +43,7 @@ export default function UploadPicturePage() {
     setIsLoading(true);
     try {
       const formData = new FormData();
-      formData.append("picture", file);
+      formData.append("file", file);
 
       // Replace with your backend endpoint
       const res = await fetch(
