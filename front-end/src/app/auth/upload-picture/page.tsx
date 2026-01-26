@@ -44,21 +44,31 @@ export default function UploadPicturePage() {
       formData.append("picture", file);
 
       // Replace with your backend endpoint
-      const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_SERV}/auth/upload-picture`, {
-        method: "POST",
-        body: formData,
-        credentials: "include",
-      });
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_BACKEND_SERV}/auth/upload-picture`,
+        {
+          method: "POST",
+          body: formData,
+          credentials: "include",
+        },
+      );
 
       if (!res.ok) {
-        const data = await res.json();
-        throw new Error(data.message || "Upload failed");
+        let errorMsg = "Upload failed";
+        try {
+          const data = await res.json();
+          errorMsg = data.message || errorMsg;
+        } catch {
+          // If response is not JSON, keep default message
+        }
+        setError("Failed to upload image. " + errorMsg);
+        return;
       }
 
       // Redirect to dashboard or next step
       router.push("/dashboard");
     } catch (err: any) {
-      setError(err.message || "Upload failed");
+      setError("Failed to upload image. " + (err.message || "Upload failed"));
     } finally {
       setIsLoading(false);
     }
@@ -105,7 +115,13 @@ export default function UploadPicturePage() {
                       fontSize: "2.5rem",
                     }}
                   >
-                    <svg width="48" height="48" fill="none" stroke="currentColor" strokeWidth="2">
+                    <svg
+                      width="48"
+                      height="48"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                    >
                       <circle cx="24" cy="24" r="22" />
                       <circle cx="24" cy="20" r="8" />
                       <path d="M12 40c2-6 8-10 12-10s10 4 12 10" />
