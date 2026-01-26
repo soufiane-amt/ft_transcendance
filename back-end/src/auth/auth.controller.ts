@@ -185,7 +185,7 @@ export class AuthController {
 
   //===============================
   @Get('uploads/:filename')
-  @UseGuards(JwtAuthGuard)
+  // @UseGuards(JwtAuthGuard)
   async getPicture(@Param('filename') filename, @Res() response: Response) {
     response.sendFile(filename, { root: './uploads' });
   }

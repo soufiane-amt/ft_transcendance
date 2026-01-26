@@ -61,9 +61,11 @@ export class UploadController
                 try {
                   const payload: any = this.authservice.extractPayload(JwtToken);
                   this.user.changeUserAvatar(payload.userId, `${process.env.BACKEND_SERV}/auth/uploads/${file.filename}`);
+                  return response.ok;
                 } catch (error) {
                   // Handle any errors that occur during the process
                   console.error('Error:', error);
+                  return 'An error occurred while processing the request.';
                 }
             }
             else if (authorizationHeader && check)
@@ -74,9 +76,10 @@ export class UploadController
                 try {
                   const payload: any = this.authservice.extractPayload(JwtToken);
                   this.user.changeUserBackgroundImg(payload.userId, `${process.env.BACKEND_SERV}/auth/uploads/${file.filename}`);
-                  response.ok;
+                  return response.ok;
                 } catch (error) {
                   // console.error('Error:', error);
+                  return 'An error occurred while processing the request.';
                 }
             }
           }
