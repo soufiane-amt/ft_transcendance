@@ -7,7 +7,7 @@ import styles from "./register.module.css";
 
 type FormErrors = {
   [key: string]: string | undefined;
-};
+};  
 
 export default function RegisterPage() {
   const [username, setUsername] = useState("");
