@@ -38,6 +38,5 @@ package-lock.json
 
 !.vscode/extensions.json
 
-prisma/migrations
 nest-cli/
 .env
